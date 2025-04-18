@@ -1,40 +1,81 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Image, Animated } from 'react-native';
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({ navigation }) => {
+  const fadeAnim = new Animated.Value(0);
+  const scaleAnim = new Animated.Value(0.3);
+
   useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 10,
+        friction: 2,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // Navigate to main app after splash screen
     const timer = setTimeout(() => {
       navigation.replace('Main');
-    }, 2000); // or however long your splash lasts
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <View style={styles.mainContainer}>
-      <Text style={styles.logo}>SuperXpense</Text>
+    <View style={styles.container}>
+      <Animated.View
+        style={[
+          styles.content,
+          {
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }],
+          },
+        ]}
+      >
+        {/* <Image
+          source={require('../../assets/images/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        /> */}
+        <Text style={styles.title}>Superxpense</Text>
+        <Text style={styles.subtitle}>Your Personal Expense Manager</Text>
+      </Animated.View>
     </View>
   );
 };
 
-export default SplashScreen;
-
 const styles = StyleSheet.create({
-  mainContainer: {
+  container: {
     flex: 1,
+    backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  logoStyle: {
-    width: 90,
-    height: 110,
+  content: {
+    alignItems: 'center',
   },
-  txtStyle: {
-    // fontFamily: FontFamily.regular,
-    fontSize: 14,
-    marginTop: 34,
-    color: 'black',
-    // color: Colors.txtColor,
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
   },
-  logo: {fontSize: 22, fontWeight: 'bold', color: '#00CFFF'},
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#007AFF',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+  },
 });
+
+export default SplashScreen; 

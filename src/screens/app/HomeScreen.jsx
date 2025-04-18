@@ -92,8 +92,8 @@ const HomeScreen = () => {
           {credit: 0, debit: 0},
         );
 
-        console.log('Total CREDIT amount:', totals.credit.toFixed(2));
-        console.log('Total DEBIT amount:', totals.debit.toFixed(2));
+        //console.log('Total CREDIT amount:', totals.credit.toFixed(2));
+        //console.log('Total DEBIT amount:', totals.debit.toFixed(2));
         setCredit(totals.credit.toFixed(2));
         setDebit(totals.debit.toFixed(2));
       } catch (error) {
