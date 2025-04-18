@@ -13,8 +13,12 @@ const BudgetsScreen = () => {
     <SafeAreaView
       style={{
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        flex: 1,
+        backgroundColor: '#000000',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}>
-      <Text>Coming Soon</Text>
+      <Text style={{color:"#fff"}}>Coming Soon</Text>
     </SafeAreaView>
   );
 };

@@ -115,8 +115,8 @@ const HomeScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Icon name="menu" size={24} />
-        <Text style={styles.logo}>SuperXpense</Text>
+        <Icon name="menu" size={24} style={{color:"#fff"}} />
+        <Text style={styles.logo}>Superxpense</Text>
         <View style={{width: 24}} />
       </View>
       <View style={styles.balanceContainer}>
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 30,
-    backgroundColor: 'black',
+    backgroundColor: '#000000',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   header: {
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   balanceBox: {},
   balanceLabel: {fontSize: 14, color: '#999', textAlign: 'center'},
-  assetValue: {fontSize: 20, fontWeight: 'bold', color: '#333'},
+  assetValue: {fontSize: 20, fontWeight: 'bold', color: 'green'},
   debtValue: {fontSize: 20, fontWeight: 'bold', color: '#d33'},
 
   graphContainer: {
