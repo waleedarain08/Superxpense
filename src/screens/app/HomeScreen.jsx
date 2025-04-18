@@ -93,6 +93,11 @@ const HomeScreen = () => {
       <View style={styles.transactionCard}>
         <View style={{flex: 1}}>
           <Text style={styles.transactionName}>
+            <Icon
+              name={isCredit ? 'wallet' : 'wallet'}
+              size={16}
+              color='#00CFFF'
+            />{' '}
             {transaction_information || 'Unknown'}
           </Text>
           <Text style={styles.transactionDate}>{formattedDate}</Text>
@@ -137,6 +142,7 @@ const HomeScreen = () => {
             stroke: '#00CFFF',
             strokeWidth: 2,
             fill: 'url(#gradient)',
+            color:"#fff"
           }}
           contentInset={{top: 20, bottom: 20}}
           curve={shape.curveNatural}>
@@ -184,8 +190,8 @@ const styles = StyleSheet.create({
   },
   balanceBox: {},
   balanceLabel: {fontSize: 14, color: '#999', textAlign: 'center'},
-  assetValue: {fontSize: 20, fontWeight: 'bold', color: 'green'},
-  debtValue: {fontSize: 20, fontWeight: 'bold', color: '#d33'},
+  assetValue: {fontSize: 22, fontWeight: 'bold', color: 'green'},
+  debtValue: {fontSize: 22, fontWeight: 'bold', color: '#d33'},
 
   graphContainer: {
     height: 120,
@@ -233,7 +239,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   transactionCard: {
-    backgroundColor: '#1c1c1e',
+    backgroundColor: '#1c1c1c',
     padding: 16,
     borderRadius: 12,
     flexDirection: 'row',
@@ -243,8 +249,9 @@ const styles = StyleSheet.create({
   },
   transactionName: {
     fontSize: 16,
-    color: 'white',
-    fontWeight: '600',
+    color: '#fff',
+    //fontWeight: 'bold',
+    fontFamily:'Arial'
   },
   transactionDate: {
     fontSize: 12,
@@ -253,7 +260,7 @@ const styles = StyleSheet.create({
   },
   transactionAmount: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: 800,
   },
   transactionType: {
     fontSize: 12,
