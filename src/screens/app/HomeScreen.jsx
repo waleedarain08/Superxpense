@@ -8,6 +8,7 @@ import {
   Image,
   Platform,
   StatusBar,
+  FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // optional for icons
 import * as shape from 'd3-shape';
@@ -20,34 +21,6 @@ import {
   Text as SvgText,
 } from 'react-native-svg';
 
-const CustomGridWithLabels = ({y, data}) => {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const mid = (max + min) / 2;
-
-  const levels = [max, mid, min];
-
-  return levels.map((value, index) => (
-    <React.Fragment key={index}>
-      <Line
-        x1="0"
-        x2="100%"
-        y1={y(value)}
-        y2={y(value)}
-        stroke="#ccc"
-        strokeDasharray={[4, 4]}
-      />
-      <SvgText
-        x="0"
-        y={y(value) - 2}
-        fontSize="10"
-        fill="#666"
-        alignmentBaseline="middle">
-        {value.toFixed(0)}
-      </SvgText>
-    </React.Fragment>
-  ));
-};
 const Gradient = () => (
   <Defs key="gradient">
     <LinearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
@@ -61,6 +34,7 @@ const graphData = [50, 109, 40, 95, 85, 91, 35, 53, 24, 50, 70];
 const HomeScreen = () => {
   const [credit, setCredit] = useState();
   const [debit, setDebit] = useState();
+  const [transactions, setTransactions] = useState([]);
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -78,7 +52,7 @@ const HomeScreen = () => {
 
         const result = await response.json();
         const transactions = result.data.data.transactions;
-
+        console.log(transactions);
         const totals = transactions.reduce(
           (acc, tx) => {
             const amount = parseFloat(tx.amount?.amount ?? 0);
@@ -94,6 +68,7 @@ const HomeScreen = () => {
 
         console.log('Total CREDIT amount:', totals.credit.toFixed(2));
         console.log('Total DEBIT amount:', totals.debit.toFixed(2));
+        setTransactions(transactions);
         setCredit(totals.credit.toFixed(2));
         setDebit(totals.debit.toFixed(2));
       } catch (error) {
@@ -103,6 +78,40 @@ const HomeScreen = () => {
 
     fetchTransactions();
   }, []);
+
+  const TransactionCard = ({transaction}) => {
+    const {
+      transaction_information,
+      credit_debit_indicator,
+      booking_date_time,
+      amount,
+    } = transaction;
+    const isCredit = credit_debit_indicator === 'CREDIT';
+    const formattedDate = new Date(booking_date_time).toLocaleDateString();
+
+    return (
+      <View style={styles.transactionCard}>
+        <View style={{flex: 1}}>
+          <Text style={styles.transactionName}>
+            {transaction_information || 'Unknown'}
+          </Text>
+          <Text style={styles.transactionDate}>{formattedDate}</Text>
+        </View>
+        <View style={{alignItems: 'flex-end'}}>
+          <Text
+            style={[
+              styles.transactionAmount,
+              {color: isCredit ? 'green' : 'red'},
+            ]}>
+            {isCredit ? '+' : '-'} {parseFloat(amount?.amount ?? 0).toFixed(2)}{' '}
+            {amount?.currency || ''}
+          </Text>
+          <Text style={styles.transactionType}>{credit_debit_indicator}</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -132,142 +141,24 @@ const HomeScreen = () => {
           contentInset={{top: 20, bottom: 20}}
           curve={shape.curveNatural}>
           <Gradient />
-          <CustomGridWithLabels data={graphData} />
+          {/* <CustomGridWithLabels data={graphData} /> */}
         </LineChart>
       </View>
-      <TouchableOpacity style={styles.transactionLink}>
-        <Icon name="eye-outline" size={18} color={'#007BFF'} />
-        <Text style={styles.transactionText}>See all transactions</Text>
-      </TouchableOpacity>
-      <View style={styles.card}>
-        <View
-          style={{
-            backgroundColor: '#f7f8fc',
-            height: 55,
-            width: 55,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 10,
-            marginRight: 20,
-          }}>
-          <Icon name="wallet-outline" size={30} color={'#007BFF'} />
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flex: 1,
-          }}>
-          <View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  height: 7,
-                  width: 7,
-                  borderRadius: 7,
-                  backgroundColor: '#007BFF',
-                  marginRight: 5,
-                }}
-              />
-              <Text style={styles.cardTitle}>Cash AED Account</Text>
-            </View>
-            <Text style={styles.cardAmount}>1,560.00 AED</Text>
-          </View>
-          <Icon name="chevron-forward" size={25} color={'#908da1'} />
-        </View>
-      </View>
-      <View style={styles.card}>
-        <View
-          style={{
-            backgroundColor: '#f7f8fc',
-            height: 55,
-            width: 55,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 10,
-            marginRight: 20,
-          }}>
-          <Icon name="wallet-outline" size={30} color={'#007BFF'} />
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flex: 1,
-          }}>
-          <View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  height: 7,
-                  width: 7,
-                  borderRadius: 7,
-                  backgroundColor: '#007BFF',
-                  marginRight: 5,
-                }}
-              />
-              <Text style={styles.cardTitle}>Mashreq Bank</Text>
-            </View>
-            <Text style={styles.cardAmount}>14,656.18 AED</Text>
-          </View>
-          <Icon name="chevron-forward" size={25} color={'#908da1'} />
-        </View>
-      </View>
-      <View
-        style={[
-          styles.card,
-          {borderColor: '#00CFFF', borderWidth: 1, alignItems: 'flex-start'},
-        ]}>
-        <View
-          style={{
-            backgroundColor: '#f7f8fc',
-            height: 55,
-            width: 55,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 10,
-            marginRight: 20,
-          }}>
-          <Icon name="wallet-outline" size={30} color={'#007BFF'} />
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '87%',
-            }}>
-            <View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View
-                  style={{
-                    height: 7,
-                    width: 7,
-                    borderRadius: 7,
-                    backgroundColor: '#007BFF',
-                    marginRight: 5,
-                  }}
-                />
-                <Text style={styles.cardTitle}>NBD Accounts</Text>
-              </View>
-              <Text style={styles.cardAmount}>11,316.79 AED</Text>
-            </View>
-            <Icon name="chevron-forward" size={25} color={'#908da1'} />
-          </View>
-          <View style={styles.subAccount}>
-            <Text style={styles.subAccountTitle}>ENBD Savings Account</Text>
-            <Text style={styles.subAccountAmount}>6,240.00 USD</Text>
-          </View>
-
-          <View style={styles.subAccount}>
-            <Text style={styles.subAccountTitle}>ENBD Credit Card (VISA)</Text>
-            <Text style={styles.subAccountAmount}>4,456.79 AED</Text>
-          </View>
-        </View>
-      </View>
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 18,
+          marginTop: 20,
+          fontWeight: '600',
+        }}>
+        Recent Transactions
+      </Text>
+      <FlatList
+        data={transactions}
+        keyExtractor={item => item.transaction_id}
+        renderItem={({item}) => <TransactionCard transaction={item} />}
+        contentContainerStyle={{paddingBottom: 40}}
+      />
     </ScrollView>
   );
 };
@@ -276,7 +167,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 30,
-    backgroundColor: '#fefefe',
+    backgroundColor: 'black',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   header: {
@@ -340,6 +231,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginTop: 2,
+  },
+  transactionCard: {
+    backgroundColor: '#1c1c1e',
+    padding: 16,
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  transactionName: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: '600',
+  },
+  transactionDate: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 4,
+  },
+  transactionAmount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  transactionType: {
+    fontSize: 12,
+    color: '#bbb',
+    marginTop: 4,
   },
 });
 

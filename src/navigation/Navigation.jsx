@@ -38,11 +38,15 @@ const Navigation = () => {
 
 const BottomNavigator = () => {
   return (
-    <View style={{backgroundColor: 'white', flex: 1}}>
+    <View style={{backgroundColor: 'black', flex: 1}}>
       <BottomStack.Navigator
         initialRouteName="Home"
         screenOptions={{
-          tabBarStyle: {},
+          tabBarStyle: {
+            backgroundColor: 'black',
+            borderTopWidth: 0,
+            marginBottom: 7,
+          },
           tabBarShowLabel: false,
           tabBarItemStyle: {
             justifyContent: 'center',
