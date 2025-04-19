@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Animated } from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Text, StyleSheet, Image, Animated} from 'react-native';
+import {Colors} from '../../utilis/Colors';
 
-const SplashScreen = ({ navigation }) => {
+const SplashScreen = ({navigation}) => {
   const fadeAnim = new Animated.Value(0);
   const scaleAnim = new Animated.Value(0.3);
 
@@ -36,17 +37,15 @@ const SplashScreen = ({ navigation }) => {
           styles.content,
           {
             opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           },
-        ]}
-      >
+        ]}>
         <Image
-          source={require('../../assets/images/logo.png')}
+          source={require('../../assets/images/logoO.png')}
           style={styles.logo}
           resizeMode="contain"
         />
-        {/* <Text style={styles.title}>SkinSync AI</Text> */}
-        <Text style={styles.subtitle}>Your Personal Expense Manager</Text>
+        {/* <Text style={styles.subtitle}>Your Personal Expense Manager</Text> */}
       </Animated.View>
     </View>
   );
@@ -55,7 +54,7 @@ const SplashScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: Colors.splashColor,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -63,9 +62,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 150,
-    height: 150,
-    marginBottom: 20,
+    width: 250,
+    height: 250,
     borderRadius: 20,
   },
   title: {
@@ -80,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SplashScreen; 
+export default SplashScreen;

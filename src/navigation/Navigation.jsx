@@ -10,6 +10,8 @@ import InsightsScreen from '../screens/app/InsightsScreen';
 import CalendarScreen from '../screens/app/CalendarScreen';
 import HomeScreen from '../screens/app/HomeScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Home} from '../icons';
+import { Colors } from '../utilis/Colors';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -57,7 +59,7 @@ const BottomNavigator = () => {
             fontSize: 12,
             marginTop: 2,
           },
-          tabBarActiveTintColor: '#3a89ca',
+          tabBarActiveTintColor: Colors.greenColor,
           tabBarInactiveTintColor: 'gray',
         }}>
         <BottomStack.Screen
@@ -66,11 +68,7 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Icon
-                name="home" // choose an icon that matches your design
-                size={30}
-                color={focused ? '#3a89ca' : 'gray'}
-              />
+              <Home size={30} color={focused ? Colors.greenColor: 'gray'} />
             ),
           }}
         />
@@ -83,7 +81,7 @@ const BottomNavigator = () => {
               <Icon
                 name="wallet" // example icon
                 size={30}
-                color={focused ? '#3a89ca' : 'gray'}
+                color={focused ? Colors.greenColor : 'gray'}
               />
             ),
           }}
@@ -97,7 +95,7 @@ const BottomNavigator = () => {
               <Icon
                 name="chart-bar" // example icon
                 size={30}
-                color={focused ? '#3a89ca' : 'gray'}
+                color={focused ? Colors.greenColor : 'gray'}
               />
             ),
           }}
@@ -111,7 +109,7 @@ const BottomNavigator = () => {
               <Icon
                 name="calendar" // example icon
                 size={30}
-                color={focused ? '#3a89ca' : 'gray'}
+                color={focused ? Colors.greenColor : 'gray'}
               />
             ),
           }}

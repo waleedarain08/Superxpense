@@ -4,11 +4,10 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
-  Image,
   Platform,
   StatusBar,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // optional for icons
 import * as shape from 'd3-shape';
@@ -20,15 +19,65 @@ import {
   Line,
   Text as SvgText,
 } from 'react-native-svg';
+import {Colors} from '../../utilis/Colors';
 
 const Gradient = () => (
   <Defs key="gradient">
     <LinearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-      <Stop offset="0%" stopColor="#00CFFF" stopOpacity={0.4} />
-      <Stop offset="100%" stopColor="#00CFFF" stopOpacity={0} />
+      <Stop offset="0%" stopColor={Colors.greenColor} stopOpacity={0.4} />
+      <Stop offset="100%" stopColor={Colors.greenColor} stopOpacity={0} />
     </LinearGradient>
   </Defs>
 );
+
+const CustomGridWithLabels = ({data}) => {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const mid = (max + min) / 2;
+
+  const lines = [
+    {value: max, label: 'Highest'},
+    {value: mid, label: 'Middle'},
+    {value: min, label: 'Lowest'},
+  ];
+
+  return (
+    <>
+      {lines.map((line, index) => {
+        const y = value => {
+          const chartHeight = 100;
+          const top = 20;
+          const bottom = 20;
+          const range = max - min;
+          return ((max - value) / range) * (chartHeight - top - bottom) + top;
+        };
+
+        return (
+          <React.Fragment key={index}>
+            <Line
+              x1="0"
+              x2="100%"
+              y1={y(line.value)}
+              y2={y(line.value)}
+              stroke={Colors.white}
+              strokeDasharray={[4, 4]}
+              strokeWidth={1}
+            />
+            <SvgText
+              x="0"
+              y={y(line.value) - 10}
+              fill={Colors.white}
+              fontSize="12"
+              alignmentBaseline="middle">
+              {`${line.value.toFixed(0)}k`}
+            </SvgText>
+          </React.Fragment>
+        );
+      })}
+    </>
+  );
+};
+
 const graphData = [50, 109, 40, 95, 85, 91, 35, 53, 24, 50, 70];
 
 const HomeScreen = () => {
@@ -96,7 +145,7 @@ const HomeScreen = () => {
             <Icon
               name={isCredit ? 'wallet' : 'wallet'}
               size={16}
-              color='#00CFFF'
+              color={Colors.greenColor}
             />{' '}
             {transaction_information || 'Unknown'}
           </Text>
@@ -106,7 +155,7 @@ const HomeScreen = () => {
           <Text
             style={[
               styles.transactionAmount,
-              {color: isCredit ? 'green' : 'red'},
+              {color: isCredit ? Colors.greenColor : 'red'},
             ]}>
             {isCredit ? '+' : '-'} {parseFloat(amount?.amount ?? 0).toFixed(2)}{' '}
             {amount?.currency || ''}
@@ -118,70 +167,76 @@ const HomeScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Icon name="menu" size={24} style={{color:"#fff"}} />
-        <Text style={styles.logo}>Superxpense</Text>
-        <View style={{width: 24}} />
-      </View>
-      <View style={styles.balanceContainer}>
-        <View style={styles.balanceBox}>
-          <Text style={styles.balanceLabel}>In assets</Text>
-          <Text style={styles.assetValue}>{credit} AED</Text>
+    <SafeAreaView style={styles.safeContainer}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Icon name="menu" size={24} style={{color: Colors.white}} />
+          <Text style={styles.logo}>Superxpense</Text>
+          <View style={{width: 24}} />
         </View>
-        <View style={styles.balanceBox}>
-          <Text style={styles.balanceLabel}>In debt</Text>
-          <Text style={styles.debtValue}>-{debit} AED</Text>
+        <View style={styles.balanceContainer}>
+          <View style={styles.balanceBox}>
+            <Text style={styles.balanceLabel}>In assets</Text>
+            <Text style={styles.assetValue}>{credit} AED</Text>
+          </View>
+          <View style={styles.balanceBox}>
+            <Text style={styles.balanceLabel}>In debt</Text>
+            <Text style={styles.debtValue}>-{debit} AED</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.graphContainer}>
-        <LineChart
-          style={{height: 100, width: '100%'}}
-          data={graphData}
-          svg={{
-            stroke: '#00CFFF',
-            strokeWidth: 2,
-            fill: 'url(#gradient)',
-            color:"#fff"
-          }}
-          contentInset={{top: 20, bottom: 20}}
-          curve={shape.curveNatural}>
-          <Gradient />
-          {/* <CustomGridWithLabels data={graphData} /> */}
-        </LineChart>
-      </View>
-      <Text
-        style={{
-          color: 'white',
-          fontSize: 18,
-          marginTop: 20,
-          fontWeight: '600',
-        }}>
-        Recent Transactions
-      </Text>
-      <FlatList
-        data={transactions}
-        keyExtractor={item => item.transaction_id}
-        renderItem={({item}) => <TransactionCard transaction={item} />}
-        contentContainerStyle={{paddingBottom: 40}}
-      />
-    </ScrollView>
+        <View style={styles.graphContainer}>
+          <LineChart
+            style={{height: 100, width: '100%'}}
+            data={graphData}
+            svg={{
+              stroke: Colors.greenColor,
+              strokeWidth: 2,
+              fill: 'url(#gradient)',
+              color: '#fff',
+            }}
+            contentInset={{top: 20, bottom: 20, left: 20}}
+            curve={shape.curveNatural}>
+            <Gradient />
+            <CustomGridWithLabels data={graphData} />
+          </LineChart>
+        </View>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 18,
+            marginTop: 20,
+            fontWeight: '600',
+          }}>
+          Recent Transactions
+        </Text>
+        <FlatList
+          data={transactions}
+          keyExtractor={item => item.transaction_id}
+          renderItem={({item}) => <TransactionCard transaction={item} />}
+          contentContainerStyle={{paddingBottom: 40}}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeContainer: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: Colors.black,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 30,
-    backgroundColor: '#000000',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    paddingTop: 20,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  logo: {fontSize: 22, fontWeight: 'bold', color: '#00CFFF'},
+  logo: {fontSize: 22, fontWeight: 'bold', color: Colors.greenColor},
 
   balanceContainer: {
     flexDirection: 'row',
@@ -189,9 +244,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   balanceBox: {},
-  balanceLabel: {fontSize: 14, color: '#999', textAlign: 'center'},
-  assetValue: {fontSize: 22, fontWeight: 'bold', color: 'green'},
-  debtValue: {fontSize: 22, fontWeight: 'bold', color: '#d33'},
+  balanceLabel: {fontSize: 14, color: Colors.white, textAlign: 'center'},
+  assetValue: {fontSize: 22, fontWeight: 'bold', color: Colors.greenColor},
+  debtValue: {fontSize: 22, fontWeight: 'bold', color: Colors.red},
 
   graphContainer: {
     height: 120,
@@ -200,11 +255,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  graphLabel: {color: '#666'},
+  graphLabel: {color: Colors.white},
 
   transactionLink: {marginTop: 15, flexDirection: 'row', alignItems: 'center'},
-  transactionText: {color: '#007BFF', fontWeight: '500', marginLeft: 10},
-
   card: {
     backgroundColor: 'white',
     padding: 16,
@@ -212,7 +265,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: Colors.black,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -222,24 +275,10 @@ const styles = StyleSheet.create({
 
     elevation: 5,
   },
-  cardTitle: {fontSize: 16, fontWeight: '600', color: '#444'},
   cardAmount: {fontSize: 18, fontWeight: 'bold', marginTop: 6},
 
-  subAccount: {
-    marginTop: 12,
-    paddingLeft: 10,
-    borderLeftWidth: 2,
-    borderLeftColor: '#00CFFF',
-  },
-  subAccountTitle: {fontSize: 14, color: '#666'},
-  subAccountAmount: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: 2,
-  },
   transactionCard: {
-    backgroundColor: '#1c1c1c',
+    backgroundColor: Colors.transactionCard,
     padding: 16,
     borderRadius: 12,
     flexDirection: 'row',
@@ -248,14 +287,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   transactionName: {
-    fontSize: 16,
-    color: '#fff',
-    //fontWeight: 'bold',
-    fontFamily:'Arial'
+    fontSize: 14,
+    color: Colors.white,
+    fontFamily: 'Arial',
+    alignItems: 'center',
   },
   transactionDate: {
     fontSize: 12,
-    color: '#999',
+    color: Colors.transactionDate,
     marginTop: 4,
   },
   transactionAmount: {
@@ -264,7 +303,7 @@ const styles = StyleSheet.create({
   },
   transactionType: {
     fontSize: 12,
-    color: '#bbb',
+    color: Colors.transactionType,
     marginTop: 4,
   },
 });
