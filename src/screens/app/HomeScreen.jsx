@@ -121,7 +121,7 @@ const HomeScreen = () => {
         setCredit(totals.credit.toFixed(2));
         setDebit(totals.debit.toFixed(2));
       } catch (error) {
-        console.error('Error fetching transactions:', error);
+        alert('Error fetching transactions:', error);
       }
     };
 
