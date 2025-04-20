@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 30,
+    paddingHorizontal: 10,
     paddingTop: 20,
   },
   header: {
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  logo: {fontSize: 22, fontWeight: 'bold', color: Colors.greenColor},
+  logo: {fontSize: 22, fontWeight: 'bold', color: Colors.white},
 
   balanceContainer: {
     flexDirection: 'row',

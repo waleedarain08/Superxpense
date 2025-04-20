@@ -3,8 +3,8 @@ import {View, Text, StyleSheet} from 'react-native';
 import Svg, {Circle} from 'react-native-svg';
 import {Colors} from '../utilis/Colors';
 
-const CIRCLE_LENGTH = 2 * Math.PI * 50; // circumference
-const RADIUS = 50;
+const CIRCLE_LENGTH = 2 * Math.PI * 60; // circumference
+const RADIUS = 60;
 
 const DualRingProgress = () => {
   return (
@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   amount: {
-    fontSize: 14,
-    fontWeight:'600',
+    fontSize: 13,
+    fontWeight:'800',
     color: Colors.greenColor,
   },
 });

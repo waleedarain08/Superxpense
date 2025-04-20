@@ -39,6 +39,20 @@ const BudgetsScreen = () => {
       amount: '162.16 AED',
       icon: 'barbell',
     },
+    {
+      id: '4',
+      day: '3rd',
+      title: 'Installment plan HAD02…',
+      amount: '3,240 AED',
+      icon: 'home',
+    },
+    {
+      id: '5',
+      day: '7th',
+      title: 'DEWA Smart Dubai Gover…',
+      amount: '425 AED',
+      icon: 'flash',
+    },
   ];
 
   return (
@@ -128,7 +142,7 @@ const BudgetsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 30,
+    paddingHorizontal: 10,
     backgroundColor: Colors.black,
     paddingTop: 20,
   },
@@ -162,7 +176,7 @@ const styles = StyleSheet.create({
     color: Colors.transactionDate,
     fontWeight: '600',
   },
-  bold: {fontWeight: '700', color: Colors.white, marginTop: 5, marginBottom: 5},
+  bold: {fontWeight: '800', color: Colors.white, marginTop: 5, marginBottom: 5, fontSize:15},
   details: {
     marginLeft: 40,
   },
@@ -176,7 +190,7 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
   billCard: {
-    backgroundColor: '#EAF3FF',
+    backgroundColor: '#fff',
     padding: 8,
     height: 120,
     borderRadius: 12,
