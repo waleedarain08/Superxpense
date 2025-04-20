@@ -60,6 +60,18 @@
             ReferencedContainer = "container:Superxpense.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "PATH"
+            value = "/Users/waleed/.nvm/versions/node/v18.20.7/bin:${PATH}"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "NODE_PATH"
+            value = "/Users/waleed/.nvm/versions/node/v18.20.7/bin"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
