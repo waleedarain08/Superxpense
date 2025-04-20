@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     color: Colors.transactionDate,
     fontWeight: '600',
   },
-  bold: {fontWeight: '800', color: Colors.white, marginTop: 5, marginBottom: 5, fontSize:15},
+  bold: {fontWeight: '800', color: Colors.white, marginTop: 5, marginBottom: 5, fontSize:17},
   details: {
     marginLeft: 40,
   },

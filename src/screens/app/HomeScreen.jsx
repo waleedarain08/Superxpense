@@ -61,7 +61,7 @@ const CustomGridWithLabels = ({data}) => {
               y2={y(line.value)}
               stroke={Colors.white}
               strokeDasharray={[4, 4]}
-              strokeWidth={0.2}
+              strokeWidth={0.1}
             />
             <SvgText
               x="0"
