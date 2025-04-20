@@ -76,6 +76,7 @@ const BudgetsScreen = () => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'center',
               marginVertical: 20,
             }}>
             <DualRingProgress />
@@ -89,7 +90,7 @@ const BudgetsScreen = () => {
             </View>
           </View>
           <Text style={styles.notice}>
-            You are <Text style={{color: Colors.greenColor}}>440 AED</Text>{' '}
+            You are <Text style={{color: Colors.greenColor, fontSize:15, fontWeight:'600'}}>440 AED</Text>{' '}
             above your monthly budget
           </Text>
 
@@ -184,32 +185,33 @@ const styles = StyleSheet.create({
   daysLeft: {textAlign: 'center', fontSize: 12, color: '#999'},
 
   sectionTitle: {
-    fontWeight: '700',
-    fontSize: 16,
+    fontWeight: '800',
+    fontSize: 18,
     marginBottom: 20,
     color: Colors.white,
   },
   billCard: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.transactionCardPurple,
     padding: 8,
     height: 120,
     borderRadius: 12,
     width: 120,
     marginRight: 12,
   },
-  billDate: {fontWeight: '600'},
+  billDate: {fontWeight: '600',color: Colors.logoColor,fontSize: 16},
   billTitle: {
     fontSize: 12,
-    color: '#333',
+    color: Colors.white,
+    fontWeight: '600',
     marginVertical: 5,
     textAlign: 'center',
   },
-  billAmount: {fontWeight: '700', color: '#000'},
+  billAmount: {fontWeight: '800', color: Colors.white, fontSize: 12},
 
   myBudget: {marginTop: 30},
   budgetItem: {flexDirection: 'row', alignItems: 'center'},
-  budgetIcon: {width: 40, height: 40, marginRight: 8},
-  budgetLabel: {fontWeight: '600', marginBottom: 4, color: Colors.white},
+  budgetIcon: {width: 30, height: 25, marginRight: 8},
+  budgetLabel: {fontWeight: '600', marginBottom: 4, color: Colors.white, fontSize: 16},
   progressBarBackground: {
     width: '100%',
     height: 8,
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#FF8C00',
   },
-  budgetAmount: {fontSize: 12, color: '#555'},
+  budgetAmount: {fontSize: 12, color: '#f6f6f6', fontWeight: '400'},
 
   safeStyle: {
     flex: 1,

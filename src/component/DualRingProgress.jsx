@@ -15,7 +15,7 @@ const DualRingProgress = () => {
           cx={70}
           cy={70}
           r={RADIUS}
-          stroke="#E6DAF6"
+          stroke="#9F2B68"
           strokeWidth={12}
           fill="none"
         />
