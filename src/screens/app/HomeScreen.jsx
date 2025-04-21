@@ -84,6 +84,7 @@ const HomeScreen = () => {
   const [credit, setCredit] = useState();
   const [debit, setDebit] = useState();
   const [transactions, setTransactions] = useState([]);
+
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
