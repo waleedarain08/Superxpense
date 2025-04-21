@@ -24,7 +24,7 @@ const SplashScreen = ({navigation}) => {
     // Navigate to main app after splash screen
     const timer = setTimeout(() => {
       //onFinish();
-      navigation.replace('Main');
+      navigation.replace('SignIn');
     }, 2000);
 
     return () => clearTimeout(timer);
@@ -45,7 +45,6 @@ const SplashScreen = ({navigation}) => {
           style={styles.logo}
           resizeMode="contain"
         />
-        {/* <Text style={styles.subtitle}>Your Personal Expense Manager</Text> */}
       </Animated.View>
     </View>
   );

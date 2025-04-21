@@ -11,7 +11,9 @@ import CalendarScreen from '../screens/app/CalendarScreen';
 import HomeScreen from '../screens/app/HomeScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Home} from '../icons';
-import { Colors } from '../utilis/Colors';
+import {Colors} from '../utilis/Colors';
+import SignInScreen from '../screens/auth/SignInScreen';
+import SignupScreen from '../screens/auth/SignupScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -32,6 +34,8 @@ const Navigation = () => {
             gestureEnabled: false,
           }}
         />
+        <Stack.Screen name="SignIn" component={SignInScreen} />
+        <Stack.Screen name="SignUp" component={SignupScreen} />
         <Stack.Screen name="Main" component={BottomNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -68,7 +72,7 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Home size={30} color={focused ? Colors.greenColor: 'gray'} />
+              <Home size={30} color={focused ? Colors.greenColor : 'gray'} />
             ),
           }}
         />
