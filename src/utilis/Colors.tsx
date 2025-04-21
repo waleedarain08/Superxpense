@@ -10,4 +10,5 @@ export const Colors = {
   transactionType:'#bbb',
   splashColor:'#040f23',
   greenColor:'#36f8b8',
+  greyColor:'#999',
 };

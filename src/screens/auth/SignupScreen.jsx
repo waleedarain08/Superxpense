@@ -103,12 +103,13 @@ const SignUpScreen = ({navigation}) => {
 
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Email"
+            placeholder="Email Address"
             style={styles.input}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            placeholderTextColor={Colors.greyColor}
           />
           {error.email ? <Text style={styles.error}>{error.email}</Text> : null}
 
@@ -120,6 +121,8 @@ const SignUpScreen = ({navigation}) => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={hidePassword}
+              placeholderTextColor={Colors.greyColor}
+
             />
             <TouchableOpacity
               onPress={() => setHidePassword(!hidePassword)}
@@ -143,6 +146,8 @@ const SignUpScreen = ({navigation}) => {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry={hideConfirmPassword}
+              placeholderTextColor={Colors.greyColor}
+
             />
             <TouchableOpacity
               onPress={() => setHideConfirmPassword(!hideConfirmPassword)}

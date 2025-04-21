@@ -40,6 +40,7 @@ const SignInScreen = ({navigation}) => {
   };
 
   const handleSignIn = async () => {
+    //navigation.navigate('Main');
     if (!validate()) return;
 
     setLoading(true);
@@ -67,7 +68,7 @@ const SignInScreen = ({navigation}) => {
         // Optionally display error
       }
     } catch (err) {
-      console.error('Error during login:', err);
+      alert(err);
     } finally {
       setLoading(false);
     }
@@ -87,12 +88,13 @@ const SignInScreen = ({navigation}) => {
         <Text style={styles.signInTxt}>Sign In</Text>
         <View style={styles.inputContainer}>
           <TextInput
-            placeholder="Email"
+            placeholder="Enter your email address"
             style={styles.input}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            placeholderTextColor={Colors.greyColor}
           />
           {error.email ? <Text style={styles.error}>{error.email}</Text> : null}
 
@@ -103,6 +105,7 @@ const SignInScreen = ({navigation}) => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={hidePassword}
+              placeholderTextColor={Colors.greyColor}
             />
             <TouchableOpacity
               onPress={() => setHidePassword(!hidePassword)}
