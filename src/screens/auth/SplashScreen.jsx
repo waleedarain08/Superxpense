@@ -65,16 +65,6 @@ const styles = StyleSheet.create({
     height: 250,
     borderRadius: 20,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#007AFF',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#ffffff',
-  },
 });
 
 export default SplashScreen;

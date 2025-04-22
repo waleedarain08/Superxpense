@@ -8,6 +8,8 @@ import {
   StatusBar,
   FlatList,
   SafeAreaView,
+  RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // optional for icons
 import * as shape from 'd3-shape';
@@ -20,6 +22,9 @@ import {
   Text as SvgText,
 } from 'react-native-svg';
 import {Colors} from '../../utilis/Colors';
+import {API} from '../../utilis/Constant';
+import {FontFamily} from '../../utilis/Fonts';
+import {Logout} from '../../icons';
 
 const Gradient = () => (
   <Defs key="gradient">
@@ -80,52 +85,58 @@ const CustomGridWithLabels = ({data}) => {
 
 const graphData = [50, 109, 40, 95, 85, 91, 35, 53, 24, 50, 70];
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   const [credit, setCredit] = useState();
   const [debit, setDebit] = useState();
   const [transactions, setTransactions] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchTransactions(); // You’ll need to move this function outside useEffect
+    setRefreshing(false);
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch(
+        `${API.tansActions}/?accountId=be71cb2b-ebbb-4a04-ac5e-6bd3aae9b624&entityId=8a7505eb-0800-4b72-85fe-44eeba584864&page=0&size=50`,
+        {
+          method: 'GET',
+          headers: {
+            accept: '/',
+            Authorization:
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJoYW1tYWQuc2hhYmJpcisxMEBjbnR4dC50ZWNoIiwibmFtZSI6ImhhbW1hZC5zaGFiYmlyKzEwQGNudHh0LnRlY2giLCJpc1ZlcmlmaWVkIjpmYWxzZSwiaXNBY3RpdmUiOnRydWUsInVzZXJJZCI6MSwiaWF0IjoxNzQ0OTI3MDA5LCJleHAiOjE3NDU1MzcwMDl9.qG4tj1dj1bH1Ycu9gwDIcJ_pwhX1T1DrKDU4cwMZfmo',
+          },
+        },
+      );
+
+      const result = await response.json();
+      console.log(result, 'asdasdasdsadas');
+
+      const transactions = result.data.data.transactions;
+      const totals = transactions.reduce(
+        (acc, tx) => {
+          const amount = parseFloat(tx.amount?.amount ?? 0);
+          if (tx.credit_debit_indicator === 'CREDIT') {
+            acc.credit += amount;
+          } else if (tx.credit_debit_indicator === 'DEBIT') {
+            acc.debit += amount;
+          }
+          return acc;
+        },
+        {credit: 0, debit: 0},
+      );
+
+      setTransactions(transactions);
+      setCredit(totals.credit.toFixed(2));
+      setDebit(totals.debit.toFixed(2));
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await fetch(
-          'https://superxpnse-be.onrender.com/lean/transactions?accountId=be71cb2b-ebbb-4a04-ac5e-6bd3aae9b624&entityId=8a7505eb-0800-4b72-85fe-44eeba584864&page=0&size=50',
-          {
-            method: 'GET',
-            headers: {
-              accept: '/',
-              Authorization:
-                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJoYW1tYWQuc2hhYmJpcisxMEBjbnR4dC50ZWNoIiwibmFtZSI6ImhhbW1hZC5zaGFiYmlyKzEwQGNudHh0LnRlY2giLCJpc1ZlcmlmaWVkIjpmYWxzZSwiaXNBY3RpdmUiOnRydWUsInVzZXJJZCI6MSwiaWF0IjoxNzQ0OTI3MDA5LCJleHAiOjE3NDU1MzcwMDl9.qG4tj1dj1bH1Ycu9gwDIcJ_pwhX1T1DrKDU4cwMZfmo',
-            },
-          },
-        );
-
-        const result = await response.json();
-        const transactions = result.data.data.transactions;
-        console.log(transactions);
-        const totals = transactions.reduce(
-          (acc, tx) => {
-            const amount = parseFloat(tx.amount?.amount ?? 0);
-            if (tx.credit_debit_indicator === 'CREDIT') {
-              acc.credit += amount;
-            } else if (tx.credit_debit_indicator === 'DEBIT') {
-              acc.debit += amount;
-            }
-            return acc;
-          },
-          {credit: 0, debit: 0},
-        );
-
-        console.log('Total CREDIT amount:', totals.credit.toFixed(2));
-        console.log('Total DEBIT amount:', totals.debit.toFixed(2));
-        setTransactions(transactions);
-        setCredit(totals.credit.toFixed(2));
-        setDebit(totals.debit.toFixed(2));
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      }
-    };
-
     fetchTransactions();
   }, []);
 
@@ -156,7 +167,7 @@ const HomeScreen = () => {
           <Text
             style={[
               styles.transactionAmount,
-              {color: isCredit ? Colors.greenColor : 'red'},
+              {color: isCredit ? Colors.greenColor : Colors.red},
             ]}>
             {isCredit ? '+' : '-'} {parseFloat(amount?.amount ?? 0).toFixed(2)}{' '}
             {amount?.currency || ''}
@@ -169,11 +180,17 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeContainer}>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.header}>
           <Icon name="menu" size={24} style={{color: Colors.white}} />
           <Text style={styles.logo}>Superxpense</Text>
-          <View style={{width: 24}} />
+          <TouchableOpacity
+            style={{width: 24}}
+            onPress={() => {
+              navigation.navigate('SignIn');
+            }}>
+            <Logout color={Colors.white} size={24} />
+          </TouchableOpacity>
         </View>
         <View style={styles.balanceContainer}>
           <View style={styles.balanceBox}>
@@ -193,7 +210,7 @@ const HomeScreen = () => {
               stroke: Colors.greenColor,
               strokeWidth: 2,
               fill: 'url(#gradient)',
-              color: '#fff',
+              color: Colors.white,
             }}
             contentInset={{top: 20, bottom: 20, left: 20}}
             curve={shape.curveNatural}>
@@ -201,22 +218,22 @@ const HomeScreen = () => {
             <CustomGridWithLabels data={graphData} />
           </LineChart>
         </View>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 18,
-            marginTop: 20,
-            fontWeight: '600',
-          }}>
-          Recent Transactions
-        </Text>
+        <Text style={styles.recentLabel}>Recent Transactions</Text>
         <FlatList
           data={transactions}
           keyExtractor={item => item.transaction_id}
           renderItem={({item}) => <TransactionCard transaction={item} />}
           contentContainerStyle={{paddingBottom: 40}}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[Colors.greenColor]}
+              tintColor={Colors.greenColor}
+            />
+          }
         />
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -237,7 +254,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  logo: {fontSize: 22, fontWeight: 'bold', color: Colors.white},
+  logo: {fontSize: 22, color: Colors.white, fontFamily: FontFamily.bold},
 
   balanceContainer: {
     flexDirection: 'row',
@@ -245,9 +262,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   balanceBox: {},
-  balanceLabel: {fontSize: 14, color: Colors.white, textAlign: 'center'},
-  assetValue: {fontSize: 22, fontWeight: 'bold', color: Colors.greenColor},
-  debtValue: {fontSize: 22, fontWeight: 'bold', color: Colors.red},
+  balanceLabel: {
+    fontSize: 14,
+    color: Colors.white,
+    textAlign: 'center',
+    fontFamily: FontFamily.semiBold,
+  },
+  assetValue: {
+    fontSize: 22,
+    FontFamily: FontFamily.bold,
+    color: Colors.greenColor,
+  },
+  debtValue: {fontSize: 22, FontFamily: FontFamily.bold, color: Colors.red},
 
   graphContainer: {
     height: 120,
@@ -256,27 +282,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  graphLabel: {color: Colors.white},
-
   transactionLink: {marginTop: 15, flexDirection: 'row', alignItems: 'center'},
-  card: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 16,
-    marginTop: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: Colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  },
-  cardAmount: {fontSize: 18, fontWeight: 'bold', marginTop: 6},
 
   transactionCard: {
     backgroundColor: Colors.transactionCard,
@@ -290,22 +296,30 @@ const styles = StyleSheet.create({
   transactionName: {
     fontSize: 14,
     color: Colors.white,
-    fontFamily: 'Arial',
+    FontFamily: FontFamily.regular,
     alignItems: 'center',
   },
   transactionDate: {
     fontSize: 12,
     color: Colors.transactionDate,
     marginTop: 4,
+    fontFamily: FontFamily.regular,
   },
   transactionAmount: {
     fontSize: 16,
-    fontWeight: 800,
+    fontFamily: FontFamily.bold,
   },
   transactionType: {
     fontSize: 12,
     color: Colors.transactionType,
     marginTop: 4,
+    fontFamily: FontFamily.regular,
+  },
+  recentLabel: {
+    color: Colors.white,
+    fontSize: 18,
+    marginTop: 20,
+    fontFamily: FontFamily.semiBold,
   },
 });
 

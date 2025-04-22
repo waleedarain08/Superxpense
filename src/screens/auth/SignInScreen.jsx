@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -13,13 +13,19 @@ import {
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
+import {API} from '../../utilis/Constant';
+import {FontFamily} from '../../utilis/Fonts';
+import LinkSDK from 'lean-react-native';
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [error, setError] = useState({email: '', password: ''});
   const [loading, setLoading] = useState(false);
-
+  const [lean, setShowLean] = useState(false);
+  const [customerID, setCustomerID] = useState('');
+  const [token, setToken] = useState('');
+  const Lean = useRef(null);
   const validate = () => {
     let isValid = true;
     const errors = {email: '', password: ''};
@@ -45,29 +51,50 @@ const SignInScreen = ({navigation}) => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        'https://superxpnse-be.onrender.com/auth/login',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({email, password}),
+      const response = await fetch(API.logIn, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({email, password}),
+      });
 
       const data = await response.json();
 
       if (response.ok) {
         console.log('Login successful:', data);
-        navigation.navigate('Main');
+
+        const token = data.data.accessToken;
+        console.log(token);
+
+        // navigation.navigate('Main');
         // Navigate or store token here
+        const responses = await fetch(
+          `https://superxpnsebe.dev.cntxt.tools/lean/customer-access-token?userId=${data.data.id}`,
+          {
+            method: 'GET',
+            headers: {
+              accept: '/',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const dataa = await responses.json();
+        if (responses.ok) {
+          setShowLean(true);
+          console.log('responses', dataa.data.customerId);
+          setCustomerID(dataa.data.customerId);
+          setToken(data.data.accessToken);
+          console.log(data.data.accessToken);
+        }
       } else {
         console.log('Login failed:', data);
+        setLoading(false);
         // Optionally display error
       }
     } catch (err) {
       console.error('Error during login:', err);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -85,69 +112,96 @@ const SignInScreen = ({navigation}) => {
           />
         </View>
         <Text style={styles.signInTxt}>Sign In</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Email"
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          {error.email ? <Text style={styles.error}>{error.email}</Text> : null}
-
-          <View style={styles.passwordContainer}>
-            <TextInput
-              placeholder="Password"
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={hidePassword}
-            />
+        {lean ? (
+          <View>
             <TouchableOpacity
-              onPress={() => setHidePassword(!hidePassword)}
-              style={styles.eyeIcon}>
-              <Icon
-                name={hidePassword ? 'eye-off' : 'eye'}
-                size={20}
-                color={Colors.greenColor}
-              />
+              style={styles.signInButton}
+              onPress={() =>
+                Lean.current.link({
+                  customer_id: customerID,
+                  permissions: [
+                    'identity',
+                    'accounts',
+                    'transactions',
+                    'balance',
+                  ],
+                  access_token: token,
+                })
+              }>
+              <Text style={styles.signInText}>Link Accounts</Text>
             </TouchableOpacity>
+
+            <LinkSDK
+              ref={Lean}
+              appToken="6420a4cb-7fc4-4e6e-bd98-156435654be9"
+              sandbox
+            />
           </View>
-          {error.password ? (
-            <Text style={styles.error}>{error.password}</Text>
-          ) : null}
-          <TouchableOpacity
-            onPress={handleSignIn}
-            style={styles.signInButton}
-            disabled={loading}>
-            {loading ? (
-              <Text style={styles.signInText}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={{color: '#fff', marginRight: 8}}>
-                    Signing in
-                  </Text>
-                  <ActivityIndicator size="small" color="#fff" />
-                </View>
+        ) : (
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Email"
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            {error.email ? (
+              <Text style={styles.error}>{error.email}</Text>
+            ) : null}
+
+            <View style={styles.passwordContainer}>
+              <TextInput
+                placeholder="Password"
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={hidePassword}
+              />
+              <TouchableOpacity
+                onPress={() => setHidePassword(!hidePassword)}
+                style={styles.eyeIcon}>
+                <Icon
+                  name={hidePassword ? 'eye-off' : 'eye'}
+                  size={20}
+                  color={Colors.greenColor}
+                />
+              </TouchableOpacity>
+            </View>
+            {error.password ? (
+              <Text style={styles.error}>{error.password}</Text>
+            ) : null}
+            <TouchableOpacity
+              onPress={handleSignIn}
+              style={styles.signInButton}
+              disabled={loading}>
+              {loading ? (
+                <Text style={styles.signInText}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={styles.signingText}>Signing in</Text>
+                    <ActivityIndicator size="small" color={Colors.white} />
+                  </View>
+                </Text>
+              ) : (
+                <Text style={styles.signInText}>Sign In</Text>
+              )}
+            </TouchableOpacity>
+            <Text style={styles.signupText}>
+              Don't have an account?{'  '}
+              <Text
+                style={{
+                  textDecorationLine: 'underline',
+                  color: Colors.greenColor,
+                }}
+                onPress={() => {
+                  navigation.navigate('SignUp');
+                }}>
+                Sign Up
               </Text>
-            ) : (
-              <Text style={styles.signInText}>Sign In</Text>
-            )}
-          </TouchableOpacity>
-          <Text style={styles.signupText}>
-            Don't have an account?{'  '}
-            <Text
-              style={{
-                textDecorationLine: 'underline',
-                color: Colors.greenColor,
-              }}
-              onPress={() => {
-                navigation.navigate('SignUp');
-              }}>
-              Sign Up
             </Text>
-          </Text>
-        </View>
+          </View>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -166,13 +220,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: Colors.splashColor,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 100,
-    color: Colors.white,
-  },
   inputContainer: {
     marginBottom: 40,
   },
@@ -184,12 +231,14 @@ const styles = StyleSheet.create({
     height: 55,
     marginTop: 22,
     color: Colors.white,
+    fontFamily: FontFamily.regular,
   },
   error: {
-    color: 'red',
+    color: Colors.red,
     marginTop: 4,
     marginLeft: 4,
     fontSize: 12,
+    fontFamily: FontFamily.regular,
   },
   logo: {
     width: 250,
@@ -200,7 +249,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   signInButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: Colors.btnColor,
     height: 55,
     marginTop: 50,
     justifyContent: 'center',
@@ -210,7 +259,7 @@ const styles = StyleSheet.create({
   signInText: {
     color: Colors.white,
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontFamily: FontFamily.bold,
     fontSize: 16,
   },
   eyeIcon: {
@@ -222,11 +271,17 @@ const styles = StyleSheet.create({
     color: Colors.white,
     textAlign: 'center',
     marginTop: 20,
+    fontFamily: FontFamily.regular,
   },
   signInTxt: {
     color: Colors.white,
     textAlign: 'center',
     fontSize: 32,
-    fontWeight: 'bold',
+    fontFamily: FontFamily.bold,
+  },
+  signingText: {
+    color: Colors.white,
+    marginRight: 8,
+    fontFamily: FontFamily.regular,
   },
 });

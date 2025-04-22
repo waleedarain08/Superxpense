@@ -130,13 +130,11 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 35,
-    // backgroundColor: Colors.inactiveTabBgColor,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: Platform.OS === 'ios' ? 40 : 40,
   },
   activeIconCircle: {
-    // backgroundColor: Colors.lightpurple,
     width: 60,
     height: 60,
     borderRadius: 35,

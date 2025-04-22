@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {Colors} from '../../utilis/Colors';
+import {API} from '../../utilis/Constant';
+import {FontFamily} from '../../utilis/Fonts';
 
 const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -58,16 +60,13 @@ const SignUpScreen = ({navigation}) => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        'https://superxpnse-be.onrender.com/auth/signup',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({email, password}),
+      const response = await fetch(API.signUp, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({email, password}),
+      });
 
       const data = await response.json();
 
@@ -201,7 +200,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontFamily: FontFamily.bold,
     textAlign: 'center',
     color: Colors.white,
   },
@@ -210,18 +209,20 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.white,
     borderRadius: 20,
     paddingHorizontal: 12,
     height: 55,
     marginTop: 16,
+    fontFamily: FontFamily.regular,
     color: Colors.white,
   },
   error: {
-    color: 'red',
+    color: Colors.red,
     marginTop: 4,
     marginLeft: 4,
     fontSize: 12,
+    fontFamily: FontFamily.regular,
   },
   passwordWrapper: {
     position: 'relative',
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
     top: 34,
   },
   signUpButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: Colors.btnColor,
     height: 55,
     justifyContent: 'center',
     alignItems: 'center',
@@ -241,9 +242,9 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   signUpText: {
-    color: '#fff',
+    color: Colors.white,
     textAlign: 'center',
-    fontWeight: 'bold',
+    FontFamily: FontFamily.bold,
   },
   logo: {
     width: 250,
@@ -254,5 +255,6 @@ const styles = StyleSheet.create({
     color: Colors.white,
     textAlign: 'center',
     marginTop: 20,
+    fontFamily: FontFamily.regular,
   },
 });

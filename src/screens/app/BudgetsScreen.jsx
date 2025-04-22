@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import TabSwitcher from '../../component/TabSwitcher';
 import {Colors} from '../../utilis/Colors';
 import DualRingProgress from '../../component/DualRingProgress';
+import {FontFamily} from '../../utilis/Fonts';
 
 const BudgetsScreen = () => {
   const upcomingBills = [
@@ -151,18 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 30,
   },
-  title: {fontSize: 20, fontWeight: '700', color: Colors.white},
-
-  tabContainer: {flexDirection: 'row', marginBottom: 16},
-  activeTab: {flex: 1, padding: 10, borderRadius: 10},
-  inactiveTab: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#F0F0F0',
-    borderRadius: 10,
-  },
-  tabText: {textAlign: 'center', color: '#fff', fontWeight: '600'},
-  tabInactiveText: {textAlign: 'center', color: '#777'},
+  title: {fontSize: 20, fontFamily: FontFamily.bold, color: Colors.white},
 
   budgetSummary: {
     backgroundColor: Colors.black,
@@ -174,46 +164,65 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     color: Colors.transactionDate,
-    fontWeight: '600',
+    fontFamily: FontFamily.semiBold,
   },
-  bold: {fontWeight: '800', color: Colors.white, marginTop: 5, marginBottom: 5, fontSize:15},
+  bold: {
+    FontFamily: FontFamily.bold,
+    color: Colors.white,
+    marginTop: 5,
+    marginBottom: 5,
+    fontSize: 15,
+  },
   details: {
     marginLeft: 40,
   },
-  notice: {textAlign: 'center', color: '#666'},
-  daysLeft: {textAlign: 'center', fontSize: 12, color: '#999'},
+  notice: {
+    textAlign: 'center',
+    color: Colors.transactionDate,
+    fontFamily: FontFamily.regular,
+  },
+  daysLeft: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: Colors.transactionDate,
+    fontFamily: FontFamily.regular,
+  },
 
   sectionTitle: {
-    fontWeight: '700',
-    fontSize: 16,
+    FontFamily: FontFamily.bold,
+    fontSize: 20,
     marginBottom: 20,
     color: Colors.white,
   },
   billCard: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.white,
     padding: 8,
     height: 120,
     borderRadius: 12,
     width: 120,
     marginRight: 12,
   },
-  billDate: {fontWeight: '600'},
+  billDate: {FontFamily: FontFamily.semiBold},
   billTitle: {
     fontSize: 12,
-    color: '#333',
+    color: Colors.black,
     marginVertical: 5,
     textAlign: 'center',
   },
-  billAmount: {fontWeight: '700', color: '#000'},
+  billAmount: {FontFamily: FontFamily.bold, color: Colors.black},
 
-  myBudget: {marginTop: 30},
+  myBudget: {marginTop: 30, marginBottom: 20},
   budgetItem: {flexDirection: 'row', alignItems: 'center'},
   budgetIcon: {width: 40, height: 40, marginRight: 8},
-  budgetLabel: {fontWeight: '600', marginBottom: 4, color: Colors.white},
+  budgetLabel: {
+    FontFamily: FontFamily.semiBold,
+    marginBottom: 4,
+    color: Colors.white,
+  },
   progressBarBackground: {
     width: '100%',
     height: 8,
-    backgroundColor: '#ddd',
+    backgroundColor: Colors.transactionType,
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 4,
@@ -221,9 +230,13 @@ const styles = StyleSheet.create({
   progressBarFill: {
     width: '90%',
     height: '100%',
-    backgroundColor: '#FF8C00',
+    backgroundColor: Colors.progressColor,
   },
-  budgetAmount: {fontSize: 12, color: '#555'},
+  budgetAmount: {
+    fontSize: 12,
+    color: Colors.transactionDate,
+    fontFamily: FontFamily.regular,
+  },
 
   safeStyle: {
     flex: 1,
@@ -232,6 +245,7 @@ const styles = StyleSheet.create({
   },
   headingDetails: {
     color: Colors.transactionDate,
+    fontFamily: FontFamily.regular,
   },
 });
 

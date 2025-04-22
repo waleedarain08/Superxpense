@@ -1,0 +1,16 @@
+{
+  "splash": {
+    "findPartners": "Find & connect with activity partners!"
+  },
+  "welcome": {
+    "meetFriends": "Find like-minded people to enjoy your favorite activities together. Whether it's golf, yoga, or any other sport, connect and make new friends effortlessly!",
+    "activityPartners": "Looking for someone to play golf, do yoga, or try a new activity with? Join a vibrant community and start connecting today!",
+    "staySocial": "Join an exciting community of sports and activity enthusiasts. Plan workouts, find partners, and stay motivated together!",
+    "connectRepeat": "Join a community of sports and activity lovers. Whether it’s golf, yoga, or any other activity, find partners and stay active together!"
+  },
+  "onBoarding": {
+    "intro": "You're one of a kind. Your profile should be too.",
+    "stepOne": "Last name is optional, and only shared with matches",
+    "stepTwo": "If you do not wish to receive marketing communication about our products and services. check this box."
+  }
+}
