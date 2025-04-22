@@ -40,7 +40,6 @@ const SignInScreen = ({navigation}) => {
   };
 
   const handleSignIn = async () => {
-    //navigation.navigate('Main');
     if (!validate()) return;
 
     setLoading(true);
@@ -60,15 +59,15 @@ const SignInScreen = ({navigation}) => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('Login successful:', data);
+        alert('Login successfull');
         navigation.navigate('Main');
         // Navigate or store token here
       } else {
-        console.log('Login failed:', data);
+        alert('Login failed', data.message);
         // Optionally display error
       }
     } catch (err) {
-      alert(err);
+      alert(err.message);
     } finally {
       setLoading(false);
     }

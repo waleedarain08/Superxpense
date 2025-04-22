@@ -72,17 +72,17 @@ const SignUpScreen = ({navigation}) => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('Signup successful:', data);
+        //console.log('Signup successful:', data);
         navigation.navigate('SignIn');
         Alert.alert('Success', 'Signup successful');
         // You can navigate to another screen or show a success message here
       } else {
-        console.log('Signup failed:', data);
+        //console.log('Signup failed:', data);
         Alert.alert('Error', data.message);
         // Optional: set an error state and display it on screen
       }
     } catch (err) {
-      console.error('Error during signup:', err);
+      Alert.alert(err.message || 'Something went wrong');
     } finally {
       setLoading(false);
     }
