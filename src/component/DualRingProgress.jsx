@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Svg, {Circle} from 'react-native-svg';
 import {Colors} from '../utilis/Colors';
+import {FontFamily} from '../utilis/Fonts';
 
 const CIRCLE_LENGTH = 2 * Math.PI * 80; // circumference
 const RADIUS = 70;
@@ -15,8 +16,13 @@ const DualRingProgress = () => {
           cx={80}
           cy={80}
           r={RADIUS}
+<<<<<<< HEAD
           stroke="#9F2B68"
           strokeWidth={10}
+=======
+          stroke={Colors.white}
+          strokeWidth={12}
+>>>>>>> strcuture
           fill="none"
         />
         <Circle
@@ -45,10 +51,17 @@ const DualRingProgress = () => {
           fill="none"
         />
         <Circle
+<<<<<<< HEAD
           cx={65}
           cy={65}
           r={50}
           stroke={Colors.greenColor}
+=======
+          cx={55}
+          cy={55}
+          r={40}
+          stroke={Colors.logoColor}
+>>>>>>> strcuture
           strokeWidth={10}
           strokeDasharray={2 * Math.PI * 40}
           strokeDashoffset={2 * Math.PI * 40 * 0.25} // 75% fill
@@ -90,10 +103,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     color: Colors.white,
+    fontFamily: FontFamily.regular,
   },
   amount: {
     fontSize: 13,
-    fontWeight:'800',
+    FontFamily: FontFamily.extraBold,
     color: Colors.greenColor,
   },
 });

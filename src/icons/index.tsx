@@ -223,3 +223,13 @@ export const Home: React.FC<IconProps> = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const Logout: React.FC<IconProps> = ({color, size, style}) => (
+  <VectorIcon
+    name="logout"
+    color={color}
+    size={size}
+    type="AntDesign"
+    style={style}
+  />
+);

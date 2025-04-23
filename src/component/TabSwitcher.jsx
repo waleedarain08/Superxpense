@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {Colors} from '../utilis/Colors';
+import {FontFamily} from '../utilis/Fonts';
 
 const TabSwitcher = () => {
   const [activeTab, setActiveTab] = useState('Budgets');
@@ -46,32 +48,31 @@ const TabSwitcher = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#F0F2F5',
+    backgroundColor: Colors.transactionCard,
     alignSelf: 'center',
-    borderRadius:15,
+    borderRadius: 15,
   },
   tab: {
     height: 50,
     minWidth: '50%',
     justifyContent: 'center',
-    borderRadius:15,
+    borderRadius: 15,
     alignItems: 'center',
   },
   activeTab: {
-    backgroundColor: '#4D6EF7', // Solid blue color
-
+    backgroundColor: Colors.btnColor, // Solid blue color
   },
   inactiveTab: {
     backgroundColor: 'transparent',
   },
   text: {
-    fontWeight: '600',
+    fontFamily: FontFamily.semiBold,
   },
   activeText: {
-    color: 'white',
+    color: Colors.white,
   },
   inactiveText: {
-    color: '#888',
+    color: Colors.transactionDate,
   },
 });
 
