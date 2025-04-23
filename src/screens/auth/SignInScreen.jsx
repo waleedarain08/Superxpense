@@ -101,14 +101,20 @@ const SignInScreen = ({navigation}) => {
     if (Lean.current) {
       console.log('customerID', customerID);
       console.log('leanToken', leanToken);
-      //navigation.navigate('Main');  
+      //navigation.navigate('Main');
       Lean.current.connect({
         customer_id: customerID,
-        permissions: ["identity","accounts","balance","transactions", "payments"],
+        permissions: [
+          'identity',
+          'accounts',
+          'balance',
+          'transactions',
+          'payments',
+        ],
         access_token: leanToken,
       });
     }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.safeStyle}>
@@ -125,7 +131,8 @@ const SignInScreen = ({navigation}) => {
           <View style={{marginBottom: -80}}>
             <TouchableOpacity
               style={styles.linkButton}
-              onPress={() =>connectLean()}>
+              // onPress={() =>connectLean()}
+              onPress={() => navigation.navigate('Main')}>
               <Text style={styles.signInText}>Link Accounts</Text>
             </TouchableOpacity>
 
@@ -149,7 +156,7 @@ const SignInScreen = ({navigation}) => {
           </View>
         ) : (
           <View style={styles.inputContainer}>
-             <Text style={styles.signInTxt}>Sign In</Text>
+            <Text style={styles.signInTxt}>Sign In</Text>
             <TextInput
               placeholder="Email Address"
               style={styles.input}
@@ -186,7 +193,8 @@ const SignInScreen = ({navigation}) => {
               <Text style={styles.error}>{error.password}</Text>
             ) : null}
             <TouchableOpacity
-              onPress={handleSignIn}
+              // onPress={handleSignIn}
+              onPress={() => navigation.navigate('Main')}
               style={styles.signInButton}
               disabled={loading}>
               {loading ? (
@@ -272,7 +280,7 @@ const styles = StyleSheet.create({
   linkButton: {
     backgroundColor: Colors.btnColor,
     height: 55,
-   // marginTop: 200,
+    // marginTop: 200,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
