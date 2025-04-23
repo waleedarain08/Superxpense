@@ -1,0 +1,196 @@
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
+import {PieChart} from 'react-native-svg-charts';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Car, Credit, Sub} from '../assets/svgs';
+import {Colors} from '../utilis/Colors';
+import {FontFamily} from '../utilis/Fonts';
+
+const {width} = Dimensions.get('window');
+
+const SpendingSummary = () => {
+  const spendingData = [
+    {
+      key: '1',
+      amount: 6000,
+      label: 'Credit Card Payment',
+      color: Colors.lightRed,
+      icon: <Credit />,
+    },
+    {
+      key: '2',
+      amount: 1000,
+      label: 'Transportation Services',
+      color: Colors.purple,
+      icon: <Car />,
+    },
+    {
+      key: '3',
+      amount: 300,
+      label: 'Subscription',
+      color: Colors.lightyellow,
+      icon: <Sub />,
+    },
+  ];
+
+  const total = 10000;
+  const chartData = spendingData.map(item => ({
+    value: item.amount,
+    svg: {fill: item.color},
+    key: item.key,
+  }));
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Spending Summary</Text>
+      <Text style={styles.subtitle}>
+        You have spent {total.toLocaleString()} AED so far this month.
+      </Text>
+
+      {/* Donut Chart */}
+      <View style={styles.chartContainer}>
+        <PieChart
+          style={styles.pieChart}
+          data={chartData}
+          innerRadius={60}
+          outerRadius={90}
+          padAngle={0}
+        />
+        <View style={styles.chartCenter}>
+          <Text style={styles.chartCurrency}>AED</Text>
+          <Text style={styles.chartAmount}>{total.toLocaleString()}</Text>
+          <Text style={styles.chartMonth}>April 2025</Text>
+        </View>
+      </View>
+
+      {/* Spending List */}
+
+      {spendingData.map((item, index) => (
+        <TouchableOpacity
+          key={item.key}
+          style={[
+            styles.listItem,
+            index !== spendingData.length - 1 && styles.listItemBorder, // only apply border if not last item
+          ]}>
+          <View style={[styles.iconCircle, {backgroundColor: item.color}]}>
+            {item.icon}
+          </View>
+          <View style={{flex: 1}}>
+            <Text style={styles.amountText}>
+              {item.amount.toLocaleString()} AED
+            </Text>
+            <Text style={styles.labelText}>{item.label}</Text>
+          </View>
+          <Icon name="chevron-forward" size={12} color={Colors.black} />
+        </TouchableOpacity>
+      ))}
+
+      {/* Breakdown Button */}
+      <TouchableOpacity style={styles.breakdownButton}>
+        <Text style={styles.breakdownText}>See full breakdown</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default SpendingSummary;
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.white,
+    borderRadius: 20,
+    width: width - 32,
+    alignSelf: 'center',
+    marginTop: 15,
+    padding: 16,
+  },
+  title: {
+    fontFamily: FontFamily.semiBold,
+    fontSize: 14,
+    color: Colors.txtColor,
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 16,
+    fontFamily: FontFamily.regular,
+    color: Colors.lightTxtColor,
+    marginBottom: 30,
+  },
+  chartContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    height: 200, // ensures enough space
+    width: '100%',
+  },
+  pieChart: {
+    height: 180,
+    width: 180,
+  },
+  chartCenter: {
+    position: 'absolute',
+    alignItems: 'center',
+  },
+  chartCurrency: {
+    fontSize: 15,
+    fontFamily: FontFamily.bold,
+    color: Colors.boldText,
+  },
+  chartAmount: {
+    fontSize: 20,
+    fontFamily: FontFamily.bold,
+    color: Colors.boldText,
+  },
+  chartMonth: {
+    fontSize: 12,
+    fontFamily: FontFamily.medium,
+    color: Colors.boldTxtLight,
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  iconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  amountText: {
+    fontSize: 16,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+  },
+  labelText: {
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.black,
+  },
+  breakdownButton: {
+    marginTop: 10,
+    backgroundColor: Colors.lightestGray,
+    borderRadius: 10,
+    height: 36,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  breakdownText: {
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
+  },
+  listItemBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.newBorderColor, // or any color you prefer
+  },
+});
