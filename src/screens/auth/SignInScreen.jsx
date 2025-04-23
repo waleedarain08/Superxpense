@@ -24,7 +24,7 @@ const SignInScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [lean, setShowLean] = useState(false);
   const [customerID, setCustomerID] = useState('');
-  const [token, setToken] = useState('');
+  const [leanToken, setLeanToken] = useState('');
   const Lean = useRef(null);
   const validate = () => {
     let isValid = true;
@@ -63,12 +63,8 @@ const SignInScreen = ({navigation}) => {
 
       if (response.ok) {
         console.log('Login successful:', data);
-
         const token = data.data.accessToken;
-        console.log(token);
-
-        // navigation.navigate('Main');
-        // Navigate or store token here
+        //console.log(token);
         const responses = await fetch(
           `https://superxpnsebe.dev.cntxt.tools/lean/customer-access-token?userId=${data.data.id}`,
           {
@@ -81,24 +77,38 @@ const SignInScreen = ({navigation}) => {
         );
         const dataa = await responses.json();
         if (responses.ok) {
-          setShowLean(true);
-          console.log('responses', dataa.data.customerId);
+          alert('Logged in successfully');
+          //console.log('responses', dataa.data);
           setCustomerID(dataa.data.customerId);
-          setToken(data.data.accessToken);
-          console.log(data.data.accessToken);
+          setLeanToken(data.data.accessToken);
+          setShowLean(true);
+          //console.log(data.data.accessToken);
         }
       } else {
-        console.log('Login failed:', data);
+        alert(data.message);
         setLoading(false);
         // Optionally display error
       }
     } catch (err) {
-      console.error('Error during login:', err);
+      alert(err.message);
       setLoading(false);
     } finally {
       setLoading(false);
     }
   };
+
+  const connectLean = () => {
+    if (Lean.current) {
+      console.log('customerID', customerID);
+      console.log('leanToken', leanToken);
+      //navigation.navigate('Main');  
+      Lean.current.connect({
+        customer_id: customerID,
+        permissions: ["identity","accounts","balance","transactions", "payments"],
+        access_token: leanToken,
+      });
+    }
+  }
 
   return (
     <SafeAreaView style={styles.safeStyle}>
@@ -111,41 +121,43 @@ const SignInScreen = ({navigation}) => {
             style={styles.logo}
           />
         </View>
-        <Text style={styles.signInTxt}>Sign In</Text>
         {lean ? (
-          <View>
+          <View style={{marginBottom: -80}}>
             <TouchableOpacity
-              style={styles.signInButton}
-              onPress={() =>
-                Lean.current.link({
-                  customer_id: customerID,
-                  permissions: [
-                    'identity',
-                    'accounts',
-                    'transactions',
-                    'balance',
-                  ],
-                  access_token: token,
-                })
-              }>
+              style={styles.linkButton}
+              onPress={() =>connectLean()}>
               <Text style={styles.signInText}>Link Accounts</Text>
             </TouchableOpacity>
 
             <LinkSDK
               ref={Lean}
+              webViewProps={{
+                androidHardwareAccelerationDisabled: true,
+              }}
               appToken="6420a4cb-7fc4-4e6e-bd98-156435654be9"
               sandbox
+              onSuccess={response => {
+                console.log('Linking successfull', response);
+                setShowLean(false);
+                navigation.navigate('Main');
+              }}
+              onError={error => {
+                console.log('Linking failed', error);
+                setShowLean(false);
+              }}
             />
           </View>
         ) : (
           <View style={styles.inputContainer}>
+             <Text style={styles.signInTxt}>Sign In</Text>
             <TextInput
-              placeholder="Email"
+              placeholder="Email Address"
               style={styles.input}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              placeholderTextColor={Colors.greyColor}
             />
             {error.email ? (
               <Text style={styles.error}>{error.email}</Text>
@@ -158,6 +170,7 @@ const SignInScreen = ({navigation}) => {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={hidePassword}
+                placeholderTextColor={Colors.greyColor}
               />
               <TouchableOpacity
                 onPress={() => setHidePassword(!hidePassword)}
@@ -252,6 +265,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.btnColor,
     height: 55,
     marginTop: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+  },
+  linkButton: {
+    backgroundColor: Colors.btnColor,
+    height: 55,
+   // marginTop: 200,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,

@@ -11,4 +11,5 @@ export const Colors = {
   greenColor: '#36f8b8',
   btnColor: '#007bff',
   progressColor: '#FF8C00',
+  greyColor : '#999',
 };
