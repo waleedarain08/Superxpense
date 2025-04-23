@@ -1,10 +1,11 @@
-import {Platform, StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View, Image} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {navigationRef} from './NavigationRef';
 import SplashScreen from '../screens/auth/SplashScreen';
+import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import BudgetsScreen from '../screens/app/BudgetsScreen';
 import InsightsScreen from '../screens/app/InsightsScreen';
 import CalendarScreen from '../screens/app/CalendarScreen';
@@ -34,6 +35,7 @@ const Navigation = () => {
             gestureEnabled: false,
           }}
         />
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignupScreen} />
         <Stack.Screen name="Main" component={BottomNavigator} />
@@ -49,7 +51,7 @@ const BottomNavigator = () => {
         initialRouteName="Home"
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: 'black',
+            backgroundColor: Colors.tabBarbackground,
             borderTopWidth: 0,
             marginBottom: 7,
           },
@@ -63,8 +65,8 @@ const BottomNavigator = () => {
             fontSize: 12,
             marginTop: 2,
           },
-          tabBarActiveTintColor: Colors.greenColor,
-          tabBarInactiveTintColor: 'gray',
+          tabBarActiveTintColor: Colors.activeTabColor,
+          tabBarInactiveTintColor: Colors.inactiveTabColor,
         }}>
         <BottomStack.Screen
           name="Home"
@@ -72,7 +74,10 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Home size={30} color={focused ? Colors.greenColor : 'gray'} />
+              <Image 
+              source={require('../assets/images/homeBottom.png')}
+              style={{tintColor:focused ? Colors.activeTabColor : Colors.inactiveTabColor, height:25,width:25}}
+              />
             ),
           }}
         />
@@ -82,10 +87,9 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Icon
-                name="wallet" // example icon
-                size={30}
-                color={focused ? Colors.greenColor : 'gray'}
+              <Image 
+              source={require('../assets/images/chartBottom.png')}
+              style={{tintColor:focused ? Colors.activeTabColor : Colors.inactiveTabColor, height:25,width:25}}
               />
             ),
           }}
@@ -96,24 +100,22 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Icon
-                name="chart-bar" // example icon
-                size={30}
-                color={focused ? Colors.greenColor : 'gray'}
+              <Image 
+              source={require('../assets/images/bulbBottom.png')}
+              style={{tintColor:focused ? Colors.activeTabColor : Colors.inactiveTabColor, height:25,width:25}}
               />
             ),
           }}
         />
         <BottomStack.Screen
-          name="Calendar"
+          name="Settings"
           component={CalendarScreen}
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Icon
-                name="calendar" // example icon
-                size={30}
-                color={focused ? Colors.greenColor : 'gray'}
+              <Image 
+              source={require('../assets/images/settingsBottom.png')}
+              style={{tintColor:focused ? Colors.activeTabColor : Colors.inactiveTabColor, height:25,width:25}}
               />
             ),
           }}

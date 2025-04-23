@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, Image, Animated} from 'react-native';
+import { View, Text, Image, StyleSheet, StatusBar , Animated } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {Colors} from '../../utilis/Colors';
+
 
 const SplashScreen = ({navigation}) => {
   const fadeAnim = new Animated.Value(0);
@@ -24,15 +26,21 @@ const SplashScreen = ({navigation}) => {
     // Navigate to main app after splash screen
     const timer = setTimeout(() => {
       //onFinish();
-      navigation.replace('SignIn');
+      navigation.replace('Welcome');
     }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Animated.View
+    // <View style={styles.container}>
+        <LinearGradient
+          colors={['#d4fbe8', '#f5f5f9']} // Spread green color more
+          start={{ x: 0.0, y: 0.0 }}
+          end={{ x: 1.0, y: 1.0 }}
+          style={styles.container}
+        >
+          <Animated.View
         style={[
           styles.content,
           {
@@ -40,20 +48,23 @@ const SplashScreen = ({navigation}) => {
             transform: [{scale: scaleAnim}],
           },
         ]}>
-        <Image
-          source={require('../../assets/images/logoO.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </Animated.View>
-    </View>
+          <Image
+            source={require('./../../assets/images/logo.png')} // Replace with your icon
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <Text style={styles.text}>Superxpense</Text>
+          </Animated.View>
+        </LinearGradient>
+      
+    // </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.splashColor,
+    //backgroundColor: Colors.white,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -61,9 +72,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: 250,
-    height: 250,
-    borderRadius: 20,
+    width: 70,
+    height: 78,
+    marginBottom: 20,
+   // borderRadius: 20,
+  },
+  text: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: '#072B2E',
   },
 });
 

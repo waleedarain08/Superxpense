@@ -12,4 +12,8 @@ export const Colors = {
   btnColor: '#007bff',
   progressColor: '#FF8C00',
   greyColor : '#999',
+  bgColor:'#F5F5F9',
+  tabBarbackground: '#FDFDFD',
+  activeTabColor: '#0D2D2D',
+  inactiveTabColor: '#81878766',
 };
