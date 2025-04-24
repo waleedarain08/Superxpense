@@ -28,7 +28,7 @@ const WelcomeScreen = ({navigation}) => {
       </View>
 
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.emailButton} onPress = {()=>navigation.navigate('Main')}>
+        <TouchableOpacity style={styles.emailButton} onPress = {()=>navigation.navigate('SignUp')}>
           <Text style={styles.buttonText}>Continue with Email</Text>
         </TouchableOpacity>
 

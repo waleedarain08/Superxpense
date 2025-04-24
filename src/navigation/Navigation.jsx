@@ -10,11 +10,10 @@ import BudgetsScreen from '../screens/app/BudgetsScreen';
 import InsightsScreen from '../screens/app/InsightsScreen';
 import CalendarScreen from '../screens/app/CalendarScreen';
 import HomeScreen from '../screens/app/HomeScreen';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Home} from '../icons';
 import {Colors} from '../utilis/Colors';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
+import OnBoardingScreen from '../screens/auth/OnBoardingScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -38,6 +37,7 @@ const Navigation = () => {
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignupScreen} />
+        <Stack.Screen name="OnBoarding" component={OnBoardingScreen} />
         <Stack.Screen name="Main" component={BottomNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -74,9 +74,15 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Image 
-              source={require('../assets/images/homeBottom.png')}
-              style={{tintColor:focused ? Colors.activeTabColor : Colors.inactiveTabColor, height:25,width:25}}
+              <Image
+                source={require('../assets/images/homeBottom.png')}
+                style={{
+                  tintColor: focused
+                    ? Colors.activeTabColor
+                    : Colors.inactiveTabColor,
+                  height: 25,
+                  width: 25,
+                }}
               />
             ),
           }}
@@ -87,9 +93,15 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Image 
-              source={require('../assets/images/chartBottom.png')}
-              style={{tintColor:focused ? Colors.activeTabColor : Colors.inactiveTabColor, height:25,width:25}}
+              <Image
+                source={require('../assets/images/chartBottom.png')}
+                style={{
+                  tintColor: focused
+                    ? Colors.activeTabColor
+                    : Colors.inactiveTabColor,
+                  height: 25,
+                  width: 25,
+                }}
               />
             ),
           }}
@@ -100,9 +112,15 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Image 
-              source={require('../assets/images/bulbBottom.png')}
-              style={{tintColor:focused ? Colors.activeTabColor : Colors.inactiveTabColor, height:25,width:25}}
+              <Image
+                source={require('../assets/images/bulbBottom.png')}
+                style={{
+                  tintColor: focused
+                    ? Colors.activeTabColor
+                    : Colors.inactiveTabColor,
+                  height: 25,
+                  width: 25,
+                }}
               />
             ),
           }}
@@ -113,9 +131,15 @@ const BottomNavigator = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (
-              <Image 
-              source={require('../assets/images/settingsBottom.png')}
-              style={{tintColor:focused ? Colors.activeTabColor : Colors.inactiveTabColor, height:25,width:25}}
+              <Image
+                source={require('../assets/images/settingsBottom.png')}
+                style={{
+                  tintColor: focused
+                    ? Colors.activeTabColor
+                    : Colors.inactiveTabColor,
+                  height: 25,
+                  width: 25,
+                }}
               />
             ),
           }}

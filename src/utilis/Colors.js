@@ -11,8 +11,8 @@ export const Colors = {
   greenColor: '#36f8b8',
   btnColor: '#007bff',
   progressColor: '#FF8C00',
-  greyColor : '#999',
-  bgColor:'#F5F5F9',
+  greyColor: '#999',
+  bgColor: '#F5F5F9',
   tabBarbackground: '#FDFDFD',
   activeTabColor: '#0D2D2D',
   inactiveTabColor: '#81878766',
@@ -36,5 +36,6 @@ export const Colors = {
   newBorderColor: '#0000001A',
   progressBackground: '#F5F5F9',
   lightProgressabrColor: '#F5F5F999',
-
+  stepsTextColor: '#1C274C',
+  lightTxt: '#606776',
 };

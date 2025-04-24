@@ -1755,6 +1755,30 @@ PODS:
     - React-logger (= 0.79.1)
     - React-perflogger (= 0.79.1)
     - React-utils (= 0.79.1)
+  - RNCPicker (2.11.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (4.10.0):
     - DoubleConversion
     - glog
@@ -1957,6 +1981,7 @@ DEPENDENCIES:
   - ReactAppDependencyProvider (from `build/generated/ios`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -2112,6 +2137,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCPicker:
+    :path: "../node_modules/@react-native-picker/picker"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -2194,6 +2221,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: f3426eaf6dabae0baec543cd7bac588b6f59210c
   ReactCodegen: 3288d61658273d72fbd348a74b59710b9790615f
   ReactCommon: 9f975582dc535de1de110bdb46d4553140a77541
+  RNCPicker: 04b02770d871072243f4a95fa2523b9c3398a2f5
   RNScreens: c5c07a86e4088ce92f0d3854082250dfa9c61f75
   RNSVG: ee32efbed652c5151fd3f98bed13c68af285bc38
   RNVectorIcons: 0d358eb5b59aa90c8c148e745edd3161d49eb6c5
