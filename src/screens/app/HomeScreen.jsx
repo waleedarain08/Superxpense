@@ -352,7 +352,7 @@ const HomeScreen = () => {
 
   const tabs = ['All Account', 'Overview', 'Spending'];
   return (
-    <SafeAreaView>
+    <View>
       <View style={styles.container}>
         <View style={styles.topRow}>
           <TouchableOpacity style={styles.accountSelector}>
@@ -416,7 +416,7 @@ const HomeScreen = () => {
         </LinearGradient>
         <BudgetCard />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -425,7 +425,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   safeView: {
     paddingHorizontal: 20,
-    marginBottom: 100,
+    marginBottom: 150,
   },
   container: {
     backgroundColor: Colors.background,
@@ -436,6 +436,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: 50,
   },
   accountSelector: {
     flexDirection: 'row',
@@ -523,7 +524,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   recentLabel2: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: FontFamily.regular,
     color: Colors.black,
   },

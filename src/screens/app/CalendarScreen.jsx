@@ -14,11 +14,11 @@ const CalendarScreen = () => {
           style={{
             paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
             flex: 1,
-            backgroundColor: '#000000',
+            backgroundColor: '#fffff',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{color:"#fff"}}>Coming Soon</Text>
+          <Text style={{color:"#000"}}>Coming Soon</Text>
         </SafeAreaView>
   );
 };

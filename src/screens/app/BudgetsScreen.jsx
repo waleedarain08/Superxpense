@@ -57,87 +57,97 @@ const BudgetsScreen = () => {
   ];
 
   return (
-    <SafeAreaView style={styles.safeStyle}>
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <View style={{width: 24}} />
-          <Text style={styles.title}>My Budgets</Text>
-          <TouchableOpacity>
-            <Icon name="add" size={24} color={Colors.white} />
-          </TouchableOpacity>
-        </View>
-        <TabSwitcher />
+    // <SafeAreaView style={styles.safeStyle}>
+    //   <ScrollView style={styles.container}>
+    //     <View style={styles.header}>
+    //       <View style={{width: 24}} />
+    //       <Text style={styles.title}>My Budgets</Text>
+    //       <TouchableOpacity>
+    //         <Icon name="add" size={24} color={Colors.white} />
+    //       </TouchableOpacity>
+    //     </View>
+    //     <TabSwitcher />
 
-        <View style={styles.budgetSummary}>
-          <Text style={styles.label}>
-            September Budget <Text style={styles.bold}>15,000 AED</Text>
-          </Text>
-          {/* You can replace this with a circular progress component */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: 20,
-            }}>
-            <DualRingProgress />
-            <View style={styles.details}>
-              <Text style={styles.headingDetails}>Spent:</Text>
-              <Text style={styles.bold}>10,527 AED</Text>
-              <Text style={styles.headingDetails}>Remaining:</Text>
-              <Text style={styles.bold}>4,473 AED</Text>
-              <Text style={styles.headingDetails}>Daily allowance:</Text>
-              <Text style={styles.bold}>497 AED</Text>
-            </View>
-          </View>
-          <Text style={styles.notice}>
-            You are <Text style={{color: Colors.greenColor, fontSize:15, fontWeight:'600'}}>440 AED</Text>{' '}
-            above your monthly budget
-          </Text>
+    //     <View style={styles.budgetSummary}>
+    //       <Text style={styles.label}>
+    //         September Budget <Text style={styles.bold}>15,000 AED</Text>
+    //       </Text>
+    //       {/* You can replace this with a circular progress component */}
+    //       <View
+    //         style={{
+    //           flexDirection: 'row',
+    //           alignItems: 'center',
+    //           justifyContent: 'center',
+    //           marginVertical: 20,
+    //         }}>
+    //         <DualRingProgress />
+    //         <View style={styles.details}>
+    //           <Text style={styles.headingDetails}>Spent:</Text>
+    //           <Text style={styles.bold}>10,527 AED</Text>
+    //           <Text style={styles.headingDetails}>Remaining:</Text>
+    //           <Text style={styles.bold}>4,473 AED</Text>
+    //           <Text style={styles.headingDetails}>Daily allowance:</Text>
+    //           <Text style={styles.bold}>497 AED</Text>
+    //         </View>
+    //       </View>
+    //       <Text style={styles.notice}>
+    //         You are <Text style={{color: Colors.greenColor, fontSize:15, fontWeight:'600'}}>440 AED</Text>{' '}
+    //         above your monthly budget
+    //       </Text>
 
-          <Text style={styles.daysLeft}>9 days left</Text>
-        </View>
+    //       <Text style={styles.daysLeft}>9 days left</Text>
+    //     </View>
 
-        <View>
-          <Text style={styles.sectionTitle}>Upcoming Bills</Text>
-          <FlatList
-            horizontal
-            data={upcomingBills}
-            keyExtractor={item => item.id}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => (
-              <View style={styles.billCard}>
-                <Text style={styles.billDate}>{item.day}</Text>
-                <View style={{alignItems: 'center'}}>
-                  <Icon name={item.icon} size={24} color={Colors.greenColor} />
-                  <Text numberOfLines={2} style={styles.billTitle}>
-                    {item.title}
-                  </Text>
-                  <Text style={styles.billAmount}>{item.amount}</Text>
-                </View>
-              </View>
-            )}
-          />
-        </View>
+    //     <View>
+    //       <Text style={styles.sectionTitle}>Upcoming Bills</Text>
+    //       <FlatList
+    //         horizontal
+    //         data={upcomingBills}
+    //         keyExtractor={item => item.id}
+    //         showsHorizontalScrollIndicator={false}
+    //         renderItem={({item}) => (
+    //           <View style={styles.billCard}>
+    //             <Text style={styles.billDate}>{item.day}</Text>
+    //             <View style={{alignItems: 'center'}}>
+    //               <Icon name={item.icon} size={24} color={Colors.greenColor} />
+    //               <Text numberOfLines={2} style={styles.billTitle}>
+    //                 {item.title}
+    //               </Text>
+    //               <Text style={styles.billAmount}>{item.amount}</Text>
+    //             </View>
+    //           </View>
+    //         )}
+    //       />
+    //     </View>
 
-        <View style={styles.myBudget}>
-          <Text style={styles.sectionTitle}>My budget</Text>
-          <View style={styles.budgetItem}>
-            <Image
-              source={{uri: 'https://img.icons8.com/color/48/hamburger.png'}}
-              style={styles.budgetIcon}
-            />
-            <View style={{flex: 1}}>
-              <Text style={styles.budgetLabel}>Food & Dining</Text>
-              <View style={styles.progressBarBackground}>
-                <View style={styles.progressBarFill} />
-              </View>
-              <Text style={styles.budgetAmount}>3,627 AED / 4,000 AED</Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    //     <View style={styles.myBudget}>
+    //       <Text style={styles.sectionTitle}>My budget</Text>
+    //       <View style={styles.budgetItem}>
+    //         <Image
+    //           source={{uri: 'https://img.icons8.com/color/48/hamburger.png'}}
+    //           style={styles.budgetIcon}
+    //         />
+    //         <View style={{flex: 1}}>
+    //           <Text style={styles.budgetLabel}>Food & Dining</Text>
+    //           <View style={styles.progressBarBackground}>
+    //             <View style={styles.progressBarFill} />
+    //           </View>
+    //           <Text style={styles.budgetAmount}>3,627 AED / 4,000 AED</Text>
+    //         </View>
+    //       </View>
+    //     </View>
+    //   </ScrollView>
+    // </SafeAreaView>
+     <SafeAreaView
+              style={{
+                paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+                flex: 1,
+                backgroundColor: '#fffff',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text style={{color:"#000"}}>Coming Soon</Text>
+            </SafeAreaView>
   );
 };
 

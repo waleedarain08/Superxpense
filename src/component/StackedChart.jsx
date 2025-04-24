@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import {View, Text, ScrollView, StyleSheet } from 'react-native';
 import {StackedBarChart, YAxis} from 'react-native-svg-charts';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
@@ -121,8 +121,9 @@ export const styles = StyleSheet.create({
   },
   heading: {
     color: Colors.graphGreen,
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: FontFamily.semiBold,
+    fontWeight:'700'
   },
   amount: {
     fontFamily: FontFamily.semiBold,
