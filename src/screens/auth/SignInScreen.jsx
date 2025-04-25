@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   Image,
   ActivityIndicator,
+  Alert
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
@@ -75,22 +76,26 @@ const SignInScreen = ({navigation}) => {
             },
           },
         );
-        const dataa = await responses.json();
-        if (responses.ok) {
-          alert('Logged in successfully');
-          //console.log('responses', dataa.data);
-          setCustomerID(dataa.data.customerId);
-          setLeanToken(data.data.accessToken);
-          setShowLean(true);
-          //console.log(data.data.accessToken);
+        const resp = await responses.json();
+        console.log('access token response:', resp);
+        if (resp.statusCode === 200) {
+          const r = resp.data;
+          console.log('r:', r);
+          setCustomerID(r.customerId);
+          setLeanToken(r.accessToken);
+          setTimeout(() => { 
+            Alert.alert('SuperXpense','Logged in successfully');
+            connectLean();          
+          }, 500);
+         // setShowLean(true);
         }
       } else {
-        alert(data.message);
+        Alert.alert(data.message);
         setLoading(false);
         // Optionally display error
       }
     } catch (err) {
-      alert(err.message);
+      Alert.alert(err.message);
       setLoading(false);
     } finally {
       setLoading(false);
@@ -112,68 +117,46 @@ const SignInScreen = ({navigation}) => {
           'payments',
         ],
         access_token: leanToken,
+        customization:{
+          theme_color:"#00B67A",
+          button_text_color:Colors.white,
+          overlay_color:Colors.bgColor
+          }
       });
     }
   };
 
   return (
     <SafeAreaView style={styles.safeStyle}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Image
-            source={require('../../assets/images/logoO.png')}
-            style={styles.logo}
-          />
-        </View>
-        {lean ? (
-          <View style={{marginBottom: -80}}>
-            <TouchableOpacity
-              style={styles.linkButton}
-              // onPress={() =>connectLean()}
-              onPress={() => navigation.navigate('Main')}>
-              <Text style={styles.signInText}>Link Accounts</Text>
-            </TouchableOpacity>
-
-            <LinkSDK
-              ref={Lean}
-              webViewProps={{
-                androidHardwareAccelerationDisabled: true,
-              }}
-              appToken="6420a4cb-7fc4-4e6e-bd98-156435654be9"
-              sandbox
-              onSuccess={response => {
-                console.log('Linking successfull', response);
-                setShowLean(false);
-                navigation.navigate('Main');
-              }}
-              onError={error => {
-                console.log('Linking failed', error);
-                setShowLean(false);
-              }}
-            />
-          </View>
-        ) : (
-          <View style={styles.inputContainer}>
-            <Text style={styles.signInTxt}>Sign In</Text>
-            <TextInput
-              placeholder="Email Address"
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              placeholderTextColor={Colors.greyColor}
-            />
-            {error.email ? (
-              <Text style={styles.error}>{error.email}</Text>
-            ) : null}
-
-            <View style={styles.passwordContainer}>
+      <View style={styles.container}>
+        <Text style={styles.heading}>Sign In Now</Text>
+        <Text style={styles.subHeading}>
+        Log in to your account by entering your email and password.
+        </Text>
+        <TextInput
+          placeholder="Enter Email Address"
+          placeholderTextColor={Colors.greyColor}
+          style={[
+            styles.input,
+            error.email && styles.inputError,
+            {marginBottom: 5},
+          ]}
+          onChangeText={setEmail}
+          value={email}
+          keyboardType="email-address"
+          autoCapitalize='none'
+        />
+        {error.email && (
+          <Text style={styles.errorText}>Enter a valid Email</Text>
+        )}
+        <View style={styles.passwordContainer}>
               <TextInput
                 placeholder="Password"
-                style={styles.input}
+                style={[
+                  styles.input,
+                  error.password && styles.inputError,
+                  {marginBottom: 5},
+                ]}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={hidePassword}
@@ -185,45 +168,42 @@ const SignInScreen = ({navigation}) => {
                 <Icon
                   name={hidePassword ? 'eye-off' : 'eye'}
                   size={20}
-                  color={Colors.greenColor}
+                  color={Colors.greyColor}
                 />
               </TouchableOpacity>
             </View>
             {error.password ? (
-              <Text style={styles.error}>{error.password}</Text>
+              <Text style={styles.errorText}>{error.password}</Text>
             ) : null}
-            <TouchableOpacity
-              // onPress={handleSignIn}
-              onPress={() => navigation.navigate('Main')}
-              style={styles.signInButton}
-              disabled={loading}>
-              {loading ? (
-                <Text style={styles.signInText}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={styles.signingText}>Signing in</Text>
-                    <ActivityIndicator size="small" color={Colors.white} />
-                  </View>
-                </Text>
-              ) : (
-                <Text style={styles.signInText}>Sign In</Text>
-              )}
-            </TouchableOpacity>
-            <Text style={styles.signupText}>
-              Don't have an account?{'  '}
-              <Text
-                style={{
-                  textDecorationLine: 'underline',
-                  color: Colors.greenColor,
-                }}
-                onPress={() => {
-                  navigation.navigate('SignUp');
-                }}>
-                Sign Up
-              </Text>
-            </Text>
-          </View>
-        )}
-      </KeyboardAvoidingView>
+        <TouchableOpacity
+          onPress={handleSignIn}
+          style={styles.button}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator size="small" color={Colors.white} />
+          ) : (
+            <Text style={styles.buttonText}>Login</Text>
+          )}
+        </TouchableOpacity>
+        <LinkSDK
+              ref={Lean}
+              webViewProps={{
+                androidHardwareAccelerationDisabled: true,
+              }}
+              appToken="6420a4cb-7fc4-4e6e-bd98-156435654be9"
+              customerId={customerID}
+              sandbox
+              callback = {(response) => {
+                //console.log('Lean response:', response);
+                if (response.status !== 'SUCCESS') {
+                  Alert.alert('Connection Failed', response.status);
+                } else {
+                  Alert.alert('Lean linked Successfully');
+                  navigation.navigate('Main');
+                }
+              }}
+            />
+      </View>
     </SafeAreaView>
   );
 };
@@ -233,84 +213,84 @@ export default SignInScreen;
 const styles = StyleSheet.create({
   safeStyle: {
     flex: 1,
-    backgroundColor: Colors.splashColor,
+    backgroundColor: Colors.progressBackground,
   },
   container: {
-    justifyContent: 'space-between',
-    flex: 0.8,
+    backgroundColor: Colors.progressBackground,
+    justifyContent: 'center',
+    paddingVertical: 32,
     paddingHorizontal: 20,
-    backgroundColor: Colors.splashColor,
   },
-  inputContainer: {
-    marginBottom: 40,
+  heading: {
+    fontSize: 24,
+    fontWeight: '500',
+    marginBottom: 5,
+    color: Colors.txtColor,
+  },
+  subHeading: {
+    color: Colors.txtColor,
+    fontSize: 16,
+    marginBottom: 24,
   },
   input: {
+    borderRadius: 12,
+    height: 56,
+    paddingHorizontal: 16,
+    backgroundColor: Colors.white,
+  },
+  inputError: {
+    borderColor: 'red',
     borderWidth: 1,
-    borderColor: Colors.white,
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    height: 55,
-    marginTop: 22,
-    color: Colors.white,
-    fontFamily: FontFamily.regular,
   },
-  error: {
-    color: Colors.red,
-    marginTop: 4,
-    marginLeft: 4,
-    fontSize: 12,
-    fontFamily: FontFamily.regular,
+  errorText: {
+    color: 'red',
   },
-  logo: {
-    width: 250,
-    borderRadius: 20,
-    resizeMode: 'contain',
+  phoneInput: {
+    marginBottom: 24,
+    height: 56,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    backgroundColor: Colors.white,
   },
   passwordContainer: {
     position: 'relative',
-  },
-  signInButton: {
-    backgroundColor: Colors.btnColor,
-    height: 55,
-    marginTop: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-  linkButton: {
-    backgroundColor: Colors.btnColor,
-    height: 55,
-    // marginTop: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-  signInText: {
-    color: Colors.white,
-    textAlign: 'center',
-    fontFamily: FontFamily.bold,
-    fontSize: 16,
+    marginTop: 10,
   },
   eyeIcon: {
     position: 'absolute',
     right: 12,
-    top: 40,
+    top: 20,
   },
-  signupText: {
-    color: Colors.white,
-    textAlign: 'center',
+  button: {
+    backgroundColor: '#00B67A',
+    borderRadius: 100,
+    alignItems: 'center',
+    height: 48,
+    justifyContent: 'center',
+    marginBottom: 12,
     marginTop: 20,
-    fontFamily: FontFamily.regular,
   },
-  signInTxt: {
+  buttonText: {
     color: Colors.white,
+    fontWeight: '500',
+    fontSize: 16,
+  },
+  terms: {
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
     textAlign: 'center',
-    fontSize: 32,
-    fontFamily: FontFamily.bold,
+    color: Colors.lightTxt,
+    marginBottom: 130,
   },
-  signingText: {
-    color: Colors.white,
-    marginRight: 8,
+  link: {
+    color: Colors.black,
+    fontWeight: '500',
+  },
+  signIn: {
+    textAlign: 'center',
+    marginTop: 10,
+    fontSize: 16,
     fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
   },
 });

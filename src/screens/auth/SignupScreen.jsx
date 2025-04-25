@@ -14,6 +14,8 @@ import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {API} from '../../utilis/Constant';
+import LinkSDK from 'lean-react-native';
+
 
 const SignUpScreen = ({navigation}) => {
   const phoneRef = useRef(null);
@@ -49,9 +51,7 @@ const SignUpScreen = ({navigation}) => {
 
   const handleSignUp = async () => {
     if (!validate()) return;
-    console.log('working');
     setLoading(true);
-
     try {
       const response = await fetch(API.signUp, {
         method: 'POST',
@@ -68,11 +68,8 @@ const SignUpScreen = ({navigation}) => {
         //console.log('Signup successful:', data);
         navigation.navigate('OnBoarding');
         Alert.alert('Success', 'Signup successful');
-        // You can navigate to another screen or show a success message here
       } else {
-        //console.log('Signup failed:', data);
         Alert.alert('Error', data.message);
-        // Optional: set an error state and display it on screen
       }
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');

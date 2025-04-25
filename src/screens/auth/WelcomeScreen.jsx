@@ -6,7 +6,7 @@ const WelcomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.signInButton}>
-        <Text onPress = {()=>navigation.navigate('Main')} style={styles.signInText}>Sign In</Text>
+        <Text onPress = {()=>navigation.navigate('SignIn')} style={styles.signInText}>Sign In</Text>
       </TouchableOpacity>
 
       <View style={styles.header}>
