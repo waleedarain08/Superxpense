@@ -38,4 +38,10 @@ export const Colors = {
   lightProgressabrColor: '#F5F5F999',
   stepsTextColor: '#1C274C',
   lightTxt: '#606776',
+  lightestGreen: '#E3FFF2',
+  lightestGrayTwo: '#0D2D2DB2',
+  newLightgreen: '#C3DCC833',
+  seventyWhite: '#FFFFFFB2',
+  seventyBlack: '#000000B2',
+  darkestgray: '#7878801F',
 };

@@ -14,7 +14,6 @@ import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {API} from '../../utilis/Constant';
-import LinkSDK from 'lean-react-native';
 
 
 const SignUpScreen = ({navigation}) => {

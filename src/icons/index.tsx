@@ -233,3 +233,43 @@ export const Logout: React.FC<IconProps> = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const ArrowBack: React.FC<IconProps> = ({color, size, style}) => (
+  <VectorIcon
+    name="arrow-back"
+    color={color}
+    size={size}
+    type="Ionicons"
+    style={style}
+  />
+);
+
+export const Refresh: React.FC<IconProps> = ({color, size, style}) => (
+  <VectorIcon
+    name="refresh"
+    color={color}
+    size={size}
+    type="Ionicons"
+    style={style}
+  />
+);
+
+export const Right: React.FC<IconProps> = ({color, size, style}) => (
+  <VectorIcon
+    name="chevron-right"
+    color={color}
+    size={size}
+    type="Entypo"
+    style={style}
+  />
+);
+
+export const ThreeDots: React.FC<IconProps> = ({color, size, style}) => (
+  <VectorIcon
+    name="dots-three-horizontal"
+    color={color}
+    size={size}
+    type="Entypo"
+    style={style}
+  />
+);

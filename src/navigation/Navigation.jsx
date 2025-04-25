@@ -14,6 +14,9 @@ import {Colors} from '../utilis/Colors';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 import OnBoardingScreen from '../screens/auth/OnBoardingScreen';
+import ConnectedAccountsScreen from '../screens/app/ConnectedAccoutsScreen';
+import BankTransactionScreen from '../screens/app/BankTransactionScreen';
+import IssuingCountryScreen from '../screens/app/IssuingCountryScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -38,6 +41,15 @@ const Navigation = () => {
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignupScreen} />
         <Stack.Screen name="OnBoarding" component={OnBoardingScreen} />
+        <Stack.Screen
+          name="ConnectedAccounts"
+          component={ConnectedAccountsScreen}
+        />
+        <Stack.Screen name="IssuingCountryScreen" component={IssuingCountryScreen} />
+        <Stack.Screen
+          name="BankTransaction"
+          component={BankTransactionScreen}
+        />
         <Stack.Screen name="Main" component={BottomNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

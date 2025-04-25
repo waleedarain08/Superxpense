@@ -14,8 +14,13 @@ import Investment from './investment.svg';
 import MoneyBag from './moneyBag.svg';
 import Track from './track.svg';
 import Money from './money.svg';
+import LeftIcon from './leftIcon.svg';
+import Dinner from './dinner.svg';
+import Goverment from './goverment.svg';
 
 export {
+  Dinner,
+  Goverment,
   Car,
   CarGreen,
   Credit,
@@ -32,4 +37,5 @@ export {
   MoneyBag,
   Track,
   Money,
+  LeftIcon,
 };

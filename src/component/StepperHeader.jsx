@@ -4,14 +4,36 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
-const StepperHeader = ({step, totalSteps, onBack}) => {
+const StepperHeader = ({
+  step,
+  totalSteps,
+  onBack,
+  exit = false,
+  mainContainer,
+}) => {
   const progress = (step / totalSteps) * 100;
 
   return (
     <View>
-      <View style={styles.header}>
+      <View style={[styles.header, mainContainer]}>
         <TouchableOpacity onPress={onBack}>
-          <Icon name="arrow-back" size={24} color="#2F3B52" />
+          {exit ? (
+            <Text
+              style={{
+                backgroundColor: Colors.bgColor,
+                paddingHorizontal: 8,
+                paddingVertical: 4,
+                borderRadius: 20,
+                alignSelf: 'center',
+                fontFamily: FontFamily.medium,
+                fontSize: 14,
+                color: '#1C274C99',
+              }}>
+              Exit
+            </Text>
+          ) : (
+            <Icon name="arrow-back" size={24} color="#2F3B52" />
+          )}
         </TouchableOpacity>
         <Text style={styles.stepText}>
           Step {step} of {totalSteps}

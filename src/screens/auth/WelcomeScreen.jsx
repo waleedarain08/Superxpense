@@ -21,10 +21,6 @@ const WelcomeScreen = ({navigation}) => {
           source={require('./../../assets/images/welcomeCard.png')} // Replace with your assets
           style={styles.cardImage}
         />
-        {/* <Image
-          source={require('./../../assets/images/spending.png')} // Replace with your assets
-          style={styles.cardImageOverlay}
-        /> */}
       </View>
 
       <View style={styles.buttonsContainer}>
