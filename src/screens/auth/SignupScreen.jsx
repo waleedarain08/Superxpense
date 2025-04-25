@@ -19,6 +19,7 @@ const SignUpScreen = ({navigation}) => {
   const phoneRef = useRef(null);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
@@ -39,6 +40,7 @@ const SignUpScreen = ({navigation}) => {
     if (password.length < 6) {
       errors.password = 'Password must be at least 6 characters';
       isValid = false;
+      setPasswordError(true);
     }
 
     setError(errors);
@@ -94,12 +96,14 @@ const SignUpScreen = ({navigation}) => {
         </Text>
 
         <TextInput
-          placeholder="Fullname"
+          placeholder="Full Name"
+          placeholderTextColor={Colors.lightTxt}
           style={[styles.input, {marginBottom: 24}]}
         />
 
         <TextInput
           placeholder="Email Address"
+          placeholderTextColor={Colors.lightTxt}
           style={[
             styles.input,
             emailError && styles.inputError,
@@ -108,6 +112,7 @@ const SignUpScreen = ({navigation}) => {
           onChangeText={setEmail}
           value={email}
           keyboardType="email-address"
+          autoCapitalize='none'
         />
         {emailError && (
           <Text style={styles.errorText}>Enter a valid Email</Text>
@@ -122,11 +127,15 @@ const SignUpScreen = ({navigation}) => {
 
         <TextInput
           placeholder="Create Password"
-          style={[styles.input, {marginBottom: 32}]}
+          style={[styles.input, {marginBottom: 10}]}
+          placeholderTextColor={Colors.lightTxt}
           secureTextEntry
           value={password}
           onChangeText={setPassword}
         />
+        {passwordError && (
+          <Text style={styles.errorText}>Password must be of 6 Characters</Text>
+        )}
         <TouchableOpacity
           onPress={handleSignUp}
           style={styles.button}
@@ -209,6 +218,7 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     marginBottom: 12,
+    marginTop: 20,
   },
   buttonText: {
     color: Colors.white,

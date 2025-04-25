@@ -13,7 +13,7 @@ import MoneyBagImage from '../assets/images/moneyBagImage.png';
 
 const {width, height} = Dimensions.get('window');
 
-const SuccessModal = ({visible, onContinue, userName = 'John'}) => {
+const SuccessModal = ({visible, onContinue, userName = ''}) => {
   return (
     <Modal transparent visible={visible} animationType="fade">
       <View style={styles.fullScreen}>
@@ -24,7 +24,7 @@ const SuccessModal = ({visible, onContinue, userName = 'John'}) => {
             resizeMode="contain"
           />
 
-          <Text style={styles.title}>You are in, {userName}!</Text>
+          <Text style={styles.title}>Welcome , You are in {userName}!</Text>
           <Text style={styles.subtitle}>
             Your dashboard is now ready for you. Dive right in and manage your
             money with ease.

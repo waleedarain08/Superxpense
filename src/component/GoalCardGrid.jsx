@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 
 const GoalCardGrid = ({data, onPress}) => {
+  const [selectedId, setSelectedId] = React.useState(null);
+
   return (
     <FlatList
       data={data}
@@ -9,14 +11,32 @@ const GoalCardGrid = ({data, onPress}) => {
       numColumns={2}
       contentContainerStyle={styles.grid}
       columnWrapperStyle={{justifyContent: 'space-between'}}
-      renderItem={({item}) => (
-        <TouchableOpacity style={styles.card} onPress={() => onPress(item.id)}>
-          <View style={[styles.iconWrapper, {backgroundColor: item.bgColor}]}>
-            <item.SvgIcon width={24} height={24} />
-          </View>
-          <Text style={styles.label}>{item.label}</Text>
-        </TouchableOpacity>
-      )}
+      extraData={selectedId}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+      renderItem={({item}) => {
+        const isSelected = selectedId === item.id;
+        return (
+          <TouchableOpacity
+            style={[
+              styles.card,
+              {backgroundColor: isSelected ? '#00B67A' : '#fff'},
+            ]}
+            onPress={() => {
+              setSelectedId(item.id);
+              onPress(item.id);
+            }}>
+            <View
+              style={[
+                styles.iconWrapper,
+                {backgroundColor: isSelected ? '#ffffff' : item.bgColor},
+              ]}>
+              <item.SvgIcon width={24} height={24} />
+            </View>
+            <Text style={[styles.label,{color: isSelected ? '#ffffff' : '#000000'}]}>{item.label}</Text>
+          </TouchableOpacity>
+        );
+      }}
     />
   );
 };
