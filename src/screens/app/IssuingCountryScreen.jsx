@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -61,6 +62,7 @@ const IssuingCountryScreen = ({navigation}) => {
   const [search, setSearch] = useState('');
   const [customerID, setCustomerID] = useState('');
   const [leanToken, setLeanToken] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const Lean = useRef(null);
 
@@ -70,11 +72,13 @@ const IssuingCountryScreen = ({navigation}) => {
 
   const hitLeanApi = async () => {
     try {
+      setLoading(true);
       const jsonValue = await AsyncStorage.getItem('userData');
       const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
 
       if (!userData || !userData.data?.accessToken || !userData.data?.id) {
         console.error('Invalid user data');
+        setLoading(false); //
         return;
       }
 
@@ -100,17 +104,21 @@ const IssuingCountryScreen = ({navigation}) => {
         console.log('r:', r);
         setCustomerID(r.customerId);
         setLeanToken(r.accessToken);
+
         //setTimeout(() => {
-         // Alert.alert('SuperXpense', 'Logged in successfully');
-          connectLean(r);
-       // }, 800);
+        // Alert.alert('SuperXpense', 'Logged in successfully');
+        connectLean(r);
+        // }, 800);
+      } else {
+        setLoading(false); // 👈 Hide loading if API failed
       }
     } catch (error) {
+      setLoading(false);
       console.error('Failed to load user data or call API:', error);
     }
   };
 
-  const connectLean = (r) => {
+  const connectLean = r => {
     if (Lean.current) {
       //console.log('r:', r);
       //console.log('customerID', r.customerId);
@@ -153,6 +161,11 @@ const IssuingCountryScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#00B67A" />
+        </View>
+      )}
       <StepperHeader
         step={2}
         totalSteps={3}
@@ -212,6 +225,7 @@ const IssuingCountryScreen = ({navigation}) => {
           customerId={customerID}
           sandbox
           callback={response => {
+            setLoading(false);
             if (response.status !== 'SUCCESS') {
               Alert.alert('Connection Failed', response.status);
             } else {
@@ -329,6 +343,13 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     color: Colors.lightTxtColor,
     textAlign: 'center',
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
 });
 
