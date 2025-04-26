@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginBottom: 5,
     color: Colors.txtColor,
+    marginTop: 20,
   },
   subHeading: {
     color: Colors.txtColor,

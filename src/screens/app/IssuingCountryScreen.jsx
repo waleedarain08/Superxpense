@@ -100,22 +100,23 @@ const IssuingCountryScreen = ({navigation}) => {
         console.log('r:', r);
         setCustomerID(r.customerId);
         setLeanToken(r.accessToken);
-        setTimeout(() => {
-          Alert.alert('SuperXpense', 'Logged in successfully');
-          connectLean();
-        }, 500);
+        //setTimeout(() => {
+         // Alert.alert('SuperXpense', 'Logged in successfully');
+          connectLean(r);
+       // }, 800);
       }
     } catch (error) {
       console.error('Failed to load user data or call API:', error);
     }
   };
 
-  const connectLean = () => {
+  const connectLean = (r) => {
     if (Lean.current) {
-      console.log('customerID', customerID);
-      console.log('leanToken', leanToken);
+      //console.log('r:', r);
+      //console.log('customerID', r.customerId);
+      //console.log('leanToken', r.accessToken);
       Lean.current.connect({
-        customer_id: customerID,
+        customer_id: r.customerId,
         permissions: [
           'identity',
           'accounts',
@@ -123,7 +124,7 @@ const IssuingCountryScreen = ({navigation}) => {
           'transactions',
           'payments',
         ],
-        access_token: leanToken,
+        access_token: r.accessToken,
         customization: {
           theme_color: '#00B67A',
           button_text_color: Colors.white,

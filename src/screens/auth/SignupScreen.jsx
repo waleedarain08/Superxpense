@@ -14,6 +14,8 @@ import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {API} from '../../utilis/Constant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 const SignUpScreen = ({navigation}) => {
@@ -67,6 +69,12 @@ const SignUpScreen = ({navigation}) => {
         //console.log('Signup successful:', data);
         navigation.navigate('OnBoarding');
         Alert.alert('Success', 'Signup successful');
+        try {
+          await AsyncStorage.setItem('userData', JSON.stringify(data));
+          console.log('User data saved to AsyncStorage');
+        } catch (error) {
+          console.error('Failed to save user data:', error);
+        }
       } else {
         Alert.alert('Error', data.message);
       }

@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
+  Alert
 } from 'react-native';
 import {LeftIcon, Plus} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
@@ -60,7 +61,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
       const jsonValue = await AsyncStorage.getItem('userData');
       const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
       const token = userData.data?.accessToken;
-
+      console.log('accessToken:', token);
       const responses = await fetch(`${baseUrl}lean/active-connections`, {
         method: 'GET',
         headers: {
@@ -76,9 +77,11 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
         const r = resp.data;
         const id = r[0].id;
         fetchTransactions(id);
+      }else{
+        Alert.alert(resp.message,'Unable to fetch data');
       }
     } catch (error) {
-      console.error('Failed to load user data or call API:', error);
+      Alert.alert('Failed to load user data', error);
     }
   };
 
