@@ -76,6 +76,7 @@ const SignUpScreen = ({navigation}) => {
           console.error('Failed to save user data:', error);
         }
       } else {
+        navigation.navigate('OnBoarding');
         Alert.alert('Error', data.message);
       }
     } catch (err) {
