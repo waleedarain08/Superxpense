@@ -77,7 +77,7 @@ const SignUpScreen = ({navigation}) => {
         }
       } else {
         navigation.navigate('OnBoarding');
-        Alert.alert('Error', data.message);
+        //Alert.alert('Error', data.message);
       }
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');

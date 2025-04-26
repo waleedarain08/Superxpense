@@ -105,11 +105,12 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
           <LeftIcon />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Connected Accounts</Text>
-        <TouchableOpacity
+        <View style={styles.headerRight}></View>
+        {/* <TouchableOpacity
           style={styles.plusButton}
           onPress={() => console.log('Add Account')}>
           <Plus />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.section}>
@@ -173,6 +174,11 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     height: 26,
     width: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerRight: {
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },

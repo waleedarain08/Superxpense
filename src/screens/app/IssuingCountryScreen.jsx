@@ -229,7 +229,7 @@ const IssuingCountryScreen = ({navigation}) => {
             if (response.status !== 'SUCCESS') {
               Alert.alert('Connection Failed', response.status);
             } else {
-              Alert.alert('Lean linked Successfully');
+              //Alert.alert('Lean linked Successfully');
               console.log(response.bank.bank_identifier);
 
               navigation.navigate('ConnectedAccounts', {
