@@ -53,6 +53,15 @@ const SignUpScreen = ({navigation}) => {
   const handleSignUp = async () => {
     if (!validate()) return;
     setLoading(true);
+    const removeItem = async (userData) => {
+      try {
+        await AsyncStorage.removeItem(userData);
+        console.log(`Item with key "${userData}" removed`);
+      } catch (error) {
+        console.error('Error removing item from AsyncStorage:', error);
+      };
+    }
+    removeItem('userData');
     try {
       const response = await fetch(API.signUp, {
         method: 'POST',
@@ -76,8 +85,8 @@ const SignUpScreen = ({navigation}) => {
           console.error('Failed to save user data:', error);
         }
       } else {
-        navigation.navigate('OnBoarding');
-        //Alert.alert('Error', data.message);
+        //navigation.navigate('OnBoarding');
+        Alert.alert('Error', data.message);
       }
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');

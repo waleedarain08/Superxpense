@@ -45,6 +45,16 @@ const SignInScreen = ({navigation}) => {
     if (!validate()) return;
 
     setLoading(true);
+    const removeItem = async (userData) => {
+      try {
+        await AsyncStorage.removeItem(userData);
+        console.log(`Item with key "${userData}" removed`);
+      } catch (error) {
+        console.error('Error removing item from AsyncStorage:', error);
+      };
+    }
+    removeItem('userData');
+    
 
     try {
       const response = await fetch(API.logIn, {

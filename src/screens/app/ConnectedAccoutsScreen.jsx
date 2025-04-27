@@ -47,7 +47,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
       const formattedAccounts = rawAccounts.map(acc => ({
         id: acc.account_id, // <-- Add this line
         type: acc.nickname || acc.account_sub_type || 'Unknown',
-        balance: '35,000.00 AED', // Placeholder — replace with actual balance if available
+        balance: '15,000.00 AED', // Placeholder — replace with actual balance if available
       }));
 
       setAccountsData(formattedAccounts);
@@ -69,7 +69,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+      console.log('response:', responses);
       const resp = await responses.json();
       console.log(resp);
 
@@ -86,7 +86,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    leanConnection();
+    setTimeout(() => {leanConnection();}, 1000);
   }, []);
 
   const handleAccountPress = account => {

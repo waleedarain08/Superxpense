@@ -491,9 +491,11 @@ const BankTransactionScreen = ({navigation, route}) => {
           <LeftIcon />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{BankName} Bank</Text>
-        <TouchableOpacity style={styles.plusButton}>
+        {/* <TouchableOpacity style={styles.plusButton}>
           <Plus />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <View style={styles.headerRight}></View>
+      
       </View>
 
       <View style={styles.balanceCard}>
@@ -507,12 +509,12 @@ const BankTransactionScreen = ({navigation, route}) => {
           }}>
           <Refresh size={16} color={Colors.seventyWhite} />
           <Text style={styles.syncText}>
-            Last Synced 24 April 2025 by 12:00am
+            Last Synced 27 April 2025 by 01:00pm
           </Text>
         </View>
-        <TouchableOpacity style={styles.refreshBtn}>
+        {/* <TouchableOpacity style={styles.refreshBtn}>
           <Text style={styles.refreshText}>Refresh</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.transactionCard}>
@@ -520,8 +522,8 @@ const BankTransactionScreen = ({navigation, route}) => {
           <Text style={styles.cardTitle}>Latest Transactions</Text>
           <TouchableOpacity
             style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.seeAll}>See all</Text>
-            <ChevronRight />
+            {/* <Text style={styles.seeAll}>See all</Text> */}
+            {/* <ChevronRight /> */}
           </TouchableOpacity>
         </View>
         {fetchedTransactions.map((item, index) => (
