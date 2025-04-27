@@ -9,7 +9,6 @@ export const Colors = {
   transactionType: '#bbb',
   splashColor: '#040f23',
   greenColor: '#36f8b8',
-  btnColor: '#007bff',
   progressColor: '#FF8C00',
   greyColor: '#999',
   bgColor: '#F5F5F9',
@@ -44,4 +43,5 @@ export const Colors = {
   seventyWhite: '#FFFFFFB2',
   seventyBlack: '#000000B2',
   darkestgray: '#7878801F',
+  btnColor: '#00B67A',
 };

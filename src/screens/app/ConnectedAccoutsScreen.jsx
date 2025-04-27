@@ -6,44 +6,37 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
-  Alert
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {LeftIcon, Plus} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import BankCard from '../../component/BankCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {API, baseUrl} from '../../utilis/Constant';
+import {API} from '../../utilis/Constant';
+import {get} from '../../utilis/Api';
 
 const ConnectedAccountsScreen = ({navigation, route}) => {
   const BankName = route.params.bankName;
   const [accountsData, setAccountsData] = useState([]);
   const [stateEntityId, setStateEntityId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchTransactions = async id => {
     setStateEntityId(id);
     const userValue = await AsyncStorage.getItem('userData');
     const userData = userValue != null ? JSON.parse(userValue) : null;
     const token = userData.data?.accessToken;
-    console.log('here');
 
     try {
-      const response = await fetch(
-        `https://superxpnsebe.dev.cntxt.tools/lean/accounts?entityId=${id}&page=0&size=100`,
-        {
-          method: 'GET',
-          headers: {
-            accept: '/',
-            Authorization: `Bearer ${token}`,
-          },
-        },
+      setLoading(true);
+      const data = await get(
+        `${API.leanAccounts}`,
+        {entityId: id, page: 0, size: 100},
+        token,
       );
-
-      const result = await response.json();
-      console.log(result, 'Fetched Account Data');
-
-      const rawAccounts = result?.data?.data?.accounts || [];
-
+      const rawAccounts = data?.data?.data?.accounts || [];
       const formattedAccounts = rawAccounts.map(acc => ({
         id: acc.account_id, // <-- Add this line
         type: acc.nickname || acc.account_sub_type || 'Unknown',
@@ -52,41 +45,32 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
 
       setAccountsData(formattedAccounts);
     } catch (error) {
+      setLoading(false);
       console.log('Error fetching transactions:', error);
     }
   };
 
   const leanConnection = async () => {
     try {
+      setLoading(true);
       const jsonValue = await AsyncStorage.getItem('userData');
       const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
       const token = userData.data?.accessToken;
-      console.log('accessToken:', token);
-      const responses = await fetch(`${baseUrl}lean/active-connections`, {
-        method: 'GET',
-        headers: {
-          accept: '/',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('response:', responses);
-      const resp = await responses.json();
-      console.log(resp);
-
-      if (resp.statusCode === 200) {
-        const r = resp.data;
-        const id = r[0].id;
-        fetchTransactions(id);
-      }else{
-        Alert.alert(resp.message,'Unable to fetch data');
-      }
+      const data = await get(`${API.leanConnection}`, null, token);
+      const r = data.data;
+      const id = r[0].id;
+      fetchTransactions(id);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       Alert.alert('Failed to load user data', error);
     }
   };
 
   useEffect(() => {
-    setTimeout(() => {leanConnection();}, 1000);
+    setTimeout(() => {
+      leanConnection();
+    }, 1000);
   }, []);
 
   const handleAccountPress = account => {
@@ -106,11 +90,6 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Connected Accounts</Text>
         <View style={styles.headerRight}></View>
-        {/* <TouchableOpacity
-          style={styles.plusButton}
-          onPress={() => console.log('Add Account')}>
-          <Plus />
-        </TouchableOpacity> */}
       </View>
 
       <View style={styles.section}>
@@ -119,7 +98,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
           Handle your bank connection and learn more about automatic syncing
         </Text>
 
-        {accountsData.length > 0 && (
+        {accountsData.length > 0 ? (
           <BankCard
             logo={require('../../assets/images/dubaiBank.png')}
             bankName={`${BankName} Bank`}
@@ -127,6 +106,12 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
             accounts={accountsData}
             onPress={handleAccountPress}
           />
+        ) : (
+          loading && (
+            <View style={styles.loadingOverlay}>
+              <ActivityIndicator size="large" color="#00B67A" />
+            </View>
+          )
         )}
       </View>
     </ScrollView>

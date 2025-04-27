@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
 import {API} from '../../utilis/Constant';
 import {FontFamily} from '../../utilis/Fonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {post} from '../../utilis/Api';
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -45,41 +46,25 @@ const SignInScreen = ({navigation}) => {
     if (!validate()) return;
 
     setLoading(true);
-    const removeItem = async (userData) => {
+    const removeItem = async userData => {
       try {
         await AsyncStorage.removeItem(userData);
         console.log(`Item with key "${userData}" removed`);
       } catch (error) {
         console.error('Error removing item from AsyncStorage:', error);
-      };
-    }
+      }
+    };
     removeItem('userData');
-    
 
     try {
-      const response = await fetch(API.logIn, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email, password}),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log('Login successful:', data);
-        navigation.navigate('Main');
-        try {
-          await AsyncStorage.setItem('userData', JSON.stringify(data));
-          console.log('User data saved to AsyncStorage');
-        } catch (error) {
-          console.error('Failed to save user data:', error);
-        }
-      } else {
-        Alert.alert(data.message);
-        setLoading(false);
-        // Optionally display error
+      const data = await post(API.logIn, {email, password});
+      console.log('Login successful:', data);
+      navigation.navigate('Main');
+      try {
+        await AsyncStorage.setItem('userData', JSON.stringify(data));
+        console.log('User data saved to AsyncStorage');
+      } catch (error) {
+        console.error('Failed to save user data:', error);
       }
     } catch (err) {
       Alert.alert(err.message);
@@ -148,7 +133,6 @@ const SignInScreen = ({navigation}) => {
             <Text style={styles.buttonText}>Login</Text>
           )}
         </TouchableOpacity>
-    
       </View>
     </SafeAreaView>
   );

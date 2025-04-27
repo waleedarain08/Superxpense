@@ -15,8 +15,7 @@ import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {API} from '../../utilis/Constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
+import {post} from '../../utilis/Api';
 
 const SignUpScreen = ({navigation}) => {
   const phoneRef = useRef(null);
@@ -53,40 +52,25 @@ const SignUpScreen = ({navigation}) => {
   const handleSignUp = async () => {
     if (!validate()) return;
     setLoading(true);
-    const removeItem = async (userData) => {
+    const removeItem = async userData => {
       try {
         await AsyncStorage.removeItem(userData);
         console.log(`Item with key "${userData}" removed`);
       } catch (error) {
         console.error('Error removing item from AsyncStorage:', error);
-      };
-    }
+      }
+    };
     removeItem('userData');
     try {
-      const response = await fetch(API.signUp, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email, password}),
-      });
-      console.log(response);
-
-      const data = await response.json();
-
-      if (response.ok) {
-        //console.log('Signup successful:', data);
-        navigation.navigate('OnBoarding');
-        Alert.alert('Success', 'Signup successful');
-        try {
-          await AsyncStorage.setItem('userData', JSON.stringify(data));
-          console.log('User data saved to AsyncStorage');
-        } catch (error) {
-          console.error('Failed to save user data:', error);
-        }
-      } else {
-        //navigation.navigate('OnBoarding');
-        Alert.alert('Error', data.message);
+      const data = await post(API.signUp, {email, password});
+      console.log(data);
+      navigation.navigate('OnBoarding');
+      Alert.alert('Success', 'Signup successful');
+      try {
+        await AsyncStorage.setItem('userData', JSON.stringify(data));
+        console.log('User data saved to AsyncStorage');
+      } catch (error) {
+        console.error('Failed to save user data:', error);
       }
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');
@@ -126,7 +110,7 @@ const SignUpScreen = ({navigation}) => {
           onChangeText={setEmail}
           value={email}
           keyboardType="email-address"
-          autoCapitalize='none'
+          autoCapitalize="none"
         />
         {emailError && (
           <Text style={styles.errorText}>Enter a valid Email</Text>

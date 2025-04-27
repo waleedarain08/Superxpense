@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
-import { View, Text, Image, StyleSheet, StatusBar , Animated } from 'react-native';
+import { Text, Image, StyleSheet , Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Colors} from '../../utilis/Colors';
 
 
 const SplashScreen = ({navigation}) => {
@@ -24,8 +23,7 @@ const SplashScreen = ({navigation}) => {
     ]).start();
 
     // Navigate to main app after splash screen
-    const timer = setTimeout(() => {
-      //onFinish();
+    const timer = setTimeout(() => {;
       navigation.replace('Welcome');
     }, 2000);
 
@@ -33,7 +31,6 @@ const SplashScreen = ({navigation}) => {
   }, []);
 
   return (
-    // <View style={styles.container}>
         <LinearGradient
           colors={['#d4fbe8', '#f5f5f9']} // Spread green color more
           start={{ x: 0.0, y: 0.0 }}
@@ -56,15 +53,12 @@ const SplashScreen = ({navigation}) => {
           <Text style={styles.text}>Superxpense</Text>
           </Animated.View>
         </LinearGradient>
-      
-    // </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: Colors.white,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -75,7 +69,6 @@ const styles = StyleSheet.create({
     width: 70,
     height: 78,
     marginBottom: 20,
-   // borderRadius: 20,
   },
   text: {
     fontSize: 28,

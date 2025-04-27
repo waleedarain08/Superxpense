@@ -17,7 +17,8 @@ import StepperHeader from '../../component/StepperHeader';
 import {FontFamily} from '../../utilis/Fonts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinkSDK from 'lean-react-native';
-import {baseUrl} from '../../utilis/Constant';
+import {API, baseUrl} from '../../utilis/Constant';
+import {get} from '../../utilis/Api';
 
 const countries = [
   {
@@ -85,33 +86,12 @@ const IssuingCountryScreen = ({navigation}) => {
       const token = userData.data?.accessToken;
       const userId = userData.data.id;
 
-      const responses = await fetch(
-        `${baseUrl}lean/customer-access-token?userId=${userId}`,
-        {
-          method: 'GET',
-          headers: {
-            accept: '/',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const resp = await responses.json();
-      console.log('access token response:', resp);
-
-      if (resp.statusCode === 200) {
-        const r = resp.data;
-        console.log('r:', r);
-        setCustomerID(r.customerId);
-        setLeanToken(r.accessToken);
-
-        //setTimeout(() => {
-        // Alert.alert('SuperXpense', 'Logged in successfully');
-        connectLean(r);
-        // }, 800);
-      } else {
-        setLoading(false); // 👈 Hide loading if API failed
-      }
+      const data = await get(`${API.leanCustomer}`, {userId: userId}, token);
+      const r = data.data;
+      console.log('r:', r);
+      setCustomerID(r.customerId);
+      setLeanToken(r.accessToken);
+      connectLean(r);
     } catch (error) {
       setLoading(false);
       console.error('Failed to load user data or call API:', error);
@@ -120,9 +100,6 @@ const IssuingCountryScreen = ({navigation}) => {
 
   const connectLean = r => {
     if (Lean.current) {
-      //console.log('r:', r);
-      //console.log('customerID', r.customerId);
-      //console.log('leanToken', r.accessToken);
       Lean.current.connect({
         customer_id: r.customerId,
         permissions: [
@@ -229,7 +206,6 @@ const IssuingCountryScreen = ({navigation}) => {
             if (response.status !== 'SUCCESS') {
               Alert.alert('Connection Failed', response.status);
             } else {
-              //Alert.alert('Lean linked Successfully');
               console.log(response.bank.bank_identifier);
 
               navigation.navigate('ConnectedAccounts', {

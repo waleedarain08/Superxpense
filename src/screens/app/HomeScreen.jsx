@@ -32,7 +32,6 @@ const HomeScreen = ({navigation}) => {
           <View style={styles.actionButtons}>
             <TouchableOpacity
               style={styles.plusButton}
-              // onPress={() => hitLeanApi()}
               onPress={() => navigation.navigate('IssuingCountryScreen')}>
               <Plus />
             </TouchableOpacity>
