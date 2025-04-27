@@ -13,9 +13,9 @@ import {LeftIcon, Plus} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import BankCard from '../../component/BankCard';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
+import {getItem} from '../../utilis/StorageActions';
 
 const ConnectedAccountsScreen = ({navigation, route}) => {
   const BankName = route.params.bankName;
@@ -25,8 +25,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
 
   const fetchTransactions = async id => {
     setStateEntityId(id);
-    const userValue = await AsyncStorage.getItem('userData');
-    const userData = userValue != null ? JSON.parse(userValue) : null;
+    const userData = await getItem('userData');
     const token = userData.data?.accessToken;
 
     try {
@@ -53,8 +52,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   const leanConnection = async () => {
     try {
       setLoading(true);
-      const jsonValue = await AsyncStorage.getItem('userData');
-      const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
+      const userData = await getItem('userData');
       const token = userData.data?.accessToken;
       const data = await get(`${API.leanConnection}`, null, token);
       const r = data.data;

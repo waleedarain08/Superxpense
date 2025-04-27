@@ -15,10 +15,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../../utilis/Colors';
 import StepperHeader from '../../component/StepperHeader';
 import {FontFamily} from '../../utilis/Fonts';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinkSDK from 'lean-react-native';
-import {API, baseUrl} from '../../utilis/Constant';
+import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
+import { getItem } from '../../utilis/StorageActions';
 
 const countries = [
   {
@@ -74,9 +74,7 @@ const IssuingCountryScreen = ({navigation}) => {
   const hitLeanApi = async () => {
     try {
       setLoading(true);
-      const jsonValue = await AsyncStorage.getItem('userData');
-      const userData = jsonValue != null ? JSON.parse(jsonValue) : null;
-
+      const userData = await getItem('userData');
       if (!userData || !userData.data?.accessToken || !userData.data?.id) {
         console.error('Invalid user data');
         setLoading(false); //

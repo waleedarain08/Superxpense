@@ -121,12 +121,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#00B67A',
+    backgroundColor: Colors.btnColor,
     borderRadius: 100,
     alignItems: 'center',
     height: 48,
     justifyContent: 'center',
-    // marginBottom: 12,
     marginHorizontal: 20,
   },
   buttonText: {

@@ -12,9 +12,9 @@ import {Credit, LeftIcon} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {ChevronRight, Refresh} from '../../icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {get} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
+import { getItem } from '../../utilis/StorageActions';
 
 const Tag = ({label, color}) => (
   <View style={[styles.tag, {backgroundColor: color}]}>
@@ -47,8 +47,7 @@ const BankTransactionScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
 
   const fetchTransactions = async () => {
-    const userValue = await AsyncStorage.getItem('userData');
-    const userData = userValue != null ? JSON.parse(userValue) : null;
+    const userData = await getItem('userData');
     const token = userData.data?.accessToken;
 
     try {
@@ -58,7 +57,8 @@ const BankTransactionScreen = ({navigation, route}) => {
         {accountId: AccountData.id, entityId: enitityId},
         token,
       );
-
+      console.log(data);
+      
       const apiTransactions = data.data.data.transactions;
 
       const formatted = apiTransactions.map(tx => ({

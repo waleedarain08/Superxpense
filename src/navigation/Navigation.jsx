@@ -4,19 +4,21 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {navigationRef} from './NavigationRef';
+import {Colors} from '../utilis/Colors';
+
+// Screens
 import SplashScreen from '../screens/auth/SplashScreen';
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import BudgetsScreen from '../screens/app/BudgetsScreen';
 import InsightsScreen from '../screens/app/InsightsScreen';
-import CalendarScreen from '../screens/app/CalendarScreen';
 import HomeScreen from '../screens/app/HomeScreen';
-import {Colors} from '../utilis/Colors';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 import OnBoardingScreen from '../screens/auth/OnBoardingScreen';
 import ConnectedAccountsScreen from '../screens/app/ConnectedAccoutsScreen';
 import BankTransactionScreen from '../screens/app/BankTransactionScreen';
 import IssuingCountryScreen from '../screens/app/IssuingCountryScreen';
+import SettingScreen from '../screens/app/SettingScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -45,7 +47,10 @@ const Navigation = () => {
           name="ConnectedAccounts"
           component={ConnectedAccountsScreen}
         />
-        <Stack.Screen name="IssuingCountryScreen" component={IssuingCountryScreen} />
+        <Stack.Screen
+          name="IssuingCountryScreen"
+          component={IssuingCountryScreen}
+        />
         <Stack.Screen
           name="BankTransaction"
           component={BankTransactionScreen}
@@ -139,7 +144,7 @@ const BottomNavigator = () => {
         />
         <BottomStack.Screen
           name="Settings"
-          component={CalendarScreen}
+          component={SettingScreen}
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (

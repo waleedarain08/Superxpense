@@ -14,8 +14,8 @@ import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {API} from '../../utilis/Constant';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {post} from '../../utilis/Api';
+import {removeItem, setItem} from '../../utilis/StorageActions';
 
 const SignUpScreen = ({navigation}) => {
   const phoneRef = useRef(null);
@@ -52,26 +52,13 @@ const SignUpScreen = ({navigation}) => {
   const handleSignUp = async () => {
     if (!validate()) return;
     setLoading(true);
-    const removeItem = async userData => {
-      try {
-        await AsyncStorage.removeItem(userData);
-        console.log(`Item with key "${userData}" removed`);
-      } catch (error) {
-        console.error('Error removing item from AsyncStorage:', error);
-      }
-    };
+    await removeItem('userData');
     removeItem('userData');
     try {
       const data = await post(API.signUp, {email, password});
-      console.log(data);
       navigation.navigate('OnBoarding');
       Alert.alert('Success', 'Signup successful');
-      try {
-        await AsyncStorage.setItem('userData', JSON.stringify(data));
-        console.log('User data saved to AsyncStorage');
-      } catch (error) {
-        console.error('Failed to save user data:', error);
-      }
+      await setItem('userData', data);
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');
     } finally {
