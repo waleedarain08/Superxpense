@@ -264,6 +264,16 @@ export const Right: React.FC<IconProps> = ({color, size, style}) => (
   />
 );
 
+export const Down: React.FC<IconProps> = ({color, size, style}) => (
+  <VectorIcon
+    name="chevron-down"
+    color={color}
+    size={size}
+    type="Entypo"
+    style={style}
+  />
+);
+
 export const ThreeDots: React.FC<IconProps> = ({color, size, style}) => (
   <VectorIcon
     name="dots-three-horizontal"

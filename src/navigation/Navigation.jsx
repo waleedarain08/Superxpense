@@ -19,6 +19,8 @@ import ConnectedAccountsScreen from '../screens/app/ConnectedAccoutsScreen';
 import BankTransactionScreen from '../screens/app/BankTransactionScreen';
 import IssuingCountryScreen from '../screens/app/IssuingCountryScreen';
 import SettingScreen from '../screens/app/SettingScreen';
+import BillsNPayments from '../screens/app/BillsNPayments';
+import ChatScreen from '../screens/app/ChatScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -55,6 +57,8 @@ const Navigation = () => {
           name="BankTransaction"
           component={BankTransactionScreen}
         />
+        <Stack.Screen name="BillsNPayments" component={BillsNPayments} />
+        <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="Main" component={BottomNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

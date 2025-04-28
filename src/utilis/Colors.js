@@ -1,7 +1,6 @@
 export const Colors = {
   white: '#FFFFFF',
   black: '#000000',
-  txtColor: '#363636',
   logoColor: '#00CFFF',
   red: '#d33',
   transactionCard: '#1c1c1c',
@@ -44,4 +43,6 @@ export const Colors = {
   seventyBlack: '#000000B2',
   darkestgray: '#7878801F',
   btnColor: '#00B67A',
+  paid: '#9245FF',
+  left: '#F964FC',
 };

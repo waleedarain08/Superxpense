@@ -4,8 +4,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {CarGreen, Invoice} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 import {Colors} from '../utilis/Colors';
+import {Down} from '../icons';
 
-const BudgetCard = () => {
+const BudgetCardd = () => {
   const totalBudget = 10000;
   const budgetLeft = 2000;
   const spent = totalBudget - budgetLeft;
@@ -30,12 +31,12 @@ const BudgetCard = () => {
       </View>
 
       {/* Category Budgets */}
-      <Text style={styles.topBudgetText}>Top Monthly Budget</Text>
-
+      <View style={styles.budgetHeader}>
+        <Text style={styles.topBudgetText}>Total Planned Expenses</Text>
+        <Down size={15} />
+      </View>
       <View style={styles.budgetItem}>
-        <View style={styles.iconStyle}>
-          <CarGreen />
-        </View>
+        <View style={styles.dotsStyle} />
         <Text style={styles.label}>Financials</Text>
         <Text style={styles.amount}>
           <Text style={{color: Colors.txtColor}}>200</Text> of 300 AED
@@ -43,10 +44,22 @@ const BudgetCard = () => {
       </View>
 
       <View style={styles.budgetItem}>
-        <View style={styles.iconStyle}>
-          <Invoice />
-        </View>
+        <View style={styles.dotsStyle} />
         <Text style={styles.label}>Bills & Utilities</Text>
+        <Text style={styles.amount}>
+          <Text style={{color: Colors.txtColor}}>120</Text> of 250 AED
+        </Text>
+      </View>
+      <View style={styles.budgetItem}>
+        <View style={styles.dotsStyle} />
+        <Text style={styles.label}>Housing</Text>
+        <Text style={styles.amount}>
+          <Text style={{color: Colors.txtColor}}>120</Text> of 250 AED
+        </Text>
+      </View>
+      <View style={styles.budgetItem}>
+        <View style={styles.dotsStyle} />
+        <Text style={styles.label}>Savings</Text>
         <Text style={styles.amount}>
           <Text style={{color: Colors.txtColor}}>120</Text> of 250 AED
         </Text>
@@ -70,7 +83,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 16,
     color: Colors.txtColor,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.semiBold,
     marginBottom: 20,
   },
   progressBarBackground: {
@@ -88,7 +101,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FontFamily.medium,
     color: Colors.txtColor,
-    marginBottom: 20,
   },
   budgetItem: {
     backgroundColor: Colors.lightestGray,
@@ -108,6 +120,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
+    marginLeft: 5,
   },
   amount: {
     fontSize: 14,
@@ -123,6 +136,18 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginRight: 6,
   },
+  budgetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  dotsStyle: {
+    height: 8,
+    width: 8,
+    borderRadius: 16,
+    backgroundColor: '#0D9488',
+  },
 });
 
-export default BudgetCard;
+export default BudgetCardd;

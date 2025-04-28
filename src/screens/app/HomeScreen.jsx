@@ -14,6 +14,7 @@ import {Dropdown, Notification, Plus, Stars} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
+import UpcomingBills from '../../component/UpcomingBills';
 
 const HomeScreen = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('Overview');
@@ -61,7 +62,7 @@ const HomeScreen = ({navigation}) => {
           ))}
         </View>
       </View>
-      <ScrollView style={styles.safeView}>
+      <ScrollView style={styles.safeView} showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <Icon name="chevron-back" size={14} color={Colors.black} />
           <Text style={styles.month}>Apr 2025</Text>
@@ -69,23 +70,27 @@ const HomeScreen = ({navigation}) => {
         </View>
         <StackedChart />
         <SpendingSummary />
-        <LinearGradient
-          colors={['#6CFFC2', '#FFFFFF']}
-          start={{x: 0, y: 3}}
-          end={{x: 1, y: 1}}
-          style={styles.superCard}>
-          <View style={styles.superCardHeader}>
-            <Text style={styles.recentLabel}>Superxpense AI</Text>
-            <Stars />
-          </View>
-          <Text style={styles.recentLabel2}>
-            Ask me anything about your personal finance, spending and many more.
-          </Text>
-          <View style={{alignItems: 'flex-end'}}>
-            <Icon name="chevron-forward" size={14} color={Colors.black} />
-          </View>
-        </LinearGradient>
+        <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+          <LinearGradient
+            colors={['#6CFFC2', '#FFFFFF']}
+            start={{x: 0, y: 3}}
+            end={{x: 1, y: 1}}
+            style={styles.superCard}>
+            <View style={styles.superCardHeader}>
+              <Text style={styles.recentLabel}>Superxpense AI</Text>
+              <Stars />
+            </View>
+            <Text style={styles.recentLabel2}>
+              Ask me anything about your personal finance, spending and many
+              more.
+            </Text>
+            <View style={{alignItems: 'flex-end', marginRight: 20}}>
+              <Icon name="chevron-forward" size={14} color={Colors.black} />
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
         <BudgetCard />
+        <UpcomingBills navigation={navigation} />
       </ScrollView>
     </View>
   );
@@ -183,8 +188,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: Colors.white,
     marginTop: 15,
-    paddingHorizontal: 20,
-    paddingVertical: 11,
     borderLeftWidth: 1,
     borderLeftColor: Colors.greenColor,
   },
@@ -198,8 +201,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: FontFamily.regular,
     color: Colors.black,
+    marginLeft: 16,
   },
   superCardHeader: {
+    marginTop: 11,
+    marginLeft: 16,
     backgroundColor: Colors.white,
     height: 25,
     flexDirection: 'row',

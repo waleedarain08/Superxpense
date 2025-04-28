@@ -17,8 +17,28 @@ import Money from './money.svg';
 import LeftIcon from './leftIcon.svg';
 import Dinner from './dinner.svg';
 import Goverment from './goverment.svg';
+import Internet from './internet.svg';
+import Wifi from './wifi.svg';
+import InvestmentWhite from './investmentWhite.svg';
+import Salary from './salary.svg';
+import ChatHeader from './chatHeader.svg';
+import AddExpense from './addExpense.svg';
+import Plan from './plan.svg';
+import SetBudget from './setBudget.svg';
+import ViewSummary from './viewSummary.svg';
+import Voice from './voice.svg';
 
 export {
+  Voice,
+  ViewSummary,
+  SetBudget,
+  Plan,
+  AddExpense,
+  ChatHeader,
+  Salary,
+  Internet,
+  Wifi,
+  InvestmentWhite,
   Dinner,
   Goverment,
   Car,
