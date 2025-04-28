@@ -14,7 +14,7 @@ import {Colors} from '../../utilis/Colors';
 const SettingScreen = ({navigation}) => {
   const handleSignOut = async () => {
     await removeItem('userData');
-    navigation.navigate('SignIn');
+    navigation.navigate('Welcome');
   };
   return (
     <SafeAreaView
