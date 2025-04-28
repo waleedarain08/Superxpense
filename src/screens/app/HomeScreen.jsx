@@ -62,7 +62,9 @@ const HomeScreen = ({navigation}) => {
           ))}
         </View>
       </View>
+      {selectedTab === 'Overview' && (
       <ScrollView style={styles.safeView} showsVerticalScrollIndicator={false}>
+        <Text style={{marginLeft:'37%',marginTop:10, color:Colors.lightblack}}>Coming Soon</Text>
         <View style={styles.card}>
           <Icon name="chevron-back" size={14} color={Colors.black} />
           <Text style={styles.month}>Apr 2025</Text>
@@ -92,6 +94,22 @@ const HomeScreen = ({navigation}) => {
         <BudgetCard />
         <UpcomingBills navigation={navigation} />
       </ScrollView>
+      )}
+      {selectedTab === 'Spending' && (
+        <ScrollView style={styles.safeView} showsVerticalScrollIndicator={false}>
+          <Text style={{marginLeft: '37%', marginTop: 10, color: Colors.lightblack}}>
+            Coming Soon
+          </Text>
+          {/* <SpendingSummary /> */}
+        </ScrollView>
+      )}
+      {selectedTab === 'All Account' && (
+        <ScrollView style={styles.safeView} showsVerticalScrollIndicator={false}>
+          <Text style={{marginLeft: '37%', marginTop: 10, color: Colors.lightblack}}>
+            Coming Soon
+          </Text>
+        </ScrollView>
+      )}
     </View>
   );
 };

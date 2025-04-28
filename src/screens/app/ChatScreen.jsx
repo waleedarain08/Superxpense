@@ -64,6 +64,8 @@ const HomeScreen = ({navigation}) => {
           paddingBottom: 80,
           justifyContent: 'center',
         }}>
+                  <Text style={{marginLeft:'37%',marginTop:10, color:Colors.lightblack}}>Coming Soon</Text>
+          
         {/* Greeting */}
         <View style={styles.greetingContainer}>
           <Text style={styles.greetingText}>Good morning John</Text>

@@ -143,6 +143,9 @@ const BillsNPayments = ({navigation}) => {
           ))}
         </View>
       </View>
+              <Text style={{marginLeft:'37%',marginTop:5,marginBottom:5, color:Colors.lightblack}}>Coming Soon</Text>
+      
+      {selectedTab === 'Upcoming' && (
       <ScrollView
         style={styles.screen}
         contentContainerStyle={{paddingBottom: 20}}
@@ -169,6 +172,24 @@ const BillsNPayments = ({navigation}) => {
           />
         </View>
       </ScrollView>
+      )}
+      {selectedTab === 'Recurring' && (
+        <ScrollView
+          style={styles.screen}
+          contentContainerStyle={{paddingBottom: 20}}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Recurring Payments</Text>
+            <FlatList
+              data={thisMonthData}
+              renderItem={({item}) => <SubscriptionItem item={item} />}
+              keyExtractor={item => item.id}
+              scrollEnabled={false}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+          </View>
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -178,7 +199,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.bgColor,
     paddingHorizontal: 16,
-    paddingTop: 20,
+    paddingTop: 10,
   },
   section: {
     backgroundColor: Colors.white,
