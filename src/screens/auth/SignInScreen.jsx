@@ -47,7 +47,6 @@ const SignInScreen = ({navigation}) => {
 
     setLoading(true);
     await removeItem('userData');
-    await removeItem('bankName');
     try {
       const data = await post(API.logIn, {email, password});
       navigation.navigate('Main');

@@ -25,18 +25,18 @@ import CalendarHeader from '../../component/CalendarHeader';
 import moment from 'moment';
 
 const categoryColors = [
-  Colors.lightRed,
-  Colors.purple,
-  Colors.lightyellow,
-  Colors.green,
-  Colors.blue,
-  Colors.orange,
-  Colors.teal,
-  Colors.pink,
-  Colors.gray,
-  Colors.cyan,
-  Colors.lavender,
-  Colors.indigo,
+  '#FF6B6B', // lightRed
+  '#9B59B6', // purple
+  '#F9E79F', // lightyellow
+  '#2ECC71', // green
+  '#3498DB', // blue
+  '#F39C12', // orange
+  '#1ABC9C', // teal
+  '#FFB6C1', // pink
+  '#BDC3C7', // gray
+  '#00BCD4', // cyan
+  '#E6E6FA', // lavender
+  '#3F51B5', // indigo
 ];
 
 const HomeScreen = ({navigation}) => {
@@ -50,6 +50,7 @@ const HomeScreen = ({navigation}) => {
   const [selectedDate, setSelectedDate] = useState(moment());
   const [month, setMonth] = useState(selectedDate.month() + 1);
   const [year, setYear] = useState(selectedDate.year());
+  const [activeData, setActiveData] = useState([]);
 
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
@@ -89,9 +90,9 @@ const HomeScreen = ({navigation}) => {
       setLoading(true);
       const userData = await getItem('userData');
       const token = userData.data?.accessToken;
-      const bankName = await getItem('bankName');
-      setBankName(bankName);
       const data = await get(`${API.leanConnection}`, null, token);
+      setActiveData(data.data);
+      setBankName(data.data[0].bank_identifier);
       const r = data.data;
       const id = r[0].id;
       fetchTransactions(id);
@@ -204,7 +205,10 @@ const HomeScreen = ({navigation}) => {
             onDateChange={handleDateChange}
           />
           <StackedChart />
-          <SpendingSummary data={categoryData} />
+          <SpendingSummary
+            data={categoryData}
+            month={selectedDate.format('MMM YYYY')}
+          />
           <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
             <LinearGradient
               colors={['#6CFFC2', '#FFFFFF']}
@@ -244,11 +248,7 @@ const HomeScreen = ({navigation}) => {
         </ScrollView>
       )}
       {selectedTab === 'All Account' &&
-        (!bankName ? (
-          <View style={styles.loadingOverlay}>
-            <Text style={styles.subtitle}>No Bank account connected</Text>
-          </View>
-        ) : (
+        (activeData.length > 0 ? (
           <View style={styles.section}>
             <Text style={styles.title}>Bank Connections</Text>
             <Text style={styles.subtitle}>
@@ -269,6 +269,18 @@ const HomeScreen = ({navigation}) => {
                 </View>
               )
             )}
+          </View>
+        ) : (
+          <View>
+            <Text style={styles.title}>No active accounts</Text>
+            <Text style={styles.subtitle}>
+              Add a bank connection to see them here
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('IssuingCountryScreen')}
+              style={styles.button}>
+              <Text style={styles.buttonText}>Connect Account</Text>
+            </TouchableOpacity>
           </View>
         ))}
     </View>
@@ -369,6 +381,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     borderLeftWidth: 1,
     borderLeftColor: Colors.greenColor,
+    marginBottom: 15,
   },
   recentLabel: {
     fontSize: 12,
@@ -424,5 +437,21 @@ const styles = StyleSheet.create({
     color: Colors.lightTxtColor,
     textAlign: 'center',
     marginBottom: 30,
+  },
+  button: {
+    backgroundColor: '#00B67A',
+    borderRadius: 100,
+    width: '90%',
+    alignItems: 'center',
+    height: 48,
+    justifyContent: 'center',
+    marginBottom: 12,
+    marginTop: 20,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: Colors.white,
+    fontWeight: '500',
+    fontSize: 16,
   },
 });

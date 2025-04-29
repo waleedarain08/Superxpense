@@ -201,7 +201,6 @@ const IssuingCountryScreen = ({navigation}) => {
           sandbox
           callback={async response => {
             setLoading(false);
-            await setItem('bankName', response.bank.bank_identifier);
             if (response.status !== 'SUCCESS') {
               Alert.alert('Connection Failed', response.status);
             } else {

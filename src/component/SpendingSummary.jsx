@@ -13,7 +13,7 @@ import {FontFamily} from '../utilis/Fonts';
 
 const {width} = Dimensions.get('window');
 
-const SpendingSummary = ({data = []}) => {
+const SpendingSummary = ({data = [],month}) => {
   const [showAll, setShowAll] = useState(false);
 
   const total = data.reduce((sum, item) => sum + item.amount, 0);
@@ -45,7 +45,7 @@ const SpendingSummary = ({data = []}) => {
         <View style={styles.chartCenter}>
           <Text style={styles.chartCurrency}>AED</Text>
           <Text style={styles.chartAmount}>{total.toLocaleString()}</Text>
-          <Text style={styles.chartMonth}>April 2025</Text>
+          <Text style={styles.chartMonth}>{month}</Text>
         </View>
       </View>
 
