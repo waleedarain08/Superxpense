@@ -10,7 +10,7 @@ import {Colors} from '../utilis/Colors';
 import SplashScreen from '../screens/auth/SplashScreen';
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import BudgetsScreen from '../screens/app/BudgetsScreen';
-import BillsScreen from '../screens/app/BillsScreen';
+import BillsScreen from '../screens/app/BillsNPayments';
 import HomeScreen from '../screens/app/HomeScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignupScreen from '../screens/auth/SignupScreen';

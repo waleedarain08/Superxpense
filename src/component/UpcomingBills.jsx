@@ -99,7 +99,7 @@ const UpcomingBills = ({navigation}) => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('BillsNPayments')}>
+        onPress={() => navigation.navigate('Bills')}>
         <Text style={styles.buttonText}>See all upcoming bills</Text>
       </TouchableOpacity>
     </View>
