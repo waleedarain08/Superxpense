@@ -25,18 +25,18 @@ import CalendarHeader from '../../component/CalendarHeader';
 import moment from 'moment';
 
 const categoryColors = [
+  '#F17192',
   Colors.lightRed,
   Colors.purple,
   Colors.lightyellow,
-  Colors.green,
+  '#7DD8A1',
   Colors.blue,
-  Colors.orange,
-  Colors.teal,
-  Colors.pink,
-  Colors.gray,
-  Colors.cyan,
-  Colors.lavender,
-  Colors.indigo,
+  '#F4C61E',
+  '#28A08C',
+  Colors.darkestgray,
+  Colors.greenColor,
+  Colors.greenOpacity,
+  Colors.graphGreen,
 ];
 
 const HomeScreen = ({navigation}) => {
@@ -85,6 +85,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   const leanConnection = async () => {
+    alert('leanConnection');
     try {
       setLoading(true);
       const userData = await getItem('userData');
@@ -125,13 +126,13 @@ const HomeScreen = ({navigation}) => {
         {month: month, year: year},
         token,
       );
-
+      console.log('Monthly Expense Data:', response);
       const categories = response?.data?.categories || [];
 
       // Add a rotating color to each category
       const coloredData = categories.map((item, index) => ({
         ...item,
-        color: categoryColors[index % categoryColors.length],
+        color: categoryColors[index],
       }));
 
       setCategoryData(coloredData);
