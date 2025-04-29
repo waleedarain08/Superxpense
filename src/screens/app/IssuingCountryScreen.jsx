@@ -18,7 +18,7 @@ import {FontFamily} from '../../utilis/Fonts';
 import LinkSDK from 'lean-react-native';
 import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
-import { getItem } from '../../utilis/StorageActions';
+import {getItem, setItem} from '../../utilis/StorageActions';
 
 const countries = [
   {
@@ -199,13 +199,12 @@ const IssuingCountryScreen = ({navigation}) => {
           appToken="6420a4cb-7fc4-4e6e-bd98-156435654be9"
           customerId={customerID}
           sandbox
-          callback={response => {
+          callback={async response => {
             setLoading(false);
+            await setItem('bankName', response.bank.bank_identifier);
             if (response.status !== 'SUCCESS') {
               Alert.alert('Connection Failed', response.status);
             } else {
-              console.log(response.bank.bank_identifier);
-
               navigation.navigate('ConnectedAccounts', {
                 bankName: response.bank.bank_identifier,
               });

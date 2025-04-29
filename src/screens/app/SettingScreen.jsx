@@ -14,6 +14,7 @@ import {Colors} from '../../utilis/Colors';
 const SettingScreen = ({navigation}) => {
   const handleSignOut = async () => {
     await removeItem('userData');
+    await removeItem('bankName');
     navigation.navigate('Welcome');
   };
   return (

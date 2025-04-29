@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,43 +8,23 @@ import {
 } from 'react-native';
 import {PieChart} from 'react-native-svg-charts';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Car, Credit, Sub} from '../assets/svgs';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
 const {width} = Dimensions.get('window');
 
-const SpendingSummary = () => {
-  const spendingData = [
-    {
-      key: '1',
-      amount: 6000,
-      label: 'Credit Card Payment',
-      color: Colors.lightRed,
-      icon: <Credit />,
-    },
-    {
-      key: '2',
-      amount: 1000,
-      label: 'Transportation Services',
-      color: Colors.purple,
-      icon: <Car />,
-    },
-    {
-      key: '3',
-      amount: 300,
-      label: 'Subscription',
-      color: Colors.lightyellow,
-      icon: <Sub />,
-    },
-  ];
+const SpendingSummary = ({data = []}) => {
+  const [showAll, setShowAll] = useState(false);
 
-  const total = 10000;
-  const chartData = spendingData.map(item => ({
+  const total = data.reduce((sum, item) => sum + item.amount, 0);
+
+  const chartData = data.map((item, index) => ({
     value: item.amount,
-    svg: {fill: item.color},
-    key: item.key,
+    svg: {fill: item.color || Colors.lightRed},
+    key: item.category || String(index),
   }));
+
+  const visibleData = showAll ? data : data.slice(0, 3);
 
   return (
     <View style={styles.container}>
@@ -70,31 +50,40 @@ const SpendingSummary = () => {
       </View>
 
       {/* Spending List */}
-
-      {spendingData.map((item, index) => (
+      {visibleData.map((item, index) => (
         <TouchableOpacity
-          key={item.key}
+          key={item.category}
           style={[
             styles.listItem,
-            index !== spendingData.length - 1 && styles.listItemBorder, // only apply border if not last item
+            index !== visibleData.length - 1 && styles.listItemBorder,
           ]}>
-          <View style={[styles.iconCircle, {backgroundColor: item.color}]}>
-            {item.icon}
+          <View
+            style={[
+              styles.iconCircle,
+              {backgroundColor: item.color || Colors.lightRed},
+            ]}>
+            {/* Optional: Add icons here based on category */}
           </View>
           <View style={{flex: 1}}>
             <Text style={styles.amountText}>
               {item.amount.toLocaleString()} AED
             </Text>
-            <Text style={styles.labelText}>{item.label}</Text>
+            <Text style={styles.labelText}>{item.category}</Text>
           </View>
           <Icon name="chevron-forward" size={12} color={Colors.black} />
         </TouchableOpacity>
       ))}
 
-      {/* Breakdown Button */}
-      <TouchableOpacity style={styles.breakdownButton}>
-        <Text style={styles.breakdownText}>See full breakdown</Text>
-      </TouchableOpacity>
+      {/* Toggle Button */}
+      {data.length > 3 && (
+        <TouchableOpacity
+          style={styles.breakdownButton}
+          onPress={() => setShowAll(prev => !prev)}>
+          <Text style={styles.breakdownText}>
+            {showAll ? 'Show less' : 'See full breakdown'}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -126,7 +115,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    height: 200, // ensures enough space
+    height: 200,
     width: '100%',
   },
   pieChart: {
@@ -191,6 +180,6 @@ const styles = StyleSheet.create({
   },
   listItemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: Colors.newBorderColor, // or any color you prefer
+    borderBottomColor: Colors.newBorderColor,
   },
 });

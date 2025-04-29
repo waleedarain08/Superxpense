@@ -9,7 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {LeftIcon, Plus} from '../../assets/svgs';
+import {LeftIcon} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import BankCard from '../../component/BankCard';

@@ -7,5 +7,6 @@ export const API = {
   tansActions: `${baseUrl}lean/transactions`,
   leanCustomer: `${baseUrl}lean/customer-access-token`,
   leanAccounts: `${baseUrl}lean/accounts`,
-  leanConnection:`${baseUrl}lean/active-connections`,
+  leanConnection: `${baseUrl}lean/active-connections`,
+  leanStats: `${baseUrl}lean/stats/category-expenses-by-month`,
 };
