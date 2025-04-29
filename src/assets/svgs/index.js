@@ -27,8 +27,10 @@ import Plan from './plan.svg';
 import SetBudget from './setBudget.svg';
 import ViewSummary from './viewSummary.svg';
 import Voice from './voice.svg';
+import Wallet from './wallet.svg';
 
 export {
+  Wallet,
   Voice,
   ViewSummary,
   SetBudget,

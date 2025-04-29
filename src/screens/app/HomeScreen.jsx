@@ -23,6 +23,7 @@ import BankCard from '../../component/BankCard';
 import {useFocusEffect} from '@react-navigation/native';
 import CalendarHeader from '../../component/CalendarHeader';
 import moment from 'moment';
+import LargestPurchaseCard from '../../component/LargestPurchaseCard';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -37,7 +38,7 @@ const categoryColors = [
   '#00BCD4', // cyan
   '#E6E6FA', // lavender
   '#3F51B5', // indigo
-  '#24F8B8'
+  '#24F8B8',
 ];
 
 const HomeScreen = ({navigation}) => {
@@ -52,6 +53,7 @@ const HomeScreen = ({navigation}) => {
   const [month, setMonth] = useState(selectedDate.month() + 1);
   const [year, setYear] = useState(selectedDate.year());
   const [activeData, setActiveData] = useState([]);
+  const [largestTransaction, setLargestTransaction] = useState({});
 
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
@@ -128,7 +130,13 @@ const HomeScreen = ({navigation}) => {
         {month: month, year: year},
         token,
       );
-      console.log('Monthly Expense Data:', response);
+      const largestTransaction = response.data.categories.reduce(
+        (max, item) => (item.amount > max.amount ? item : max),
+        response.data.categories[0],
+      );
+      console.log('largestTransaction:', largestTransaction);
+      setLargestTransaction(largestTransaction);
+
       const categories = response?.data?.categories || [];
 
       // Add a rotating color to each category
@@ -140,6 +148,7 @@ const HomeScreen = ({navigation}) => {
       setCategoryData(coloredData);
     } catch (error) {
       console.log('Error fetching transactions:', error);
+      setCategoryData([]);
     }
   };
 
@@ -246,7 +255,15 @@ const HomeScreen = ({navigation}) => {
             }}>
             Coming Soon
           </Text>
-          {/* <SpendingSummary /> */}
+          <CalendarHeader
+            currentDate={selectedDate}
+            onDateChange={handleDateChange}
+          />
+          <LargestPurchaseCard largestAmount={largestTransaction.amount} />
+          <SpendingSummary
+            data={categoryData}
+            month={selectedDate.format('MMM YYYY')}
+          />
         </ScrollView>
       )}
       {selectedTab === 'All Account' &&
