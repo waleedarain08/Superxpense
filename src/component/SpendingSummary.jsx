@@ -20,7 +20,7 @@ const SpendingSummary = ({data = [],month}) => {
 
   const chartData = data.map((item, index) => ({
     value: item.amount,
-    svg: {fill: item.color || Colors.lightRed},
+    svg: {fill: item.color},
     key: item.category || String(index),
   }));
 
@@ -60,7 +60,7 @@ const SpendingSummary = ({data = [],month}) => {
           <View
             style={[
               styles.iconCircle,
-              {backgroundColor: item.color || Colors.lightRed},
+              {backgroundColor: item.color},
             ]}>
             {/* Optional: Add icons here based on category */}
           </View>
@@ -70,7 +70,7 @@ const SpendingSummary = ({data = [],month}) => {
             </Text>
             <Text style={styles.labelText}>{item.category}</Text>
           </View>
-          <Icon name="chevron-forward" size={12} color={Colors.black} />
+          {/* <Icon name="chevron-forward" size={12} color={Colors.black} /> */}
         </TouchableOpacity>
       ))}
 

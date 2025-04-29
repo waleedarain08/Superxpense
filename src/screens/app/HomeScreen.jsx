@@ -25,18 +25,19 @@ import CalendarHeader from '../../component/CalendarHeader';
 import moment from 'moment';
 
 const categoryColors = [
-  '#FF6B6B', // lightRed
-  '#9B59B6', // purple
-  '#F9E79F', // lightyellow
-  '#2ECC71', // green
+  '#F17192', // lightRed
+  '#717EF1', // purple
+  '#F4C61E', // lightyellow
+  '#7DD8A1', // green
   '#3498DB', // blue
-  '#F39C12', // orange
+  '#FFAD37', // orange
   '#1ABC9C', // teal
   '#FFB6C1', // pink
   '#BDC3C7', // gray
   '#00BCD4', // cyan
   '#E6E6FA', // lavender
   '#3F51B5', // indigo
+  '#24F8B8'
 ];
 
 const HomeScreen = ({navigation}) => {
@@ -86,7 +87,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   const leanConnection = async () => {
-    alert('leanConnection');
+    //alert('leanConnection');
     try {
       setLoading(true);
       const userData = await getItem('userData');
