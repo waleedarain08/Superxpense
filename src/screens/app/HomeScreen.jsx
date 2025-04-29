@@ -86,6 +86,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   const leanConnection = async () => {
+    alert('leanConnection');
     try {
       setLoading(true);
       const userData = await getItem('userData');
@@ -126,13 +127,13 @@ const HomeScreen = ({navigation}) => {
         {month: month, year: year},
         token,
       );
-
+      console.log('Monthly Expense Data:', response);
       const categories = response?.data?.categories || [];
 
       // Add a rotating color to each category
       const coloredData = categories.map((item, index) => ({
         ...item,
-        color: categoryColors[index % categoryColors.length],
+        color: categoryColors[index],
       }));
 
       setCategoryData(coloredData);

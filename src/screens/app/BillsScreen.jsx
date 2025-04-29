@@ -1,7 +1,7 @@
 import {Platform, SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const InsightsScreen = () => {
+const BillsScreen = () => {
   return (
     <SafeAreaView
       style={{
@@ -16,6 +16,6 @@ const InsightsScreen = () => {
   );
 };
 
-export default InsightsScreen;
+export default BillsScreen;
 
 const styles = StyleSheet.create({});
