@@ -50,14 +50,14 @@ const BankCard = ({bankName, totalBalance, accounts, logo, onPress}) => {
                     <Text style={styles.accountType}>
                       {account.accountType}
                     </Text>
-                    <View style={styles.refreshIcon}>
+                    {/* <View style={styles.refreshIcon}>
                       <Refresh size={10} color="green" />
-                    </View>
+                    </View> */}
                   </View>
                 </View>
                 <View style={styles.accountRight}>
                   <Text style={styles.accountBalance}>
-                    {account.accountBalance}
+                    {account.accountBalance} AED
                   </Text>
                 </View>
               </View>
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
   accountRight: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 2,
   },
   accountBalance: {
     fontSize: 14,
