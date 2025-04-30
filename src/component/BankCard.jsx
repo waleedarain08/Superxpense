@@ -16,9 +16,9 @@ const BankCard = ({bankName, totalBalance, accounts, logo, onPress}) => {
           <Text style={styles.bankTitle}>{bankName}</Text>
           <Text style={styles.bankBalance}>{totalBalance}</Text>
         </View>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <ThreeDots size={20} color="black" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Bottom: Accounts */}
@@ -44,14 +44,14 @@ const BankCard = ({bankName, totalBalance, accounts, logo, onPress}) => {
               <View>
                 <View style={styles.accountRow}>
                   <View style={styles.accountLeft}>
-                    <Text style={styles.accountType}>{account.type}</Text>
+                    <Text style={styles.accountType}>{account.accountType}</Text>
                     <View style={styles.refreshIcon}>
                       <Refresh size={10} color="green" />
                     </View>
                   </View>
                 </View>
                 <View style={styles.accountRight}>
-                  <Text style={styles.accountBalance}>{account.balance}</Text>
+                  <Text style={styles.accountBalance}>{account.accountBalance}</Text>
                 </View>
               </View>
               <ChevronRight size={12} color="black" />
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     marginBottom: 20,
+    marginTop: 10,
     padding: 16,
     shadowColor: '#000',
     shadowOpacity: 0.05,
@@ -146,6 +147,7 @@ const styles = StyleSheet.create({
   accountLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent:'center'
   },
   accountType: {
     fontSize: 13,

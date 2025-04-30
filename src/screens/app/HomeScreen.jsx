@@ -45,6 +45,7 @@ const HomeScreen = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('Overview');
   const tabs = ['All Account', 'Overview', 'Spending'];
   const [accountsData, setAccountsData] = useState([]);
+  const [banksData, setBanksData] = useState([]);
   const [stateEntityId, setStateEntityId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [bankName, setBankName] = useState('');
@@ -59,29 +60,31 @@ const HomeScreen = ({navigation}) => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
     setYear(newDate.year());
-    console.log(`Selected Month: ${newDate.month() + 1} ${newDate.year()}`); // e.g., 4 2025
+   // console.log(`Selected Month: ${newDate.month() + 1} ${newDate.year()}`); // e.g., 4 2025
   };
 
-  const fetchTransactions = async id => {
-    setStateEntityId(id);
+  const fetchTransactions = async()  => {
+    //setStateEntityId(id);
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
 
     try {
       setLoading(true);
       const data = await get(
-        `${API.leanAccounts}`,
-        {entityId: id, page: 0, size: 100},
+        `${API.bankAccounts}`,
+        null,
+        //{entityId: id, page: 0, size: 100},
         token,
       );
-      const rawAccounts = data?.data?.data?.accounts || [];
-      const formattedAccounts = rawAccounts.map(acc => ({
-        id: acc.account_id, // <-- Add this line
-        type: acc.nickname || acc.account_sub_type || 'Unknown',
-        balance: '15,000.00 AED', // Placeholder — replace with actual balance if available
-      }));
+      console.log('Fetched data:', data);
+      const rawBanks = data?.data || [];
+      // const formattedAccounts = rawAccounts.map(acc => ({
+      //   id: acc.accountId, // <-- Add this line
+      //   type: acc.accountType || acc.account_sub_type || 'Unknown',
+      //   balance: acc.accountBalance, // Placeholder — replace with actual balance if available
+      // }));
 
-      setAccountsData(formattedAccounts);
+      setBanksData(rawBanks);
     } catch (error) {
       setLoading(false);
       console.log('Error fetching transactions:', error);
@@ -92,14 +95,14 @@ const HomeScreen = ({navigation}) => {
     //alert('leanConnection');
     try {
       setLoading(true);
-      const userData = await getItem('userData');
-      const token = userData.data?.accessToken;
-      const data = await get(`${API.leanConnection}`, null, token);
-      setActiveData(data.data);
-      setBankName(data.data[0].bank_identifier);
-      const r = data.data;
-      const id = r[0].id;
-      fetchTransactions(id);
+      // const userData = await getItem('userData');
+      // const token = userData.data?.accessToken;
+      // const data = await get(`${API.leanConnection}`, null, token);
+      // setActiveData(data.data);
+      // setBankName(data.data[0].bank_identifier);
+      // const r = data.data;
+      // const id = r[0].id;
+      fetchTransactions();
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -112,10 +115,10 @@ const HomeScreen = ({navigation}) => {
     }, []),
   );
 
-  const handleAccountPress = account => {
+  const handleAccountPress = item => {
     navigation.navigate('BankTransaction', {
-      AccountData: account,
-      BankName: bankName,
+      AccountData: item.accounts,
+      BankName: item.bankName,
       enitityId: stateEntityId,
     });
   };
@@ -267,30 +270,28 @@ const HomeScreen = ({navigation}) => {
         </ScrollView>
       )}
       {selectedTab === 'All Account' &&
-        (activeData.length > 0 ? (
-          <View style={styles.section}>
+        (banksData.length > 0 ? (
+          <ScrollView
+          style={styles.section}
+          showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Bank Connections</Text>
-            <Text style={styles.subtitle}>
-              Handle your bank connection and learn more about automatic syncing
-            </Text>
-            {accountsData.length > 0 ? (
+              {banksData.map((item, index) => {
+                console.log('item:', item.accounts);
+                return (
               <BankCard
+                key={index}
                 logo={require('../../assets/images/dubaiBank.png')}
-                bankName={`${bankName} Bank`}
-                totalBalance="45,000.00 AED" // Placeholder — can calculate from data if available
-                accounts={accountsData}
-                onPress={handleAccountPress}
+                bankName={`${item.bankName} Bank`}
+                totalBalance={`${item.bankBalance} AED`}// Placeholder — can calculate from data if available
+                accounts={item.accounts}
+                onPress={()=>handleAccountPress(item)}
               />
-            ) : (
-              loading && (
-                <View style={styles.loadingOverlay}>
-                  <ActivityIndicator size="large" color="#00B67A" />
-                </View>
-              )
-            )}
-          </View>
+                );
+            })}
+            
+          </ScrollView>
         ) : (
-          <View>
+          <View style={{marginTop:'50%'}}>
             <Text style={styles.title}>No active accounts</Text>
             <Text style={styles.subtitle}>
               Add a bank connection to see them here

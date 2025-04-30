@@ -49,12 +49,12 @@ const BankTransactionScreen = ({navigation, route}) => {
   const fetchTransactions = async () => {
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
-
+    console.log('accounts data', AccountData);
     try {
       setLoading(true);
       const data = await get(
         `${API.tansActions}`,
-        {accountId: AccountData.id, entityId: enitityId},
+        {accountId: AccountData.accountId, entityId: enitityId},
         token,
       );
       console.log(data);
@@ -184,7 +184,7 @@ const BankTransactionScreen = ({navigation, route}) => {
             ))}
         </>
       ) : (
-        <View style={styles.noDataContainer}>
+        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
           <Text style={styles.noDataText}>No transactions found.</Text>
         </View>
       )}
