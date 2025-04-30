@@ -5,7 +5,7 @@ import {Wallet} from '../assets/svgs';
 import {ChevronRight} from '../icons';
 import {FontFamily} from '../utilis/Fonts';
 
-const LargestPurchaseCard = ({largestAmount}) => {
+const LargestPurchaseCard = ({largestAmount, date}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Largest purchase</Text>
@@ -19,7 +19,7 @@ const LargestPurchaseCard = ({largestAmount}) => {
         </View>
         <View style={styles.textWrapper}>
           <Text style={styles.cardTitle}>Debit card Purchase</Text>
-          <Text style={styles.cardDate}>29 April 2024</Text>
+          <Text style={styles.cardDate}>{date}</Text>
         </View>
         <View style={styles.amountWrapper}>
           <Text style={styles.amount}>
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 17,
+    marginTop: 15,
   },
   title: {
     fontSize: 16,

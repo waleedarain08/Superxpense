@@ -14,7 +14,7 @@ import {FontFamily} from '../../utilis/Fonts';
 import {ChevronRight, Refresh} from '../../icons';
 import {get} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
-import { getItem } from '../../utilis/StorageActions';
+import {getItem} from '../../utilis/StorageActions';
 
 const Tag = ({label, color}) => (
   <View style={[styles.tag, {backgroundColor: color}]}>
@@ -41,26 +41,34 @@ const TransactionItem = ({item, isToday}) => (
 );
 
 const BankTransactionScreen = ({navigation, route}) => {
-  const {BankName, AccountData, enitityId} = route.params;
+  const {BankName, accountId, accountBalance, accountType, entityId} =
+    route.params;
   const [fetchedTransactions, setFetchedTransactions] = useState([]);
   const [groupedTransactions, setGroupedTransactions] = useState({});
   const [loading, setLoading] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState(null);
 
   const fetchTransactions = async () => {
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
-    console.log('accounts data', AccountData);
+    console.log(
+      'accounts data',
+      accountId,
+      accountBalance,
+      accountType,
+      entityId,
+    );
     try {
       setLoading(true);
       const data = await get(
         `${API.tansActions}`,
-        {accountId: AccountData.accountId, entityId: enitityId},
+        {accountId: accountId, entityId: entityId},
         token,
       );
-      console.log(data);
-      
-      const apiTransactions = data.data.data.transactions;
 
+      const apiTransactions = data.data.data.transactions;
+      const now = new Date();
+      setLastRefreshed(now);
       const formatted = apiTransactions.map(tx => ({
         icon: <Credit />, // Replace with dynamic logic if needed
         label: tx.transaction_information ?? 'Unknown',
@@ -100,6 +108,21 @@ const BankTransactionScreen = ({navigation, route}) => {
     }
   };
 
+  const formatDate = date => {
+    if (!date) return '';
+
+    const day = date.getDate();
+    const month = date.toLocaleString('default', {month: 'long'});
+    const year = date.getFullYear();
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12 || 12;
+
+    return `${day} ${month} ${year} by ${hours}:${minutes}${ampm}`;
+  };
+
   useEffect(() => {
     fetchTransactions();
   }, []);
@@ -125,12 +148,12 @@ const BankTransactionScreen = ({navigation, route}) => {
           }}>
           <Refresh size={16} color={Colors.seventyWhite} />
           <Text style={styles.syncText}>
-            Last Synced 27 April 2025 by 01:00pm
+            Last Synced {formatDate(lastRefreshed)}
           </Text>
         </View>
-        {/* <TouchableOpacity style={styles.refreshBtn}>
+        <TouchableOpacity style={styles.refreshBtn} onPress={fetchTransactions}>
           <Text style={styles.refreshText}>Refresh</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       <View style={styles.transactionCard}>
@@ -184,7 +207,7 @@ const BankTransactionScreen = ({navigation, route}) => {
             ))}
         </>
       ) : (
-        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text style={styles.noDataText}>No transactions found.</Text>
         </View>
       )}

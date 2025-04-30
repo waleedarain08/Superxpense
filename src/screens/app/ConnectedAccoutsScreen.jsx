@@ -22,27 +22,35 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   const [accountsData, setAccountsData] = useState([]);
   const [stateEntityId, setStateEntityId] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [bankName, setBankName] = useState('');
+  const [banksData, setBanksData] = useState([]);
   const fetchTransactions = async id => {
     setStateEntityId(id);
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
 
+    // try {
+    //   setLoading(true);
+    //   const data = await get(
+    //     `${API.leanAccounts}`,
+    //     {entityId: id, page: 0, size: 100},
+    //     token,
+    //   );
+    //   const rawAccounts = data?.data?.data?.accounts || [];
+    //   const formattedAccounts = rawAccounts.map(acc => ({
+    //     id: acc.account_id, // <-- Add this line
+    //     type: acc.nickname || acc.account_sub_type || 'Unknown',
+    //     balance: '15,000.00 AED', // Placeholder — replace with actual balance if available
+    //   }));
     try {
       setLoading(true);
-      const data = await get(
-        `${API.leanAccounts}`,
-        {entityId: id, page: 0, size: 100},
-        token,
-      );
-      const rawAccounts = data?.data?.data?.accounts || [];
-      const formattedAccounts = rawAccounts.map(acc => ({
-        id: acc.account_id, // <-- Add this line
-        type: acc.nickname || acc.account_sub_type || 'Unknown',
-        balance: '15,000.00 AED', // Placeholder — replace with actual balance if available
-      }));
+      const data = await get(`${API.bankAccounts}`, null, token);
+      setBankName(data.data[0].bankName);
+      const rawBanks = data?.data || [];
 
-      setAccountsData(formattedAccounts);
+      setBanksData(rawBanks);
+
+      setAccountsData(rawBanks);
     } catch (error) {
       setLoading(false);
       console.log('Error fetching transactions:', error);
@@ -72,11 +80,12 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   }, []);
 
   const handleAccountPress = account => {
-    console.log('Pressed account:', account);
     navigation.navigate('BankTransaction', {
-      AccountData: account,
-      BankName: BankName,
-      enitityId: stateEntityId,
+      accountId: account.accountId,
+      accountBalance: account.accountBalance,
+      accountType: account.accountType,
+      BankName: bankName,
+      entityId: stateEntityId,
     });
   };
 
@@ -96,21 +105,25 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
           Handle your bank connection and learn more about automatic syncing
         </Text>
 
-        {accountsData.length > 0 ? (
-          <BankCard
-            logo={require('../../assets/images/dubaiBank.png')}
-            bankName={`${BankName} Bank`}
-            totalBalance="45,000.00 AED" // Placeholder — can calculate from data if available
-            accounts={accountsData}
-            onPress={handleAccountPress}
-          />
-        ) : (
-          loading && (
-            <View style={styles.loadingOverlay}>
-              <ActivityIndicator size="large" color="#00B67A" />
-            </View>
-          )
-        )}
+        {banksData.length > 0
+          ? banksData.map((item, index) => {
+              // console.log('item:', item.accounts);
+              return (
+                <BankCard
+                  key={index}
+                  logo={require('../../assets/images/dubaiBank.png')}
+                  bankName={`${item.bankName} Bank`}
+                  totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
+                  accounts={item.accounts}
+                  onPress={handleAccountPress}
+                />
+              );
+            })
+          : loading && (
+              <View style={styles.loadingOverlay}>
+                <ActivityIndicator size="large" color="#00B67A" />
+              </View>
+            )}
       </View>
     </ScrollView>
   );

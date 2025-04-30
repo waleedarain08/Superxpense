@@ -24,6 +24,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import CalendarHeader from '../../component/CalendarHeader';
 import moment from 'moment';
 import LargestPurchaseCard from '../../component/LargestPurchaseCard';
+import SpendingChart from '../../component/SpendingChart';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -60,29 +61,17 @@ const HomeScreen = ({navigation}) => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
     setYear(newDate.year());
-   // console.log(`Selected Month: ${newDate.month() + 1} ${newDate.year()}`); // e.g., 4 2025
   };
 
-  const fetchTransactions = async()  => {
-    //setStateEntityId(id);
+  const fetchTransactions = async () => {
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
 
     try {
       setLoading(true);
-      const data = await get(
-        `${API.bankAccounts}`,
-        null,
-        //{entityId: id, page: 0, size: 100},
-        token,
-      );
-      console.log('Fetched data:', data);
+      const data = await get(`${API.bankAccounts}`, null, token);
+      setBankName(data.data[0].bankName);
       const rawBanks = data?.data || [];
-      // const formattedAccounts = rawAccounts.map(acc => ({
-      //   id: acc.accountId, // <-- Add this line
-      //   type: acc.accountType || acc.account_sub_type || 'Unknown',
-      //   balance: acc.accountBalance, // Placeholder — replace with actual balance if available
-      // }));
 
       setBanksData(rawBanks);
     } catch (error) {
@@ -95,13 +84,15 @@ const HomeScreen = ({navigation}) => {
     //alert('leanConnection');
     try {
       setLoading(true);
-      // const userData = await getItem('userData');
-      // const token = userData.data?.accessToken;
-      // const data = await get(`${API.leanConnection}`, null, token);
-      // setActiveData(data.data);
-      // setBankName(data.data[0].bank_identifier);
-      // const r = data.data;
-      // const id = r[0].id;
+      const userData = await getItem('userData');
+      const token = userData.data?.accessToken;
+      const data = await get(`${API.leanConnection}`, null, token);
+      setActiveData(data.data);
+      setBankName(data.data[0].bank_identifier);
+      const r = data.data;
+      const id = r[0].id;
+      setStateEntityId(id);
+
       fetchTransactions();
       setLoading(false);
     } catch (error) {
@@ -115,11 +106,13 @@ const HomeScreen = ({navigation}) => {
     }, []),
   );
 
-  const handleAccountPress = item => {
+  const handleAccountPress = account => {
     navigation.navigate('BankTransaction', {
-      AccountData: item.accounts,
-      BankName: item.bankName,
-      enitityId: stateEntityId,
+      accountId: account.accountId,
+      accountBalance: account.accountBalance,
+      accountType: account.accountType,
+      BankName: bankName,
+      entityId: stateEntityId,
     });
   };
 
@@ -137,17 +130,21 @@ const HomeScreen = ({navigation}) => {
         (max, item) => (item.amount > max.amount ? item : max),
         response.data.categories[0],
       );
-      console.log('largestTransaction:', largestTransaction);
+
       setLargestTransaction(largestTransaction);
 
       const categories = response?.data?.categories || [];
 
-      // Add a rotating color to each category
-      const coloredData = categories.map((item, index) => ({
-        ...item,
-        color: categoryColors[index],
-      }));
+      // Sort from largest to smallest by amount
+      const sortedCategories = [...categories].sort(
+        (a, b) => b.amount - a.amount,
+      );
 
+      // Add rotating color to each category
+      const coloredData = sortedCategories.map((item, index) => ({
+        ...item,
+        color: categoryColors[index % categoryColors.length],
+      }));
       setCategoryData(coloredData);
     } catch (error) {
       console.log('Error fetching transactions:', error);
@@ -262,7 +259,11 @@ const HomeScreen = ({navigation}) => {
             currentDate={selectedDate}
             onDateChange={handleDateChange}
           />
-          <LargestPurchaseCard largestAmount={largestTransaction.amount} />
+          <SpendingChart />
+          <LargestPurchaseCard
+            largestAmount={largestTransaction?.amount || 0}
+            date={selectedDate.format('MMMM YYYY')}
+          />
           <SpendingSummary
             data={categoryData}
             month={selectedDate.format('MMM YYYY')}
@@ -272,26 +273,25 @@ const HomeScreen = ({navigation}) => {
       {selectedTab === 'All Account' &&
         (banksData.length > 0 ? (
           <ScrollView
-          style={styles.section}
-          showsVerticalScrollIndicator={false}>
+            style={styles.section}
+            showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Bank Connections</Text>
-              {banksData.map((item, index) => {
-                console.log('item:', item.accounts);
-                return (
-              <BankCard
-                key={index}
-                logo={require('../../assets/images/dubaiBank.png')}
-                bankName={`${item.bankName} Bank`}
-                totalBalance={`${item.bankBalance} AED`}// Placeholder — can calculate from data if available
-                accounts={item.accounts}
-                onPress={()=>handleAccountPress(item)}
-              />
-                );
+            {banksData.map((item, index) => {
+              // console.log('item:', item.accounts);
+              return (
+                <BankCard
+                  key={index}
+                  logo={require('../../assets/images/dubaiBank.png')}
+                  bankName={`${item.bankName} Bank`}
+                  totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
+                  accounts={item.accounts}
+                  onPress={handleAccountPress}
+                />
+              );
             })}
-            
           </ScrollView>
         ) : (
-          <View style={{marginTop:'50%'}}>
+          <View style={{marginTop: '50%'}}>
             <Text style={styles.title}>No active accounts</Text>
             <Text style={styles.subtitle}>
               Add a bank connection to see them here

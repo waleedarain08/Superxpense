@@ -45,5 +45,6 @@ export const Colors = {
   btnColor: '#00B67A',
   paid: '#9245FF',
   left: '#F964FC',
-  green: '#36f8b8'
+  green: '#36f8b8',
+  greenTxt:'#1DC693'
 };

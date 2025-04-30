@@ -1,6 +1,8 @@
 import React, {useEffect} from 'react';
 import { Text, Image, StyleSheet , Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { get } from '../../utilis/Api';
+import { getItem } from '../../utilis/StorageActions';
 
 
 const SplashScreen = ({navigation}) => {
@@ -23,8 +25,16 @@ const SplashScreen = ({navigation}) => {
     ]).start();
 
     // Navigate to main app after splash screen
-    const timer = setTimeout(() => {;
-      navigation.replace('Welcome');
+    const timer = setTimeout(async () => {
+      const userData =  await getItem('userData')
+      console.log(userData);
+      if(userData.data.accessToken)
+      {
+        navigation.replace('Main');
+      }
+      else {
+        navigation.replace('Welcome');
+      }
     }, 2000);
 
     return () => clearTimeout(timer);

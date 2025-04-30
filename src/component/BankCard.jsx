@@ -40,18 +40,25 @@ const BankCard = ({bankName, totalBalance, accounts, logo, onPress}) => {
         {/* Account details */}
         <View style={styles.accountDetails}>
           {accounts.map((account, index) => (
-            <TouchableOpacity key={index} style={styles.mainContainer}  onPress={() => onPress(account)} >
+            <TouchableOpacity
+              key={index}
+              style={styles.mainContainer}
+              onPress={() => onPress(account)}>
               <View>
                 <View style={styles.accountRow}>
                   <View style={styles.accountLeft}>
-                    <Text style={styles.accountType}>{account.accountType}</Text>
+                    <Text style={styles.accountType}>
+                      {account.accountType}
+                    </Text>
                     <View style={styles.refreshIcon}>
                       <Refresh size={10} color="green" />
                     </View>
                   </View>
                 </View>
                 <View style={styles.accountRight}>
-                  <Text style={styles.accountBalance}>{account.accountBalance}</Text>
+                  <Text style={styles.accountBalance}>
+                    {account.accountBalance}
+                  </Text>
                 </View>
               </View>
               <ChevronRight size={12} color="black" />
@@ -120,10 +127,10 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.background,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 8.5,
   },
   checkMark: {
     color: 'white',
@@ -147,7 +154,7 @@ const styles = StyleSheet.create({
   accountLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'center'
+    justifyContent: 'center',
   },
   accountType: {
     fontSize: 13,
