@@ -138,8 +138,8 @@ const BankTransactionScreen = ({navigation, route}) => {
       </View>
 
       <View style={styles.balanceCard}>
-        <Text style={styles.balanceLabel}>CURRENT ACCOUNT</Text>
-        <Text style={styles.balanceAmount}>35,000.00 AED</Text>
+        <Text style={styles.balanceLabel}>{accountType}</Text>
+        <Text style={styles.balanceAmount}>{accountBalance} AED</Text>
         <View
           style={{
             flexDirection: 'row',
