@@ -26,6 +26,11 @@ const SettingScreen = ({navigation}) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Subscription')}
+        style={styles.button}>
+        <Text style={styles.buttonText}>Subscription</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={handleSignOut} style={styles.button}>
         <Text style={styles.buttonText}>Log Out</Text>
       </TouchableOpacity>

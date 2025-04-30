@@ -1,9 +1,8 @@
 import React, {useEffect} from 'react';
-import { Text, Image, StyleSheet , Animated } from 'react-native';
+import {Text, Image, StyleSheet, Animated} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { get } from '../../utilis/Api';
-import { getItem } from '../../utilis/StorageActions';
-
+import {get} from '../../utilis/Api';
+import {getItem} from '../../utilis/StorageActions';
 
 const SplashScreen = ({navigation}) => {
   const fadeAnim = new Animated.Value(0);
@@ -26,14 +25,12 @@ const SplashScreen = ({navigation}) => {
 
     // Navigate to main app after splash screen
     const timer = setTimeout(async () => {
-      const userData =  await getItem('userData')
-      console.log(userData);
-      if(userData.data.accessToken)
-      {
-        navigation.replace('Main');
-      }
-      else {
+      const userData = await getItem('userData');
+      console.log();
+      if (!userData) {
         navigation.replace('Welcome');
+      } else {
+        navigation.replace('Main');
       }
     }, 2000);
 
@@ -41,13 +38,12 @@ const SplashScreen = ({navigation}) => {
   }, []);
 
   return (
-        <LinearGradient
-          colors={['#d4fbe8', '#f5f5f9']} // Spread green color more
-          start={{ x: 0.0, y: 0.0 }}
-          end={{ x: 1.0, y: 1.0 }}
-          style={styles.container}
-        >
-          <Animated.View
+    <LinearGradient
+      colors={['#d4fbe8', '#f5f5f9']} // Spread green color more
+      start={{x: 0.0, y: 0.0}}
+      end={{x: 1.0, y: 1.0}}
+      style={styles.container}>
+      <Animated.View
         style={[
           styles.content,
           {
@@ -55,14 +51,14 @@ const SplashScreen = ({navigation}) => {
             transform: [{scale: scaleAnim}],
           },
         ]}>
-          <Image
-            source={require('./../../assets/images/logo.png')} // Replace with your icon
-            style={styles.logo}
-            resizeMode="contain"
-          />
-          <Text style={styles.text}>Superxpense</Text>
-          </Animated.View>
-        </LinearGradient>
+        <Image
+          source={require('./../../assets/images/logo.png')} // Replace with your icon
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Text style={styles.text}>Superxpense</Text>
+      </Animated.View>
+    </LinearGradient>
   );
 };
 

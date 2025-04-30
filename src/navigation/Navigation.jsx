@@ -21,6 +21,7 @@ import IssuingCountryScreen from '../screens/app/IssuingCountryScreen';
 import SettingScreen from '../screens/app/SettingScreen';
 import BillsNPayments from '../screens/app/BillsNPayments';
 import ChatScreen from '../screens/app/ChatScreen';
+import SubscriptionScreen from '../screens/app/SubscriptionScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -59,6 +60,7 @@ const Navigation = () => {
         />
         <Stack.Screen name="BillsNPayments" component={BillsNPayments} />
         <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen name="Subscription" component={SubscriptionScreen} />
         <Stack.Screen name="Main" component={BottomNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
