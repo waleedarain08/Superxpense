@@ -28,8 +28,26 @@ import SetBudget from './setBudget.svg';
 import ViewSummary from './viewSummary.svg';
 import Voice from './voice.svg';
 import Wallet from './wallet.svg';
+import Bulb from './bulb.svg';
+import Crown from './crown.svg';
+import Globe from './globe.svg';
+import Help from './help.svg';
+import NotiBlue from './notiBlue.svg';
+import Personal from './personal.svg';
+import Shield from './shield.svg';
+import Flag from './flag.svg';
+import LeftBlack from './leftBlack.svg';
 
 export {
+  LeftBlack,
+  Flag,
+  Crown,
+  Bulb,
+  Globe,
+  Help,
+  NotiBlue,
+  Personal,
+  Shield,
   Wallet,
   Voice,
   ViewSummary,

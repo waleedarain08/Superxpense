@@ -46,5 +46,6 @@ export const Colors = {
   paid: '#9245FF',
   left: '#F964FC',
   green: '#36f8b8',
-  greenTxt:'#1DC693'
+  greenTxt: '#1DC693',
+  newBorderColor: '#79797933',
 };

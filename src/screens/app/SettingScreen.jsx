@@ -1,59 +1,145 @@
-import {
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
 import React from 'react';
-import {removeItem} from '../../utilis/StorageActions';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import {Colors} from '../../utilis/Colors';
+import {FontFamily} from '../../utilis/Fonts';
+import {
+  Bulb,
+  Crown,
+  Flag,
+  Globe,
+  Help,
+  NotiBlue,
+  Personal,
+  Shield,
+} from '../../assets/svgs';
+import {ChevronRight} from '../../icons';
+import {useNavigation} from '@react-navigation/native';
+import {removeItem} from '../../utilis/StorageActions';
 
-const SettingScreen = ({navigation}) => {
-  const handleSignOut = async () => {
-    await removeItem('userData');
-    await removeItem('bankName');
-    navigation.navigate('Welcome');
-  };
+const SettingScreen = () => {
   return (
-    <SafeAreaView
-      style={{
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-        flex: 1,
-        backgroundColor: '#fffff',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Subscription')}
-        style={styles.button}>
-        <Text style={styles.buttonText}>Subscription</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleSignOut} style={styles.button}>
-        <Text style={styles.buttonText}>Log Out</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <View style={{flex: 1}}>
+      <Text style={styles.header}>Settings</Text>
+      <ScrollView contentContainerStyle={[styles.container]}>
+        {/* Account Section */}
+        <Text style={styles.sectionTitle}>Account</Text>
+        <View style={styles.card}>
+          <SettingItem
+            title="Personal Information"
+            IconComponent={<Personal />}
+            screenName="EditProfile"
+          />
+          <SettingItem title="Subscription" IconComponent={<Crown />} />
+          <SettingItem
+            title="Alert & Notification"
+            IconComponent={<NotiBlue />}
+          />
+        </View>
+
+        {/* Security Section */}
+        <Text style={styles.sectionTitle}>Security</Text>
+        <View style={styles.card}>
+          <SettingItem title="Privacy Policy" IconComponent={<Globe />} />
+          <SettingItem title="App Passcode" IconComponent={<Shield />} />
+        </View>
+
+        {/* Support Section */}
+        <Text style={styles.sectionTitle}>Support</Text>
+        <View style={styles.card}>
+          <SettingItem title="Help & Support" IconComponent={<Help />} />
+          <SettingItem title="Privacy Policy" IconComponent={<Bulb />} />
+          <SettingItem title="FAQs" IconComponent={<Flag />} />
+        </View>
+
+        {/* Logout Section */}
+        <Text style={styles.sectionTitle}>Logout</Text>
+        <View style={styles.card}>
+          <SettingItem
+            title="Logout"
+            IconComponent={<Help />}
+            screenName="Welcome"
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
-export default SettingScreen;
+const SettingItem = ({title, IconComponent, screenName}) => {
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity
+      style={styles.item}
+      onPress={async () => {
+        console.log(screenName);
+
+        if (screenName === 'Welcome') {
+          await removeItem('userData');
+          navigation.navigate('Welcome');
+        } else {
+          navigation.navigate(screenName);
+        }
+      }}>
+      <View style={styles.itemLeft}>
+        {IconComponent}
+        <Text style={styles.itemText}>{title}</Text>
+      </View>
+      <ChevronRight />
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#00B67A',
-    borderRadius: 100,
-    width: '90%',
-    alignItems: 'center',
-    height: 48,
-    justifyContent: 'center',
-    marginBottom: 12,
-    marginTop: 20,
+  container: {
+    flexGrow: 1,
+    backgroundColor: Colors.bgColor,
+    paddingHorizontal: 20,
   },
-  buttonText: {
+  header: {
+    fontSize: 18,
+    fontFamily: FontFamily.medium,
     color: Colors.white,
-    fontWeight: '500',
+    backgroundColor: Colors.background,
+    textAlign: 'center',
+    paddingTop: 80,
+    paddingBottom: 30,
+  },
+  sectionTitle: {
+    marginTop: 16,
+    marginBottom: 18,
     fontSize: 16,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+  },
+  card: {
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 10,
+    marginBottom: 8,
+  },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  itemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  itemText: {
+    fontSize: 16,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
   },
 });
+
+export default SettingScreen;
