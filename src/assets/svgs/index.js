@@ -37,8 +37,20 @@ import Personal from './personal.svg';
 import Shield from './shield.svg';
 import Flag from './flag.svg';
 import LeftBlack from './leftBlack.svg';
+import Gros from './gros.svg';
+import Flame from './flame.svg';
+import Home from './home.svg';
+import Income from './income.svg';
+import PopCorn from './popcorn.svg';
+import Soda from './soda.svg';
 
 export {
+  Gros,
+  Flame,
+  Home,
+  Income,
+  PopCorn,
+  Soda,
   LeftBlack,
   Flag,
   Crown,

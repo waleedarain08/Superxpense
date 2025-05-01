@@ -21,10 +21,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import IncomeCard from '../../component/IncomeCard';
 import {ThreeDots} from '../../icons';
 import BudgetCardd from '../../component/BudgetCardd';
+import BudgetModal from '../../component/BudgetModal';
 
 const BudgetsScreen = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('Plan');
-
+  const [open, setOpen] = useState(false);
   const tabs = ['Plan', 'Remaining', 'Insights'];
 
   const incomeData = [
@@ -49,6 +50,7 @@ const BudgetsScreen = ({navigation}) => {
 
   return (
     <View>
+      <BudgetModal visible={open} onClose={() => setOpen(false)} />
       <View style={styles.container}>
         <View style={styles.topRow}>
           <View style={{width: 10}}></View>
@@ -81,56 +83,85 @@ const BudgetsScreen = ({navigation}) => {
           ))}
         </View> */}
       </View>
-      
+
       {selectedTab === 'Plan' && (
-      <ScrollView style={styles.safeView} showsVerticalScrollIndicator={false}>
-        <Text style={{marginLeft:'37%',marginTop:10, color:Colors.lightblack}}>Coming Soon</Text>
-        <View style={styles.card}>
-          <Icon name="chevron-back" size={14} color={Colors.black} />
-          <Text style={styles.month}>Apr 2025</Text>
-          <Icon name="chevron-forward" size={14} color={Colors.black} />
-        </View>
-        <BudgetCardd />
-        <IncomeCard data={incomeData} type="income" />
-        <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-          <LinearGradient
-            colors={['#6CFFC2', '#FFFFFF']}
-            start={{x: 0, y: 3}}
-            end={{x: 1, y: 1}}
-            style={styles.superCard}>
-            <View style={styles.superCardHeader}>
-              <Text style={styles.recentLabel}>Superxpense AI</Text>
-              <Stars />
-            </View>
-            <Text style={styles.recentLabel2}>
-              Ask me anything about your personal finance, spending and many
-              more.
-            </Text>
-            <View style={{alignItems: 'flex-end', marginRight: 20}}>
-              <Icon name="chevron-forward" size={14} color={Colors.black} />
-            </View>
-          </LinearGradient>
+        <ScrollView
+          style={styles.safeView}
+          showsVerticalScrollIndicator={false}>
+          <Text
+            style={{
+              marginLeft: '37%',
+              marginTop: 10,
+              color: Colors.lightblack,
+            }}>
+            Coming Soon
+          </Text>
           <View style={styles.card}>
-            <View style={{paddingTop:20,paddingBottom:10,justifyContent:'center',alignItems:'flex-start'}}>
-              <Text style={{fontSize:16,fontWeight:600}}>Setup a custom budget</Text>
-              <Text style={{}}>Choose categories and set limits for the month. Track expenses, get alerts, and avoid overspending.</Text>
-            </View>
-            <View></View>
+            <Icon name="chevron-back" size={14} color={Colors.black} />
+            <Text style={styles.month}>Apr 2025</Text>
+            <Icon name="chevron-forward" size={14} color={Colors.black} />
           </View>
-          <IncomeCard data={HousingData} type="utilities" />
-        </TouchableOpacity>
-      </ScrollView>
+          <BudgetCardd />
+          <IncomeCard data={incomeData} type="income" />
+          <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+            <LinearGradient
+              colors={['#6CFFC2', '#FFFFFF']}
+              start={{x: 0, y: 3}}
+              end={{x: 1, y: 1}}
+              style={styles.superCard}>
+              <View style={styles.superCardHeader}>
+                <Text style={styles.recentLabel}>Superxpense AI</Text>
+                <Stars />
+              </View>
+              <Text style={styles.recentLabel2}>
+                Ask me anything about your personal finance, spending and many
+                more.
+              </Text>
+              <View style={{alignItems: 'flex-end', marginRight: 20}}>
+                <Icon name="chevron-forward" size={14} color={Colors.black} />
+              </View>
+            </LinearGradient>
+            <View style={styles.budgetcard}>
+              <Text style={styles.title}>Set up a custom budget</Text>
+              <Text style={styles.description}>
+                Choose categories and set limits for the month. Track expenses,
+                get alerts, and avoid overspending.
+              </Text>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setOpen(true)}>
+                <Text style={styles.buttonText}>Add a Budget</Text>
+                <Icon name="add-circle" size={20} color="#11956D" />
+              </TouchableOpacity>
+            </View>
+            <IncomeCard data={HousingData} type="utilities" />
+          </TouchableOpacity>
+        </ScrollView>
       )}
       {selectedTab === 'Remaining' && (
-        <ScrollView style={styles.safeView} showsVerticalScrollIndicator={false}>
-          <Text style={{marginLeft: '37%', marginTop: 10, color: Colors.lightblack}}>
+        <ScrollView
+          style={styles.safeView}
+          showsVerticalScrollIndicator={false}>
+          <Text
+            style={{
+              marginLeft: '37%',
+              marginTop: 10,
+              color: Colors.lightblack,
+            }}>
             Coming Soon
           </Text>
         </ScrollView>
       )}
       {selectedTab === 'Insights' && (
-        <ScrollView style={styles.safeView} showsVerticalScrollIndicator={false}>
-          <Text style={{marginLeft: '37%', marginTop: 10, color: Colors.lightblack}}>
+        <ScrollView
+          style={styles.safeView}
+          showsVerticalScrollIndicator={false}>
+          <Text
+            style={{
+              marginLeft: '37%',
+              marginTop: 10,
+              color: Colors.lightblack,
+            }}>
             Coming Soon
           </Text>
         </ScrollView>
@@ -263,5 +294,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontFamily.medium,
     marginRight: 10,
+  },
+  budgetcard: {
+    backgroundColor: Colors.white,
+    borderRadius: 20,
+    padding: 16,
+    marginTop: 15,
+  },
+  title: {
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor, // neutral-900
+  },
+  description: {
+    marginTop: 8,
+    color: Colors.lightTxtColor, // gray-600
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+  },
+  button: {
+    marginTop: 16,
+    backgroundColor: Colors.newLightgreen, // emerald-50
+    borderRadius: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 45,
+    width: '100%',
+  },
+  buttonText: {
+    color: '#11956D', // emerald-700
+    fontFamily: FontFamily.medium,
+    fontSize: 14,
+    marginRight: 6,
   },
 });
