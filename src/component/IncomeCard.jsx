@@ -116,10 +116,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
 
 
-const IncomeCard = ({data}) => {
+const IncomeCard = ({data,type}) => {
   const renderItem = ({item}) => (
     <View style={styles.row}>
-      <View style={styles.iconContainer}>{item.icon}</View>
+      <View style={[styles.iconContainer,{backgroundColor: type==='income'?Colors.blue:'#CE63FF'}]}>{item.icon}</View>
       <Text style={styles.title}>{item.title}</Text>
       <View style={styles.amountContainer}>
         <Text style={styles.amount}>{item.amount}</Text>
@@ -129,7 +129,7 @@ const IncomeCard = ({data}) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.heading}>Total Income</Text>
+      <Text style={styles.heading}>{type==='income'?"Total Income":"Home & Utitlities"}</Text>
       <FlatList
         data={data}
         keyExtractor={item => item.id}
@@ -137,12 +137,12 @@ const IncomeCard = ({data}) => {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         scrollEnabled={false}
       />
-      <TouchableOpacity style={styles.addButton}>
+      {/* <TouchableOpacity style={styles.addButton}>
         <View style={styles.addIcon}>
           <Ionicons name="add" size={15} color="#000000" />
         </View>
         <Text style={styles.addText}>Add category</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   iconContainer: {
-    backgroundColor: Colors.blue,
+    
     borderRadius: 20,
     padding: 8,
     marginRight: 12,

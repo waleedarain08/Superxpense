@@ -61,7 +61,7 @@ const BudgetsScreen = ({navigation}) => {
           </View>
         </View>
 
-        <View style={styles.tabRow}>
+        {/* <View style={styles.tabRow}>
           {tabs.map(tab => (
             <TouchableOpacity
               key={tab}
@@ -79,7 +79,7 @@ const BudgetsScreen = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </View> */}
       </View>
       
       {selectedTab === 'Plan' && (
@@ -91,7 +91,7 @@ const BudgetsScreen = ({navigation}) => {
           <Icon name="chevron-forward" size={14} color={Colors.black} />
         </View>
         <BudgetCardd />
-        <IncomeCard data={incomeData} />
+        <IncomeCard data={incomeData} type="income" />
         <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
           <LinearGradient
             colors={['#6CFFC2', '#FFFFFF']}
@@ -110,7 +110,14 @@ const BudgetsScreen = ({navigation}) => {
               <Icon name="chevron-forward" size={14} color={Colors.black} />
             </View>
           </LinearGradient>
-          <IncomeCard data={HousingData} />
+          <View style={styles.card}>
+            <View style={{paddingTop:20,paddingBottom:10,justifyContent:'center',alignItems:'flex-start'}}>
+              <Text style={{fontSize:16,fontWeight:600}}>Setup a custom budget</Text>
+              <Text style={{}}>Choose categories and set limits for the month. Track expenses, get alerts, and avoid overspending.</Text>
+            </View>
+            <View></View>
+          </View>
+          <IncomeCard data={HousingData} type="utilities" />
         </TouchableOpacity>
       </ScrollView>
       )}
@@ -137,7 +144,7 @@ export default BudgetsScreen;
 const styles = StyleSheet.create({
   safeView: {
     paddingHorizontal: 20,
-    marginBottom: 150,
+    marginBottom: 100,
   },
   container: {
     backgroundColor: Colors.background,

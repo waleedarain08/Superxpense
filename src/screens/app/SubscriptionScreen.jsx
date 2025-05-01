@@ -64,11 +64,13 @@ const SubscriptionScreen = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setModalVisible(true)}>
+          onPress={() => navigation.goBack()}>
           <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+           onPress={() => setModalVisible(true)}
+        >
           <Text style={styles.seeAllText}>See all subscriptions</Text>
         </TouchableOpacity>
       </ScrollView>
