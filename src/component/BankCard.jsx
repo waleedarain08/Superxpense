@@ -72,7 +72,7 @@ const BankCard = ({bankName, totalBalance, accounts, logo, onPress}) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     borderRadius: 20,
     marginBottom: 20,
     marginTop: 10,
@@ -89,11 +89,18 @@ const styles = StyleSheet.create({
   },
   bankLogoWrapper: {
     width: 40,
+    height: 40,
     marginRight: 10,
+    borderRadius: 20,
+    backgroundColor: Colors.purple,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding:3
   },
   bankLogo: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
+    //tintColor: Colors.lightestGrayTwo,
   },
   bankInfo: {
     flex: 1,

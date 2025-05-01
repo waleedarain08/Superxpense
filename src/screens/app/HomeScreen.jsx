@@ -277,11 +277,11 @@ const HomeScreen = ({navigation}) => {
             showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Bank Connections</Text>
             {banksData.map((item, index) => {
-              // console.log('item:', item.accounts);
+              console.log('item:', item);
               return (
                 <BankCard
                   key={index}
-                  logo={require('../../assets/images/dubaiBank.png')}
+                  logo={{uri:item.bankIcon}}
                   bankName={`${item.bankName} Bank`}
                   totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
                   accounts={item.accounts}

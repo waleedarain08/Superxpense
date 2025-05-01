@@ -111,7 +111,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
               return (
                 <BankCard
                   key={index}
-                  logo={require('../../assets/images/dubaiBank.png')}
+                  logo={{uri:item.bankIcon}}
                   bankName={`${item.bankName} Bank`}
                   totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
                   accounts={item.accounts}
