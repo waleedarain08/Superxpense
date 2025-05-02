@@ -56,6 +56,8 @@ const HomeScreen = ({navigation}) => {
   const [year, setYear] = useState(selectedDate.year());
   const [activeData, setActiveData] = useState([]);
   const [largestTransaction, setLargestTransaction] = useState({});
+  const [lineChartData, setLineChartData] = useState([]);
+  const [barData, setBarData] = useState(null);
 
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
@@ -152,9 +154,52 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
+  const fetchBarGraph = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(
+        `${API.incomeMonth}`,
+        {month: month, year: year},
+        token,
+      );
+      console.log(response, 'barGraph');
+      const {income, expenses} = response.data || {};
+      setBarData({
+        netWorth: income,
+        expenses: expenses,
+        label: `${month.slice(0, 3).toUpperCase()} ${year.toString().slice(2)}`,
+      });
+    } catch (error) {
+      console.log('Error fetching barGraph Data:', error);
+    }
+  };
+
+  const fetchMonthlyIncome = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(
+        `${API.barGraph}`,
+        {entityId: stateEntityId, month: month, year: year},
+        token,
+      );
+      console.log(response, 'lineGraph');
+      if (response?.data) {
+        setLineChartData(response.data);
+      }
+    } catch (error) {
+      console.log('Error fetching LineGraph Data:', error);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       fetchMonthlyExpense();
+      fetchBarGraph();
+      fetchMonthlyIncome();
     }, [month, year]),
   );
 
@@ -215,7 +260,7 @@ const HomeScreen = ({navigation}) => {
             currentDate={selectedDate}
             onDateChange={handleDateChange}
           />
-          <StackedChart />
+          <StackedChart chartData={barData} />
           <SpendingSummary
             data={categoryData}
             month={selectedDate.format('MMM YYYY')}
@@ -259,7 +304,7 @@ const HomeScreen = ({navigation}) => {
             currentDate={selectedDate}
             onDateChange={handleDateChange}
           />
-          <SpendingChart />
+          <SpendingChart data={lineChartData} />
           <LargestPurchaseCard
             largestAmount={largestTransaction?.amount || 0}
             date={selectedDate.format('MMMM YYYY')}
@@ -281,7 +326,7 @@ const HomeScreen = ({navigation}) => {
               return (
                 <BankCard
                   key={index}
-                  logo={{uri:item.bankIcon}}
+                  logo={{uri: item.bankIcon}}
                   bankName={`${item.bankName} Bank`}
                   totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
                   accounts={item.accounts}

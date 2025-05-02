@@ -23,6 +23,7 @@ import BillsNPayments from '../screens/app/BillsNPayments';
 import ChatScreen from '../screens/app/ChatScreen';
 import SubscriptionScreen from '../screens/app/SubscriptionScreen';
 import EditProfileScreen from '../screens/app/EditProfileScreen';
+import AddGoals from '../screens/app/AddGoals';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -143,6 +144,26 @@ const BottomNavigator = () => {
                   tintColor: focused
                     ? Colors.activeTabColor
                     : Colors.inactiveTabColor,
+                  height: 25,
+                  width: 25,
+                }}
+              />
+            ),
+          }}
+        />
+        <BottomStack.Screen
+          name="Goals"
+          component={AddGoals}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <Image
+                source={
+                  focused
+                    ? require('../assets/images/GoalActive.png')
+                    : require('../assets/images/Goal.png')
+                }
+                style={{
                   height: 25,
                   width: 25,
                 }}

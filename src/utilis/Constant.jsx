@@ -10,5 +10,6 @@ export const API = {
   leanConnection: `${baseUrl}lean/active-connections`,
   leanStats: `${baseUrl}lean/stats/category-expenses-by-month`,
   bankAccounts: `${baseUrl}lean/bank-listing-with-accounts`,
-
+  barGraph: `${baseUrl}lean/stats/transactions-by-month`,
+  incomeMonth: `${baseUrl}lean/stats/income-by-month`,
 };

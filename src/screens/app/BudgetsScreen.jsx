@@ -53,7 +53,11 @@ const BudgetsScreen = ({navigation}) => {
       <BudgetModal visible={open} onClose={() => setOpen(false)} />
       <View style={styles.container}>
         <View style={styles.topRow}>
-          <View style={{width: 10}}></View>
+          <TouchableOpacity
+            style={styles.saveBtn}
+            onPress={() => navigation.navigate('AddGoals')}>
+            <Text style={styles.saveBtnText}>Goal</Text>
+          </TouchableOpacity>
           <View style={styles.nameHeader}>
             <Text style={styles.headerTxt}>Personal Monthly Budget</Text>
             <Dropdown />
@@ -121,21 +125,21 @@ const BudgetsScreen = ({navigation}) => {
                 <Icon name="chevron-forward" size={14} color={Colors.black} />
               </View>
             </LinearGradient>
-            <View style={styles.budgetcard}>
-              <Text style={styles.title}>Set up a custom budget</Text>
-              <Text style={styles.description}>
-                Choose categories and set limits for the month. Track expenses,
-                get alerts, and avoid overspending.
-              </Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => setOpen(true)}>
-                <Text style={styles.buttonText}>Add a Budget</Text>
-                <Icon name="add-circle" size={20} color="#11956D" />
-              </TouchableOpacity>
-            </View>
-            <IncomeCard data={HousingData} type="utilities" />
           </TouchableOpacity>
+          <View style={styles.budgetcard}>
+            <Text style={styles.title}>Set up a custom budget</Text>
+            <Text style={styles.description}>
+              Choose categories and set limits for the month. Track expenses,
+              get alerts, and avoid overspending.
+            </Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setOpen(true)}>
+              <Text style={styles.buttonText}>Add a Budget</Text>
+              <Icon name="add-circle" size={20} color="#11956D" />
+            </TouchableOpacity>
+          </View>
+          <IncomeCard data={HousingData} type="utilities" />
         </ScrollView>
       )}
       {selectedTab === 'Remaining' && (
@@ -327,5 +331,16 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.medium,
     fontSize: 14,
     marginRight: 6,
+  },
+  saveBtn: {
+    backgroundColor: '#11956D',
+    paddingHorizontal: 11,
+    paddingVertical: 4,
+    borderRadius: 20,
+  },
+  saveBtnText: {
+    color: Colors.white,
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
   },
 });
