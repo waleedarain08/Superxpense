@@ -12,4 +12,7 @@ export const API = {
   bankAccounts: `${baseUrl}lean/bank-listing-with-accounts`,
   barGraph: `${baseUrl}lean/stats/transactions-by-month`,
   incomeMonth: `${baseUrl}lean/stats/income-by-month`,
+  addBudget: `${baseUrl}budget`,
+  getAllCategories: `${baseUrl}category`,
+  allBudgets: `${baseUrl}budget`,
 };

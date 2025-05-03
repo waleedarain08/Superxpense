@@ -73,15 +73,15 @@ const StackedChart = ({chartData}) => {
               <View
                 style={{width: 56, alignItems: 'center', marginHorizontal: 8}}>
                 <StackedBarChart
-                  style={{height: chartHeight, width: 56}}
+                  style={{height: chartHeight, width: 56 * chartData.length}}
                   keys={keys}
                   colors={colors}
-                  data={[chartData]}
+                  data={chartData}
                   showGrid={false}
                   contentInset={{top: 10, bottom: 10}}
                   numberOfTicks={5}
                 />
-                <Text
+                {/* <Text
                   style={{
                     marginTop: 4,
                     fontSize: 12,
@@ -89,7 +89,21 @@ const StackedChart = ({chartData}) => {
                     fontFamily: FontFamily.medium,
                   }}>
                   {chartData.label}
-                </Text>
+                </Text> */}
+                {chartData.map((item, index) => (
+                  <Text
+                    key={index}
+                    style={{
+                      marginTop: 4,
+                      fontSize: 12,
+                      color: Colors.txtColor,
+                      fontFamily: FontFamily.medium,
+                      width: 56,
+                      textAlign: 'center',
+                    }}>
+                    {item.label}
+                  </Text>
+                ))}
               </View>
             </View>
           </ScrollView>

@@ -11,9 +11,8 @@ import Svg, {
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
-const SpendingChart = ({data = []}) => {
+const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
   const [chartWidth, setChartWidth] = useState(0);
-
   // Called when layout is calculated
   const handleLayout = event => {
     const {width} = event.nativeEvent.layout;
@@ -66,7 +65,7 @@ const SpendingChart = ({data = []}) => {
     <View style={styles.container} onLayout={handleLayout}>
       <View style={{paddingHorizontal: 22, paddingTop: 20}}>
         <Text style={styles.title}>THIS MONTH’S SPEND</Text>
-        <Text style={styles.amount}>35,000.00 AED</Text>
+        <Text style={styles.amount}>{monthlySpending} AED</Text>
       </View>
 
       {chartWidth > 0 && (
@@ -126,10 +125,17 @@ const SpendingChart = ({data = []}) => {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          You’ve spent <Text style={{fontWeight: '600'}}>$20,000</Text> more
-          than last month
-        </Text>
+        {monthlySpending > lastSpending ? (
+          <Text style={styles.footerText}>
+            You’ve spent{' '}
+            <Text style={{fontWeight: '600'}}>
+              ${monthlySpending - lastSpending}
+            </Text>{' '}
+            more than last month
+          </Text>
+        ) : (
+          <Text style={styles.footerText}>No comparison to show</Text>
+        )}
       </View>
     </View>
   );

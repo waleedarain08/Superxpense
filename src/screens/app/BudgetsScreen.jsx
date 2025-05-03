@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
 import {
   Dropdown,
@@ -22,10 +22,17 @@ import IncomeCard from '../../component/IncomeCard';
 import {ThreeDots} from '../../icons';
 import BudgetCardd from '../../component/BudgetCardd';
 import BudgetModal from '../../component/BudgetModal';
+import {API} from '../../utilis/Constant';
+import {get, post} from '../../utilis/Api';
+import {getItem} from '../../utilis/StorageActions';
+import {useFocusEffect} from '@react-navigation/native';
+import AllBudgetCard from '../../component/AllBudgetCard';
 
 const BudgetsScreen = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('Plan');
+  const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
+  const [budgetData, setBudgetData] = useState(null);
   const tabs = ['Plan', 'Remaining', 'Insights'];
 
   const incomeData = [
@@ -48,16 +55,104 @@ const BudgetsScreen = ({navigation}) => {
     },
   ];
 
+  const defaultColors = [
+    '#F87171', // red
+    '#34D399', // green
+    '#60A5FA', // blue
+    '#FBBF24', // yellow
+    '#A78BFA', // purple
+    '#FB7185', // pink
+    '#F97316', // orange
+    '#10B981', // emerald
+    '#4B5563', // gray
+    '#3B82F6', // blue
+    '#EF4444', // red dark
+    '#8B5CF6', // violet
+  ];
+
+  const addBudget = async (amount, categories) => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await post(
+        `${API.addBudget}`,
+        {
+          amount,
+          categories, // ✅ include categories array
+        },
+        token,
+      );
+      // console.log(response);
+    } catch (error) {
+      console.log('Error adding Budget:', error);
+    }
+  };
+
+  const showBudget = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(`${API.allBudgets}`, {}, token);
+      console.log(response);
+      setBudgetData(
+        response.data.map(item => ({
+          id: item.id,
+          title: item.category.name,
+          amount: item.amount,
+          icon: null, // You can add an icon based on item.category.code
+        })),
+      );
+    } catch (error) {
+      console.log('Error adding Budget:', error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchCategories();
+      showBudget();
+    }, []),
+  );
+
+  const fetchCategories = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+    const response = await get(`${API.getAllCategories}`, {}, token);
+    const rawCategories = response.data;
+    // console.log(response);
+
+    const mappedCategories = rawCategories.map((item, index) => ({
+      id: item.id.toString(),
+      label: item.name,
+      value: item.code,
+      color: defaultColors[index % defaultColors.length], // Pick a color from predefined list
+      icon: null, // or assign custom icons based on `item.code`
+    }));
+    setCategories(mappedCategories);
+  };
+
+  const handleSubmit = ({amount, categories}) => {
+    // Call your submit API here
+    console.log('Submit payload:', {amount, categories});
+    addBudget(amount, categories);
+  };
+
   return (
     <View>
-      <BudgetModal visible={open} onClose={() => setOpen(false)} />
+      <BudgetModal
+        visible={open}
+        onClose={() => setOpen(false)}
+        categories={categories}
+        onSubmit={handleSubmit}
+      />
       <View style={styles.container}>
         <View style={styles.topRow}>
           <TouchableOpacity
             style={styles.saveBtn}
-            onPress={() => navigation.navigate('AddGoals')}>
-            <Text style={styles.saveBtnText}>Goal</Text>
-          </TouchableOpacity>
+            // onPress={() => navigation.navigate('AddGoals')}
+          ></TouchableOpacity>
           <View style={styles.nameHeader}>
             <Text style={styles.headerTxt}>Personal Monthly Budget</Text>
             <Dropdown />
@@ -139,6 +234,7 @@ const BudgetsScreen = ({navigation}) => {
               <Icon name="add-circle" size={20} color="#11956D" />
             </TouchableOpacity>
           </View>
+          <AllBudgetCard data={budgetData} />
           <IncomeCard data={HousingData} type="utilities" />
         </ScrollView>
       )}
@@ -333,7 +429,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   saveBtn: {
-    backgroundColor: '#11956D',
+    // backgroundColor: '#11956D',
     paddingHorizontal: 11,
     paddingVertical: 4,
     borderRadius: 20,

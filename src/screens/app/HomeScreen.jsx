@@ -58,6 +58,8 @@ const HomeScreen = ({navigation}) => {
   const [largestTransaction, setLargestTransaction] = useState({});
   const [lineChartData, setLineChartData] = useState([]);
   const [barData, setBarData] = useState(null);
+  const [monthlySpending, setMonthlySpending] = useState(null);
+  const [lastSpending, setLastSpending] = useState(null);
 
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
@@ -83,7 +85,6 @@ const HomeScreen = ({navigation}) => {
   };
 
   const leanConnection = async () => {
-    //alert('leanConnection');
     try {
       setLoading(true);
       const userData = await getItem('userData');
@@ -128,6 +129,7 @@ const HomeScreen = ({navigation}) => {
         {month: month, year: year},
         token,
       );
+
       const largestTransaction = response.data.categories.reduce(
         (max, item) => (item.amount > max.amount ? item : max),
         response.data.categories[0],
@@ -164,16 +166,41 @@ const HomeScreen = ({navigation}) => {
         {month: month, year: year},
         token,
       );
-      console.log(response, 'barGraph');
-      const {income, expenses} = response.data || {};
-      setBarData({
-        netWorth: income,
-        expenses: expenses,
-        label: `${month.slice(0, 3).toUpperCase()} ${year.toString().slice(2)}`,
-      });
+
+      const {netWorthExpense} = response.data || {};
+
+      if (Array.isArray(netWorthExpense)) {
+        const transformedData = netWorthExpense.map(item => ({
+          netWorth: item.netWorth,
+          expenses: item.expenses,
+          label: `${getMonthLabel(item.month)} ${item.year
+            .toString()
+            .slice(2)}`,
+        }));
+
+        setBarData(transformedData);
+      }
     } catch (error) {
       console.log('Error fetching barGraph Data:', error);
     }
+  };
+
+  const getMonthLabel = monthNumber => {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return months[monthNumber - 1] || '';
   };
 
   const fetchMonthlyIncome = async () => {
@@ -186,9 +213,15 @@ const HomeScreen = ({navigation}) => {
         {entityId: stateEntityId, month: month, year: year},
         token,
       );
-      console.log(response, 'lineGraph');
-      if (response?.data) {
-        setLineChartData(response.data);
+
+      const {transactions} = response?.data || {};
+      setMonthlySpending(response.data.currentMonthSpending);
+      setLastSpending(response.data.lastMonthSpending);
+      if (Array.isArray(transactions)) {
+        // Transform transactions if needed here
+        setLineChartData(transactions);
+      } else {
+        setLineChartData([]); // fallback for empty or unexpected data
       }
     } catch (error) {
       console.log('Error fetching LineGraph Data:', error);
@@ -304,7 +337,11 @@ const HomeScreen = ({navigation}) => {
             currentDate={selectedDate}
             onDateChange={handleDateChange}
           />
-          <SpendingChart data={lineChartData} />
+          <SpendingChart
+            data={lineChartData}
+            monthlySpending={monthlySpending}
+            lastSpending={lastSpending}
+          />
           <LargestPurchaseCard
             largestAmount={largestTransaction?.amount || 0}
             date={selectedDate.format('MMMM YYYY')}

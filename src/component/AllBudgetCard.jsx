@@ -1,29 +1,24 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {Colors} from '../utilis/Colors';
 
-const IncomeCard = ({data, type}) => {
+const AllBudgetCard = ({data}) => {
   const renderItem = ({item}) => (
     <View style={styles.row}>
       <View
-        style={[
-          styles.iconContainer,
-          {backgroundColor: type === 'income' ? Colors.blue : '#CE63FF'},
-        ]}>
-        {item.icon}
-      </View>
-      <Text style={styles.title}>{item.title}</Text>
+        style={[styles.iconContainer, {backgroundColor: Colors.blue}]}></View>
+      <Text style={styles.title}>
+        {item.title || item.category?.name || 'Unknown'}
+      </Text>
       <View style={styles.amountContainer}>
-        <Text style={styles.amount}>{item.amount}</Text>
+        <Text style={styles.amount}>AED {item.amount}</Text>
       </View>
     </View>
   );
 
   return (
     <View style={styles.card}>
-      <Text style={styles.heading}>
-        {type === 'income' ? 'Total Income' : 'Home & Utitlities'}
-      </Text>
+      <Text style={styles.heading}>All Budgets</Text>
       <FlatList
         data={data}
         keyExtractor={item => item.id}
@@ -100,4 +95,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IncomeCard;
+export default AllBudgetCard;
