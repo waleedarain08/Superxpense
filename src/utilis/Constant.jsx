@@ -15,4 +15,5 @@ export const API = {
   addBudget: `${baseUrl}budget`,
   getAllCategories: `${baseUrl}category/all`,
   allBudgets: `${baseUrl}budget`,
+  getUserData: `${baseUrl}auth/me`,
 };

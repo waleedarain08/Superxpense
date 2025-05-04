@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -11,12 +11,68 @@ import PhoneInput from 'react-native-phone-input';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {LeftBlack} from '../../assets/svgs';
+import {getItem} from '../../utilis/StorageActions';
+import {get, patch} from '../../utilis/Api';
+import {API} from '../../utilis/Constant';
 
 const EditProfileScreen = ({navigation}) => {
   const phoneRef = useRef(null);
-  const [name, setName] = useState('Oginni Samuel');
-  const [email, setEmail] = useState('samuel.oginni@cntxt.tech');
-  const [phone, setPhone] = useState('508727033');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [change, setChange] = useState(false);
+  const [reload, setReload] = useState(1);
+
+  const updateUserData = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    // Extract country code and number from phone
+    const countryCode = phoneRef.current.getCountryCode(); // e.g., "971"
+    const mobileNumber = phone.replace(`+${countryCode}`, ''); // e.g., "3165825127"
+
+    const payload = {
+      name,
+      email,
+      countryCode,
+      mobileNumber,
+    };
+
+    try {
+      const response = await patch(`${API.getUserData}`, payload, token);
+      console.log('Updated data:', response);
+      setChange(false);
+      setReload(reload + 1);
+    } catch (error) {
+      console.log('Error updating user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [reload]);
+
+  const fetchData = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(`${API.getUserData}`, {}, token);
+      const {name, email, mobileNumber, countryCode} = response?.data;
+
+      setName(name);
+      setEmail(email);
+
+      const fullPhone = `+${countryCode}${mobileNumber}`;
+      setPhone(fullPhone);
+
+      if (phoneRef.current) {
+        phoneRef.current.setValue(fullPhone); // this updates the UI
+      }
+    } catch (error) {
+      console.log('Error fetching user data:', error);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -27,7 +83,11 @@ const EditProfileScreen = ({navigation}) => {
           <LeftBlack />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Edit Profile</Text>
-        <TouchableOpacity style={styles.saveBtn}>
+        <TouchableOpacity
+          style={[styles.saveBtn, {opacity: change ? 1 : 0.5}]}
+          onPress={() => {
+            if (change) updateUserData();
+          }}>
           <Text style={styles.saveBtnText}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -42,7 +102,10 @@ const EditProfileScreen = ({navigation}) => {
         <Text style={styles.label}>Firstname</Text>
         <TextInput
           value={name}
-          onChangeText={setName}
+          onChangeText={text => {
+            setName(text);
+            setChange(true);
+          }}
           style={styles.input}
           placeholder="Firstname"
         />
@@ -50,7 +113,10 @@ const EditProfileScreen = ({navigation}) => {
         <Text style={styles.label}>Email Address</Text>
         <TextInput
           value={email}
-          onChangeText={setEmail}
+          onChangeText={text => {
+            setEmail(text);
+            setChange(true);
+          }}
           style={styles.input}
           placeholder="Email"
           keyboardType="email-address"
@@ -63,7 +129,11 @@ const EditProfileScreen = ({navigation}) => {
             ref={phoneRef}
             initialCountry="ae"
             value={phone}
-            onChangePhoneNumber={setPhone}
+            // onChangePhoneNumber={setPhone}
+            onChangePhoneNumber={text => {
+              setPhone(text);
+              setChange(true);
+            }}
             textStyle={styles.phoneText}
             style={styles.phoneInput}
           />

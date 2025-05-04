@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { baseUrl } from './Constant';
+import {baseUrl} from './Constant';
 
 export const instance = axios.create({
   baseURL: baseUrl,
@@ -77,6 +77,24 @@ export const del = async (url, params = {}, token = null) => {
     }
 
     const response = await instance.delete(url, config);
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};
+
+// PATCH method
+export const patch = async (url, body = {}, token = null) => {
+  try {
+    const config = {
+      headers: {},
+    };
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await instance.patch(url, body, config);
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error;
