@@ -50,6 +50,7 @@ const SignInScreen = ({navigation}) => {
     try {
       const data = await post(API.logIn, {email, password});
       navigation.navigate('Main');
+      console.log('Login successful:', data);
       await setItem('userData', data);
     } catch (err) {
       Alert.alert(err.message);

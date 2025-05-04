@@ -20,17 +20,22 @@ import {removeItem, setItem} from '../../utilis/StorageActions';
 const SignUpScreen = ({navigation}) => {
   const phoneRef = useRef(null);
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [nameError, setNameError] = useState(false);
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
     email: '',
     password: '',
+    name:'',
+    mobileNumber:'',
   });
   const validate = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const errors = {email: '', password: ''};
+    const errors = {email: '', password: '', name: '', mobileNumber: ''};
     let isValid = true;
 
     if (!emailRegex.test(email)) {
@@ -45,17 +50,29 @@ const SignUpScreen = ({navigation}) => {
       setPasswordError(true);
     }
 
+    if (name.length < 3) {
+      errors.name = 'Name must be at least 3 characters';
+      isValid = false;
+      setNameError(true);
+    }
+
     setError(errors);
     return isValid;
   };
 
   const handleSignUp = async () => {
+    const fullNumber = phoneRef.current.getValue();
+    const countryCode = phoneRef.current.getCountryCode();
+    const mobileNumber = fullNumber.replace(`+${countryCode}`, '').trim();
+    //console.log('Country Code:', countryCode);
+    //console.log('Mobile Number:', mobileNumber);
+    //return;
     if (!validate()) return;
     setLoading(true);
     await removeItem('userData');
     removeItem('userData');
     try {
-      const data = await post(API.signUp, {email, password});
+      const data = await post(API.signUp, {email,password,name,mobileNumber,countryCode});
       navigation.navigate('OnBoarding');
       Alert.alert('Success', 'Signup successful');
       await setItem('userData', data);
@@ -83,16 +100,23 @@ const SignUpScreen = ({navigation}) => {
         <TextInput
           placeholder="Full Name"
           placeholderTextColor={Colors.lightTxt}
-          style={[styles.input, {marginBottom: 24}]}
+          style={[styles.input, 
+            //nameError && styles.inputError,
+            {marginBottom: 10}]}
+          onChangeText={setName}
+          value={name}
         />
+         {nameError && (
+          <Text style={styles.errorText}>{error.name}</Text>
+        )}
 
         <TextInput
           placeholder="Email Address"
           placeholderTextColor={Colors.lightTxt}
           style={[
             styles.input,
-            emailError && styles.inputError,
-            {marginBottom: 10},
+            //emailError && styles.inputError,
+            {marginBottom: 10,marginTop: 10},
           ]}
           onChangeText={setEmail}
           value={email}
@@ -100,7 +124,7 @@ const SignUpScreen = ({navigation}) => {
           autoCapitalize="none"
         />
         {emailError && (
-          <Text style={styles.errorText}>Enter a valid Email</Text>
+          <Text style={styles.errorText}>{error.email}</Text>
         )}
 
         <PhoneInput

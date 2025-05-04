@@ -28,10 +28,10 @@ const WelcomeScreen = ({navigation}) => {
           <Text style={styles.buttonText}>Continue with Email</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.appleButton} onPress = {()=>navigation.navigate('Main')}>
+        {/* <TouchableOpacity style={styles.appleButton} onPress = {()=>navigation.navigate('Main')}>
           <Text style={styles.appleIcon}></Text>
           <Text style={styles.appleButtonText}>Continue with Apple</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity onPress = {()=>navigation.navigate('Main')}>
           <Text style={styles.guestText}>Continue as Guest</Text>

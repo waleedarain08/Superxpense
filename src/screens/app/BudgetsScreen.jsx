@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
@@ -83,6 +84,12 @@ const BudgetsScreen = ({navigation}) => {
         },
         token,
       );
+      console.log(response, 'add budget response');
+      if(response.statusCode === 201) {
+        Alert.alert('Budget added successfully!');
+        showBudget(); // Refresh the budget list after adding a new budget
+      }
+      // Handle success response
       // console.log(response);
     } catch (error) {
       console.log('Error adding Budget:', error);
@@ -95,13 +102,13 @@ const BudgetsScreen = ({navigation}) => {
 
     try {
       const response = await get(`${API.allBudgets}`, {}, token);
-      console.log(response);
+      console.log(response,'budget response');
       setBudgetData(
         response.data.map(item => ({
           id: item.id,
           title: item.category.name,
           amount: item.amount,
-          icon: null, // You can add an icon based on item.category.code
+          icon: item.category.icon, // You can add an icon based on item.category.code
         })),
       );
     } catch (error) {
@@ -128,14 +135,14 @@ const BudgetsScreen = ({navigation}) => {
       label: item.name,
       value: item.code,
       color: defaultColors[index % defaultColors.length], // Pick a color from predefined list
-      icon: null, // or assign custom icons based on `item.code`
+      icon: item.icon, // or assign custom icons based on `item.code`
     }));
     setCategories(mappedCategories);
   };
 
   const handleSubmit = ({amount, categories}) => {
     // Call your submit API here
-    console.log('Submit payload:', {amount, categories});
+    //console.log('Submit payload:', {amount, categories});
     addBudget(amount, categories);
   };
 
@@ -155,10 +162,10 @@ const BudgetsScreen = ({navigation}) => {
           ></TouchableOpacity>
           <View style={styles.nameHeader}>
             <Text style={styles.headerTxt}>Personal Monthly Budget</Text>
-            <Dropdown />
+            {/* <Dropdown /> */}
           </View>
           <View style={styles.actionButtons}>
-            <ThreeDots size={20} color={Colors.white} />
+            {/* <ThreeDots size={20} color={Colors.white} /> */}
           </View>
         </View>
 
@@ -235,10 +242,10 @@ const BudgetsScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <AllBudgetCard data={budgetData} />
-          <IncomeCard data={HousingData} type="utilities" />
+          {/* <IncomeCard data={HousingData} type="utilities" /> */}
         </ScrollView>
       )}
-      {selectedTab === 'Remaining' && (
+      {/* {selectedTab === 'Remaining' && (
         <ScrollView
           style={styles.safeView}
           showsVerticalScrollIndicator={false}>
@@ -265,7 +272,7 @@ const BudgetsScreen = ({navigation}) => {
             Coming Soon
           </Text>
         </ScrollView>
-      )}
+      )} */}
     </View>
   );
 };

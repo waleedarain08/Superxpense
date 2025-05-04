@@ -151,7 +151,7 @@ const BottomNavigator = () => {
             ),
           }}
         />
-        <BottomStack.Screen
+        {/* <BottomStack.Screen
           name="Goals"
           component={AddGoals}
           options={{
@@ -170,7 +170,7 @@ const BottomNavigator = () => {
               />
             ),
           }}
-        />
+        /> */}
         <BottomStack.Screen
           name="Settings"
           component={SettingScreen}

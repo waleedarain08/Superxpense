@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
   KeyboardAvoidingView,
+  Image
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Flame, Gros, Home, Income, PopCorn, Soda} from '../assets/svgs';
@@ -28,6 +29,22 @@ const BudgetModal = ({visible, onClose, categories = [], onSubmit}) => {
   const [amount, setAmount] = useState('');
 
   const handleSubmit = () => {
+    if(selectedCategories.length === 0) {
+      alert('Please select at least one category!');
+      return;
+    }
+    if (!amount) {
+      alert('Please enter an amount!');
+      return;
+    }
+    if (isNaN(amount)) {
+      alert('Please enter a valid number!');
+      return;
+    }
+    if (parseFloat(amount) <= 0) {
+      alert('Please enter an amount greater than 0!');
+      return;
+    }
     onSubmit({
       amount: parseFloat(amount),
       categories: selectedCategories,
@@ -54,6 +71,8 @@ const BudgetModal = ({visible, onClose, categories = [], onSubmit}) => {
     }
   };
 
+  //console.log(categories);
+
   const showSubmitButton = selectedCategories.length > 0;
 
   return (
@@ -77,28 +96,6 @@ const BudgetModal = ({visible, onClose, categories = [], onSubmit}) => {
               </View>
 
               <Text style={styles.amount}>AED {amount || '0'}</Text>
-              <Text style={styles.label}>Select Categories</Text>
-
-              <View style={styles.card}>
-                {categories.map(item => (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={styles.categoryRow}
-                    onPress={() => handleSelect(item.value)}>
-                    <View
-                      style={[
-                        styles.iconCircle,
-                        {backgroundColor: item.color},
-                      ]}>
-                      {item.icon}
-                    </View>
-                    <Text style={styles.categoryLabel}>{item.label}</Text>
-                    {selectedCategories.includes(item.value) && (
-                      <Icon name="checkmark-circle" color="#111827" size={20} />
-                    )}
-                  </TouchableOpacity>
-                ))}
-              </View>
               <TextInput
                 style={styles.input}
                 placeholder="Enter amount to continue"
@@ -107,14 +104,36 @@ const BudgetModal = ({visible, onClose, categories = [], onSubmit}) => {
                 placeholderTextColor="#9CA3AF"
                 onChangeText={setAmount}
               />
+              <Text style={styles.label}>Select Category</Text>
 
-              {showSubmitButton && (
+              <View style={styles.card}>
+                {categories.map(item => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={styles.categoryRow}
+                    onPress={() => setSelectedCategories([item.value])}>
+                    <View
+                      style={[
+                        styles.iconCircle,
+                        {backgroundColor: item.color},
+                      ]}>
+                      <Image source={{uri: item.icon}} style={{resizeMode: 'contain', height: 16, width: 16}} />
+                    </View>
+                    <Text style={styles.categoryLabel}>{item.label}</Text>
+                    {selectedCategories.includes(item.value) && (
+                      <Icon name="checkmark-circle" color="#111827" size={20} />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              
                 <TouchableOpacity
                   style={styles.submitBtn}
                   onPress={handleSubmit}>
-                  <Text style={styles.submitText}>Save and submit</Text>
+                  <Text style={styles.submitText}>Save and Submit</Text>
                 </TouchableOpacity>
-              )}
+              
             </ScrollView>
           </View>
         </KeyboardAvoidingView>
@@ -136,7 +155,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-    minHeight: '85%',
+    marginTop: 80,
+    //minHeight: '85%',
   },
   headerRow: {
     flexDirection: 'row',

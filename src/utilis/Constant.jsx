@@ -13,6 +13,6 @@ export const API = {
   barGraph: `${baseUrl}lean/stats/transactions-by-month`,
   incomeMonth: `${baseUrl}lean/stats/income-by-month`,
   addBudget: `${baseUrl}budget`,
-  getAllCategories: `${baseUrl}category`,
+  getAllCategories: `${baseUrl}category/all`,
   allBudgets: `${baseUrl}budget`,
 };
