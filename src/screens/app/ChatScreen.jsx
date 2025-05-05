@@ -50,6 +50,7 @@ const HomeScreen = ({navigation}) => {
   const [message, setMessage] = useState('');
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [name, setName] = useState('');
+  const [isThinking, setIsThinking] = useState(false);
 
   const scrollViewRef = useRef(null);
 
@@ -108,9 +109,8 @@ const HomeScreen = ({navigation}) => {
       setSendMessageLoading(true);
       const userData = await getItem('userData');
       const token = userData.data?.accessToken;
-      const response = await post(`${API.createChat}`, {query: message}, token);
-      console.log('Send response', response);
-      // Add the new message to the chat list
+      
+      // Add user message and thinking message
       setChats(prevChats => [
         ...prevChats,
         {
@@ -119,16 +119,38 @@ const HomeScreen = ({navigation}) => {
           timestamp: new Date().toLocaleTimeString(),
         },
         {
-          message: response.data,
+          message: 'Thinking...',
           isUser: false,
+          isThinking: true,
           timestamp: new Date().toLocaleTimeString(),
         },
       ]);
+      
+      setIsThinking(true);
+      const response = await post(`${API.createChat}`, {query: message}, token);
+      console.log('Send response', response);
+      
+      // Remove thinking message and add bot response
+      setChats(prevChats => {
+        const newChats = prevChats.filter(chat => !chat.isThinking);
+        return [
+          ...newChats,
+          {
+            message: response.data,
+            isUser: false,
+            timestamp: new Date().toLocaleTimeString(),
+          },
+        ];
+      });
+      
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
+      // Remove thinking message on error
+      setChats(prevChats => prevChats.filter(chat => !chat.isThinking));
     } finally {
       setSendMessageLoading(false);
+      setIsThinking(false);
     }
   };
 
@@ -185,8 +207,15 @@ const HomeScreen = ({navigation}) => {
                     styles.messageContainer,
                     chat.isUser ? styles.userMessage : styles.botMessage,
                   ]}>
-                  <Text style={styles.messageText}>{chat.message}</Text>
-                  <Text style={styles.timestampText}>{chat.timestamp}</Text>
+                  <Text style={[
+                    styles.messageText,
+                    chat.isThinking && styles.thinkingText
+                  ]}>
+                    {chat.message}
+                  </Text>
+                  {!chat.isThinking && (
+                    <Text style={styles.timestampText}>{chat.timestamp}</Text>
+                  )}
                 </View>
               ))}
             </View>
@@ -342,6 +371,10 @@ const styles = StyleSheet.create({
   subGreetingText: {
     fontSize: 14,
     fontFamily: FontFamily.regular,
+    color: Colors.lightTxtColor,
+  },
+  thinkingText: {
+    fontStyle: 'italic',
     color: Colors.lightTxtColor,
   },
 });
