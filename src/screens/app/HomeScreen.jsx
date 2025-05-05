@@ -67,7 +67,7 @@ const HomeScreen = ({navigation}) => {
     setYear(newDate.year());
   };
 
-  const fetchTransactions = async () => {
+  const fetchAccounts = async () => {
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
 
@@ -84,38 +84,42 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  const leanConnection = async () => {
-    try {
-      setLoading(true);
-      const userData = await getItem('userData');
-      const token = userData.data?.accessToken;
-      const data = await get(`${API.leanConnection}`, null, token);
-      setActiveData(data.data);
-      setBankName(data.data[0].bank_identifier);
-      const r = data.data;
-      const id = r[0].id;
-      setStateEntityId(id);
+  // const leanConnection = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const userData = await getItem('userData');
+  //     const token = userData.data?.accessToken;
+  //     const data = await get(`${API.leanConnection}`, null, token);
+  //     setActiveData(data.data);
+  //     setBankName(data.data[0].bank_identifier);
+  //     const r = data.data;
+  //     const id = r[0].id;
+  //     setStateEntityId(id);
 
-      fetchTransactions();
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      Alert.alert('Failed to load user data', error);
-    }
-  };
+  //     fetchTransactions();
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     Alert.alert('Failed to load user data', error);
+  //   }
+  // };
+
   useFocusEffect(
     useCallback(() => {
-      leanConnection();
+      fetchAccounts();
+      //leanConnection();
     }, []),
   );
 
-  const handleAccountPress = account => {
+  const handleAccountPress = (account,bankID,bankName) => {
+    //console.log('Account pressed:', account);
+    //console.log('Bank Name:', bankName);
     navigation.navigate('BankTransaction', {
       accountId: account.accountId,
       accountBalance: account.accountBalance,
       accountType: account.accountType,
       BankName: bankName,
-      entityId: stateEntityId,
+      entityId: bankID,
     });
   };
 
@@ -359,12 +363,13 @@ const HomeScreen = ({navigation}) => {
             showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Bank Connections</Text>
             {banksData.map((item, index) => {
-              console.log('item:', item);
+              //console.log('item:', item);
               return (
                 <BankCard
                   key={index}
-                  logo={{uri: item.bankIcon}}
-                  bankName={`${item.bankName} Bank`}
+                  logo={{uri:item.bankIcon}}
+                  bankID={item.bankId}
+                  bankName={item.bankName}
                   totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
                   accounts={item.accounts}
                   onPress={handleAccountPress}

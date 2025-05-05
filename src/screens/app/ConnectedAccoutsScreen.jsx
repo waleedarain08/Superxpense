@@ -24,11 +24,12 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [bankName, setBankName] = useState('');
   const [banksData, setBanksData] = useState([]);
-  const fetchTransactions = async id => {
-    setStateEntityId(id);
+  
+  const fetchAccounts = async() => {
+    //setStateEntityId(id);
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
-
+    //console.log('token:', token);
     // try {
     //   setLoading(true);
     //   const data = await get(
@@ -57,35 +58,37 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     }
   };
 
-  const leanConnection = async () => {
-    try {
-      setLoading(true);
-      const userData = await getItem('userData');
-      const token = userData.data?.accessToken;
-      const data = await get(`${API.leanConnection}`, null, token);
-      const r = data.data;
-      const id = r[0].id;
-      fetchTransactions(id);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      Alert.alert('Failed to load user data', error);
-    }
-  };
+  // const leanConnection = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const userData = await getItem('userData');
+  //     const token = userData.data?.accessToken;
+  //     const data = await get(`${API.leanConnection}`, null, token);
+  //     const r = data.data;
+  //     const id = r[0].id;
+  //     fetchTransactions(id);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     Alert.alert('Failed to load user data', error);
+  //   }
+  // };
 
   useEffect(() => {
     setTimeout(() => {
-      leanConnection();
+      fetchAccounts();
     }, 1000);
   }, []);
 
-  const handleAccountPress = account => {
+  const handleAccountPress = (account,bankID,bankName) => {
+    //console.log('Account pressed:', account);
+    //console.log('Bank Name:', bankName);
     navigation.navigate('BankTransaction', {
       accountId: account.accountId,
       accountBalance: account.accountBalance,
       accountType: account.accountType,
       BankName: bankName,
-      entityId: stateEntityId,
+      entityId: bankID,
     });
   };
 
@@ -112,7 +115,8 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
                 <BankCard
                   key={index}
                   logo={{uri:item.bankIcon}}
-                  bankName={`${item.bankName} Bank`}
+                  bankID={item.bankId}
+                  bankName={item.bankName}
                   totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
                   accounts={item.accounts}
                   onPress={handleAccountPress}

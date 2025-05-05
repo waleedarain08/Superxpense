@@ -4,7 +4,7 @@ import {ChevronRight, Refresh, ThreeDots} from '../icons';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
-const BankCard = ({bankName, totalBalance, accounts, logo, onPress}) => {
+const BankCard = ({bankID,bankName, totalBalance, accounts, logo, onPress}) => {
   return (
     <View style={styles.card}>
       {/* Top: Logo, Bank name, Balance, Options */}
@@ -43,7 +43,7 @@ const BankCard = ({bankName, totalBalance, accounts, logo, onPress}) => {
             <TouchableOpacity
               key={index}
               style={styles.mainContainer}
-              onPress={() => onPress(account)}>
+              onPress={() => onPress(account,bankID,bankName)}>
               <View>
                 <View style={styles.accountRow}>
                   <View style={styles.accountLeft}>
