@@ -5,7 +5,7 @@ import {Wallet} from '../assets/svgs';
 import {ChevronRight} from '../icons';
 import {FontFamily} from '../utilis/Fonts';
 
-const LargestPurchaseCard = ({largestAmount, date}) => {
+const LargestPurchaseCard = ({largestAmount, date , category}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Largest purchase</Text>
@@ -18,14 +18,14 @@ const LargestPurchaseCard = ({largestAmount, date}) => {
           <Wallet />
         </View>
         <View style={styles.textWrapper}>
-          <Text style={styles.cardTitle}>Debit card Purchase</Text>
+          <Text style={styles.cardTitle}>{category}</Text>
           <Text style={styles.cardDate}>{date}</Text>
         </View>
         <View style={styles.amountWrapper}>
           <Text style={styles.amount}>
             AED <Text style={{color: Colors.txtColor}}>{largestAmount}</Text>
           </Text>
-          <ChevronRight />
+          {/* <ChevronRight /> */}
         </View>
       </TouchableOpacity>
     </View>

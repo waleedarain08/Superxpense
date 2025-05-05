@@ -366,6 +366,7 @@ const HomeScreen = ({navigation}) => {
           <LargestPurchaseCard
             largestAmount={largestTransaction?.amount || 0}
             date={selectedDate.format('MMMM YYYY')}
+            category={largestTransaction?.category || ''}
           />
           <SpendingSummary
             data={categoryData}
