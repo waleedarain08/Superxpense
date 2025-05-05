@@ -12,7 +12,7 @@ import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
 const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
-  console.log(data);
+  const safeData = Array.isArray(data) ? data : [];
 
   const [chartWidth, setChartWidth] = useState(0);
   // Called when layout is calculated
@@ -21,10 +21,13 @@ const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
     setChartWidth(width);
   };
 
-  const sortedData = [...data].sort(
+  const sortedData = [...safeData].sort(
     (a, b) => new Date(a.date) - new Date(b.date),
   );
-  const maxAmount = Math.max(...sortedData.map(item => item.amount));
+  const maxAmount =
+    sortedData.length > 0
+      ? Math.max(...sortedData.map(item => item.amount))
+      : 0;
   const chartHeight = 100;
   const horizontalPadding = 16;
   const verticalPadding = 10;
@@ -46,7 +49,7 @@ const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
     '',
   );
 
-  const lastPoint = points[points.length - 1];
+  const lastPoint = points[points.length - 1] || { x: 0, y: 0, date: '', amount: 0 };
 
   const tooltipWidth = 120; // Estimate or measure the actual width of tooltip
   const clampedLeft = Math.min(
@@ -54,7 +57,7 @@ const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
     chartWidth - tooltipWidth - 8, // prevent overflow on right
   );
 
-  return data.length === 0 ? (
+  return safeData.length === 0 ? (
     <View style={styles.container}>
       <View style={{paddingHorizontal: 22, paddingTop: 20}}>
         <Text style={styles.title}>THIS MONTH’S SPEND</Text>
