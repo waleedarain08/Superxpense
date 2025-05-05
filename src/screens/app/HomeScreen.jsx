@@ -339,7 +339,7 @@ const HomeScreen = ({navigation}) => {
             </LinearGradient>
           </TouchableOpacity>
           <BudgetCard data={budgetCategoryData?.data || []} month={month}/>
-          <UpcomingBills navigation={navigation} />
+          {/* <UpcomingBills navigation={navigation} /> */}
         </ScrollView>
       )}
       {selectedTab === 'Spending' && (
