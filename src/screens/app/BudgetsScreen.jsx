@@ -127,7 +127,7 @@ const BudgetsScreen = ({navigation}) => {
         {month: month, year: year},
         token,
       );
-      console.log(response, 'hehehhehehehehheheheheheheh');
+      console.log(response, 'trans by month');
       setIncomeData(response);
     } catch (error) {
       console.log('Error fetching Transaction By Month Data:', error);

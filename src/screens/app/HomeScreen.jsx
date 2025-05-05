@@ -218,7 +218,7 @@ const HomeScreen = ({navigation}) => {
         {entityId: stateEntityId, month: month, year: year},
         token,
       );
-
+      console.log('line chart response:', response);
       const {transactions} = response?.data || {};
       setMonthlySpending(response.data.currentMonthSpending);
       setLastSpending(response.data.lastMonthSpending);
