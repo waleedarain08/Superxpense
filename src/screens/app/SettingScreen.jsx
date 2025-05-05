@@ -36,25 +36,25 @@ const SettingScreen = () => {
             screenName="EditProfile"
           />
           <SettingItem title="Subscription" screenName="Subscription" IconComponent={<Crown />} />
-          <SettingItem
+          {/* <SettingItem
             title="Alert & Notification"
             IconComponent={<NotiBlue />}
-          />
+          /> */}
         </View>
 
         {/* Security Section */}
         <Text style={styles.sectionTitle}>Security</Text>
         <View style={styles.card}>
           <SettingItem title="Privacy Policy" IconComponent={<Globe />} />
-          <SettingItem title="App Passcode" IconComponent={<Shield />} />
+          {/* <SettingItem title="App Passcode" IconComponent={<Shield />} /> */}
         </View>
 
         {/* Support Section */}
         <Text style={styles.sectionTitle}>Support</Text>
         <View style={styles.card}>
           <SettingItem title="Help & Support" IconComponent={<Help />} />
-          <SettingItem title="Privacy Policy" IconComponent={<Bulb />} />
-          <SettingItem title="FAQs" IconComponent={<Flag />} />
+          {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
+          {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
         </View>
 
         {/* Logout Section */}

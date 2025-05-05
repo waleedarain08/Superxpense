@@ -123,7 +123,7 @@ const BillsNPayments = ({navigation}) => {
           <View style={{width: 10}} />
         </View>
 
-        <View style={styles.tabRow}>
+        {/* <View style={styles.tabRow}>
           {tabs.map(tab => (
             <TouchableOpacity
               key={tab}
@@ -141,11 +141,11 @@ const BillsNPayments = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </View> */}
       </View>
-              <Text style={{marginLeft:'37%',marginTop:5,marginBottom:5, color:Colors.lightblack}}>Coming Soon</Text>
+              {/* <Text style={{marginLeft:'37%',marginTop:5,marginBottom:5, color:Colors.lightblack}}>Coming Soon</Text> */}
       
-      {selectedTab === 'Upcoming' && (
+      {/* {selectedTab === 'Upcoming' && (
       <ScrollView
         style={styles.screen}
         contentContainerStyle={{paddingBottom: 20}}
@@ -189,7 +189,7 @@ const BillsNPayments = ({navigation}) => {
             />
           </View>
         </ScrollView>
-      )}
+      )} */}
     </View>
   );
 };

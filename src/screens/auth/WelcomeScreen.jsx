@@ -33,9 +33,9 @@ const WelcomeScreen = ({navigation}) => {
           <Text style={styles.appleButtonText}>Continue with Apple</Text>
         </TouchableOpacity> */}
 
-        <TouchableOpacity onPress = {()=>navigation.navigate('Main')}>
+        {/* <TouchableOpacity onPress = {()=>navigation.navigate('Main')}>
           <Text style={styles.guestText}>Continue as Guest</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
