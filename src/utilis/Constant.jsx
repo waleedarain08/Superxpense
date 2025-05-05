@@ -18,4 +18,6 @@ export const API = {
   getUserData: `${baseUrl}auth/me`,
   budgetByCategory: `${baseUrl}budget/expenses-by-category-with-budget`,
   transactionByMonth: `${baseUrl}accounts/income-transactions-by-month`,
+  getAllChats: `${baseUrl}chat/all`,
+  createChat: `${baseUrl}chat`,
 };

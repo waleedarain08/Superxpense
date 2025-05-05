@@ -1,63 +1,18 @@
 import React from 'react';
-// @ts-ignore
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-// @ts-ignore
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-// @ts-ignore
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-// @ts-ignore
 import Ionicons from 'react-native-vector-icons/Ionicons';
-// @ts-ignore
 import AntDesign from 'react-native-vector-icons/AntDesign';
-// @ts-ignore
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-// @ts-ignore
 import Entypo from 'react-native-vector-icons/Entypo';
-// @ts-ignore
 import Feather from 'react-native-vector-icons/Feather';
-// @ts-ignore
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-// @ts-ignore
 import Fontisto from 'react-native-vector-icons/Fontisto';
-// @ts-ignore
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-// @ts-ignore
 import Octicons from 'react-native-vector-icons/Octicons';
-import {TextStyle} from 'react-native';
 
-// Define accepted icon types
-type IconType =
-  | 'FontAwesome'
-  | 'FontAwesome5'
-  | 'FontAwesome6'
-  | 'Ionicons'
-  | 'AntDesign'
-  | 'EvilIcons'
-  | 'Entypo'
-  | 'Feather'
-  | 'Fontisto'
-  | 'MaterialIcons'
-  | 'MaterialCommunityIcons'
-  | 'Octicons';
-
-// Define props type
-interface VectorIconProps {
-  name: string;
-  color?: string;
-  size?: number;
-  type: IconType;
-  style?: TextStyle;
-  onPress?: () => void;
-}
-
-export const VectorIcon: React.FC<VectorIconProps> = ({
-  name,
-  color,
-  size,
-  type,
-  style,
-  onPress,
-}) => {
+export const VectorIcon = ({name, color, size, type, style, onPress}) => {
   switch (type) {
     case 'FontAwesome':
       return (
@@ -197,14 +152,7 @@ export const VectorIcon: React.FC<VectorIconProps> = ({
   }
 };
 
-// Defined Icons
-interface IconProps {
-  color?: string;
-  size?: number;
-  style?: TextStyle;
-}
-
-export const ChevronRight: React.FC<IconProps> = ({color, size, style}) => (
+export const ChevronRight = ({color, size, style}) => (
   <VectorIcon
     name="chevron-thin-right"
     color={color}
@@ -214,7 +162,7 @@ export const ChevronRight: React.FC<IconProps> = ({color, size, style}) => (
   />
 );
 
-export const Home: React.FC<IconProps> = ({color, size, style}) => (
+export const Home = ({color, size, style}) => (
   <VectorIcon
     name="home"
     color={color}
@@ -224,7 +172,7 @@ export const Home: React.FC<IconProps> = ({color, size, style}) => (
   />
 );
 
-export const Logout: React.FC<IconProps> = ({color, size, style}) => (
+export const Logout = ({color, size, style}) => (
   <VectorIcon
     name="logout"
     color={color}
@@ -234,7 +182,7 @@ export const Logout: React.FC<IconProps> = ({color, size, style}) => (
   />
 );
 
-export const ArrowBack: React.FC<IconProps> = ({color, size, style}) => (
+export const ArrowBack = ({color, size, style}) => (
   <VectorIcon
     name="arrow-back"
     color={color}
@@ -244,7 +192,7 @@ export const ArrowBack: React.FC<IconProps> = ({color, size, style}) => (
   />
 );
 
-export const Refresh: React.FC<IconProps> = ({color, size, style}) => (
+export const Refresh = ({color, size, style}) => (
   <VectorIcon
     name="refresh"
     color={color}
@@ -254,7 +202,7 @@ export const Refresh: React.FC<IconProps> = ({color, size, style}) => (
   />
 );
 
-export const Right: React.FC<IconProps> = ({color, size, style}) => (
+export const Right = ({color, size, style}) => (
   <VectorIcon
     name="chevron-right"
     color={color}
@@ -264,7 +212,7 @@ export const Right: React.FC<IconProps> = ({color, size, style}) => (
   />
 );
 
-export const Down: React.FC<IconProps> = ({color, size, style}) => (
+export const Down = ({color, size, style}) => (
   <VectorIcon
     name="chevron-down"
     color={color}
@@ -274,7 +222,7 @@ export const Down: React.FC<IconProps> = ({color, size, style}) => (
   />
 );
 
-export const ThreeDots: React.FC<IconProps> = ({color, size, style}) => (
+export const ThreeDots = ({color, size, style}) => (
   <VectorIcon
     name="dots-three-horizontal"
     color={color}

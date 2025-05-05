@@ -13,7 +13,7 @@
 
 // const styles = StyleSheet.create({});
 
-import React from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -21,8 +21,13 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ActivityIndicator,
+  Platform,
+  Keyboard,
+  KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -34,86 +39,184 @@ import {
   ViewSummary,
   Voice,
 } from '../../assets/svgs';
-
-const QuickAction = ({icon, label, backgroundColor}) => (
-  <TouchableOpacity style={[styles.quickAction]}>
-    <View style={[styles.iconStyle, {backgroundColor: backgroundColor}]}>
-      {icon}
-    </View>
-    <Text style={styles.quickActionText}>{label}</Text>
-  </TouchableOpacity>
-);
+import {VectorIcon} from '../../icons';
+import {get, post} from '../../utilis/Api';
+import {getItem} from '../../utilis/StorageActions';
+import {API} from '../../utilis/Constant';
 
 const HomeScreen = ({navigation}) => {
+  const [chats, setChats] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState('');
+  const [sendMessageLoading, setSendMessageLoading] = useState(false);
+  const [name, setName] = useState('');
+
+  const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    fetchChats();
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(`${API.getUserData}`, {}, token);
+      const {name} = response?.data;
+
+      setName(name);
+    } catch (error) {
+      console.log('Error fetching user data:', error);
+    }
+  };
+
+  const fetchChats = async () => {
+    try {
+      setLoading(true);
+      const userData = await getItem('userData');
+      const token = userData.data?.accessToken;
+      const response = await get(`${API.getAllChats}`, null, token);
+      // Transform the history into chat messages and reverse the order
+      const formattedChats = response.data.history
+        .reverse() // Reverse the array to show oldest messages first
+        .map(chat => [
+          {
+            message: chat.userQuery,
+            isUser: true,
+            timestamp: new Date(chat.createdAt).toLocaleTimeString(),
+          },
+          {
+            message: chat.aiResponse,
+            isUser: false,
+            timestamp: new Date(chat.createdAt).toLocaleTimeString(),
+          },
+        ])
+        .flat();
+      setChats(formattedChats);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching chats:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!message.trim()) return;
+    try {
+      setSendMessageLoading(true);
+      const userData = await getItem('userData');
+      const token = userData.data?.accessToken;
+      const response = await post(`${API.createChat}`, {query: message}, token);
+      console.log('Send response', response);
+      // Add the new message to the chat list
+      setChats(prevChats => [
+        ...prevChats,
+        {
+          message: message,
+          isUser: true,
+          timestamp: new Date().toLocaleTimeString(),
+        },
+        {
+          message: response.data,
+          isUser: false,
+          timestamp: new Date().toLocaleTimeString(),
+        },
+      ]);
+      setMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setSendMessageLoading(false);
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
       {/* Top Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={{width: '10%'}}
+          onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={Colors.white} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Chat</Text>
-        <TouchableOpacity>
-          {/* <ChatHeader /> */}
+        <TouchableOpacity style={{width: '10%'}}>
+          <ChatHeader />
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingBottom: 80,
-          justifyContent: 'center',
-        }}>
-                  {/* <Text style={{marginLeft:'37%',marginTop:10, color:Colors.lightblack}}>Coming Soon</Text> */}
-          
-        {/* Greeting */}
-        <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>Good morning John</Text>
-          <Text style={styles.subGreetingText}>
-            Let's make your money work for you.
-          </Text>
+      <View style={styles.contentContainer}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={{
+            flexGrow: 1,
+          }}
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current?.scrollToEnd({animated: true})
+          }
+          onLayout={() => scrollViewRef.current?.scrollToEnd({animated: true})}
+          enableOnAndroid={true}
+          enableAutomaticScroll={true}
+          keyboardShouldPersistTaps="handled"
+          extraScrollHeight={Platform.OS === 'ios' ? 90 : 0}>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={Colors.primary} />
+            </View>
+          ) : chats.length === 0 ? (
+            <View style={styles.greetingContainer}>
+              <Text style={styles.greetingText}>Welcome, {name}</Text>
+              <Text style={styles.subGreetingText}>
+                Let's make your money work for you.
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.chatContainer}>
+              {chats.map((chat, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.messageContainer,
+                    chat.isUser ? styles.userMessage : styles.botMessage,
+                  ]}>
+                  <Text style={styles.messageText}>{chat.message}</Text>
+                  <Text style={styles.timestampText}>{chat.timestamp}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+        </ScrollView>
+
+        {/* Bottom Input Bar */}
+        <View style={styles.inputBar}>
+          <TextInput
+            style={styles.input}
+            placeholder="Ask me Anything"
+            placeholderTextColor="#999"
+            value={message}
+            onChangeText={setMessage}
+          />
+          <TouchableOpacity onPress={handleSend}>
+            {sendMessageLoading ? (
+              <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+              <VectorIcon
+                name="send"
+                color={Colors.primary}
+                size={20}
+                type="Ionicons"
+              />
+            )}
+          </TouchableOpacity>
         </View>
-
-        {/* Quick Actions */}
-        {/* <View style={styles.quickActionsContainer}>
-          <QuickAction
-            icon={<AddExpense />}
-            label="Add Expense"
-            backgroundColor="#C9F7FF"
-          />
-          <QuickAction
-            icon={<SetBudget />}
-            label="Set Budget"
-            backgroundColor="#D9C9FF"
-          />
-          <QuickAction
-            icon={<Plan />}
-            label="Plan a Payment"
-            backgroundColor="#FFC9DC"
-          />
-          <QuickAction
-            icon={<ViewSummary />}
-            label="View Summary"
-            backgroundColor="#C9E2FF"
-          />
-        </View> */}
-      </ScrollView>
-
-      {/* Bottom Input Bar */}
-      <View style={styles.inputBar}>
-        {/* <TouchableOpacity style={styles.plusButton}>
-          <Ionicons name="add" size={20} color={Colors.primary || '#00A86B'} />
-        </TouchableOpacity> */}
-        <TextInput
-          style={styles.input}
-          placeholder="Ask me Anything"
-          placeholderTextColor="#999"
-        />
-        <TouchableOpacity>
-          <Voice />
-        </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -122,41 +225,95 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.bgColor,
   },
+  contentContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  scrollView: {
+    flex: 1,
+  },
   header: {
     backgroundColor: Colors.background,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 50,
+    paddingTop: 60,
     paddingBottom: 16,
+    width: '100%',
   },
   headerTitle: {
     color: '#fff',
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
     marginTop: 5,
+    width: '80%',
+    textAlign: 'center',
   },
-  greetingContainer: {
-    marginTop: 30,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 30,
   },
-  greetingText: {
-    fontSize: 24,
-    fontFamily: FontFamily.medium,
-    marginBottom: 10,
+  chatContainer: {
+    padding: 16,
   },
-  subGreetingText: {
-    fontSize: 14,
+  messageContainer: {
+    maxWidth: '80%',
+    padding: 12,
+    borderRadius: 16,
+    marginBottom: 8,
+  },
+  userMessage: {
+    alignSelf: 'flex-end',
+    backgroundColor: Colors.background,
+  },
+  botMessage: {
+    alignSelf: 'flex-start',
+    backgroundColor: Colors.white,
+  },
+  messageText: {
     fontFamily: FontFamily.regular,
-    color: Colors.lightTxtColor,
+    fontSize: 14,
+    color: Colors.txtColor,
+    marginBottom: 4,
   },
-  quickActionsContainer: {
+  timestampText: {
+    fontFamily: FontFamily.regular,
+    fontSize: 10,
+    color: Colors.lightTxtColor,
+    alignSelf: 'flex-end',
+  },
+  inputBar: {
+    backgroundColor: '#fff',
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginHorizontal: 20,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 30,
+    marginHorizontal: 16,
+    marginBottom: Platform.OS === 'ios' ? 20 : 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    fontFamily: FontFamily.regular,
+    color: '#333',
+  },
+  iconStyle: {
+    height: 28,
+    width: 32,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   quickAction: {
     width: '47%',
@@ -171,39 +328,21 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.medium,
     marginTop: 20,
   },
-  inputBar: {
-    position: 'absolute',
-    bottom: 20,
-    left: 16,
-    right: 16,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 30,
-  },
-  plusButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#E5F7EB',
+  greetingContainer: {
+    marginTop: 200,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 8,
+    marginBottom: 30,
   },
-  input: {
-    flex: 1,
-    height: 40,
+  greetingText: {
+    fontSize: 24,
+    fontFamily: FontFamily.medium,
+    marginBottom: 10,
+  },
+  subGreetingText: {
+    fontSize: 14,
     fontFamily: FontFamily.regular,
-    color: '#333',
-  },
-  iconStyle: {
-    height: 28,
-    width: 32,
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    color: Colors.lightTxtColor,
   },
 });
 

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --simulator=\"iPhone 16\"",
+    "pod": "cd ios && pod install && cd ..",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest"
@@ -25,6 +26,7 @@
     "react-native-circular-progress": "^1.4.1",
     "react-native-cli": "^2.0.1",
     "react-native-country-picker-modal": "^2.0.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-phone-input": "^1.3.7",
     "react-native-pie-chart": "^4.0.1",
@@ -58,5 +60,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "packageManager": "yarn@3.6.4+sha512.e70835d4d6d62c07be76b3c1529cb640c7443f0fe434ef4b6478a5a399218cbaf1511b396b3c56eb03bc86424cff2320f6167ad2fde273aa0df6e60b7754029f"
 }
