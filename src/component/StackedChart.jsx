@@ -67,15 +67,15 @@ const StackedChart = ({chartData}) => {
           {/* Chart */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={{flexDirection: 'row', paddingLeft: 8}}>
-              {/* Grid Lines (now properly behind the chart) */}
+              {/* Grid Lines */}
               <View
                 style={{
                   position: 'absolute',
                   height: chartHeight,
-                  width: 56 * safeChartData.length, // Ensure it matches the width of the bars
+                  width: 56 * safeChartData.length,
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  zIndex: -1, // Ensure it's behind the bars
+                  zIndex: -1, // Ensure grid is behind
                 }}>
                 {[0, 1, 2, 3, 4].map((_, i) => (
                   <View
@@ -97,6 +97,8 @@ const StackedChart = ({chartData}) => {
                   width: 56 * safeChartData.length,
                   alignItems: 'center',
                   flexDirection: 'row',
+                  transform: [{scaleX: -1}],
+                  paddingBottom: 25, // Add space for labels
                 }}>
                 <StackedBarChart
                   style={{
@@ -110,18 +112,19 @@ const StackedChart = ({chartData}) => {
                   contentInset={{top: 10, bottom: 10}}
                   numberOfTicks={5}
                 />
-                {safeChartData.map((item, index) => (
+                {[...safeChartData].reverse().map((item, index) => (
                   <Text
                     key={index}
                     style={{
                       position: 'absolute',
-                      left: index * 56 + 4,
-                      bottom: -20,
+                      right: index * 56 + 4,
+                      bottom: 0,
                       fontSize: 12,
                       color: Colors.txtColor,
                       fontFamily: FontFamily.medium,
                       width: 56,
                       textAlign: 'center',
+                      transform: [{scaleX: -1}],
                     }}>
                     {item?.label || ''}
                   </Text>
