@@ -50,7 +50,6 @@ const HomeScreen = ({navigation}) => {
   const [message, setMessage] = useState('');
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [name, setName] = useState('');
-  const [isThinking, setIsThinking] = useState(false);
 
   const scrollViewRef = useRef(null);
 
@@ -126,9 +125,7 @@ const HomeScreen = ({navigation}) => {
         },
       ]);
       
-      setIsThinking(true);
       const response = await post(`${API.createChat}`, {query: message}, token);
-      console.log('Send response', response);
       
       // Remove thinking message and add bot response
       setChats(prevChats => {
@@ -150,7 +147,6 @@ const HomeScreen = ({navigation}) => {
       setChats(prevChats => prevChats.filter(chat => !chat.isThinking));
     } finally {
       setSendMessageLoading(false);
-      setIsThinking(false);
     }
   };
 
