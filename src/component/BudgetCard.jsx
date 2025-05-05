@@ -5,16 +5,46 @@ import {CarGreen, Invoice} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 import {Colors} from '../utilis/Colors';
 
-const BudgetCard = () => {
-  const totalBudget = 10000;
-  const budgetLeft = 2000;
+const BudgetCard = ({data = [], month}) => {
+  const safeData = Array.isArray(data) ? data : [];
+
+  const totalBudget = safeData.reduce(
+    (sum, item) => sum + (item?.budgetAmount || 0),
+    0,
+  );
+
+  const totalSpent = safeData.reduce(
+    (sum, item) => sum + (item?.actualAmount || 0),
+    0,
+  );
+  const budgetLeft = totalBudget - totalSpent;
+
+  const percentageUsed =
+    totalBudget === 0 ? 0 : (totalSpent / totalBudget) * 100;
+
   const spent = totalBudget - budgetLeft;
-  const percentageUsed = (spent / totalBudget) * 100;
+
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const readableMonth = monthNames[(month ?? 1) - 1]; // subtract 1 because array is 0-indexed
 
   return (
     <View style={styles.container}>
       {/* Top Text Section */}
-      <Text style={styles.monthLabel}>April Budget</Text>
+      <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
       <Text style={styles.statusText}>
         Great job! you have {budgetLeft} AED left
       </Text>
@@ -32,7 +62,7 @@ const BudgetCard = () => {
       {/* Category Budgets */}
       <Text style={styles.topBudgetText}>Top Monthly Budget</Text>
 
-      <View style={styles.budgetItem}>
+      {/* <View style={styles.budgetItem}>
         <View style={styles.iconStyle}>
           <CarGreen />
         </View>
@@ -50,7 +80,20 @@ const BudgetCard = () => {
         <Text style={styles.amount}>
           <Text style={{color: Colors.txtColor}}>120</Text> of 250 AED
         </Text>
-      </View>
+      </View> */}
+      {Array.isArray(data) &&
+        data.map((item, index) => (
+          <View key={index} style={styles.budgetItem}>
+            <View style={styles.dotsStyle} />
+            <Text style={styles.label}>{item?.category ?? 'Unknown'}</Text>
+            <Text style={styles.amount}>
+              <Text style={{color: Colors.txtColor}}>
+                {item?.actualAmount ?? 0}
+              </Text>{' '}
+              of {item?.budgetAmount ?? 0} AED
+            </Text>
+          </View>
+        ))}
     </View>
   );
 };
@@ -121,6 +164,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.white,
     borderRadius: 30,
+    marginRight: 6,
+  },
+  dotsStyle: {
+    height: 8,
+    width: 8,
+    borderRadius: 16,
+    backgroundColor: '#0D9488',
     marginRight: 6,
   },
 });

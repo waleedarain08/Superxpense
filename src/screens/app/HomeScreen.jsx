@@ -60,6 +60,7 @@ const HomeScreen = ({navigation}) => {
   const [barData, setBarData] = useState(null);
   const [monthlySpending, setMonthlySpending] = useState(null);
   const [lastSpending, setLastSpending] = useState(null);
+  const [budgetCategoryData, setBudgetCategoryData] = useState([]);
 
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
@@ -231,12 +232,28 @@ const HomeScreen = ({navigation}) => {
       console.log('Error fetching LineGraph Data:', error);
     }
   };
+  const fetchBudgetBycategory = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(
+        `${API.budgetByCategory}`,
+        {month: month, year: year},
+        token,
+      );
+      setBudgetCategoryData(response); // or response?.data if needed
+    } catch (error) {
+      console.log('Error fetching LineGraph Data:', error);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
       fetchMonthlyExpense();
       fetchBarGraph();
       fetchMonthlyIncome();
+      fetchBudgetBycategory();
     }, [month, year]),
   );
 
@@ -321,7 +338,7 @@ const HomeScreen = ({navigation}) => {
               </View>
             </LinearGradient>
           </TouchableOpacity>
-          <BudgetCard />
+          <BudgetCard data={budgetCategoryData?.data || []} month={month}/>
           <UpcomingBills navigation={navigation} />
         </ScrollView>
       )}

@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert
+  Alert,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
@@ -28,33 +28,21 @@ import {get, post} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import {useFocusEffect} from '@react-navigation/native';
 import AllBudgetCard from '../../component/AllBudgetCard';
+import CalendarHeader from '../../component/CalendarHeader';
+import moment from 'moment';
 
 const BudgetsScreen = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('Plan');
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [budgetData, setBudgetData] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(moment());
+  const [month, setMonth] = useState(selectedDate.month() + 1);
+  const [year, setYear] = useState(selectedDate.year());
+  const [budgetCategoryData, setBudgetCategoryData] = useState([]);
+  const [incomeData, setIncomeData] = useState([]);
   const tabs = ['Plan', 'Remaining', 'Insights'];
 
-  const incomeData = [
-    {id: '1', title: 'Salary', amount: '$5,000', icon: <Salary />},
-    {
-      id: '2',
-      title: 'Investments',
-      amount: '$500',
-      icon: <InvestmentWhite />,
-    },
-  ];
-
-  const HousingData = [
-    {id: '1', title: 'Rent', amount: '$5,000', icon: <Wifi />},
-    {
-      id: '2',
-      title: 'Internet',
-      amount: '$500',
-      icon: <Internet />,
-    },
-  ];
 
   const defaultColors = [
     '#F87171', // red
@@ -84,15 +72,29 @@ const BudgetsScreen = ({navigation}) => {
         },
         token,
       );
-      console.log(response, 'add budget response');
-      if(response.statusCode === 201) {
+      if (response.statusCode === 201) {
         Alert.alert('Budget added successfully!');
         showBudget(); // Refresh the budget list after adding a new budget
       }
       // Handle success response
-      // console.log(response);
     } catch (error) {
       console.log('Error adding Budget:', error);
+    }
+  };
+
+  const fetchBudgetByCategory = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(
+        `${API.budgetByCategory}`,
+        {month: month, year: year},
+        token,
+      );
+      setBudgetCategoryData(response); // or response?.data if needed
+    } catch (error) {
+      console.log('Error fetching Budget By Category Data:', error);
     }
   };
 
@@ -102,7 +104,6 @@ const BudgetsScreen = ({navigation}) => {
 
     try {
       const response = await get(`${API.allBudgets}`, {}, token);
-      console.log(response,'budget response');
       setBudgetData(
         response.data.map(item => ({
           id: item.id,
@@ -112,23 +113,32 @@ const BudgetsScreen = ({navigation}) => {
         })),
       );
     } catch (error) {
-      console.log('Error adding Budget:', error);
+      console.log('Error showing Budget:', error);
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchCategories();
-      showBudget();
-    }, []),
-  );
+  const fetchTransactionByMonth = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+    
+    try {
+      const response = await get(
+        `${API.transactionByMonth}`,
+        {month: month, year: year},
+        token,
+      );
+      console.log(response, 'hehehhehehehehheheheheheheh');
+      setIncomeData(response);
+    } catch (error) {
+      console.log('Error fetching Transaction By Month Data:', error);
+    }
+  };
 
   const fetchCategories = async () => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
     const response = await get(`${API.getAllCategories}`, {}, token);
     const rawCategories = response.data;
-    // console.log(response);
 
     const mappedCategories = rawCategories.map((item, index) => ({
       id: item.id.toString(),
@@ -142,9 +152,28 @@ const BudgetsScreen = ({navigation}) => {
 
   const handleSubmit = ({amount, categories}) => {
     // Call your submit API here
-    //console.log('Submit payload:', {amount, categories});
     addBudget(amount, categories);
   };
+
+  const handleDateChange = newDate => {
+    setSelectedDate(newDate);
+    setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
+    setYear(newDate.year());
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchCategories();
+      showBudget();
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchBudgetByCategory();
+      fetchTransactionByMonth();
+    }, [month, year]),
+  );
 
   return (
     <View>
@@ -202,12 +231,11 @@ const BudgetsScreen = ({navigation}) => {
             }}>
             Coming Soon
           </Text>
-          <View style={styles.card}>
-            <Icon name="chevron-back" size={14} color={Colors.black} />
-            <Text style={styles.month}>Apr 2025</Text>
-            <Icon name="chevron-forward" size={14} color={Colors.black} />
-          </View>
-          <BudgetCardd />
+          <CalendarHeader
+            currentDate={selectedDate}
+            onDateChange={handleDateChange}
+          />
+          <BudgetCardd data={budgetCategoryData?.data || []} month={month} />
           <IncomeCard data={incomeData} type="income" />
           <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
             <LinearGradient
