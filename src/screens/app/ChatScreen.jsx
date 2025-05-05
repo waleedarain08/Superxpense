@@ -164,7 +164,7 @@ const HomeScreen = ({navigation}) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Chat</Text>
         <TouchableOpacity style={{width: '10%'}}>
-          <ChatHeader />
+          {/* <ChatHeader /> */}
         </TouchableOpacity>
       </View>
 
@@ -291,7 +291,8 @@ const styles = StyleSheet.create({
   },
   userMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.lightestGreen,
+    //opacity: 0.9,
   },
   botMessage: {
     alignSelf: 'flex-start',
