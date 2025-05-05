@@ -46,7 +46,7 @@ const BudgetCard = ({data = [], month}) => {
       {/* Top Text Section */}
       <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
       <Text style={styles.statusText}>
-        Great job! you have {budgetLeft} AED left
+        Great job! you have {Number(budgetLeft).toFixed(2)} AED left
       </Text>
 
       {/* Progress Bar with Linear Gradient */}
@@ -61,26 +61,6 @@ const BudgetCard = ({data = [], month}) => {
 
       {/* Category Budgets */}
       <Text style={styles.topBudgetText}>Top Monthly Budget</Text>
-
-      {/* <View style={styles.budgetItem}>
-        <View style={styles.iconStyle}>
-          <CarGreen />
-        </View>
-        <Text style={styles.label}>Financials</Text>
-        <Text style={styles.amount}>
-          <Text style={{color: Colors.txtColor}}>200</Text> of 300 AED
-        </Text>
-      </View>
-
-      <View style={styles.budgetItem}>
-        <View style={styles.iconStyle}>
-          <Invoice />
-        </View>
-        <Text style={styles.label}>Bills & Utilities</Text>
-        <Text style={styles.amount}>
-          <Text style={{color: Colors.txtColor}}>120</Text> of 250 AED
-        </Text>
-      </View> */}
       {Array.isArray(data) &&
         data.map((item, index) => (
           <View key={index} style={styles.budgetItem}>

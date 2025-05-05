@@ -5,32 +5,51 @@ import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
 const StackedChart = ({chartData}) => {
+  const safeChartData = Array.isArray(chartData) ? chartData : [];
+
   const colors = [Colors.blue, Colors.graphGreen];
   const keys = ['expenses', 'netWorth'];
   const chartHeight = 200;
 
-  const hasData =
-    chartData && (chartData.netWorth > 0 || chartData.expenses > 0);
+  // Add tiny bars for zero values
+  const MIN_BAR_VALUE = 500;
+
+  const visualData = safeChartData.map(item => ({
+    ...item,
+    expenses: item?.expenses > 0 ? item.expenses : MIN_BAR_VALUE,
+    netWorth: item?.netWorth > 0 ? item.netWorth : MIN_BAR_VALUE,
+  }));
+
+  // Get first non-zero entry (or fallback to zeros)
+  const currentMonthData = safeChartData.find(
+    item => item?.expenses > 0 || item?.netWorth > 0,
+  ) || {expenses: 0, netWorth: 0};
+
+  const hasAnyData = safeChartData.some(
+    item => item?.expenses > 0 || item?.netWorth > 0,
+  );
 
   return (
     <View style={styles.mainContainer}>
+      {/* Header */}
       <View style={styles.headerContainer}>
         <View>
           <Text style={styles.heading}>NET WORTH</Text>
           <Text style={styles.amount}>
-            {chartData?.netWorth?.toLocaleString() || '0.00'} AED
+            {currentMonthData.netWorth.toLocaleString()} AED
           </Text>
         </View>
         <View style={{alignItems: 'flex-end'}}>
           <Text style={[styles.heading, {color: Colors.blue}]}>EXPENSES</Text>
           <Text style={styles.amount}>
-            {chartData?.expenses?.toLocaleString() || '0.00'} AED
+            {currentMonthData.expenses.toLocaleString()} AED
           </Text>
         </View>
       </View>
 
-      {hasData ? (
+      {safeChartData.length > 0 ? (
         <View style={{flexDirection: 'row'}}>
+          {/* Y Axis */}
           <YAxis
             data={[0, 10000, 20000, 30000, 40000]}
             contentInset={{top: 10, bottom: 10}}
@@ -44,17 +63,19 @@ const StackedChart = ({chartData}) => {
               paddingRight: 4,
             }}
           />
+
+          {/* Chart */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={{flexDirection: 'row', paddingLeft: 8}}>
-              {/* Background grid */}
+              {/* Grid Lines (now properly behind the chart) */}
               <View
                 style={{
                   position: 'absolute',
                   height: chartHeight,
-                  width: 72,
+                  width: 56 * safeChartData.length, // Ensure it matches the width of the bars
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  zIndex: -1,
+                  zIndex: -1, // Ensure it's behind the bars
                 }}>
                 {[0, 1, 2, 3, 4].map((_, i) => (
                   <View
@@ -70,38 +91,39 @@ const StackedChart = ({chartData}) => {
                 ))}
               </View>
 
+              {/* Bars & Labels */}
               <View
-                style={{width: 56, alignItems: 'center', marginHorizontal: 8}}>
+                style={{
+                  width: 56 * safeChartData.length,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                }}>
                 <StackedBarChart
-                  style={{height: chartHeight, width: 56 * chartData.length}}
+                  style={{
+                    height: chartHeight,
+                    width: 56 * safeChartData.length,
+                  }}
                   keys={keys}
                   colors={colors}
-                  data={chartData}
+                  data={visualData}
                   showGrid={false}
                   contentInset={{top: 10, bottom: 10}}
                   numberOfTicks={5}
                 />
-                {/* <Text
-                  style={{
-                    marginTop: 4,
-                    fontSize: 12,
-                    color: Colors.txtColor,
-                    fontFamily: FontFamily.medium,
-                  }}>
-                  {chartData.label}
-                </Text> */}
-                {chartData.map((item, index) => (
+                {safeChartData.map((item, index) => (
                   <Text
                     key={index}
                     style={{
-                      marginTop: 4,
+                      position: 'absolute',
+                      left: index * 56 + 4,
+                      bottom: -20,
                       fontSize: 12,
                       color: Colors.txtColor,
                       fontFamily: FontFamily.medium,
                       width: 56,
                       textAlign: 'center',
                     }}>
-                    {item.label}
+                    {item?.label || ''}
                   </Text>
                 ))}
               </View>

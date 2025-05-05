@@ -45,7 +45,7 @@ const BudgetCardd = ({data = [], month}) => {
       {/* Top Text Section */}
       <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
       <Text style={styles.statusText}>
-        Great job! you have {budgetLeft} AED left
+        Great job! you have {Number(budgetLeft).toFixed(2)} AED left
       </Text>
 
       {/* Progress Bar with Linear Gradient */}
