@@ -262,8 +262,8 @@ const HomeScreen = ({navigation}) => {
       <View style={styles.container}>
         <View style={styles.topRow}>
           <TouchableOpacity style={styles.accountSelector}>
-            <Text style={styles.accountText}>Demo Account</Text>
-            <Dropdown />
+            {/* <Text style={styles.accountText}>Demo Account</Text>
+            <Dropdown /> */}
           </TouchableOpacity>
 
           <View style={styles.actionButtons}>
@@ -272,9 +272,9 @@ const HomeScreen = ({navigation}) => {
               onPress={() => navigation.navigate('IssuingCountryScreen')}>
               <Plus />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bellButton}>
+            {/* <TouchableOpacity style={styles.bellButton}>
               <Notification />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
