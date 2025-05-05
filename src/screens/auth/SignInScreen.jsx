@@ -15,6 +15,8 @@ import {API} from '../../utilis/Constant';
 import {FontFamily} from '../../utilis/Fonts';
 import {post} from '../../utilis/Api';
 import {removeItem, setItem} from '../../utilis/StorageActions';
+import {LeftBlack} from '../../assets/svgs';
+
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -63,6 +65,10 @@ const SignInScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.safeStyle}>
       <View style={styles.container}>
+        <LeftBlack
+          onPress={() => navigation.goBack()}
+          style={{marginBottom: 20}}
+        />
         <Text style={styles.heading}>Sign In Now</Text>
         <Text style={styles.subHeading}>
           Log in to your account by entering your email and password.
