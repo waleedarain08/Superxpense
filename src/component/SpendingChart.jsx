@@ -12,6 +12,8 @@ import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
 const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
+  console.log(data);
+
   const [chartWidth, setChartWidth] = useState(0);
   // Called when layout is calculated
   const handleLayout = event => {
@@ -24,22 +26,33 @@ const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
   );
   const maxAmount = Math.max(...sortedData.map(item => item.amount));
   const chartHeight = 100;
-  const paddingTop = 20;
-  const spacing = chartWidth / 7;
+  const horizontalPadding = 16;
+  const verticalPadding = 10;
+  const availableHeight = chartHeight - verticalPadding * 2;
+
+  const spacing =
+    sortedData.length > 1
+      ? (chartWidth - horizontalPadding * 2) / (sortedData.length - 1)
+      : 0;
 
   const points = sortedData.map((item, index) => ({
-    x: index * spacing,
-    y: chartHeight - (item.amount / maxAmount) * (chartHeight - paddingTop),
+    x: index * spacing + horizontalPadding,
+    y: verticalPadding + (1 - item.amount / maxAmount) * availableHeight,
     date: item.date,
     amount: item.amount,
   }));
-
   const linePath = points.reduce(
     (acc, point, idx) => acc + `${idx === 0 ? 'M' : 'L'}${point.x},${point.y} `,
     '',
   );
 
   const lastPoint = points[points.length - 1];
+
+  const tooltipWidth = 120; // Estimate or measure the actual width of tooltip
+  const clampedLeft = Math.min(
+    Math.max(lastPoint.x - tooltipWidth / 2, 8), // prevent overflow on left
+    chartWidth - tooltipWidth - 8, // prevent overflow on right
+  );
 
   return data.length === 0 ? (
     <View style={styles.container}>
@@ -72,30 +85,29 @@ const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
         <>
           <Svg height="100" width="100%" viewBox={`0 0 ${chartWidth} 100`}>
             <Defs>
-              <LinearGradient id="grad" x1="0" y1="0" x2={chartWidth} y2="0">
-                <Stop offset="0" stopColor="#00e6aa" stopOpacity="0.4" />
-                <Stop offset="1" stopColor="#00e6aa" stopOpacity="0.1" />
+              <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor="#00e6aa" stopOpacity="0.25" />
+                <Stop offset="1" stopColor="#00e6aa" stopOpacity="0.05" />
               </LinearGradient>
             </Defs>
 
             {/* Gradient fill */}
             <Path
-              d={`${linePath} L${chartWidth},100 L0,100 Z`}
+              d={`${linePath} L${chartWidth},${chartHeight} L0,${chartHeight} Z`}
               fill="url(#grad)"
             />
 
             {/* Line Path */}
-            <Path d={linePath} stroke="#00e6aa" strokeWidth="2" fill="none" />
+            <Path
+              d={linePath}
+              stroke="#00e6aa" // solid green
+              strokeWidth="3" // thicker line
+              fill="none"
+            />
 
             {/* Highlight last point */}
-            <Circle
-              cx={lastPoint.x}
-              cy={lastPoint.y}
-              r="6"
-              fill="#fff"
-              stroke="#00e6aa"
-              strokeWidth="2"
-            />
+            <Circle cx={lastPoint.x} cy={lastPoint.y} r="6" fill="#00e6aa" />
+            <Circle cx={lastPoint.x} cy={lastPoint.y} r="3" fill="#fff" />
 
             {/* Vertical dotted line */}
             <Line
@@ -109,7 +121,7 @@ const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
           </Svg>
 
           {/* Tooltip */}
-          <View style={[styles.tooltip, {left: lastPoint.x - 60}]}>
+          <View style={[styles.tooltip, {left: clampedLeft}]}>
             <Text style={styles.tooltipText}>
               {new Date(lastPoint.date).toLocaleDateString('en-GB', {
                 day: '2-digit',
