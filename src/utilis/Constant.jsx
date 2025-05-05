@@ -16,4 +16,6 @@ export const API = {
   getAllCategories: `${baseUrl}category/all`,
   allBudgets: `${baseUrl}budget`,
   getUserData: `${baseUrl}auth/me`,
+  budgetByCategory: `${baseUrl}budget/expenses-by-category-with-budget`,
+  transactionByMonth: `${baseUrl}accounts/income-transactions-by-month`,
 };

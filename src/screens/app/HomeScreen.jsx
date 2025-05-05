@@ -60,6 +60,7 @@ const HomeScreen = ({navigation}) => {
   const [barData, setBarData] = useState(null);
   const [monthlySpending, setMonthlySpending] = useState(null);
   const [lastSpending, setLastSpending] = useState(null);
+  const [budgetCategoryData, setBudgetCategoryData] = useState([]);
 
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
@@ -231,12 +232,28 @@ const HomeScreen = ({navigation}) => {
       console.log('Error fetching LineGraph Data:', error);
     }
   };
+  const fetchBudgetBycategory = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(
+        `${API.budgetByCategory}`,
+        {month: month, year: year},
+        token,
+      );
+      setBudgetCategoryData(response); // or response?.data if needed
+    } catch (error) {
+      console.log('Error fetching LineGraph Data:', error);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
       fetchMonthlyExpense();
       fetchBarGraph();
       fetchMonthlyIncome();
+      fetchBudgetBycategory();
     }, [month, year]),
   );
 
@@ -245,8 +262,8 @@ const HomeScreen = ({navigation}) => {
       <View style={styles.container}>
         <View style={styles.topRow}>
           <TouchableOpacity style={styles.accountSelector}>
-            <Text style={styles.accountText}>Demo Account</Text>
-            <Dropdown />
+            {/* <Text style={styles.accountText}>Demo Account</Text>
+            <Dropdown /> */}
           </TouchableOpacity>
 
           <View style={styles.actionButtons}>
@@ -255,9 +272,9 @@ const HomeScreen = ({navigation}) => {
               onPress={() => navigation.navigate('IssuingCountryScreen')}>
               <Plus />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.bellButton}>
+            {/* <TouchableOpacity style={styles.bellButton}>
               <Notification />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -321,8 +338,8 @@ const HomeScreen = ({navigation}) => {
               </View>
             </LinearGradient>
           </TouchableOpacity>
-          <BudgetCard />
-          <UpcomingBills navigation={navigation} />
+          <BudgetCard data={budgetCategoryData?.data || []} month={month}/>
+          {/* <UpcomingBills navigation={navigation} /> */}
         </ScrollView>
       )}
       {selectedTab === 'Spending' && (

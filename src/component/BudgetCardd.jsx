@@ -6,16 +6,44 @@ import {FontFamily} from '../utilis/Fonts';
 import {Colors} from '../utilis/Colors';
 import {Down} from '../icons';
 
-const BudgetCardd = () => {
-  const totalBudget = 10000;
-  const budgetLeft = 2000;
-  const spent = totalBudget - budgetLeft;
-  const percentageUsed = (spent / totalBudget) * 100;
+const BudgetCardd = ({data = [], month}) => {
+  const safeData = Array.isArray(data) ? data : [];
+
+  const totalBudget = safeData.reduce(
+    (sum, item) => sum + (item?.budgetAmount || 0),
+    0,
+  );
+
+  const totalSpent = safeData.reduce(
+    (sum, item) => sum + (item?.actualAmount || 0),
+    0,
+  );
+  const budgetLeft = totalBudget - totalSpent;
+
+  const percentageUsed =
+    totalBudget === 0 ? 0 : (totalSpent / totalBudget) * 100;
+
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const readableMonth = monthNames[(month ?? 1) - 1]; // subtract 1 because array is 0-indexed
 
   return (
     <View style={styles.container}>
       {/* Top Text Section */}
-      <Text style={styles.monthLabel}>April Budget</Text>
+      <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
       <Text style={styles.statusText}>
         Great job! you have {budgetLeft} AED left
       </Text>
@@ -35,35 +63,19 @@ const BudgetCardd = () => {
         <Text style={styles.topBudgetText}>Total Planned Expenses</Text>
         <Down size={15} />
       </View>
-      <View style={styles.budgetItem}>
-        <View style={styles.dotsStyle} />
-        <Text style={styles.label}>Financials</Text>
-        <Text style={styles.amount}>
-          <Text style={{color: Colors.txtColor}}>200</Text> of 300 AED
-        </Text>
-      </View>
-
-      <View style={styles.budgetItem}>
-        <View style={styles.dotsStyle} />
-        <Text style={styles.label}>Bills & Utilities</Text>
-        <Text style={styles.amount}>
-          <Text style={{color: Colors.txtColor}}>120</Text> of 250 AED
-        </Text>
-      </View>
-      <View style={styles.budgetItem}>
-        <View style={styles.dotsStyle} />
-        <Text style={styles.label}>Housing</Text>
-        <Text style={styles.amount}>
-          <Text style={{color: Colors.txtColor}}>120</Text> of 250 AED
-        </Text>
-      </View>
-      <View style={styles.budgetItem}>
-        <View style={styles.dotsStyle} />
-        <Text style={styles.label}>Savings</Text>
-        <Text style={styles.amount}>
-          <Text style={{color: Colors.txtColor}}>120</Text> of 250 AED
-        </Text>
-      </View>
+      {Array.isArray(data) &&
+        data.map((item, index) => (
+          <View key={index} style={styles.budgetItem}>
+            <View style={styles.dotsStyle} />
+            <Text style={styles.label}>{item?.category ?? 'Unknown'}</Text>
+            <Text style={styles.amount}>
+              <Text style={{color: Colors.txtColor}}>
+                {item?.actualAmount ?? 0}
+              </Text>{' '}
+              of {item?.budgetAmount ?? 0} AED
+            </Text>
+          </View>
+        ))}
     </View>
   );
 };

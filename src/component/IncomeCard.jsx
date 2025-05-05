@@ -1,33 +1,41 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {Colors} from '../utilis/Colors';
+import {Salary} from '../assets/svgs';
+import {FontFamily} from '../utilis/Fonts';
 
-const IncomeCard = ({data, type}) => {
+const IncomeCard = ({data}) => {
+  const transactions = data?.data?.transactions || [];
+
   const renderItem = ({item}) => (
     <View style={styles.row}>
-      <View
-        style={[
-          styles.iconContainer,
-          {backgroundColor: type === 'income' ? Colors.blue : '#CE63FF'},
-        ]}>
-        {item.icon}
+      <View style={[styles.iconContainer, {backgroundColor: Colors.blue}]}>
+        <Salary />
       </View>
-      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.title}>{item.description}</Text>
       <View style={styles.amountContainer}>
         <Text style={styles.amount}>{item.amount}</Text>
       </View>
     </View>
   );
 
+  const renderEmpty = () => (
+    <View>
+      <Text style={styles.emptyText}>No data available for this month</Text>
+    </View>
+  );
+
   return (
     <View style={styles.card}>
-      <Text style={styles.heading}>
-        {type === 'income' ? 'Total Income' : 'Home & Utitlities'}
-      </Text>
+      <View style={styles.amountMainContainer}>
+        <Text style={styles.heading}>{'Total Income'}</Text>
+        <Text style={styles.totalAmountTxt}>{data?.data?.totalAmount}</Text>
+      </View>
       <FlatList
-        data={data}
+        data={transactions}
         keyExtractor={item => item.id}
         renderItem={renderItem}
+        ListEmptyComponent={renderEmpty}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         scrollEnabled={false}
       />
@@ -47,7 +55,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#0D1B34',
-    marginBottom: 16,
   },
   row: {
     flexDirection: 'row',
@@ -97,6 +104,22 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+  },
+  amountMainContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  totalAmountTxt: {
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
   },
 });
 
