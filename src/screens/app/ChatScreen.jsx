@@ -52,9 +52,9 @@ const HomeScreen = ({navigation}) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color={Colors.white} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Superxpense AI</Text>
+        <Text style={styles.headerTitle}>Chat</Text>
         <TouchableOpacity>
-          <ChatHeader />
+          {/* <ChatHeader /> */}
         </TouchableOpacity>
       </View>
 
@@ -64,7 +64,7 @@ const HomeScreen = ({navigation}) => {
           paddingBottom: 80,
           justifyContent: 'center',
         }}>
-                  <Text style={{marginLeft:'37%',marginTop:10, color:Colors.lightblack}}>Coming Soon</Text>
+                  {/* <Text style={{marginLeft:'37%',marginTop:10, color:Colors.lightblack}}>Coming Soon</Text> */}
           
         {/* Greeting */}
         <View style={styles.greetingContainer}>
@@ -75,7 +75,7 @@ const HomeScreen = ({navigation}) => {
         </View>
 
         {/* Quick Actions */}
-        <View style={styles.quickActionsContainer}>
+        {/* <View style={styles.quickActionsContainer}>
           <QuickAction
             icon={<AddExpense />}
             label="Add Expense"
@@ -96,14 +96,14 @@ const HomeScreen = ({navigation}) => {
             label="View Summary"
             backgroundColor="#C9E2FF"
           />
-        </View>
+        </View> */}
       </ScrollView>
 
       {/* Bottom Input Bar */}
       <View style={styles.inputBar}>
-        <TouchableOpacity style={styles.plusButton}>
+        {/* <TouchableOpacity style={styles.plusButton}>
           <Ionicons name="add" size={20} color={Colors.primary || '#00A86B'} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TextInput
           style={styles.input}
           placeholder="Ask me Anything"
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
+    marginTop: 5,
   },
   greetingContainer: {
     marginTop: 30,
