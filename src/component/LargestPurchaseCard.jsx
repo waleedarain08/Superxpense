@@ -9,16 +9,16 @@ const LargestPurchaseCard = ({largestAmount, date , category}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Largest purchase</Text>
-      <Text style={styles.subtitle}>
+      {/*  <Text style={styles.subtitle}>
         You can tap on a transaction to ignore it from your budget or spendings
-      </Text>
+            </Text> */} 
 
-      <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+            <TouchableOpacity style={styles.card} activeOpacity={0.7}>
         <View style={styles.iconWrapper}>
           <Wallet />
         </View>
         <View style={styles.textWrapper}>
-          <Text style={styles.cardTitle}>{category}</Text>
+          <Text style={styles.cardTitle}>{category.replace(/_/g, ' ')}</Text>
           <Text style={styles.cardDate}>{date}</Text>
         </View>
         <View style={styles.amountWrapper}>
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.white,
     borderRadius: 20,
+    marginTop: 20,
   },
   iconWrapper: {
     backgroundColor: Colors.background,

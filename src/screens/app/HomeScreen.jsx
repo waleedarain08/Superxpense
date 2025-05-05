@@ -44,7 +44,7 @@ const categoryColors = [
 
 const HomeScreen = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('Overview');
-  const tabs = ['All Account', 'Overview', 'Spending'];
+  const tabs = ['Overview', 'Spending'];
   const [accountsData, setAccountsData] = useState([]);
   const [banksData, setBanksData] = useState([]);
   const [stateEntityId, setStateEntityId] = useState(null);
@@ -302,14 +302,14 @@ const HomeScreen = ({navigation}) => {
         <ScrollView
           style={styles.safeView}
           showsVerticalScrollIndicator={false}>
-          <Text
+          {/* <Text
             style={{
               marginLeft: '37%',
               marginTop: 10,
               color: Colors.lightblack,
             }}>
             Coming Soon
-          </Text>
+          </Text> */}
           <CalendarHeader
             currentDate={selectedDate}
             onDateChange={handleDateChange}
@@ -346,14 +346,14 @@ const HomeScreen = ({navigation}) => {
         <ScrollView
           style={styles.safeView}
           showsVerticalScrollIndicator={false}>
-          <Text
+          {/* <Text
             style={{
               marginLeft: '37%',
               marginTop: 10,
               color: Colors.lightblack,
             }}>
             Coming Soon
-          </Text>
+          </Text> */}
           <CalendarHeader
             currentDate={selectedDate}
             onDateChange={handleDateChange}

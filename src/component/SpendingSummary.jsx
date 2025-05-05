@@ -24,6 +24,7 @@ const SpendingSummary = ({data = [], month}) => {
   }));
 
   const visibleData = showAll ? data : data.slice(0, 3);
+  //console.log('visibleData', visibleData);
 
   return (
     <View style={styles.container}>
@@ -63,7 +64,9 @@ const SpendingSummary = ({data = [], month}) => {
                 <Text style={styles.amountText}>
                   {item.amount.toLocaleString()} AED
                 </Text>
-                <Text style={styles.labelText}>{item.category}</Text>
+                <Text style={styles.labelText}>
+                  {item.category.replace(/_/g, ' ')}
+                </Text>
               </View>
             </TouchableOpacity>
           ))}

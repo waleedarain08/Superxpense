@@ -94,7 +94,7 @@ const StackedChart = ({chartData}) => {
               {/* Bars & Labels */}
               <View
                 style={{
-                  width: 56 * safeChartData.length,
+                  width: 60 * safeChartData.length,
                   alignItems: 'center',
                   flexDirection: 'row',
                   transform: [{scaleX: -1}],
@@ -103,7 +103,7 @@ const StackedChart = ({chartData}) => {
                 <StackedBarChart
                   style={{
                     height: chartHeight,
-                    width: 56 * safeChartData.length,
+                    width: 60 * safeChartData.length,
                   }}
                   keys={keys}
                   colors={colors}
@@ -117,12 +117,12 @@ const StackedChart = ({chartData}) => {
                     key={index}
                     style={{
                       position: 'absolute',
-                      right: index * 56 + 4,
+                      right: index * 60,
                       bottom: 0,
                       fontSize: 12,
                       color: Colors.txtColor,
                       fontFamily: FontFamily.medium,
-                      width: 56,
+                      width: 60,
                       textAlign: 'center',
                       transform: [{scaleX: -1}],
                     }}>

@@ -11,6 +11,7 @@ import SplashScreen from '../screens/auth/SplashScreen';
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import BudgetsScreen from '../screens/app/BudgetsScreen';
 import BillsScreen from '../screens/app/BillsNPayments';
+import AccountsScreen from '../screens/app/AccountsScreen';
 import HomeScreen from '../screens/app/HomeScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
@@ -132,9 +133,28 @@ const BottomNavigator = () => {
             ),
           }}
         />
-        <BottomStack.Screen
+        {/* <BottomStack.Screen
           name="Bills"
           component={BillsScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <Image
+                source={require('../assets/images/bulbBottom.png')}
+                style={{
+                  tintColor: focused
+                    ? Colors.activeTabColor
+                    : Colors.inactiveTabColor,
+                  height: 25,
+                  width: 25,
+                }}
+              />
+            ),
+          }}
+        /> */}
+         <BottomStack.Screen
+          name="Accounts"
+          component={AccountsScreen}
           options={{
             headerShown: false,
             tabBarIcon: ({focused}) => (

@@ -178,9 +178,9 @@ const BankTransactionScreen = ({navigation, route}) => {
             <Text style={styles.noDataText}>No transactions found.</Text>
           </View>
         )}
-        <TouchableOpacity style={styles.reviewBtn}>
+        {/* <TouchableOpacity style={styles.reviewBtn}>
           <Text style={styles.reviewText}>Mark all as reviewed</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {loading ? (
         <View style={styles.loadingOverlay}>

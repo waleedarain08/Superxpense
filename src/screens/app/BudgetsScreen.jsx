@@ -74,6 +74,8 @@ const BudgetsScreen = ({navigation}) => {
       );
       if (response.statusCode === 201) {
         Alert.alert('Budget added successfully!');
+        fetchCategories(); // Refresh the categories after adding a new budget
+        fetchBudgetByCategory(); // Refresh the budget by category after adding a new budget
         showBudget(); // Refresh the budget list after adding a new budget
       }
       // Handle success response
@@ -223,14 +225,14 @@ const BudgetsScreen = ({navigation}) => {
         <ScrollView
           style={styles.safeView}
           showsVerticalScrollIndicator={false}>
-          <Text
+          {/* <Text
             style={{
               marginLeft: '37%',
               marginTop: 10,
               color: Colors.lightblack,
             }}>
             Coming Soon
-          </Text>
+          </Text> */}
           <CalendarHeader
             currentDate={selectedDate}
             onDateChange={handleDateChange}
