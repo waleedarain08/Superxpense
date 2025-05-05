@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import {Colors} from '../../utilis/Colors';
@@ -29,18 +30,18 @@ const EditProfileScreen = ({navigation}) => {
 
     // Extract country code and number from phone
     const countryCode = phoneRef.current.getCountryCode(); // e.g., "971"
-    const mobileNumber = phone.replace(`+${countryCode}`, ''); // e.g., "3165825127"
-
+    const phoneNumber = phone.replace(`+${countryCode}`, ''); // e.g., "3165825127"
+    //Alert.alert(phoneNumber);
     const payload = {
       name,
       email,
       countryCode,
-      mobileNumber,
+      phoneNumber,
     };
-
+    //console.log(payload,token);
     try {
       const response = await patch(`${API.getUserData}`, payload, token);
-      console.log('Updated data:', response);
+      Alert.alert('Success', 'Profile updated successfully');
       setChange(false);
       setReload(reload + 1);
     } catch (error) {
@@ -117,10 +118,12 @@ const EditProfileScreen = ({navigation}) => {
             setEmail(text);
             setChange(true);
           }}
+          editable={false}
           style={styles.input}
           placeholder="Email"
           keyboardType="email-address"
           autoCapitalize="none"
+          
         />
 
         <Text style={styles.label}>Mobile Number</Text>
