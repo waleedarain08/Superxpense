@@ -24,6 +24,7 @@ import BillsNPayments from '../screens/app/BillsNPayments';
 import ChatScreen from '../screens/app/ChatScreen';
 import SubscriptionScreen from '../screens/app/SubscriptionScreen';
 import EditProfileScreen from '../screens/app/EditProfileScreen';
+import HelpScreen from '../screens/app/Help';
 import AddGoals from '../screens/app/AddGoals';
 
 const Stack = createNativeStackNavigator();
@@ -65,6 +66,7 @@ const Navigation = () => {
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="Subscription" component={SubscriptionScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="Help" component={HelpScreen} />
         <Stack.Screen name="Main" component={BottomNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

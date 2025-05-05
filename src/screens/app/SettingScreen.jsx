@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
@@ -52,7 +53,11 @@ const SettingScreen = () => {
         {/* Support Section */}
         <Text style={styles.sectionTitle}>Support</Text>
         <View style={styles.card}>
-          <SettingItem title="Help & Support" IconComponent={<Help />} />
+          <SettingItem 
+          title="Help & Support" 
+          IconComponent={<Help />}
+          screenName="Help"
+          />
           {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
           {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
         </View>
@@ -78,12 +83,13 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     <TouchableOpacity
       style={styles.item}
       onPress={async () => {
-        console.log(screenName);
+        //console.log(screenName);
 
         if (screenName === 'Welcome') {
           await removeItem('userData');
           navigation.navigate('Welcome');
         } else {
+          //Alert.alert(screenName)
           navigation.navigate(screenName);
         }
       }}>
