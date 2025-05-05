@@ -99,7 +99,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
           <LeftIcon />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Connected Accounts</Text>
-        <View style={styles.headerRight}></View>
+        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.headerRight}><Text style={{color:"#fff"}}>Home</Text></TouchableOpacity>
       </View>
 
       <View style={styles.section}>

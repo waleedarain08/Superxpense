@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Image
 } from 'react-native';
 import {PieChart} from 'react-native-svg-charts';
 import {Colors} from '../utilis/Colors';
@@ -59,7 +60,7 @@ const SpendingSummary = ({data = [], month}) => {
                 style={[
                   styles.iconCircle,
                   {backgroundColor: item.color},
-                ]}></View>
+                ]}><Image source={{uri:item.icon}} style={{height:12,width:12}}></Image></View>
               <View style={{flex: 1}}>
                 <Text style={styles.amountText}>
                   {item.amount.toLocaleString()} AED
