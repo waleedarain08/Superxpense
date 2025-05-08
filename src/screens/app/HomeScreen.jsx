@@ -1,6 +1,7 @@
 import {
-  ActivityIndicator,
+  Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -112,7 +113,7 @@ const HomeScreen = ({navigation}) => {
     }, []),
   );
 
-  const handleAccountPress = (account,bankID,bankName) => {
+  const handleAccountPress = (account, bankID, bankName) => {
     //console.log('Account pressed:', account);
     //console.log('Bank Name:', bankName);
     navigation.navigate('BankTransaction', {
@@ -300,7 +301,7 @@ const HomeScreen = ({navigation}) => {
       </View>
       {selectedTab === 'Overview' && (
         <ScrollView
-          style={styles.safeView}
+          contentContainerStyle={styles.safeView}
           showsVerticalScrollIndicator={false}>
           {/* <Text
             style={{
@@ -338,7 +339,7 @@ const HomeScreen = ({navigation}) => {
               </View>
             </LinearGradient>
           </TouchableOpacity>
-          <BudgetCard data={budgetCategoryData?.data || []} month={month}/>
+          <BudgetCard data={budgetCategoryData?.data || []} month={month} />
           {/* <UpcomingBills navigation={navigation} /> */}
         </ScrollView>
       )}
@@ -385,7 +386,7 @@ const HomeScreen = ({navigation}) => {
               return (
                 <BankCard
                   key={index}
-                  logo={{uri:item.bankIcon}}
+                  logo={{uri: item.bankIcon}}
                   bankID={item.bankId}
                   bankName={item.bankName}
                   totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
@@ -417,7 +418,8 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   safeView: {
     paddingHorizontal: 20,
-    marginBottom: 150,
+    paddingBottom: 150,
+    flexGrow: 1,
   },
   container: {
     backgroundColor: Colors.background,
@@ -428,7 +430,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: Platform.OS === 'ios' && 50,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight - 10 : 0,
   },
   accountSelector: {
     flexDirection: 'row',

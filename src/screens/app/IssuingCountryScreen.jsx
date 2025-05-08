@@ -9,6 +9,8 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -145,7 +147,11 @@ const IssuingCountryScreen = ({navigation}) => {
         step={2}
         totalSteps={3}
         onBack={() => navigation.goBack()}
-        mainContainer={{backgroundColor: 'white'}}
+        mainContainer={{
+          backgroundColor: 'white',
+          paddingTop:
+            Platform.OS === 'android' ? StatusBar.currentHeight - 15 : 0,
+        }}
         exit={true}
       />
       <View style={styles.container}>

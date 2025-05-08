@@ -19,6 +19,7 @@ import {
   Investment,
 } from '../../assets/svgs';
 import SuccessModal from '../../component/SucessModal';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const OnBoardingScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -66,31 +67,33 @@ const OnBoardingScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeStyle}>
-      <StepperHeader
-        step={3}
-        totalSteps={6}
-        onBack={() => navigation.goBack()}
-      />
-      <View style={styles.container}>
-        <Text style={styles.heading}>What brings you to Superxpense?</Text>
-        <Text style={styles.subHeading}>
-          Tell us what you're interested in and we will customize the app for
-          your needs
-        </Text>
+      <KeyboardAwareScrollView>
+        <StepperHeader
+          step={3}
+          totalSteps={6}
+          onBack={() => navigation.goBack()}
+        />
+        <View style={styles.container}>
+          <Text style={styles.heading}>What brings you to Superxpense?</Text>
+          <Text style={styles.subHeading}>
+            Tell us what you're interested in and we will customize the app for
+            your needs
+          </Text>
 
-        <GoalCardGrid data={data} onPress={handlePress} />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={handleNext}>
-        <Text style={styles.buttonText}>Next</Text>
-      </TouchableOpacity>
-      <LoaderModal visible={loading} />
-      <SuccessModal
-        visible={successVisible}
-        onContinue={() => {
-          setSuccessVisible(false);
-          navigation.navigate('Main');
-        }}
-      />
+          <GoalCardGrid data={data} onPress={handlePress} />
+        </View>
+        <TouchableOpacity style={styles.button} onPress={handleNext}>
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity>
+        <LoaderModal visible={loading} />
+        <SuccessModal
+          visible={successVisible}
+          onContinue={() => {
+            setSuccessVisible(false);
+            navigation.navigate('Main');
+          }}
+        />
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -127,6 +130,7 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     marginHorizontal: 20,
+    marginBottom: 20,
   },
   buttonText: {
     color: Colors.white,

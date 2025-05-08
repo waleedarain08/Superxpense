@@ -5,7 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
@@ -53,10 +55,10 @@ const SettingScreen = () => {
         {/* Support Section */}
         <Text style={styles.sectionTitle}>Support</Text>
         <View style={styles.card}>
-          <SettingItem 
-          title="Help & Support" 
-          IconComponent={<Help />}
-          screenName="Help"
+          <SettingItem
+            title="Help & Support"
+            IconComponent={<Help />}
+            screenName="Help"
           />
           {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
           {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
@@ -114,8 +116,8 @@ const styles = StyleSheet.create({
     color: Colors.white,
     backgroundColor: Colors.background,
     textAlign: 'center',
-    paddingTop: 80,
-    paddingBottom: 30,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 80,
+    paddingBottom: 15,
   },
   sectionTitle: {
     marginTop: 16,

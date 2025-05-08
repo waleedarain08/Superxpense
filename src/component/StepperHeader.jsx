@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
@@ -55,6 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: Colors.progressBackground,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   stepText: {
     fontSize: 16,

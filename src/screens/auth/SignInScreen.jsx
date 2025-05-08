@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Alert,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
@@ -16,7 +18,6 @@ import {FontFamily} from '../../utilis/Fonts';
 import {post} from '../../utilis/Api';
 import {removeItem, setItem} from '../../utilis/StorageActions';
 import {LeftBlack} from '../../assets/svgs';
-
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -95,7 +96,7 @@ const SignInScreen = ({navigation}) => {
             style={[
               styles.input,
               error.password && styles.inputError,
-              {marginBottom: 5},
+              {marginBottom: 5, color: Colors.black},
             ]}
             value={password}
             onChangeText={setPassword}
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
   safeStyle: {
     flex: 1,
     backgroundColor: Colors.progressBackground,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
     backgroundColor: Colors.progressBackground,

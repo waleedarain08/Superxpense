@@ -82,7 +82,8 @@ const BottomNavigator = () => {
           tabBarStyle: {
             backgroundColor: Colors.tabBarbackground,
             borderTopWidth: 0,
-            marginBottom: 7,
+            // marginBottom: 7,
+            height: Platform.OS === 'ios' ? 0 : 60,
           },
           tabBarShowLabel: false,
           tabBarItemStyle: {
@@ -154,7 +155,7 @@ const BottomNavigator = () => {
             ),
           }}
         /> */}
-         <BottomStack.Screen
+        <BottomStack.Screen
           name="Accounts"
           component={AccountsScreen}
           options={{

@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import {LeftIcon} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
@@ -24,8 +25,8 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [bankName, setBankName] = useState('');
   const [banksData, setBanksData] = useState([]);
-  
-  const fetchAccounts = async() => {
+
+  const fetchAccounts = async () => {
     //setStateEntityId(id);
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
@@ -80,7 +81,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     }, 1000);
   }, []);
 
-  const handleAccountPress = (account,bankID,bankName) => {
+  const handleAccountPress = (account, bankID, bankName) => {
     //console.log('Account pressed:', account);
     //console.log('Bank Name:', bankName);
     navigation.navigate('BankTransaction', {
@@ -99,7 +100,11 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
           <LeftIcon />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Connected Accounts</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Main')} style={styles.headerRight}><Text style={{color:"#fff"}}>Home</Text></TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Main')}
+          style={styles.headerRight}>
+          <Text style={{color: '#fff'}}>Home</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
@@ -114,7 +119,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
               return (
                 <BankCard
                   key={index}
-                  logo={{uri:item.bankIcon}}
+                  logo={{uri: item.bankIcon}}
                   bankID={item.bankId}
                   bankName={item.bankName}
                   totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: Colors.background,
-    paddingTop: Platform.OS === 'ios' ? 60 : 30,
+    paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight + 5,
     paddingBottom: 22,
     paddingHorizontal: 20,
     flexDirection: 'row',

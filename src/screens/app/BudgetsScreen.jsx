@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
@@ -42,7 +44,6 @@ const BudgetsScreen = ({navigation}) => {
   const [budgetCategoryData, setBudgetCategoryData] = useState([]);
   const [incomeData, setIncomeData] = useState([]);
   const tabs = ['Plan', 'Remaining', 'Insights'];
-
 
   const defaultColors = [
     '#F87171', // red
@@ -122,7 +123,7 @@ const BudgetsScreen = ({navigation}) => {
   const fetchTransactionByMonth = async () => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
-    
+
     try {
       const response = await get(
         `${API.transactionByMonth}`,
@@ -223,7 +224,7 @@ const BudgetsScreen = ({navigation}) => {
 
       {selectedTab === 'Plan' && (
         <ScrollView
-          style={styles.safeView}
+          contentContainerStyle={styles.safeView}
           showsVerticalScrollIndicator={false}>
           {/* <Text
             style={{
@@ -312,7 +313,8 @@ export default BudgetsScreen;
 const styles = StyleSheet.create({
   safeView: {
     paddingHorizontal: 20,
-    marginBottom: 100,
+    flexGrow: 1,
+    paddingBottom: 100,
   },
   container: {
     backgroundColor: Colors.background,
@@ -323,7 +325,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: Platform.OS === 'ios' && 50,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight - 10 : 0,
   },
   accountText: {
     color: Colors.white,

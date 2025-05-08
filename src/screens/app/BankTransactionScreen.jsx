@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Platform,
   ActivityIndicator,
+  StatusBar,
 } from 'react-native';
 import {Credit, LeftIcon} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: Colors.background,
-    paddingTop: Platform.OS === 'ios' ? 60 : 30,
+    paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight + 5,
     paddingBottom: 22,
     flexDirection: 'row',
     alignItems: 'center',

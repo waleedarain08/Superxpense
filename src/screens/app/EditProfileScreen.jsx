@@ -7,6 +7,8 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import {Colors} from '../../utilis/Colors';
@@ -123,7 +125,6 @@ const EditProfileScreen = ({navigation}) => {
           placeholder="Email"
           keyboardType="email-address"
           autoCapitalize="none"
-          
         />
 
         <Text style={styles.label}>Mobile Number</Text>
@@ -155,7 +156,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 80,
+    // paddingTop: 80,
+    paddingTop: Platform.OS === 'ios' ? 80 : StatusBar.currentHeight + 5,
     paddingBottom: 8,
     borderBottomColor: Colors.newBorderColor,
     borderBottomWidth: 1,

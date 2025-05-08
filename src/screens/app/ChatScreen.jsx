@@ -1,18 +1,3 @@
-// import {StyleSheet, Text, View} from 'react-native';
-// import React from 'react';
-
-// const ChatScreen = () => {
-//   return (
-//     <View>
-//       <Text>ChatScreen</Text>
-//     </View>
-//   );
-// };
-
-// export default ChatScreen;
-
-// const styles = StyleSheet.create({});
-
 import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
@@ -26,6 +11,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {FontFamily} from '../../utilis/Fonts';
@@ -108,7 +94,7 @@ const HomeScreen = ({navigation}) => {
       setSendMessageLoading(true);
       const userData = await getItem('userData');
       const token = userData.data?.accessToken;
-      
+
       // Add user message and thinking message
       setChats(prevChats => [
         ...prevChats,
@@ -124,9 +110,9 @@ const HomeScreen = ({navigation}) => {
           timestamp: new Date().toLocaleTimeString(),
         },
       ]);
-      
+
       const response = await post(`${API.createChat}`, {query: message}, token);
-      
+
       // Remove thinking message and add bot response
       setChats(prevChats => {
         const newChats = prevChats.filter(chat => !chat.isThinking);
@@ -139,7 +125,7 @@ const HomeScreen = ({navigation}) => {
           },
         ];
       });
-      
+
       setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -151,7 +137,7 @@ const HomeScreen = ({navigation}) => {
   };
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
@@ -203,10 +189,11 @@ const HomeScreen = ({navigation}) => {
                     styles.messageContainer,
                     chat.isUser ? styles.userMessage : styles.botMessage,
                   ]}>
-                  <Text style={[
-                    styles.messageText,
-                    chat.isThinking && styles.thinkingText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.messageText,
+                      chat.isThinking && styles.thinkingText,
+                    ]}>
                     {chat.message}
                   </Text>
                   {!chat.isThinking && (
@@ -263,7 +250,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 60,
+    // paddingTop: 60,
+    paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight,
     paddingBottom: 16,
     width: '100%',
   },
