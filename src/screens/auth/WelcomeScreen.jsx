@@ -51,12 +51,13 @@ const styles = StyleSheet.create({
   },
   signInButton: {
     alignSelf: 'flex-end',
-    marginTop: 40,
+    marginTop: 50,
+    marginRight:10
   },
   signInText: {
     color: '#28A08C',
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: 17,
   },
   header: {
     marginTop: 30,
