@@ -83,7 +83,7 @@ const BottomNavigator = () => {
             backgroundColor: Colors.tabBarbackground,
             borderTopWidth: 0,
             // marginBottom: 7,
-            height: Platform.OS === 'ios' ? 0 : 60,
+            height: Platform.OS === 'ios' ? 80 : 60,
           },
           tabBarShowLabel: false,
           tabBarItemStyle: {

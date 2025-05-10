@@ -345,7 +345,7 @@ const HomeScreen = ({navigation}) => {
       )}
       {selectedTab === 'Spending' && (
         <ScrollView
-          style={styles.safeView}
+          contentContainerStyle={styles.safeView}
           showsVerticalScrollIndicator={false}>
           {/* <Text
             style={{
@@ -418,7 +418,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   safeView: {
     paddingHorizontal: 20,
-    paddingBottom: 150,
+    paddingBottom: 180,
     flexGrow: 1,
   },
   container: {

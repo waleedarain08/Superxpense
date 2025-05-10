@@ -35,9 +35,9 @@ const HelpScreen = ({navigation}) => {
           <LeftBlack />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Help</Text>
-        <TouchableOpacity style={[styles.saveBtn]}>
-          {/* <Text style={styles.saveBtnText}>Save</Text> */}
-        </TouchableOpacity>
+        <View style={[styles.saveBtn]}>
+          <Text style={styles.saveBtnText}>   </Text>
+        </View>
       </View>
       <View style={{flex: 0.6, justifyContent: 'center', alignItems: 'center'}}>
         <Text style={styles.title}>Reach out to us</Text>

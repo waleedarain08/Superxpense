@@ -62,7 +62,7 @@ const OnBoardingScreen = ({navigation}) => {
   };
 
   const handlePress = id => {
-    console.log('Card pressed:', id);
+   // console.log('Card pressed:', id);
   };
 
   return (
