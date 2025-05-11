@@ -52,8 +52,13 @@ const SignInScreen = ({navigation}) => {
     await removeItem('userData');
     try {
       const data = await post(API.logIn, {email, password});
-      navigation.navigate('Main');
-      console.log('Login successful:', data);
+      console.log('Login successful:', data.data.activeSubscription.productId);
+      if (data.data.activeSubscription.productId !== 'expired') {
+        navigation.navigate('Main');
+      } else {
+        navigation.replace('Subscription');
+      }
+      await setItem('subscription', data.data.activeSubscription.productId);
       await setItem('userData', data);
     } catch (err) {
       Alert.alert(err.message);
