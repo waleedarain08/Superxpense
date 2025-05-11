@@ -117,7 +117,7 @@ const StackedChart = ({chartData}) => {
                     key={index}
                     style={{
                       position: 'absolute',
-                      right: index * 60,
+                      right: index * 57,
                       bottom: 0,
                       fontSize: 12,
                       color: Colors.txtColor,
