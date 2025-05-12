@@ -95,7 +95,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     getSubscription();
   }, []);
 
-  console.log('subscription', subscription);
+  //console.log('subscription', subscription);
 
   return (
     <TouchableOpacity
@@ -114,15 +114,19 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         {title === 'Subscription' && (
+          <View style={{backgroundColor:'#C9FFE8', padding: 5, borderRadius: 10, marginRight:10}}>
           <Text
             style={{
-              marginRight: 10,
+              //marginRight: 10,
               color: Colors.txtColor,
               fontFamily: FontFamily.medium,
               fontSize: 16,
+              marginLeft: 10,
+              marginRight: 10,
             }}>
-            {subscription}
+            {subscription.toUpperCase()}
           </Text>
+          </View>
         )}
         <ChevronRight />
       </View>
