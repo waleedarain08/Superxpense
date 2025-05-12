@@ -7,58 +7,53 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-const plans = [
-  {
-    title: '1 Month',
-    price: 'AED 36.99',
-    sub: 'AED 8.54 / Week',
-  },
-  {
-    title: '12 Month',
-    price: 'AED 192.99',
-    sub: 'AED 3.71 / Week',
-    trial: '7 days free',
-    mostPopular: true,
-  },
-  {
-    title: 'Unlimited',
-    price: 'AED 399.99',
-    sub: 'One-off',
-  },
-];
 
-const SubscriptionModal = ({ visible, onClose }) => {
+
+const SubscriptionModal = ({ visible, onClose, products, onBuyProduct, onSelectProduct }) => {
+  const [selectedPlan, setSelectedPlan] = React.useState(products.find(plan => plan.id === 'yearly') || null);
+
+  const handleSelectPlan = (plan) => {
+    console.log('Selected plan:', plan);
+    const newSelectedPlan = selectedPlan === plan ? null : plan;
+    setSelectedPlan(newSelectedPlan);
+    onSelectProduct(newSelectedPlan); // Pass selected plan to parent
+  };
+
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
         <View style={styles.modal}>
-          <View style={styles.handle} />
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+          {/* <View style={styles.handle} /> */}
           <View style={styles.plansRow}>
-            {plans.map((plan, index) => (
-              <View
+            {products.map((plan, index) => (
+              <TouchableOpacity
                 key={index}
                 style={[
                   styles.planCard,
-                  plan.mostPopular && styles.popularCard,
-                ]}>
-                {plan.mostPopular && (
+                  selectedPlan === plan && { borderColor: '#0D2D2D', borderWidth: 1.5 },
+                ]}
+                onPress={() => handleSelectPlan(plan)}
+              >
+                {plan.id === "yearly" && (
                   <View style={styles.popularHeader}>
                     <Text style={styles.popularHeaderText}>Most Popular</Text>
                   </View>
                 )}
-                <Text style={styles.planTitle}>{plan.title}</Text>
+                <Text style={styles.planTitle}>{plan.id}</Text>
                 <Text style={styles.planPrice}>{plan.price}</Text>
-                <Text style={styles.planSub}>{plan.sub}</Text>
                 {plan.trial && <Text style={styles.planTrial}>{plan.trial}</Text>}
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
 
-          <Text style={styles.modalText}>7 days free, then AED 192.99 / year</Text>
-          <Text style={styles.modalSubText}>You can cancel anytime</Text>
+          <Text style={styles.modalText}>119.99 AED / year</Text>
+          <Text style={styles.modalSubText}>And 14.99 AED / month</Text>
 
-          <TouchableOpacity style={styles.modalButton} onPress={onClose}>
-            <Text style={styles.modalButtonText}>Try free & subscribe</Text>
+          <TouchableOpacity style={styles.modalButton} onPress={onBuyProduct}>
+            <Text style={styles.modalButtonText}>Subscribe</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -91,7 +86,7 @@ const styles = StyleSheet.create({
   },
   plansRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginBottom: 24,
   },
   planCard: {
@@ -166,5 +161,19 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  closeButton:{
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    marginBottom: 10,
+    marginRight: 10,
+    backgroundColor: '#fff',
+    borderRadius: 50,
+    padding: 5,
+  },
+  closeButtonText:{
+    fontSize: 18,
+    color: '#000',
   },
 });

@@ -38,7 +38,7 @@ const SettingScreen = () => {
             IconComponent={<Personal />}
             screenName="EditProfile"
           />
-          {/* <SettingItem title="Subscription" screenName="Subscription" IconComponent={<Crown />} /> */}
+          <SettingItem title="Subscription" screenName="Subscription" IconComponent={<Crown />} />
           {/* <SettingItem
             title="Alert & Notification"
             IconComponent={<NotiBlue />}
