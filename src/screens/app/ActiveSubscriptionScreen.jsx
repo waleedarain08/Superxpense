@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,8 +12,25 @@ import {
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {API} from '../../utilis/Constant';
+import {get} from '../../utilis/Api';
+import {getItem} from '../../utilis/StorageActions';
 
 const ActiveSubscriptionScreen = ({navigation}) => {
+  useEffect(() => {
+    const getUserData = async () => {
+      const userData = await getItem('userData');
+      const token = userData?.data?.accessToken;
+      try {
+        const data = await get(`${API.getUserData}`, {}, token);
+        console.log('UserData:', data.data.activeSubscription);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getUserData();
+  }, [navigation]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>

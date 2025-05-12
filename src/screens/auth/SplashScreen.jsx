@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {Text, Image, StyleSheet, Animated, ImageBackground} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';

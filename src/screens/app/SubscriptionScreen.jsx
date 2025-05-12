@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,27 +6,28 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
 import SubscriptionModal from '../../component/SubscriptionModal';
 import * as RNIap from 'react-native-iap';
 
-
 const SubscriptionScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(true);
-  const [products, setProducts] = useState([{
+  const [products, setProducts] = useState([
+    {
       id: 'yearly',
       price: 'AED 119.99',
     },
     {
       id: 'monthly',
       price: 'AED 14.99',
-    }]);
+    },
+  ]);
   const [selectedProduct, setSelectedProduct] = useState({});
-  const productIds = ['yearly','monthly']; // replace with your real product id(s)
-  
+  const productIds = ['yearly', 'monthly']; // replace with your real product id(s)
+
   useEffect(() => {
     const initIAP = async () => {
       try {
@@ -46,11 +47,18 @@ const SubscriptionScreen = ({navigation}) => {
     };
   }, []);
 
-  const buyProduct = async() => {
+
+
+  const buyProduct = async () => {
     //console.log('Selected product:::', Object.keys(selectedProduct).length);
-    Alert.alert('Product', Object.keys(selectedProduct).length === 0 ? products[0].id : selectedProduct.id);
+    Alert.alert(
+      'Product',
+      Object.keys(selectedProduct).length === 0
+        ? products[0].id
+        : selectedProduct.id,
+    );
     try {
-      const purchase = await RNIap.requestPurchase({sku:selectedProduct.id});
+      const purchase = await RNIap.requestPurchase({sku: selectedProduct.id});
       console.log('Purchase successful:', purchase);
     } catch (err) {
       if (err.code !== 'E_USER_CANCELLED') {
@@ -76,10 +84,9 @@ const SubscriptionScreen = ({navigation}) => {
       <SubscriptionModal
         visible={modalVisible}
         products={products}
-        onBuyProduct={()=>buyProduct()}
+        onBuyProduct={() => buyProduct()}
         onClose={() => setModalVisible(false)}
-        onSelectProduct={(product) => setSelectedProduct(product)}
-       
+        onSelectProduct={product => setSelectedProduct(product)}
       />
       <TouchableOpacity
         style={styles.closeButton}
@@ -88,7 +95,9 @@ const SubscriptionScreen = ({navigation}) => {
       </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.proText}>SUPEREXPENSE PRO</Text>
-        <Text style={styles.title}>Choose your plan to proceed with Subscription</Text>
+        <Text style={styles.title}>
+          Choose your plan to proceed with Subscription
+        </Text>
 
         <View style={styles.badgesContainer}>
           {/* <Text style={styles.badge}>30 days free</Text>
@@ -104,18 +113,13 @@ const SubscriptionScreen = ({navigation}) => {
         </View>
 
         <View style={styles.priceContainer}>
-          <Text style={styles.priceText}>
-            119.99 AED / year
-          </Text>
-          <Text style={styles.subText}>
-            14.99 AED / month, cancel anytime
-          </Text>
+          <Text style={styles.priceText}>119.99 AED / year</Text>
+          <Text style={styles.subText}>14.99 AED / month, cancel anytime</Text>
         </View>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setModalVisible(true)}
-          >
+          onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText}>Choose Plan</Text>
         </TouchableOpacity>
 

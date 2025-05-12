@@ -29,6 +29,7 @@ const SignUpScreen = ({navigation}) => {
   const [passwordError, setPasswordError] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [password, setPassword] = useState('');
+  const [mobileNumberError, setMobileNumberError] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState({
@@ -60,6 +61,16 @@ const SignUpScreen = ({navigation}) => {
       setNameError(true);
     }
 
+    const fullNumber = phoneRef.current.getValue();
+    const countryCode = phoneRef.current.getCountryCode();
+    const mobileNumber = fullNumber.replace(`+${countryCode}`, '').trim();
+
+    if (mobileNumber.length < 7 || mobileNumber.length > 11) {
+      errors.mobileNumber = 'Mobile number must be between 7 and 11 digits';
+      isValid = false;
+      setMobileNumberError(true); // Make sure this state exists
+    }
+
     setError(errors);
     return isValid;
   };
@@ -71,6 +82,7 @@ const SignUpScreen = ({navigation}) => {
     //console.log('Country Code:', countryCode);
     //console.log('Mobile Number:', mobileNumber);
     //return;
+
     if (!validate()) return;
     setLoading(true);
     await removeItem('userData');
@@ -116,7 +128,7 @@ const SignUpScreen = ({navigation}) => {
             style={[
               styles.input,
               nameError && styles.inputError,
-              {marginBottom: 10},
+              {marginBottom: nameError ? 5 : 20},
             ]}
             onChangeText={setName}
             value={name}
@@ -140,10 +152,22 @@ const SignUpScreen = ({navigation}) => {
 
           <PhoneInput
             ref={phoneRef}
-            style={[styles.phoneInput, {marginTop: 17}]}
+            style={[
+              styles.phoneInput,
+              {
+                marginTop: 17,
+                marginBottom: mobileNumberError ? 5 : 10,
+                borderColor: mobileNumberError && Colors.red,
+                borderWidth: mobileNumberError ? 1 : 0,
+              },
+            ]}
             initialCountry="ae"
             textProps={{placeholder: '10 Digit Number'}}
           />
+          {mobileNumberError && (
+            <Text style={styles.errorText}>{error.mobileNumber}</Text>
+          )}
+
           <View style={styles.passwordContainer}>
             <TextInput
               placeholder="Password"
@@ -252,6 +276,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
+    marginBottom: 10,
   },
   phoneInput: {
     marginBottom: 24,

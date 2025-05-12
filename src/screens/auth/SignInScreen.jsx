@@ -58,7 +58,10 @@ const SignInScreen = ({navigation}) => {
       } else {
         navigation.replace('Subscription');
       }
-      await setItem('subscription', data.data.activeSubscription.productId);
+      await setItem(
+        'subscription',
+        data?.data?.activeSubscription?.productId ?? 'trial',
+      );
       await setItem('userData', data);
     } catch (err) {
       Alert.alert(err.message);
