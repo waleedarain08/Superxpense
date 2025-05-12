@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
@@ -24,6 +25,8 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 const OnBoardingScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [successVisible, setSuccessVisible] = useState(false);
+  const [selectedGoals, setSelectedGoals] = useState([]);
+
   const data = [
     {
       id: '1',
@@ -54,15 +57,26 @@ const OnBoardingScreen = ({navigation}) => {
   ];
 
   const handleNext = () => {
+    if (selectedGoals.length === 0) {
+      Alert.alert('Please select at least one goal');
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      setSuccessVisible(true); // Replace with your actual screen
+      setSuccessVisible(true);
     }, 2500);
   };
 
   const handlePress = id => {
-   // console.log('Card pressed:', id);
+    setSelectedGoals(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(goalId => goalId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   return (
@@ -80,7 +94,11 @@ const OnBoardingScreen = ({navigation}) => {
             your needs
           </Text>
 
-          <GoalCardGrid data={data} onPress={handlePress} />
+          <GoalCardGrid
+            data={data}
+            onPress={handlePress}
+            selectedIds={selectedGoals}
+          />
         </View>
         <TouchableOpacity style={styles.button} onPress={handleNext}>
           <Text style={styles.buttonText}>Next</Text>
@@ -131,6 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 20,
     marginBottom: 20,
+    marginTop: 10,
   },
   buttonText: {
     color: Colors.white,

@@ -92,6 +92,8 @@ const HomeScreen = ({navigation}) => {
     if (!message.trim()) return;
     try {
       setSendMessageLoading(true);
+
+      setMessage('');
       const userData = await getItem('userData');
       const token = userData.data?.accessToken;
 
@@ -125,8 +127,6 @@ const HomeScreen = ({navigation}) => {
           },
         ];
       });
-
-      setMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
       // Remove thinking message on error

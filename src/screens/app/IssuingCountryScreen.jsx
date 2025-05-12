@@ -165,7 +165,7 @@ const IssuingCountryScreen = ({navigation}) => {
         </Text>
 
         {/* Search */}
-        <View style={styles.searchContainer}>
+        {/* <View style={styles.searchContainer}>
           <Icon
             name="search-outline"
             size={20}
@@ -179,6 +179,31 @@ const IssuingCountryScreen = ({navigation}) => {
             onChangeText={setSearch}
             style={styles.searchInput}
           />
+        </View> */}
+        <View style={styles.searchContainer}>
+          <Icon
+            name="search-outline"
+            size={20}
+            color="#999"
+            style={{marginRight: 8}}
+          />
+          <TextInput
+            placeholder="Search"
+            placeholderTextColor="#999"
+            value={search}
+            onChangeText={setSearch}
+            style={[styles.searchInput, {flex: 1}]}
+          />
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => setSearch('')}>
+              <Icon
+                name="close-circle"
+                size={20}
+                color={'#808086'}
+                style={{marginLeft: 8}}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* List */}
