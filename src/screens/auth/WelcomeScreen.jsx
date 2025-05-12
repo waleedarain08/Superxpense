@@ -1,12 +1,24 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+} from 'react-native';
 import {Colors} from '../../utilis/Colors';
+import {FontFamily} from '../../utilis/Fonts';
 
 const WelcomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.signInButton}>
-        <Text onPress = {()=>navigation.navigate('SignIn')} style={styles.signInText}>Sign In</Text>
+        <Text
+          onPress={() => navigation.navigate('SignIn')}
+          style={styles.signInText}>
+          Sign In
+        </Text>
       </TouchableOpacity>
 
       <View style={styles.header}>
@@ -24,7 +36,9 @@ const WelcomeScreen = ({navigation}) => {
       </View>
 
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.emailButton} onPress = {()=>navigation.navigate('SignUp')}>
+        <TouchableOpacity
+          style={styles.emailButton}
+          onPress={() => navigation.navigate('SignUp')}>
           <Text style={styles.buttonText}>Continue with Email</Text>
         </TouchableOpacity>
 
@@ -52,7 +66,7 @@ const styles = StyleSheet.create({
   signInButton: {
     alignSelf: 'flex-end',
     marginTop: 50,
-    marginRight:10
+    marginRight: 10,
   },
   signInText: {
     color: '#28A08C',
@@ -64,31 +78,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcome: {
-    fontSize: 13,
-    color: '#1E2B33',
-    fontWeight: '500',
+    fontSize: 16,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.medium,
     letterSpacing: 1,
   },
   subtitle: {
-    fontSize: 21,
-    color: '#0D2A2E',
-    //fontWeight: '600',
+    fontSize: 24,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.medium,
     textAlign: 'center',
-    marginTop: 10,
+    marginTop: 5,
   },
   cardsContainer: {
-   // marginTop: '30%',
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundColor:'red',
-    flex:2
+    flex: 2,
   },
   cardImage: {
     width: 340,
     height: 340,
     resizeMode: 'contain',
     marginTop: 80,
-   // borderRadius: 20,
   },
   cardImageOverlay: {
     position: 'absolute',
@@ -99,7 +110,6 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   buttonsContainer: {
-    //marginTop: '70%',
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,

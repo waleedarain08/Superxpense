@@ -8,21 +8,13 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
-import {
-  Dropdown,
-  Internet,
-  InvestmentWhite,
-  Salary,
-  Stars,
-  Wifi,
-} from '../../assets/svgs';
+import {Stars} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import IncomeCard from '../../component/IncomeCard';
-import {ThreeDots} from '../../icons';
 import BudgetCardd from '../../component/BudgetCardd';
 import BudgetModal from '../../component/BudgetModal';
 import {API} from '../../utilis/Constant';
@@ -239,6 +231,19 @@ const BudgetsScreen = ({navigation}) => {
             onDateChange={handleDateChange}
           />
           <BudgetCardd data={budgetCategoryData?.data || []} month={month} />
+          <View style={styles.budgetcard}>
+            <Text style={styles.title}>Set up a custom budget</Text>
+            <Text style={styles.description}>
+              Choose categories and set limits for the month. Track expenses,
+              get alerts, and avoid overspending.
+            </Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setOpen(true)}>
+              <Text style={styles.buttonText}>Add a Budget</Text>
+              <Icon name="add-circle" size={20} color="#11956D" />
+            </TouchableOpacity>
+          </View>
           <IncomeCard data={incomeData} type="income" />
           <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
             <LinearGradient
@@ -259,19 +264,6 @@ const BudgetsScreen = ({navigation}) => {
               </View>
             </LinearGradient>
           </TouchableOpacity>
-          <View style={styles.budgetcard}>
-            <Text style={styles.title}>Set up a custom budget</Text>
-            <Text style={styles.description}>
-              Choose categories and set limits for the month. Track expenses,
-              get alerts, and avoid overspending.
-            </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => setOpen(true)}>
-              <Text style={styles.buttonText}>Add a Budget</Text>
-              <Icon name="add-circle" size={20} color="#11956D" />
-            </TouchableOpacity>
-          </View>
           <AllBudgetCard data={budgetData} />
           {/* <IncomeCard data={HousingData} type="utilities" /> */}
         </ScrollView>

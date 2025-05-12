@@ -45,7 +45,11 @@ const BudgetCardd = ({data = [], month}) => {
       {/* Top Text Section */}
       <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
       <Text style={styles.statusText}>
-        {Number(budgetLeft).toFixed(2)>0?`Great job! you have ${Number(budgetLeft).toFixed(2)} AED left`:`You have behind by ${Number(budgetLeft).toFixed(2)} AED from your budget`}
+        {Number(budgetLeft).toFixed(2) > 0
+          ? `Great job! you have ${Number(budgetLeft).toFixed(2)} AED left`
+          : `You have behind by ${Number(budgetLeft).toFixed(
+              2,
+            )} AED from your budget`}
       </Text>
 
       {/* Progress Bar with Linear Gradient */}
@@ -61,7 +65,7 @@ const BudgetCardd = ({data = [], month}) => {
       {/* Category Budgets */}
       <View style={styles.budgetHeader}>
         <Text style={styles.topBudgetText}>Total Planned Expenses</Text>
-        <Down size={15} />
+        {/* <Down size={15} /> */}
       </View>
       {Array.isArray(data) &&
         data.map((item, index) => (

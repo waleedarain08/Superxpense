@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
-import {Text, Image, StyleSheet, Animated} from 'react-native';
+import {Text, Image, StyleSheet, Animated, ImageBackground} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
+import {FontFamily} from '../../utilis/Fonts';
+import {Colors} from '../../utilis/Colors';
 
 const SplashScreen = ({navigation}) => {
   const fadeAnim = new Animated.Value(0);
@@ -40,11 +41,12 @@ const SplashScreen = ({navigation}) => {
   }, []);
 
   return (
-    <LinearGradient
-      colors={['#d4fbe8', '#f5f5f9']} // Spread green color more
-      start={{x: 0.0, y: 0.0}}
-      end={{x: 1.0, y: 1.0}}
-      style={styles.container}>
+    <ImageBackground
+      source={require('../../assets/images/splashBack.png')} // 🔁 Replace with your background image
+      style={styles.container}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover" // or "contain", "stretch", etc.
+    >
       <Animated.View
         style={[
           styles.content,
@@ -54,13 +56,13 @@ const SplashScreen = ({navigation}) => {
           },
         ]}>
         <Image
-          source={require('./../../assets/images/logo.png')} // Replace with your icon
+          source={require('./../../assets/images/logo.png')} // Your logo
           style={styles.logo}
           resizeMode="contain"
         />
         <Text style={styles.text}>Superxpense</Text>
       </Animated.View>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
@@ -79,9 +81,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   text: {
-    fontSize: 28,
-    fontWeight: '600',
-    color: '#072B2E',
+    fontSize: 45,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
   },
 });
 
