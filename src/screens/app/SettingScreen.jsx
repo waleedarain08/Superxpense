@@ -124,7 +124,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
               marginLeft: 10,
               marginRight: 10,
             }}>
-            {subscription.toUpperCase()}
+            {subscription?.toUpperCase()}
           </Text>
           </View>
         )}
