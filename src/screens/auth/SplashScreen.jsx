@@ -26,9 +26,11 @@ const SplashScreen = ({navigation}) => {
     // Navigate to main app after splash screen
     const timer = setTimeout(async () => {
       const userData = await getItem('userData');
-      console.log();
+      const subscription = await getItem('subscription');
       if (!userData) {
         navigation.replace('Welcome');
+      } else if (subscription === 'expired') {
+        navigation.replace('Subscription');
       } else {
         navigation.replace('Main');
       }

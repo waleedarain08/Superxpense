@@ -117,7 +117,7 @@ const StackedChart = ({chartData}) => {
                     key={index}
                     style={{
                       position: 'absolute',
-                      right: index * 60,
+                      right: index * 57,
                       bottom: 0,
                       fontSize: 12,
                       color: Colors.txtColor,
@@ -135,13 +135,14 @@ const StackedChart = ({chartData}) => {
                   width: 60 * safeChartData.length,
                   alignItems: 'center',
                   flexDirection: 'row',
-                  transform: [{scaleX: -1}],
                   paddingBottom: 25, // Add space for labels
+                  position: 'relative', // Ensure absolute positioning works correctly
                 }}>
                 <StackedBarChart
                   style={{
                     height: chartHeight,
                     width: 60 * safeChartData.length,
+                    transform: [{scaleX: -1}], // ✅ Flip only the chart
                   }}
                   keys={keys}
                   colors={colors}
@@ -151,21 +152,20 @@ const StackedChart = ({chartData}) => {
                   numberOfTicks={5}
                 />
                 {[...safeChartData].reverse().map((item, index) => (
-                  <View style={{
-                     position: 'absolute',
-                      right: index * 62,
+                  <Text
+                    key={index}
+                    style={{
+                      position: 'absolute',
+                      left: index * 57, // ✅ Use `left` instead of `right` when not flipping container
                       bottom: 0,
                       fontSize: 12,
                       color: Colors.txtColor,
                       fontFamily: FontFamily.medium,
                       width: 60,
                       textAlign: 'center',
-                      transform: [{scaleX: -1}],
-                  }} key={index}>
-                  <Text>
+                    }}>
                     {item?.label || ''}
                   </Text>
-                  </View>
                 ))}
               </View>
 
