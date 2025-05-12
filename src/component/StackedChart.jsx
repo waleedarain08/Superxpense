@@ -92,7 +92,7 @@ const StackedChart = ({chartData}) => {
               </View>
 
               {/* Bars & Labels */}
-              <View
+              {/* <View
                 style={{
                   width: 60 * safeChartData.length,
                   alignItems: 'center',
@@ -129,7 +129,46 @@ const StackedChart = ({chartData}) => {
                     {item?.label || ''}
                   </Text>
                 ))}
+              </View> */}
+              <View
+                style={{
+                  width: 60 * safeChartData.length,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  transform: [{scaleX: -1}],
+                  paddingBottom: 25, // Add space for labels
+                }}>
+                <StackedBarChart
+                  style={{
+                    height: chartHeight,
+                    width: 60 * safeChartData.length,
+                  }}
+                  keys={keys}
+                  colors={colors}
+                  data={visualData}
+                  showGrid={false}
+                  contentInset={{top: 10, bottom: 10}}
+                  numberOfTicks={5}
+                />
+                {[...safeChartData].reverse().map((item, index) => (
+                  <View style={{
+                     position: 'absolute',
+                      right: index * 62,
+                      bottom: 0,
+                      fontSize: 12,
+                      color: Colors.txtColor,
+                      fontFamily: FontFamily.medium,
+                      width: 60,
+                      textAlign: 'center',
+                      transform: [{scaleX: -1}],
+                  }} key={index}>
+                  <Text>
+                    {item?.label || ''}
+                  </Text>
+                  </View>
+                ))}
               </View>
+
             </View>
           </ScrollView>
         </View>
