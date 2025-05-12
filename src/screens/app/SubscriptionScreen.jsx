@@ -12,6 +12,7 @@ import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
 import SubscriptionModal from '../../component/SubscriptionModal';
 import * as RNIap from 'react-native-iap';
+import {Platform} from 'react-native';
 
 const SubscriptionScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(true);

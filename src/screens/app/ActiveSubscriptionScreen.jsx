@@ -81,7 +81,9 @@ const ActiveSubscriptionScreen = ({navigation}) => {
         </View>
 
         {/* Upgrade Button */}
-        <TouchableOpacity style={styles.upgradeButton}>
+        <TouchableOpacity
+          style={styles.upgradeButton}
+          onPress={() => navigation.navigate('Subscription')}>
           <Text style={styles.upgradeButtonText}>Upgrade Plan</Text>
         </TouchableOpacity>
       </View>

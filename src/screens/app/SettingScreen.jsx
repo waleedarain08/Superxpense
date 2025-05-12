@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -23,7 +23,7 @@ import {
 } from '../../assets/svgs';
 import {ChevronRight} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
-import {removeItem} from '../../utilis/StorageActions';
+import {getStringItem, removeItem} from '../../utilis/StorageActions';
 
 const SettingScreen = () => {
   return (
@@ -85,6 +85,17 @@ const SettingScreen = () => {
 
 const SettingItem = ({title, IconComponent, screenName}) => {
   const navigation = useNavigation();
+  const [subscription, setSubscription] = React.useState(null);
+
+  useEffect(() => {
+    const getSubscription = async () => {
+      const subscriptionn = await getStringItem('subscription');
+      setSubscription(subscriptionn);
+    };
+    getSubscription();
+  }, []);
+
+  console.log('subscription', subscription);
 
   return (
     <TouchableOpacity
@@ -101,7 +112,20 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         {IconComponent}
         <Text style={styles.itemText}>{title}</Text>
       </View>
-      <ChevronRight />
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        {title === 'Subscription' && (
+          <Text
+            style={{
+              marginRight: 10,
+              color: Colors.txtColor,
+              fontFamily: FontFamily.medium,
+              fontSize: 16,
+            }}>
+            {subscription}
+          </Text>
+        )}
+        <ChevronRight />
+      </View>
     </TouchableOpacity>
   );
 };
