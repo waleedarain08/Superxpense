@@ -13,9 +13,8 @@ import {FontFamily} from '../../utilis/Fonts';
 const WelcomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.signInButton}>
+      <TouchableOpacity style={styles.signInButton}  onPress={() => navigation.navigate('SignIn')}>
         <Text
-          onPress={() => navigation.navigate('SignIn')}
           style={styles.signInText}>
           Sign In
         </Text>
