@@ -92,7 +92,7 @@ const StackedChart = ({chartData}) => {
               </View>
 
               {/* Bars & Labels */}
-              <View
+              {/* <View
                 style={{
                   width: 60 * safeChartData.length,
                   alignItems: 'center',
@@ -125,6 +125,44 @@ const StackedChart = ({chartData}) => {
                       width: 60,
                       textAlign: 'center',
                       transform: [{scaleX: -1}],
+                    }}>
+                    {item?.label || ''}
+                  </Text>
+                ))}
+              </View> */}
+              <View
+                style={{
+                  width: 60 * safeChartData.length,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  paddingBottom: 25, // Add space for labels
+                  position: 'relative', // Ensure absolute positioning works correctly
+                }}>
+                <StackedBarChart
+                  style={{
+                    height: chartHeight,
+                    width: 60 * safeChartData.length,
+                    transform: [{scaleX: -1}], // ✅ Flip only the chart
+                  }}
+                  keys={keys}
+                  colors={colors}
+                  data={visualData}
+                  showGrid={false}
+                  contentInset={{top: 10, bottom: 10}}
+                  numberOfTicks={5}
+                />
+                {[...safeChartData].reverse().map((item, index) => (
+                  <Text
+                    key={index}
+                    style={{
+                      position: 'absolute',
+                      left: index * 57, // ✅ Use `left` instead of `right` when not flipping container
+                      bottom: 0,
+                      fontSize: 12,
+                      color: Colors.txtColor,
+                      fontFamily: FontFamily.medium,
+                      width: 60,
+                      textAlign: 'center',
                     }}>
                     {item?.label || ''}
                   </Text>
