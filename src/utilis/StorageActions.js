@@ -11,7 +11,7 @@ export const setItem = async (key, value) => {
 };
 
 // Get data from AsyncStorage
-export const getItem = async (key) => {
+export const getItem = async key => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
@@ -21,8 +21,25 @@ export const getItem = async (key) => {
   }
 };
 
+export const setStringItem = async (key, value) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+  } catch (error) {
+    console.error(`Error setting string item [${key}]:`, error);
+  }
+};
+
+export const getStringItem = async key => {
+  try {
+    return await AsyncStorage.getItem(key);
+  } catch (error) {
+    console.error(`Error getting string item [${key}]:`, error);
+    return null;
+  }
+};
+
 // Remove data from AsyncStorage
-export const removeItem = async (key) => {
+export const removeItem = async key => {
   try {
     await AsyncStorage.removeItem(key);
   } catch (error) {

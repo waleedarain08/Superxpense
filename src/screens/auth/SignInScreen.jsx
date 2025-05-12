@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
 import {API} from '../../utilis/Constant';
 import {FontFamily} from '../../utilis/Fonts';
 import {post} from '../../utilis/Api';
-import {removeItem, setItem} from '../../utilis/StorageActions';
+import {removeItem, setItem, setStringItem} from '../../utilis/StorageActions';
 import {LeftBlack} from '../../assets/svgs';
 
 const SignInScreen = ({navigation}) => {
@@ -52,16 +52,17 @@ const SignInScreen = ({navigation}) => {
     await removeItem('userData');
     try {
       const data = await post(API.logIn, {email, password});
-      console.log('Login successful:', data.data.activeSubscription.productId);
+      // console.log('Login successful:', data.data.activeSubscription.productId);
       if (data.data.activeSubscription.productId !== 'expired') {
         navigation.navigate('Main');
       } else {
         navigation.replace('Subscription');
       }
-      await setItem(
-        'subscription',
-        data?.data?.activeSubscription?.productId ?? 'trial',
-      );
+      const productId = data?.data?.activeSubscription?.productId || 'trial';
+      console.log('Product ID:', productId);
+
+      // await setItem('subscription', productId);
+      await setStringItem('subscription', productId);
       await setItem('userData', data);
     } catch (err) {
       Alert.alert(err.message);
