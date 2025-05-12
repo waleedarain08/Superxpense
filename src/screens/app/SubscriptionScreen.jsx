@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,59 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
 import SubscriptionModal from '../../component/SubscriptionModal';
+import * as RNIap from 'react-native-iap';
+
 
 const SubscriptionScreen = ({navigation}) => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(true);
+  const [products, setProducts] = useState([{
+      id: 'yearly',
+      price: 'AED 119.99',
+    },
+    {
+      id: 'monthly',
+      price: 'AED 14.99',
+    }]);
+  const [selectedProduct, setSelectedProduct] = useState({});
+  const productIds = ['yearly','monthly']; // replace with your real product id(s)
+  
+  useEffect(() => {
+    const initIAP = async () => {
+      try {
+        await RNIap.initConnection();
+        const items = await RNIap.getProducts({skus: productIds});
+        console.log('Products:', items);
+        //setProducts(items);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    initIAP();
+
+    return () => {
+      RNIap.endConnection();
+    };
+  }, []);
+
+  const buyProduct = async() => {
+    //console.log('Selected product:::', Object.keys(selectedProduct).length);
+    Alert.alert('Product', Object.keys(selectedProduct).length === 0 ? products[0].id : selectedProduct.id);
+    try {
+      const purchase = await RNIap.requestPurchase({sku:selectedProduct.id});
+      console.log('Purchase successful:', purchase);
+    } catch (err) {
+      if (err.code !== 'E_USER_CANCELLED') {
+        console.log('Purchase failed:', err);
+      }
+    }
+  };
+
   const FeatureItem = ({text}) => (
     <View style={styles.featureRow}>
       <View style={styles.circle}>
@@ -29,7 +75,11 @@ const SubscriptionScreen = ({navigation}) => {
       style={styles.background}>
       <SubscriptionModal
         visible={modalVisible}
+        products={products}
+        onBuyProduct={()=>buyProduct()}
         onClose={() => setModalVisible(false)}
+        onSelectProduct={(product) => setSelectedProduct(product)}
+       
       />
       <TouchableOpacity
         style={styles.closeButton}
@@ -38,11 +88,11 @@ const SubscriptionScreen = ({navigation}) => {
       </TouchableOpacity>
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.proText}>SUPEREXPENSE PRO</Text>
-        <Text style={styles.title}>Start your free 7 day trial</Text>
+        <Text style={styles.title}>Choose your plan to proceed with Subscription</Text>
 
         <View style={styles.badgesContainer}>
-          <Text style={styles.badge}>7 days free</Text>
-          <Text style={styles.badge}>Save up to 56%</Text>
+          {/* <Text style={styles.badge}>30 days free</Text>
+          <Text style={styles.badge}>Save up to 56%</Text> */}
         </View>
 
         <View style={styles.features}>
@@ -55,24 +105,25 @@ const SubscriptionScreen = ({navigation}) => {
 
         <View style={styles.priceContainer}>
           <Text style={styles.priceText}>
-            7 days free, then AED 192.99 / year
+            119.99 AED / year
           </Text>
           <Text style={styles.subText}>
-            That’s only AED 3.71 / week billed annually
+            14.99 AED / month, cancel anytime
           </Text>
         </View>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.goBack()}>
-          <Text style={styles.buttonText}>Continue</Text>
+          onPress={() => setModalVisible(true)}
+          >
+          <Text style={styles.buttonText}>Choose Plan</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
            onPress={() => setModalVisible(true)}
         >
           <Text style={styles.seeAllText}>See all subscriptions</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
     </ImageBackground>
   );
@@ -142,7 +193,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 30,
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 22,
   },
   buttonText: {
     color: Colors.white,
@@ -154,6 +205,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontFamily.medium,
     textAlign: 'center',
+    marginBottom: 20,
   },
   featureRow: {
     flexDirection: 'row',
