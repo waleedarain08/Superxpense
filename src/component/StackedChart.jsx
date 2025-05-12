@@ -156,7 +156,7 @@ const StackedChart = ({chartData}) => {
                     key={index}
                     style={{
                       position: 'absolute',
-                      left: index * 57, // ✅ Use `left` instead of `right` when not flipping container
+                      left: index * 59, // ✅ Use `left` instead of `right` when not flipping container
                       bottom: 0,
                       fontSize: 12,
                       color: Colors.txtColor,
