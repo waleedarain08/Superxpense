@@ -32,7 +32,7 @@ const ActiveSubscriptionScreen = ({navigation}) => {
     getUserData();
   }, [navigation]);
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity
           style={{width: '10%'}}
@@ -51,7 +51,7 @@ const ActiveSubscriptionScreen = ({navigation}) => {
           style={styles.card}
           imageStyle={styles.cardImage}>
           <Text style={styles.planLabel}>Basic Plan</Text>
-          <Text style={styles.planTitle}>Annual Premium</Text>
+          <Text style={styles.planTitle}>Free Access</Text>
           <Text style={styles.trialText}>7 Days free trial</Text>
         </ImageBackground>
 
@@ -60,24 +60,24 @@ const ActiveSubscriptionScreen = ({navigation}) => {
         <View style={styles.billingCard}>
           <View style={styles.billingRow}>
             <Text style={styles.billingLabelRed}>Membership</Text>
-            <Text style={styles.billingValue}>Active</Text>
+            <Text style={styles.billingValue}>Trial</Text>
           </View>
           <View style={styles.billingRow}>
             <Text style={styles.billingLabel}>Amount</Text>
-            <Text style={styles.billingValue}>Basic</Text>
+            <Text style={styles.billingValue}>0.00 AED</Text>
           </View>
           <View style={styles.billingRow}>
             <Text style={styles.billingLabel}>Next Billing Date</Text>
-            <Text style={styles.billingValue}>04/02/25</Text>
+            <Text style={styles.billingValue}>20/05/2025</Text>
           </View>
         </View>
 
         {/* Description Text */}
         <View style={{flex: 0.8}}>
-          <Text style={styles.descriptionText}>You signup using IOS</Text>
+          {/* <Text style={styles.descriptionText}>You signup using IOS</Text>
           <Text style={styles.descriptionSubText}>
             Your iOS account is automatically{'\n'}billed each month
-          </Text>
+          </Text> */}
         </View>
 
         {/* Upgrade Button */}
@@ -87,7 +87,7 @@ const ActiveSubscriptionScreen = ({navigation}) => {
           <Text style={styles.upgradeButtonText}>Upgrade Plan</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

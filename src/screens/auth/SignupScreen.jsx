@@ -185,7 +185,7 @@ const SignUpScreen = ({navigation}) => {
           </View>
           {passwordError && (
             <Text style={styles.errorText}>
-              Password must be of 6 Characters
+              Password must be atleast 6 Characters long
             </Text>
           )}
           <TouchableOpacity

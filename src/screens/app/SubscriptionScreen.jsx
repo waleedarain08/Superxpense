@@ -51,14 +51,15 @@ const SubscriptionScreen = ({navigation}) => {
   const buyProduct = async () => {
     //console.log('Selected product:::', Object.keys(selectedProduct).length);
     // Alert.alert('Product', Object.keys(selectedProduct).length === 0 ? products[0].id : selectedProduct.id);
-    try {
-      const purchase = await RNIap.requestPurchase({sku: selectedProduct.id});
-      Alert.alert('Purchase successful:', purchase);
-    } catch (err) {
-      if (err.code !== 'E_USER_CANCELLED') {
-        Alert.alert('Purchase failed:', err);
-      }
-    }
+    // try {
+    //   const purchase = await RNIap.requestPurchase({sku: selectedProduct.id});
+    //   Alert.alert('Purchase successful:', purchase);
+    // } catch (err) {
+    //   if (err.code !== 'E_USER_CANCELLED') {
+    //     Alert.alert('Purchase failed:', err);
+    //   }
+    // }
+    Alert.alert('in-app purchase approval pending in your developer account');
   };
 
   const FeatureItem = ({text}) => (
