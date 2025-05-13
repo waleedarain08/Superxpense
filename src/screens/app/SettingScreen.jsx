@@ -114,18 +114,24 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         {title === 'Subscription' && (
-          <View style={{backgroundColor:'#C9FFE8', padding: 5, borderRadius: 10, marginRight:10}}>
-          <Text
+          <View
             style={{
-              //marginRight: 10,
-              color: Colors.txtColor,
-              fontFamily: FontFamily.medium,
-              fontSize: 16,
-              marginLeft: 10,
+              backgroundColor: '#C9FFE8',
+              padding: 5,
+              borderRadius: 10,
               marginRight: 10,
             }}>
-            {subscription.toUpperCase()}
-          </Text>
+            <Text
+              style={{
+                //marginRight: 10,
+                color: Colors.txtColor,
+                fontFamily: FontFamily.medium,
+                fontSize: 16,
+                marginLeft: 10,
+                marginRight: 10,
+              }}>
+              {subscription?.toUpperCase()}
+            </Text>
           </View>
         )}
         <ChevronRight />

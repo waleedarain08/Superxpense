@@ -17,6 +17,7 @@ import {LeftBlack} from '../../assets/svgs';
 import {getItem} from '../../utilis/StorageActions';
 import {get, patch} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
+import PhoneInputCustom from '../../component/PhoneInputCustome';
 
 const EditProfileScreen = ({navigation}) => {
   const phoneRef = useRef(null);
@@ -29,20 +30,17 @@ const EditProfileScreen = ({navigation}) => {
   const updateUserData = async () => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
-
-    // Extract country code and number from phone
-    const countryCode = phoneRef.current.getCountryCode(); // e.g., "971"
-    const phoneNumber = phone.replace(`+${countryCode}`, ''); // e.g., "3165825127"
-    //Alert.alert(phoneNumber);
+    const countryCode = '971';
+    const phoneNumber = `${countryCode}${phone}`;
     const payload = {
       name,
       email,
       countryCode,
       phoneNumber,
     };
-    //console.log(payload,token);
     try {
       const response = await patch(`${API.getUserData}`, payload, token);
+
       Alert.alert('Success', 'Profile updated successfully');
       setChange(false);
       setReload(reload + 1);
@@ -62,12 +60,13 @@ const EditProfileScreen = ({navigation}) => {
     try {
       const response = await get(`${API.getUserData}`, {}, token);
       const {name, email, mobileNumber, countryCode} = response?.data;
-
+      console.log('res', response);
       setName(name);
       setEmail(email);
-
-      const fullPhone = `+${countryCode}${mobileNumber}`;
-      setPhone(fullPhone);
+      const trimmedPhone = mobileNumber.startsWith('971')
+        ? mobileNumber.slice(3)
+        : mobileNumber;
+      setPhone(trimmedPhone);
 
       if (phoneRef.current) {
         phoneRef.current.setValue(fullPhone); // this updates the UI
@@ -94,11 +93,6 @@ const EditProfileScreen = ({navigation}) => {
           <Text style={styles.saveBtnText}>Save</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Profile Image - Placeholder Box */}
-      {/* <View style={styles.imageContainer}>
-        <View style={styles.imagePlaceholder} />
-      </View> */}
 
       {/* Form */}
       <View style={styles.form}>
@@ -129,17 +123,13 @@ const EditProfileScreen = ({navigation}) => {
 
         <Text style={styles.label}>Mobile Number</Text>
         <View style={styles.phoneWrapper}>
-          <PhoneInput
-            ref={phoneRef}
-            initialCountry="ae"
+          <PhoneInputCustom
             value={phone}
-            // onChangePhoneNumber={setPhone}
-            onChangePhoneNumber={text => {
+            onChangeText={text => {
               setPhone(text);
               setChange(true);
             }}
-            textStyle={styles.phoneText}
-            style={styles.phoneInput}
+            error={false}
           />
         </View>
       </View>

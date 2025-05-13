@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import PhoneInput from 'react-native-phone-input';
 import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
@@ -20,9 +19,9 @@ import {post} from '../../utilis/Api';
 import {removeItem, setItem} from '../../utilis/StorageActions';
 import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import PhoneInputCustom from '../../component/PhoneInputCustome';
 
 const SignUpScreen = ({navigation}) => {
-  const phoneRef = useRef(null);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [emailError, setEmailError] = useState(false);
@@ -32,16 +31,24 @@ const SignUpScreen = ({navigation}) => {
   const [mobileNumberError, setMobileNumberError] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState({
     email: '',
     password: '',
     name: '',
-    mobileNumber: '',
+    phoneNumber: '',
+    countryCode: '971',
   });
+
   const validate = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const errors = {email: '', password: '', name: '', mobileNumber: ''};
+    const errors = {email: '', password: '', name: '', phoneNumber: ''};
     let isValid = true;
+
+    setEmailError(false);
+    setPasswordError(false);
+    setNameError(false);
+    setMobileNumberError(false);
 
     if (!emailRegex.test(email)) {
       errors.email = 'Enter a valid email address';
@@ -61,14 +68,10 @@ const SignUpScreen = ({navigation}) => {
       setNameError(true);
     }
 
-    const fullNumber = phoneRef.current.getValue();
-    const countryCode = phoneRef.current.getCountryCode();
-    const mobileNumber = fullNumber.replace(`+${countryCode}`, '').trim();
-
-    if (mobileNumber.length < 7 || mobileNumber.length > 11) {
-      errors.mobileNumber = 'Mobile number must be between 7 and 11 digits';
+    if (phoneNumber.length < 7 || phoneNumber.length > 10) {
+      errors.phoneNumber = 'Mobile number must be between 7 and 10 digits';
       isValid = false;
-      setMobileNumberError(true); // Make sure this state exists
+      setMobileNumberError(true);
     }
 
     setError(errors);
@@ -76,17 +79,14 @@ const SignUpScreen = ({navigation}) => {
   };
 
   const handleSignUp = async () => {
-    const fullNumber = phoneRef.current.getValue();
-    const countryCode = phoneRef.current.getCountryCode();
-    const mobileNumber = fullNumber.replace(`+${countryCode}`, '').trim();
-    //console.log('Country Code:', countryCode);
-    //console.log('Mobile Number:', mobileNumber);
-    //return;
-
     if (!validate()) return;
+
+    const countryCode = error.countryCode;
+    const mobileNumber = phoneNumber.trim();
+
     setLoading(true);
     await removeItem('userData');
-    removeItem('userData');
+
     try {
       const data = await post(API.signUp, {
         email,
@@ -95,11 +95,9 @@ const SignUpScreen = ({navigation}) => {
         mobileNumber,
         countryCode,
       });
-      console.log(data, 'signup');
-
-      navigation.navigate('OnBoarding');
-      Alert.alert('Success', 'Signup successful');
       await setItem('userData', data);
+      navigation.replace('OnBoarding');
+      Alert.alert('Success', 'Signup successful');
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');
     } finally {
@@ -150,22 +148,16 @@ const SignUpScreen = ({navigation}) => {
           />
           {emailError && <Text style={styles.errorText}>{error.email}</Text>}
 
-          <PhoneInput
-            ref={phoneRef}
-            style={[
-              styles.phoneInput,
-              {
-                marginTop: 17,
-                marginBottom: mobileNumberError ? 5 : 10,
-                borderColor: mobileNumberError && Colors.red,
-                borderWidth: mobileNumberError ? 1 : 0,
-              },
-            ]}
-            initialCountry="ae"
-            textProps={{placeholder: '10 Digit Number'}}
+          <PhoneInputCustom
+            value={phoneNumber}
+            onChangeText={text => {
+              setPhoneNumber(text);
+              if (mobileNumberError) setMobileNumberError(false); // clear error when typing
+            }}
+            error={mobileNumberError}
           />
           {mobileNumberError && (
-            <Text style={styles.errorText}>{error.mobileNumber}</Text>
+            <Text style={styles.errorText}>{error.phoneNumber}</Text>
           )}
 
           <View style={styles.passwordContainer}>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -21,11 +21,15 @@ import {
 } from '../../assets/svgs';
 import SuccessModal from '../../component/SucessModal';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {getItem} from '../../utilis/StorageActions';
+import {get} from '../../utilis/Api';
+import {API} from '../../utilis/Constant';
 
 const OnBoardingScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [successVisible, setSuccessVisible] = useState(false);
   const [selectedGoals, setSelectedGoals] = useState([]);
+  const [name, setName] = useState('');
 
   const data = [
     {
@@ -79,6 +83,22 @@ const OnBoardingScreen = ({navigation}) => {
     });
   };
 
+  useEffect(() => {
+    const getUserData = async () => {
+      const userData = await getItem('userData');
+      const token = userData?.data?.accessToken;
+      try {
+        const data = await get(`${API.getUserData}`, {}, token);
+        console.log('UserData:', data.data.name);
+        setName(data.data.name);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getUserData();
+  }, [navigation]);
+
   return (
     <SafeAreaView style={styles.safeStyle}>
       <KeyboardAwareScrollView>
@@ -108,8 +128,9 @@ const OnBoardingScreen = ({navigation}) => {
           visible={successVisible}
           onContinue={() => {
             setSuccessVisible(false);
-            navigation.navigate('Main');
+            navigation.replace('Main');
           }}
+          userName={name}
         />
       </KeyboardAwareScrollView>
     </SafeAreaView>

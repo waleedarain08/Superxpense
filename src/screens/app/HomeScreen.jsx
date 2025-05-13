@@ -249,12 +249,26 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetchMonthlyExpense();
+  //     fetchBarGraph();
+  //     fetchMonthlyIncome();
+  //     fetchBudgetBycategory();
+  //   }, [month, year]),
+  // );
+
   useFocusEffect(
     useCallback(() => {
-      fetchMonthlyExpense();
-      fetchBarGraph();
-      fetchMonthlyIncome();
-      fetchBudgetBycategory();
+      const timeout = setTimeout(() => {
+        fetchMonthlyExpense();
+        fetchBarGraph();
+        fetchMonthlyIncome();
+        fetchBudgetBycategory();
+      }, 1500); // 1.5 seconds
+
+      // Cleanup timeout if screen is unfocused before timeout completes
+      return () => clearTimeout(timeout);
     }, [month, year]),
   );
 
