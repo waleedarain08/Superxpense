@@ -122,16 +122,16 @@ const EditProfileScreen = ({navigation}) => {
         />
 
         <Text style={styles.label}>Mobile Number</Text>
-        <View style={styles.phoneWrapper}>
-          <PhoneInputCustom
-            value={phone}
-            onChangeText={text => {
-              setPhone(text);
-              setChange(true);
-            }}
-            error={false}
-          />
-        </View>
+        {/* <View style={styles.phoneWrapper}> */}
+        <PhoneInputCustom
+          value={phone}
+          onChangeText={text => {
+            setPhone(text);
+            setChange(true);
+          }}
+          error={false}
+        />
+        {/* </View> */}
       </View>
     </ScrollView>
   );
