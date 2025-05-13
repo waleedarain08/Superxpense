@@ -94,6 +94,11 @@ const AccountsScreen = ({navigation}) => {
               />
             );
           })}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('IssuingCountryScreen')}
+            style={styles.button}>
+            <Text style={styles.buttonText}>Connect Account</Text>
+          </TouchableOpacity>
         </ScrollView>
       ) : (
         <View style={{marginTop: '50%'}}>
