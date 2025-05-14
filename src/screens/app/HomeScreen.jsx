@@ -26,6 +26,7 @@ import CalendarHeader from '../../component/CalendarHeader';
 import moment from 'moment';
 import LargestPurchaseCard from '../../component/LargestPurchaseCard';
 import SpendingChart from '../../component/SpendingChart';
+import FloatingChatButton from '../../component/FloatingChatButton';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -273,157 +274,160 @@ const HomeScreen = ({navigation}) => {
   );
 
   return (
-    <View>
-      <View style={styles.container}>
-        <View style={styles.topRow}>
-          <TouchableOpacity style={styles.accountSelector}>
-            {/* <Text style={styles.accountText}>Demo Account</Text>
+    <>
+      <View>
+        <View style={styles.container}>
+          <View style={styles.topRow}>
+            <TouchableOpacity style={styles.accountSelector}>
+              {/* <Text style={styles.accountText}>Demo Account</Text>
             <Dropdown /> */}
-          </TouchableOpacity>
-
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={styles.plusButton}
-              onPress={() => navigation.navigate('IssuingCountryScreen')}>
-              <Plus />
             </TouchableOpacity>
-            {/* <TouchableOpacity style={styles.bellButton}>
+
+            <View style={styles.actionButtons}>
+              <TouchableOpacity
+                style={styles.plusButton}
+                onPress={() => navigation.navigate('IssuingCountryScreen')}>
+                <Plus />
+              </TouchableOpacity>
+              {/* <TouchableOpacity style={styles.bellButton}>
               <Notification />
             </TouchableOpacity> */}
+            </View>
           </View>
-        </View>
 
-        <View style={styles.tabRow}>
-          {tabs.map(tab => (
-            <TouchableOpacity
-              key={tab}
-              style={[
-                styles.tabButton,
-                selectedTab === tab && styles.activeTabButton,
-              ]}
-              onPress={() => setSelectedTab(tab)}>
-              <Text
+          <View style={styles.tabRow}>
+            {tabs.map(tab => (
+              <TouchableOpacity
+                key={tab}
                 style={[
-                  styles.tabText,
-                  selectedTab === tab && styles.activeTabText,
-                ]}>
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-      {selectedTab === 'Overview' && (
-        <ScrollView
-          contentContainerStyle={styles.safeView}
-          showsVerticalScrollIndicator={false}>
-          {/* <Text
-            style={{
-              marginLeft: '37%',
-              marginTop: 10,
-              color: Colors.lightblack,
-            }}>
-            Coming Soon
-          </Text> */}
-          <CalendarHeader
-            currentDate={selectedDate}
-            onDateChange={handleDateChange}
-          />
-          <StackedChart chartData={barData} />
-          <SpendingSummary
-            data={categoryData}
-            month={selectedDate.format('MMM YYYY')}
-          />
-          <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-            <LinearGradient
-              colors={['#6CFFC2', '#FFFFFF']}
-              start={{x: 0, y: 3}}
-              end={{x: 1, y: 1}}
-              style={styles.superCard}>
-              <View style={styles.superCardHeader}>
-                <Text style={styles.recentLabel}>Superxpense AI</Text>
-                <Stars />
-              </View>
-              <Text style={styles.recentLabel2}>
-                Ask me anything about your personal finance, spending and many
-                more.
-              </Text>
-              <View style={{alignItems: 'flex-end', marginRight: 20}}>
-                <Icon name="chevron-forward" size={14} color={Colors.black} />
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-          <BudgetCard data={budgetCategoryData?.data || []} month={month} />
-          {/* <UpcomingBills navigation={navigation} /> */}
-        </ScrollView>
-      )}
-      {selectedTab === 'Spending' && (
-        <ScrollView
-          contentContainerStyle={styles.safeView}
-          showsVerticalScrollIndicator={false}>
-          {/* <Text
-            style={{
-              marginLeft: '37%',
-              marginTop: 10,
-              color: Colors.lightblack,
-            }}>
-            Coming Soon
-          </Text> */}
-          <CalendarHeader
-            currentDate={selectedDate}
-            onDateChange={handleDateChange}
-          />
-          <SpendingChart
-            data={lineChartData}
-            monthlySpending={monthlySpending}
-            lastSpending={lastSpending}
-          />
-          <LargestPurchaseCard
-            largestAmount={largestTransaction?.amount || 0}
-            date={selectedDate.format('MMMM YYYY')}
-            category={largestTransaction?.category || ''}
-          />
-          <SpendingSummary
-            data={categoryData}
-            month={selectedDate.format('MMM YYYY')}
-          />
-        </ScrollView>
-      )}
-      {selectedTab === 'All Account' &&
-        (banksData.length > 0 ? (
-          <ScrollView
-            style={styles.section}
-            showsVerticalScrollIndicator={false}>
-            <Text style={styles.title}>Bank Connections</Text>
-            {banksData.map((item, index) => {
-              //console.log('item:', item);
-              return (
-                <BankCard
-                  key={index}
-                  logo={{uri: item.bankIcon}}
-                  bankID={item.bankId}
-                  bankName={item.bankName}
-                  totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
-                  accounts={item.accounts}
-                  onPress={handleAccountPress}
-                />
-              );
-            })}
-          </ScrollView>
-        ) : (
-          <View style={{marginTop: '50%'}}>
-            <Text style={styles.title}>No active accounts</Text>
-            <Text style={styles.subtitle}>
-              Add a bank connection to see them here
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('IssuingCountryScreen')}
-              style={styles.button}>
-              <Text style={styles.buttonText}>Connect Account</Text>
-            </TouchableOpacity>
+                  styles.tabButton,
+                  selectedTab === tab && styles.activeTabButton,
+                ]}
+                onPress={() => setSelectedTab(tab)}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    selectedTab === tab && styles.activeTabText,
+                  ]}>
+                  {tab}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        ))}
-    </View>
+        </View>
+        {selectedTab === 'Overview' && (
+          <ScrollView
+            contentContainerStyle={styles.safeView}
+            showsVerticalScrollIndicator={false}>
+            {/* <Text
+            style={{
+              marginLeft: '37%',
+              marginTop: 10,
+              color: Colors.lightblack,
+            }}>
+            Coming Soon
+          </Text> */}
+            <CalendarHeader
+              currentDate={selectedDate}
+              onDateChange={handleDateChange}
+            />
+            <StackedChart chartData={barData} />
+            <SpendingSummary
+              data={categoryData}
+              month={selectedDate.format('MMM YYYY')}
+            />
+            <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+              <LinearGradient
+                colors={['#6CFFC2', '#FFFFFF']}
+                start={{x: 0, y: 3}}
+                end={{x: 1, y: 1}}
+                style={styles.superCard}>
+                <View style={styles.superCardHeader}>
+                  <Text style={styles.recentLabel}>Superxpense AI</Text>
+                  <Stars />
+                </View>
+                <Text style={styles.recentLabel2}>
+                  Ask me anything about your personal finance, spending and many
+                  more.
+                </Text>
+                <View style={{alignItems: 'flex-end', marginRight: 20}}>
+                  <Icon name="chevron-forward" size={14} color={Colors.black} />
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+            <BudgetCard data={budgetCategoryData?.data || []} month={month} />
+            {/* <UpcomingBills navigation={navigation} /> */}
+          </ScrollView>
+        )}
+        {selectedTab === 'Spending' && (
+          <ScrollView
+            contentContainerStyle={styles.safeView}
+            showsVerticalScrollIndicator={false}>
+            {/* <Text
+            style={{
+              marginLeft: '37%',
+              marginTop: 10,
+              color: Colors.lightblack,
+            }}>
+            Coming Soon
+          </Text> */}
+            <CalendarHeader
+              currentDate={selectedDate}
+              onDateChange={handleDateChange}
+            />
+            <SpendingChart
+              data={lineChartData}
+              monthlySpending={monthlySpending}
+              lastSpending={lastSpending}
+            />
+            <LargestPurchaseCard
+              largestAmount={largestTransaction?.amount || 0}
+              date={selectedDate.format('MMMM YYYY')}
+              category={largestTransaction?.category || ''}
+            />
+            <SpendingSummary
+              data={categoryData}
+              month={selectedDate.format('MMM YYYY')}
+            />
+          </ScrollView>
+        )}
+        {selectedTab === 'All Account' &&
+          (banksData.length > 0 ? (
+            <ScrollView
+              style={styles.section}
+              showsVerticalScrollIndicator={false}>
+              <Text style={styles.title}>Bank Connections</Text>
+              {banksData.map((item, index) => {
+                //console.log('item:', item);
+                return (
+                  <BankCard
+                    key={index}
+                    logo={{uri: item.bankIcon}}
+                    bankID={item.bankId}
+                    bankName={item.bankName}
+                    totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
+                    accounts={item.accounts}
+                    onPress={handleAccountPress}
+                  />
+                );
+              })}
+            </ScrollView>
+          ) : (
+            <View style={{marginTop: '50%'}}>
+              <Text style={styles.title}>No active accounts</Text>
+              <Text style={styles.subtitle}>
+                Add a bank connection to see them here
+              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('IssuingCountryScreen')}
+                style={styles.button}>
+                <Text style={styles.buttonText}>Connect Account</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+      </View>
+      <FloatingChatButton navigation={navigation} />
+    </>
   );
 };
 

@@ -20,6 +20,7 @@ import {get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import BankCard from '../../component/BankCard';
 import {useFocusEffect} from '@react-navigation/native';
+import FloatingChatButton from '../../component/FloatingChatButton';
 
 const AccountsScreen = ({navigation}) => {
   const [banksData, setBanksData] = useState([]);
@@ -59,61 +60,66 @@ const AccountsScreen = ({navigation}) => {
   };
 
   return (
-    <View>
-      <View style={styles.container}>
-        <View style={styles.topRow}>
-          <TouchableOpacity style={styles.accountSelector}>
-            {/* <Text style={styles.accountText}>Demo Account</Text>
+    <>
+      <View>
+        <View style={styles.container}>
+          <View style={styles.topRow}>
+            <TouchableOpacity style={styles.accountSelector}>
+              {/* <Text style={styles.accountText}>Demo Account</Text>
               <Dropdown /> */}
-          </TouchableOpacity>
-
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={styles.plusButton}
-              onPress={() => navigation.navigate('IssuingCountryScreen')}>
-              <Plus />
             </TouchableOpacity>
+
+            <View style={styles.actionButtons}>
+              <TouchableOpacity
+                style={styles.plusButton}
+                onPress={() => navigation.navigate('IssuingCountryScreen')}>
+                <Plus />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
 
-      {banksData.length > 0 ? (
-        <ScrollView style={styles.section} showsVerticalScrollIndicator={false}>
-          <Text style={styles.title}>Bank Connections</Text>
-          {banksData.map((item, index) => {
-            //console.log('item:', item);
-            return (
-              <BankCard
-                key={index}
-                logo={{uri: item.bankIcon}}
-                bankID={item.bankId}
-                bankName={item.bankName}
-                totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
-                accounts={item.accounts}
-                onPress={handleAccountPress}
-              />
-            );
-          })}
-          <TouchableOpacity
-            onPress={() => navigation.navigate('IssuingCountryScreen')}
-            style={styles.button}>
-            <Text style={styles.buttonText}>Connect Account</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      ) : (
-        <View style={{marginTop: '50%'}}>
-          <Text style={styles.title}>No active accounts</Text>
-          <Text style={styles.subtitle}>
-            Add a bank connection to see them here
-          </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('IssuingCountryScreen')}
-            style={styles.button}>
-            <Text style={styles.buttonText}>Connect Account</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
+        {banksData.length > 0 ? (
+          <ScrollView
+            style={styles.section}
+            showsVerticalScrollIndicator={false}>
+            <Text style={styles.title}>Bank Connections</Text>
+            {banksData.map((item, index) => {
+              //console.log('item:', item);
+              return (
+                <BankCard
+                  key={index}
+                  logo={{uri: item.bankIcon}}
+                  bankID={item.bankId}
+                  bankName={item.bankName}
+                  totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
+                  accounts={item.accounts}
+                  onPress={handleAccountPress}
+                />
+              );
+            })}
+            <TouchableOpacity
+              onPress={() => navigation.navigate('IssuingCountryScreen')}
+              style={styles.button}>
+              <Text style={styles.buttonText}>Connect Account</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        ) : (
+          <View style={{marginTop: '50%'}}>
+            <Text style={styles.title}>No active accounts</Text>
+            <Text style={styles.subtitle}>
+              Add a bank connection to see them here
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('IssuingCountryScreen')}
+              style={styles.button}>
+              <Text style={styles.buttonText}>Connect Account</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+      <FloatingChatButton navigation={navigation} />
+    </>
   );
 };
 

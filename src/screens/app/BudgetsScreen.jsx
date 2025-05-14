@@ -24,6 +24,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import AllBudgetCard from '../../component/AllBudgetCard';
 import CalendarHeader from '../../component/CalendarHeader';
 import moment from 'moment';
+import FloatingChatButton from '../../component/FloatingChatButton';
 
 const BudgetsScreen = ({navigation}) => {
   const [selectedTab, setSelectedTab] = useState('Plan');
@@ -171,29 +172,30 @@ const BudgetsScreen = ({navigation}) => {
   );
 
   return (
-    <View>
-      <BudgetModal
-        visible={open}
-        onClose={() => setOpen(false)}
-        categories={categories}
-        onSubmit={handleSubmit}
-      />
-      <View style={styles.container}>
-        <View style={styles.topRow}>
-          <TouchableOpacity
-            style={styles.saveBtn}
-            // onPress={() => navigation.navigate('AddGoals')}
-          ></TouchableOpacity>
-          <View style={styles.nameHeader}>
-            <Text style={styles.headerTxt}>Personal Monthly Budget</Text>
-            {/* <Dropdown /> */}
+    <>
+      <View>
+        <BudgetModal
+          visible={open}
+          onClose={() => setOpen(false)}
+          categories={categories}
+          onSubmit={handleSubmit}
+        />
+        <View style={styles.container}>
+          <View style={styles.topRow}>
+            <TouchableOpacity
+              style={styles.saveBtn}
+              // onPress={() => navigation.navigate('AddGoals')}
+            ></TouchableOpacity>
+            <View style={styles.nameHeader}>
+              <Text style={styles.headerTxt}>Personal Monthly Budget</Text>
+              {/* <Dropdown /> */}
+            </View>
+            <View style={styles.actionButtons}>
+              {/* <ThreeDots size={20} color={Colors.white} /> */}
+            </View>
           </View>
-          <View style={styles.actionButtons}>
-            {/* <ThreeDots size={20} color={Colors.white} /> */}
-          </View>
-        </View>
 
-        {/* <View style={styles.tabRow}>
+          {/* <View style={styles.tabRow}>
           {tabs.map(tab => (
             <TouchableOpacity
               key={tab}
@@ -212,13 +214,13 @@ const BudgetsScreen = ({navigation}) => {
             </TouchableOpacity>
           ))}
         </View> */}
-      </View>
+        </View>
 
-      {selectedTab === 'Plan' && (
-        <ScrollView
-          contentContainerStyle={styles.safeView}
-          showsVerticalScrollIndicator={false}>
-          {/* <Text
+        {selectedTab === 'Plan' && (
+          <ScrollView
+            contentContainerStyle={styles.safeView}
+            showsVerticalScrollIndicator={false}>
+            {/* <Text
             style={{
               marginLeft: '37%',
               marginTop: 10,
@@ -226,49 +228,49 @@ const BudgetsScreen = ({navigation}) => {
             }}>
             Coming Soon
           </Text> */}
-          <CalendarHeader
-            currentDate={selectedDate}
-            onDateChange={handleDateChange}
-          />
-          <BudgetCardd data={budgetCategoryData?.data || []} month={month} />
-          <View style={styles.budgetcard}>
-            <Text style={styles.title}>Set up a custom budget</Text>
-            <Text style={styles.description}>
-              Choose categories and set limits for the month. Track expenses,
-              get alerts, and avoid overspending.
-            </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => setOpen(true)}>
-              <Text style={styles.buttonText}>Add a Budget</Text>
-              <Icon name="add-circle" size={20} color="#11956D" />
-            </TouchableOpacity>
-          </View>
-          <IncomeCard data={incomeData} type="income" />
-          <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-            <LinearGradient
-              colors={['#6CFFC2', '#FFFFFF']}
-              start={{x: 0, y: 3}}
-              end={{x: 1, y: 1}}
-              style={styles.superCard}>
-              <View style={styles.superCardHeader}>
-                <Text style={styles.recentLabel}>Superxpense AI</Text>
-                <Stars />
-              </View>
-              <Text style={styles.recentLabel2}>
-                Ask me anything about your personal finance, spending and many
-                more.
+            <CalendarHeader
+              currentDate={selectedDate}
+              onDateChange={handleDateChange}
+            />
+            <BudgetCardd data={budgetCategoryData?.data || []} month={month} />
+            <View style={styles.budgetcard}>
+              <Text style={styles.title}>Set up a custom budget</Text>
+              <Text style={styles.description}>
+                Choose categories and set limits for the month. Track expenses,
+                get alerts, and avoid overspending.
               </Text>
-              <View style={{alignItems: 'flex-end', marginRight: 20}}>
-                <Icon name="chevron-forward" size={14} color={Colors.black} />
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-          <AllBudgetCard data={budgetData} />
-          {/* <IncomeCard data={HousingData} type="utilities" /> */}
-        </ScrollView>
-      )}
-      {/* {selectedTab === 'Remaining' && (
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setOpen(true)}>
+                <Text style={styles.buttonText}>Add a Budget</Text>
+                <Icon name="add-circle" size={20} color="#11956D" />
+              </TouchableOpacity>
+            </View>
+            <IncomeCard data={incomeData} type="income" />
+            <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+              <LinearGradient
+                colors={['#6CFFC2', '#FFFFFF']}
+                start={{x: 0, y: 3}}
+                end={{x: 1, y: 1}}
+                style={styles.superCard}>
+                <View style={styles.superCardHeader}>
+                  <Text style={styles.recentLabel}>Superxpense AI</Text>
+                  <Stars />
+                </View>
+                <Text style={styles.recentLabel2}>
+                  Ask me anything about your personal finance, spending and many
+                  more.
+                </Text>
+                <View style={{alignItems: 'flex-end', marginRight: 20}}>
+                  <Icon name="chevron-forward" size={14} color={Colors.black} />
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+            <AllBudgetCard data={budgetData} />
+            {/* <IncomeCard data={HousingData} type="utilities" /> */}
+          </ScrollView>
+        )}
+        {/* {selectedTab === 'Remaining' && (
         <ScrollView
           style={styles.safeView}
           showsVerticalScrollIndicator={false}>
@@ -296,7 +298,9 @@ const BudgetsScreen = ({navigation}) => {
           </Text>
         </ScrollView>
       )} */}
-    </View>
+      </View>
+      <FloatingChatButton navigation={navigation} />
+    </>
   );
 };
 

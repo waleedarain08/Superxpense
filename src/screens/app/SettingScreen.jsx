@@ -24,62 +24,66 @@ import {
 import {ChevronRight} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
 import {getStringItem, removeItem} from '../../utilis/StorageActions';
+import FloatingChatButton from '../../component/FloatingChatButton';
 
-const SettingScreen = () => {
+const SettingScreen = ({navigation}) => {
   return (
-    <View style={{flex: 1}}>
-      <Text style={styles.header}>Settings</Text>
-      <ScrollView contentContainerStyle={[styles.container]}>
-        {/* Account Section */}
-        <Text style={styles.sectionTitle}>Account</Text>
-        <View style={styles.card}>
-          <SettingItem
-            title="Personal Information"
-            IconComponent={<Personal />}
-            screenName="EditProfile"
-          />
-          <SettingItem
-            title="Subscription"
-            // screenName="Subscription"
-            screenName="ActiveSubscription"
-            IconComponent={<Crown />}
-          />
-          {/* <SettingItem
+    <>
+      <View style={{flex: 1}}>
+        <Text style={styles.header}>Settings</Text>
+        <ScrollView contentContainerStyle={[styles.container]}>
+          {/* Account Section */}
+          <Text style={styles.sectionTitle}>Account</Text>
+          <View style={styles.card}>
+            <SettingItem
+              title="Personal Information"
+              IconComponent={<Personal />}
+              screenName="EditProfile"
+            />
+            <SettingItem
+              title="Subscription"
+              // screenName="Subscription"
+              screenName="ActiveSubscription"
+              IconComponent={<Crown />}
+            />
+            {/* <SettingItem
             title="Alert & Notification"
             IconComponent={<NotiBlue />}
           /> */}
-        </View>
+          </View>
 
-        {/* Security Section */}
-        {/* <Text style={styles.sectionTitle}>Security</Text>
+          {/* Security Section */}
+          {/* <Text style={styles.sectionTitle}>Security</Text>
         <View style={styles.card}>
           <SettingItem title="Privacy Policy" IconComponent={<Globe />} />
           <SettingItem title="App Passcode" IconComponent={<Shield />} />
         </View> */}
 
-        {/* Support Section */}
-        <Text style={styles.sectionTitle}>Support</Text>
-        <View style={styles.card}>
-          <SettingItem
-            title="Help & Support"
-            IconComponent={<Help />}
-            screenName="Help"
-          />
-          {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
-          {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
-        </View>
+          {/* Support Section */}
+          <Text style={styles.sectionTitle}>Support</Text>
+          <View style={styles.card}>
+            <SettingItem
+              title="Help & Support"
+              IconComponent={<Help />}
+              screenName="Help"
+            />
+            {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
+            {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
+          </View>
 
-        {/* Logout Section */}
-        <Text style={styles.sectionTitle}>Logout</Text>
-        <View style={styles.card}>
-          <SettingItem
-            title="Logout"
-            IconComponent={<Help />}
-            screenName="Welcome"
-          />
-        </View>
-      </ScrollView>
-    </View>
+          {/* Logout Section */}
+          <Text style={styles.sectionTitle}>Logout</Text>
+          <View style={styles.card}>
+            <SettingItem
+              title="Logout"
+              IconComponent={<Help />}
+              screenName="Welcome"
+            />
+          </View>
+        </ScrollView>
+      </View>
+      <FloatingChatButton navigation={navigation} />
+    </>
   );
 };
 
