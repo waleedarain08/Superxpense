@@ -1,23 +1,15 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 
 const WelcomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.signInButton}  onPress={() => navigation.navigate('SignIn')}>
-        <Text
-          style={styles.signInText}>
-          Sign In
-        </Text>
+      <TouchableOpacity
+        style={styles.signInButton}
+        onPress={() => navigation.navigate('SignIn')}>
+        <Text style={styles.signInText}>Sign In</Text>
       </TouchableOpacity>
 
       <View style={styles.header}>

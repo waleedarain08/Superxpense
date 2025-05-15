@@ -231,3 +231,13 @@ export const ThreeDots = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const ArrowRight = ({color, size, style}) => (
+  <VectorIcon
+    name="arrowright"
+    color={color}
+    size={size}
+    type="AntDesign"
+    style={style}
+  />
+);

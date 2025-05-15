@@ -27,6 +27,7 @@ import EditProfileScreen from '../screens/app/EditProfileScreen';
 import HelpScreen from '../screens/app/Help';
 import AddGoals from '../screens/app/AddGoals';
 import ActiveSubscriptionScreen from '../screens/app/ActiveSubscriptionScreen';
+import VerficationCodeScreen from '../screens/auth/VerficationCodeScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -72,6 +73,10 @@ const Navigation = () => {
         />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="Help" component={HelpScreen} />
+        <Stack.Screen
+          name="VerficationCode"
+          component={VerficationCodeScreen}
+        />
         <Stack.Screen name="Main" component={BottomNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
