@@ -24,6 +24,9 @@ import {
 import {ChevronRight} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
 import {getStringItem, removeItem} from '../../utilis/StorageActions';
+import { PermissionsAndroid } from 'react-native';
+import Contacts from 'react-native-contacts';
+
 
 const SettingScreen = () => {
   return (
@@ -43,6 +46,11 @@ const SettingScreen = () => {
             // screenName="Subscription"
             screenName="ActiveSubscription"
             IconComponent={<Crown />}
+          />
+          <SettingItem
+            title="Sync Contacts"
+            screenName="SyncContacts"
+            IconComponent={<Globe />}
           />
           {/* <SettingItem
             title="Alert & Notification"
@@ -95,6 +103,28 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     getSubscription();
   }, []);
 
+  const syncContacts = async () => {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
+        title: 'Contacts',
+        message: 'This app would like to view your contacts.',
+        buttonPositive: 'Please accept bare mortal',
+    })
+        .then((res) => {
+            console.log('Permission: ', res);
+            Contacts.getAll()
+                .then((contacts) => {
+                    // work with contacts
+                    Alert.alert(`${contacts?.length} Contacts Synced Successfully`);
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        })
+        .catch((error) => {
+            console.error('Permission error: ', error);
+        });
+  }
+
   //console.log('subscription', subscription);
 
   return (
@@ -104,6 +134,13 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         if (screenName === 'Welcome') {
           await removeItem('userData');
           navigation.replace('Welcome');
+        }else if(screenName === 'SyncContacts'){
+          Alert.alert(
+            'Sync Contacts',
+            'Do you want to sync your contacts?',
+            [{text: 'Yes', onPress: () => syncContacts()},{text: 'No', onPress: () => ''}],
+          );
+
         } else {
           navigation.navigate(screenName);
         }
