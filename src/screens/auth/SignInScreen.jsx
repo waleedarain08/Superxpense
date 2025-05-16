@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,12 +12,18 @@ import {
   StatusBar,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
-import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
+import Icon from 'react-native-vector-icons/Feather';
 import {API} from '../../utilis/Constant';
 import {FontFamily} from '../../utilis/Fonts';
 import {post} from '../../utilis/Api';
-import {removeItem, setItem, setStringItem} from '../../utilis/StorageActions';
+import {
+  removeItem,
+  setItem,
+  setStringItem,
+  getItem,
+} from '../../utilis/StorageActions';
 import {LeftBlack} from '../../assets/svgs';
+import ReactNativeBiometrics from 'react-native-biometrics';
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -45,32 +51,97 @@ const SignInScreen = ({navigation}) => {
     return isValid;
   };
 
+  const handleBiometricLogin = async userData => {
+    const rnBiometrics = new ReactNativeBiometrics();
+    const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+
+    console.log('Biometric Type:', biometryType);
+
+    if (!available) {
+      Alert.alert(
+        'Biometrics not available',
+        'Please enable Face ID or Fingerprint in your device settings.',
+      );
+      return;
+    }
+
+    try {
+      let promptMessage = 'Login with Biometrics';
+
+      if (
+        Platform.OS === 'ios' &&
+        biometryType === ReactNativeBiometrics.FaceID
+      ) {
+        promptMessage = 'Login with Face ID';
+      } else if (
+        Platform.OS === 'ios' &&
+        biometryType === ReactNativeBiometrics.TouchID
+      ) {
+        promptMessage = 'Login with Touch ID';
+      } else if (Platform.OS === 'android') {
+        promptMessage = 'Login with Fingerprint';
+      }
+
+      const {success} = await rnBiometrics.simplePrompt({
+        promptMessage,
+      });
+
+      if (success) {
+        console.log('Biometric Auth Success');
+        if (
+          userData?.data?.activeSubscription?.productId &&
+          userData.data.activeSubscription.productId !== 'expired'
+        ) {
+          navigation.navigate('Main');
+        } else {
+          navigation.replace('Subscription');
+        }
+      } else {
+        console.log('Biometric authentication cancelled');
+      }
+    } catch (error) {
+      console.log('Biometric Error:', error);
+      Alert.alert(
+        'Authentication Error',
+        'Failed to authenticate using biometrics.',
+      );
+    }
+  };
+
   const handleSignIn = async () => {
     if (!validate()) return;
 
     setLoading(true);
     await removeItem('userData');
+
     try {
       const data = await post(API.logIn, {email, password});
-      // console.log('Login successful:', data.data.activeSubscription.productId);
-      if (data.data.activeSubscription.productId !== 'expired') {
-        navigation.navigate('Main');
-      } else {
-        navigation.replace('Subscription');
-      }
-      const productId = data?.data?.activeSubscription?.productId || 'trial';
-      console.log('Product ID:', productId);
 
-      // await setItem('subscription', productId);
+      const productId = data?.data?.activeSubscription?.productId || 'trial';
       await setStringItem('subscription', productId);
       await setItem('userData', data);
+      await setItem('biometricEnabled', true);
+
+      await handleBiometricLogin(data);
     } catch (err) {
-      Alert.alert(err.message);
-      setLoading(false);
+      Alert.alert('Login Failed', err.message || 'Something went wrong');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const checkBiometric = async () => {
+      const biometricEnabled = await getItem('biometricEnabled');
+      const userData = await getItem('userData');
+
+      if (biometricEnabled && userData) {
+        handleBiometricLogin(userData);
+      }
+    };
+
+    checkBiometric();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safeStyle}>
@@ -83,6 +154,7 @@ const SignInScreen = ({navigation}) => {
         <Text style={styles.subHeading}>
           Log in to your account by entering your email and password.
         </Text>
+
         <TextInput
           placeholder="Enter Email Address"
           placeholderTextColor={Colors.greyColor}
@@ -96,21 +168,22 @@ const SignInScreen = ({navigation}) => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
-        {error.email && (
-          <Text style={styles.errorText}>Enter a valid Email</Text>
-        )}
+        {error.email ? (
+          <Text style={styles.errorText}>{error.email}</Text>
+        ) : null}
+
         <View style={styles.passwordContainer}>
           <TextInput
             placeholder="Password"
+            placeholderTextColor={Colors.greyColor}
             style={[
               styles.input,
               error.password && styles.inputError,
               {marginBottom: 5, color: Colors.black},
             ]}
+            secureTextEntry={hidePassword}
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={hidePassword}
-            placeholderTextColor={Colors.greyColor}
           />
           <TouchableOpacity
             onPress={() => setHidePassword(!hidePassword)}
@@ -122,9 +195,11 @@ const SignInScreen = ({navigation}) => {
             />
           </TouchableOpacity>
         </View>
+
         {error.password ? (
           <Text style={styles.errorText}>{error.password}</Text>
         ) : null}
+
         <TouchableOpacity
           onPress={handleSignIn}
           style={styles.button}
