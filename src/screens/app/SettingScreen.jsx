@@ -25,62 +25,69 @@ import {ChevronRight} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
 import {getStringItem, removeItem} from '../../utilis/StorageActions';
 import FloatingChatButton from '../../component/FloatingChatButton';
+import {PermissionsAndroid} from 'react-native';
+import Contacts from 'react-native-contacts';
 
 const SettingScreen = ({navigation}) => {
   return (
     <>
       <View style={{flex: 1}}>
-        <Text style={styles.header}>Settings</Text>
-        <ScrollView contentContainerStyle={[styles.container]}>
-          {/* Account Section */}
-          <Text style={styles.sectionTitle}>Account</Text>
-          <View style={styles.card}>
-            <SettingItem
-              title="Personal Information"
-              IconComponent={<Personal />}
-              screenName="EditProfile"
-            />
-            <SettingItem
-              title="Subscription"
-              // screenName="Subscription"
-              screenName="ActiveSubscription"
-              IconComponent={<Crown />}
-            />
-            {/* <SettingItem
+        {/* <Text style={styles.header}>Settings</Text>
+        <ScrollView contentContainerStyle={[styles.container]}> */}
+        {/* Account Section */}
+        <Text style={styles.sectionTitle}>Account</Text>
+        <View style={styles.card}>
+          <SettingItem
+            title="Personal Information"
+            IconComponent={<Personal />}
+            screenName="EditProfile"
+          />
+          <SettingItem
+            title="Subscription"
+            // screenName="Subscription"
+            screenName="ActiveSubscription"
+            IconComponent={<Crown />}
+          />
+          {/* <SettingItem
             title="Alert & Notification"
             IconComponent={<NotiBlue />}
           /> */}
-          </View>
+          <SettingItem
+            title="Sync Contacts"
+            screenName="SyncContacts"
+            IconComponent={<Globe />}
+          />
+        </View>
 
-          {/* Security Section */}
-          {/* <Text style={styles.sectionTitle}>Security</Text>
+        {/* Security Section */}
+        {/* <Text style={styles.sectionTitle}>Security</Text>
         <View style={styles.card}>
           <SettingItem title="Privacy Policy" IconComponent={<Globe />} />
           <SettingItem title="App Passcode" IconComponent={<Shield />} />
         </View> */}
 
-          {/* Support Section */}
-          <Text style={styles.sectionTitle}>Support</Text>
-          <View style={styles.card}>
-            <SettingItem
-              title="Help & Support"
-              IconComponent={<Help />}
-              screenName="Help"
-            />
-            {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
-            {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
-          </View>
+        {/* Support Section */}
+        <Text style={styles.sectionTitle}>Support</Text>
+        <View style={styles.card}>
+          <SettingItem
+            title="Help & Support"
+            IconComponent={<Help />}
+            screenName="Help"
+          />
+          {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
+          {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
+        </View>
 
-          {/* Logout Section */}
-          <Text style={styles.sectionTitle}>Logout</Text>
-          <View style={styles.card}>
-            <SettingItem
-              title="Logout"
-              IconComponent={<Help />}
-              screenName="Welcome"
-            />
-          </View>
-        </ScrollView>
+        {/* Logout Section */}
+        <Text style={styles.sectionTitle}>Logout</Text>
+        <View style={styles.card}>
+          <SettingItem
+            title="Logout"
+            IconComponent={<Help />}
+            screenName="Welcome"
+          />
+        </View>
+        {/* </ScrollView> */}
       </View>
       <FloatingChatButton navigation={navigation} />
     </>
@@ -99,6 +106,28 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     getSubscription();
   }, []);
 
+  const syncContacts = async () => {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
+      title: 'Contacts',
+      message: 'This app would like to view your contacts.',
+      buttonPositive: 'Please accept bare mortal',
+    })
+      .then(res => {
+        console.log('Permission: ', res);
+        Contacts.getAll()
+          .then(contacts => {
+            // work with contacts
+            Alert.alert(`${contacts?.length} Contacts Synced Successfully`);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      })
+      .catch(error => {
+        console.error('Permission error: ', error);
+      });
+  };
+
   //console.log('subscription', subscription);
 
   return (
@@ -108,6 +137,11 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         if (screenName === 'Welcome') {
           await removeItem('userData');
           navigation.replace('Welcome');
+        } else if (screenName === 'SyncContacts') {
+          Alert.alert('Sync Contacts', 'Do you want to sync your contacts?', [
+            {text: 'Yes', onPress: () => syncContacts()},
+            {text: 'No', onPress: () => ''},
+          ]);
         } else {
           navigation.navigate(screenName);
         }
