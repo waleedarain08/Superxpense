@@ -22,4 +22,6 @@ export const API = {
   createChat: `${baseUrl}chat`,
   verifyEmail: `${baseUrl}auth/verify-email`,
   resendEmail: `${baseUrl}auth/resend-verification-email`,
+  faceRegister: `${baseUrl}auth/face/register`,
+  verifyFace: `${baseUrl}auth/face/verify`,
 };

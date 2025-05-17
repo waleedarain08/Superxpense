@@ -51,7 +51,49 @@ const SignInScreen = ({navigation}) => {
     return isValid;
   };
 
-  const handleBiometricLogin = async userData => {
+  const handleSignIn = async () => {
+    if (!validate()) return;
+
+    setLoading(true);
+    await removeItem('userData');
+
+    try {
+      const data = await post(API.logIn, {email, password});
+      const activeSub = data?.data?.activeSubscription;
+      const productId = activeSub?.productId || '';
+      await setStringItem('subscription', productId);
+      await setItem('userData', data);
+      await setItem('biometricEnabled', true);
+      // await handleBiometricLogin(data);
+      if (data?.data?.activeSubscription !== '') {
+        navigation.replace('Main');
+      } else {
+        navigation.replace('Subscription');
+      }
+    } catch (err) {
+      Alert.alert('Login Failed', err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const verifyBiometric = async publicKey => {
+    try {
+      const response = await post(
+        `${API.verifyFace}`,
+        {faceDescriptor: publicKey, email: email},
+        token,
+      );
+      console.log('response', response);
+      console.log('Biometric registration successful.');
+      Alert.alert('Success', 'Biometric registration successful.');
+    } catch (error) {
+      console.error('Biometric API Error:', error);
+      throw error;
+    }
+  };
+
+  const biometric = async data => {
     const rnBiometrics = new ReactNativeBiometrics();
     const {available, biometryType} = await rnBiometrics.isSensorAvailable();
 
@@ -82,50 +124,12 @@ const SignInScreen = ({navigation}) => {
         promptMessage = 'Login with Fingerprint';
       }
 
-      // Step 1: Ask if user wants to enable biometrics
-
-      Alert.alert(
-        promptMessage,
-        `Would you like to enable ${promptMessage} authentication for the next time?`,
-        [
-          {
-            text: 'Yes please',
-            onPress: async () => {
-              try {
-                const {publicKey} = await rnBiometrics.createKeys();
-                console.log('Public Key:', publicKey);
-
-                // await sendPublicKeyToServer({userId, publicKey}); // Your API call
-
-                // await AsyncStorage.setItem('userId', userId);
-
-                console.log(`${promptMessage} has been enabled.`);
-              } catch (setupError) {
-                console.log('Biometric Setup Error:', setupError);
-                Alert.alert('Error', 'Failed to enable biometric login.');
-              }
-            },
-          },
-          {text: 'Cancel', style: 'cancel'},
-        ],
-      );
-
+      const {publicKey} = await rnBiometrics.createKeys();
+      await verifyBiometric('haider113@yopmail.com', publicKey);
       // Step 2: Authenticate biometrically
       const {success} = await rnBiometrics.simplePrompt({
         promptMessage,
       });
-
-      if (success) {
-        console.log('Biometric Auth Success');
-
-        if (userData?.data?.activeSubscription !== '') {
-          navigation.navigate('Main');
-        } else {
-          navigation.replace('Subscription');
-        }
-      } else {
-        console.log('Biometric authentication cancelled');
-      }
     } catch (error) {
       console.log('Biometric Error:', error);
       Alert.alert(
@@ -134,94 +138,6 @@ const SignInScreen = ({navigation}) => {
       );
     }
   };
-
-  // const handleBiometricLogin = async userData => {
-  //   const rnBiometrics = new ReactNativeBiometrics();
-  //   const {available, biometryType} = await rnBiometrics.isSensorAvailable();
-
-  //   console.log('Biometric Type:', biometryType);
-
-  //   if (!available) {
-  //     Alert.alert(
-  //       'Biometrics not available',
-  //       'Please enable Face ID or Fingerprint in your device settings.',
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     let promptMessage = 'Login with Biometrics';
-
-  //     if (
-  //       Platform.OS === 'ios' &&
-  //       biometryType === ReactNativeBiometrics.FaceID
-  //     ) {
-  //       promptMessage = 'Login with Face ID';
-  //     } else if (
-  //       Platform.OS === 'ios' &&
-  //       biometryType === ReactNativeBiometrics.TouchID
-  //     ) {
-  //       promptMessage = 'Login with Touch ID';
-  //     } else if (Platform.OS === 'android') {
-  //       promptMessage = 'Login with Fingerprint';
-  //     }
-
-  //     const {success} = await rnBiometrics.simplePrompt({
-  //       promptMessage,
-  //     });
-
-  //     if (success) {
-  //       console.log('Biometric Auth Success');
-  //       if (userData?.data?.activeSubscription?.productId) {
-  //         navigation.navigate('Main');
-  //       } else {
-  //         navigation.replace('Subscription');
-  //       }
-  //     } else {
-  //       console.log('Biometric authentication cancelled');
-  //     }
-  //   } catch (error) {
-  //     console.log('Biometric Error:', error);
-  //     Alert.alert(
-  //       'Authentication Error',
-  //       'Failed to authenticate using biometrics.',
-  //     );
-  //   }
-  // };
-
-  const handleSignIn = async () => {
-    if (!validate()) return;
-
-    setLoading(true);
-    await removeItem('userData');
-
-    try {
-      const data = await post(API.logIn, {email, password});
-      const activeSub = data?.data?.activeSubscription;
-      const productId = activeSub?.productId || '';
-      await setStringItem('subscription', productId);
-      await setItem('userData', data);
-      await setItem('biometricEnabled', true);
-      await handleBiometricLogin(data);
-    } catch (err) {
-      Alert.alert('Login Failed', err.message || 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const checkBiometric = async () => {
-      const biometricEnabled = await getItem('biometricEnabled');
-      const userData = await getItem('userData');
-
-      if (biometricEnabled && userData) {
-        handleBiometricLogin(userData);
-      }
-    };
-
-    checkBiometric();
-  }, []);
 
   return (
     <SafeAreaView style={styles.safeStyle}>
@@ -288,6 +204,16 @@ const SignInScreen = ({navigation}) => {
             <ActivityIndicator size="small" color={Colors.white} />
           ) : (
             <Text style={styles.buttonText}>Login</Text>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={biometric}
+          style={[styles.button, {marginTop: 0}]}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator size="small" color={Colors.white} />
+          ) : (
+            <Text style={styles.buttonText}>Biometric Login</Text>
           )}
         </TouchableOpacity>
       </View>

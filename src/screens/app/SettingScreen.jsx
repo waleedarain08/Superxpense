@@ -23,71 +23,75 @@ import {
 } from '../../assets/svgs';
 import {ChevronRight} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
-import {getStringItem, removeItem} from '../../utilis/StorageActions';
+import {getItem, getStringItem, removeItem} from '../../utilis/StorageActions';
 import FloatingChatButton from '../../component/FloatingChatButton';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
+import ReactNativeBiometrics from 'react-native-biometrics';
+import {get} from '../../utilis/Api';
+import {API} from '../../utilis/Constant';
 
 const SettingScreen = ({navigation}) => {
   return (
     <>
       <View style={{flex: 1}}>
-        {/* <Text style={styles.header}>Settings</Text>
-        <ScrollView contentContainerStyle={[styles.container]}> */}
-        {/* Account Section */}
-        <Text style={styles.sectionTitle}>Account</Text>
-        <View style={styles.card}>
-          <SettingItem
-            title="Personal Information"
-            IconComponent={<Personal />}
-            screenName="EditProfile"
-          />
-          <SettingItem
-            title="Subscription"
-            // screenName="Subscription"
-            screenName="ActiveSubscription"
-            IconComponent={<Crown />}
-          />
-          {/* <SettingItem
-            title="Alert & Notification"
-            IconComponent={<NotiBlue />}
-          /> */}
-          <SettingItem
-            title="Sync Contacts"
-            screenName="SyncContacts"
-            IconComponent={<Globe />}
-          />
-        </View>
+        <Text style={styles.header}>Settings</Text>
+        <ScrollView contentContainerStyle={[styles.container]}>
+          {/* Account Section */}
+          <Text style={styles.sectionTitle}>Account</Text>
+          <View style={styles.card}>
+            <SettingItem
+              title="Personal Information"
+              IconComponent={<Personal />}
+              screenName="EditProfile"
+            />
+            <SettingItem
+              title="Subscription"
+              // screenName="Subscription"
+              screenName="ActiveSubscription"
+              IconComponent={<Crown />}
+            />
+            <SettingItem
+              title="Enable Biometric"
+              screenName="EnableBiometric"
+              IconComponent={<Help />}
+            />
+            <SettingItem
+              title="Sync Contacts"
+              screenName="SyncContacts"
+              IconComponent={<Globe />}
+            />
+          </View>
 
-        {/* Security Section */}
-        {/* <Text style={styles.sectionTitle}>Security</Text>
+          {/* Security Section */}
+          {/* <Text style={styles.sectionTitle}>Security</Text>
         <View style={styles.card}>
           <SettingItem title="Privacy Policy" IconComponent={<Globe />} />
           <SettingItem title="App Passcode" IconComponent={<Shield />} />
         </View> */}
 
-        {/* Support Section */}
-        <Text style={styles.sectionTitle}>Support</Text>
-        <View style={styles.card}>
-          <SettingItem
-            title="Help & Support"
-            IconComponent={<Help />}
-            screenName="Help"
-          />
-          {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
-          {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
-        </View>
+          {/* Support Section */}
+          <Text style={styles.sectionTitle}>Support</Text>
+          <View style={styles.card}>
+            <SettingItem
+              title="Help & Support"
+              IconComponent={<Help />}
+              screenName="Help"
+            />
+            {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
+            {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
+          </View>
 
-        {/* Logout Section */}
-        <Text style={styles.sectionTitle}>Logout</Text>
-        <View style={styles.card}>
-          <SettingItem
-            title="Logout"
-            IconComponent={<Help />}
-            screenName="Welcome"
-          />
-        </View>
-        {/* </ScrollView> */}
+          {/* Logout Section */}
+          <Text style={styles.sectionTitle}>Logout</Text>
+          <View style={styles.card}>
+            <SettingItem
+              title="Logout"
+              IconComponent={<Help />}
+              screenName="Welcome"
+            />
+          </View>
+        </ScrollView>
       </View>
       <FloatingChatButton navigation={navigation} />
     </>
@@ -128,12 +132,128 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       });
   };
 
-  //console.log('subscription', subscription);
+  useEffect(() => {
+    const getUserData = async () => {
+      const userData = await getItem('userData');
+      const token = userData?.data?.accessToken;
+      try {
+        const data = await get(`${API.getUserData}`, {}, token);
+        console.log('UserData:', data.data.name);
+        // setName(data.data.name);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    setTimeout(() => {
+      getUserData();
+    }, 1000);
+  }, [navigation]);
+
+  const registerFaceBiometric = async (email, publicKey, token) => {
+    try {
+      const response = await post(
+        `${API.faceRegister}`,
+        {faceDescriptor: publicKey, email: email},
+        token,
+      );
+      console.log('response', response);
+      console.log('Biometric registration successful.');
+      Alert.alert('Success', 'Biometric registration successful.');
+    } catch (error) {
+      console.error('Biometric API Error:', error);
+      throw error;
+    }
+  };
+
+  const handleBiometricLogin = async () => {
+    const rnBiometrics = new ReactNativeBiometrics();
+    const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+
+    console.log('Biometric Type:', biometryType);
+
+    if (!available) {
+      Alert.alert(
+        'Biometrics not available',
+        'Please enable Face ID or Fingerprint in your device settings.',
+      );
+      return;
+    }
+
+    try {
+      let promptMessage = 'Login with Biometrics';
+
+      if (
+        Platform.OS === 'ios' &&
+        biometryType === ReactNativeBiometrics.FaceID
+      ) {
+        promptMessage = 'Login with Face ID';
+      } else if (
+        Platform.OS === 'ios' &&
+        biometryType === ReactNativeBiometrics.TouchID
+      ) {
+        promptMessage = 'Login with Touch ID';
+      } else if (Platform.OS === 'android') {
+        promptMessage = 'Login with Fingerprint';
+      }
+
+      // Step 1: Ask if user wants to enable biometrics
+
+      Alert.alert(
+        promptMessage,
+        `Would you like to enable ${promptMessage} authentication for the next time?`,
+        [
+          {
+            text: 'Yes please',
+            onPress: async () => {
+              try {
+                const {publicKey} = await rnBiometrics.createKeys();
+                console.log('Public Key:', publicKey);
+                const userData = await getItem('userData');
+                const token = userData?.data?.accessToken;
+                console.log('token', token);
+                console.log(userData.data, 'asdasasdsa');
+
+                await registerFaceBiometric(
+                  'haider113@yopmail.com',
+                  publicKey,
+                  token,
+                );
+
+                console.log(`${promptMessage} has been enabled.`);
+              } catch (setupError) {
+                console.log('Biometric Setup Error:', setupError);
+                Alert.alert('Error', 'Failed to enable biometric login.');
+              }
+            },
+          },
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+
+      // Step 2: Authenticate biometrically
+      const {success} = await rnBiometrics.simplePrompt({
+        promptMessage,
+      });
+
+      // if (success) {
+      //   Alert.alert('Biometric', 'Biometric added successfully');
+      // } else {
+      //   console.log('Biometric authentication cancelled');
+      // }
+    } catch (error) {
+      console.log('Biometric Error:', error);
+      Alert.alert(
+        'Authentication Error',
+        'Failed to authenticate using biometrics.',
+      );
+    }
+  };
 
   return (
     <TouchableOpacity
       style={styles.item}
       onPress={async () => {
+        console.log('Setting item pressed:', screenName); // Add this
         if (screenName === 'Welcome') {
           await removeItem('userData');
           navigation.replace('Welcome');
@@ -142,6 +262,8 @@ const SettingItem = ({title, IconComponent, screenName}) => {
             {text: 'Yes', onPress: () => syncContacts()},
             {text: 'No', onPress: () => ''},
           ]);
+        } else if (screenName === 'EnableBiometric') {
+          handleBiometricLogin();
         } else {
           navigation.navigate(screenName);
         }
