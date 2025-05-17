@@ -12,7 +12,7 @@ import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {ArrowRight} from '../../icons';
-import {getItem} from '../../utilis/StorageActions';
+import {getItem, setItem} from '../../utilis/StorageActions';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 
@@ -50,6 +50,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
         token,
       );
       console.log(response, 'verfiy');
+      await setItem('userData', response);
       navigation.replace('OnBoarding');
       Alert.alert('Verified', 'Email Verified successfully');
       setCode(['', '', '', '', '', '']);
@@ -133,7 +134,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
             <>
               <Text style={styles.grayText}>Didn't receive code? </Text>
               <TouchableOpacity onPress={ResendCode}>
-                <Text style={styles.resendLink}>Resend Link</Text>
+                <Text style={styles.resendLink}>Resend Code</Text>
               </TouchableOpacity>
             </>
           )}
