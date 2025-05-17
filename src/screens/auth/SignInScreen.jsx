@@ -82,16 +82,43 @@ const SignInScreen = ({navigation}) => {
         promptMessage = 'Login with Fingerprint';
       }
 
+      // Step 1: Ask if user wants to enable biometrics
+
+      Alert.alert(
+        promptMessage,
+        `Would you like to enable ${promptMessage} authentication for the next time?`,
+        [
+          {
+            text: 'Yes please',
+            onPress: async () => {
+              try {
+                const {publicKey} = await rnBiometrics.createKeys();
+                console.log('Public Key:', publicKey);
+
+                // await sendPublicKeyToServer({userId, publicKey}); // Your API call
+
+                // await AsyncStorage.setItem('userId', userId);
+
+                console.log(`${promptMessage} has been enabled.`);
+              } catch (setupError) {
+                console.log('Biometric Setup Error:', setupError);
+                Alert.alert('Error', 'Failed to enable biometric login.');
+              }
+            },
+          },
+          {text: 'Cancel', style: 'cancel'},
+        ],
+      );
+
+      // Step 2: Authenticate biometrically
       const {success} = await rnBiometrics.simplePrompt({
         promptMessage,
       });
 
       if (success) {
         console.log('Biometric Auth Success');
-        if (
-          userData?.data?.activeSubscription?.productId &&
-          userData.data.activeSubscription.productId !== 'expired'
-        ) {
+
+        if (userData?.data?.activeSubscription !== '') {
           navigation.navigate('Main');
         } else {
           navigation.replace('Subscription');
@@ -108,6 +135,60 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
+  // const handleBiometricLogin = async userData => {
+  //   const rnBiometrics = new ReactNativeBiometrics();
+  //   const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+
+  //   console.log('Biometric Type:', biometryType);
+
+  //   if (!available) {
+  //     Alert.alert(
+  //       'Biometrics not available',
+  //       'Please enable Face ID or Fingerprint in your device settings.',
+  //     );
+  //     return;
+  //   }
+
+  //   try {
+  //     let promptMessage = 'Login with Biometrics';
+
+  //     if (
+  //       Platform.OS === 'ios' &&
+  //       biometryType === ReactNativeBiometrics.FaceID
+  //     ) {
+  //       promptMessage = 'Login with Face ID';
+  //     } else if (
+  //       Platform.OS === 'ios' &&
+  //       biometryType === ReactNativeBiometrics.TouchID
+  //     ) {
+  //       promptMessage = 'Login with Touch ID';
+  //     } else if (Platform.OS === 'android') {
+  //       promptMessage = 'Login with Fingerprint';
+  //     }
+
+  //     const {success} = await rnBiometrics.simplePrompt({
+  //       promptMessage,
+  //     });
+
+  //     if (success) {
+  //       console.log('Biometric Auth Success');
+  //       if (userData?.data?.activeSubscription?.productId) {
+  //         navigation.navigate('Main');
+  //       } else {
+  //         navigation.replace('Subscription');
+  //       }
+  //     } else {
+  //       console.log('Biometric authentication cancelled');
+  //     }
+  //   } catch (error) {
+  //     console.log('Biometric Error:', error);
+  //     Alert.alert(
+  //       'Authentication Error',
+  //       'Failed to authenticate using biometrics.',
+  //     );
+  //   }
+  // };
+
   const handleSignIn = async () => {
     if (!validate()) return;
 
@@ -116,12 +197,11 @@ const SignInScreen = ({navigation}) => {
 
     try {
       const data = await post(API.logIn, {email, password});
-
-      const productId = data?.data?.activeSubscription?.productId || 'trial';
+      const activeSub = data?.data?.activeSubscription;
+      const productId = activeSub?.productId || '';
       await setStringItem('subscription', productId);
       await setItem('userData', data);
       await setItem('biometricEnabled', true);
-
       await handleBiometricLogin(data);
     } catch (err) {
       Alert.alert('Login Failed', err.message || 'Something went wrong');

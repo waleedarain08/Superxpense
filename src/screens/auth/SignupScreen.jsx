@@ -96,7 +96,11 @@ const SignUpScreen = ({navigation}) => {
         countryCode,
       });
       await setItem('userData', data);
-      navigation.replace('OnBoarding');
+      setName('');
+      setEmail('');
+      setPassword('');
+      setPhoneNumber('');
+      navigation.navigate('VerificationCode', {email});
       Alert.alert('Success', 'Signup successful');
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');

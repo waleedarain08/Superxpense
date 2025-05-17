@@ -20,4 +20,6 @@ export const API = {
   transactionByMonth: `${baseUrl}accounts/income-transactions-by-month`,
   getAllChats: `${baseUrl}chat/all`,
   createChat: `${baseUrl}chat`,
+  verifyEmail: `${baseUrl}auth/verify-email`,
+  resendEmail: `${baseUrl}auth/resend-verification-email`,
 };

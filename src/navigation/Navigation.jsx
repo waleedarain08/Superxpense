@@ -74,7 +74,7 @@ const Navigation = () => {
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="Help" component={HelpScreen} />
         <Stack.Screen
-          name="VerficationCode"
+          name="VerificationCode"
           component={VerficationCodeScreen}
         />
         <Stack.Screen name="Main" component={BottomNavigator} />
