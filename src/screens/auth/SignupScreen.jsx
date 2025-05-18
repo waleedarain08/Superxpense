@@ -101,7 +101,7 @@ const SignUpScreen = ({navigation}) => {
       setPassword('');
       setPhoneNumber('');
       navigation.navigate('VerificationCode', {email});
-      Alert.alert('Success', 'Signup successful');
+      //Alert.alert('Success', 'Signup successful');
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');
     } finally {
