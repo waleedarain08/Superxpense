@@ -60,6 +60,11 @@ const SignInScreen = ({navigation}) => {
 
     try {
       const data = await post(API.logIn, {email, password});
+      const activeSub = data?.data?.activeSubscription;
+      const productId = activeSub?.productId || '';
+      await setStringItem('subscription', productId);
+      await setItem('userData', data);
+      await setItem('biometricEnabled', true);
       console.log('data', data);
       if (data?.data?.appCode) {
         Alert.alert('Login Failed', 'Your email is not verified');
@@ -71,11 +76,6 @@ const SignInScreen = ({navigation}) => {
       } else {
         navigation.replace('Subscription');
       }
-      const activeSub = data?.data?.activeSubscription;
-      const productId = activeSub?.productId || '';
-      await setStringItem('subscription', productId);
-      await setItem('userData', data);
-      await setItem('biometricEnabled', true);
     } catch (err) {
       Alert.alert('Login Failed', err.message || 'Something went wrong');
     } finally {
