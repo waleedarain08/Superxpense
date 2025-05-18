@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -28,7 +28,7 @@ import FloatingChatButton from '../../component/FloatingChatButton';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
 import ReactNativeBiometrics from 'react-native-biometrics';
-import {get} from '../../utilis/Api';
+import {get, post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 
 const SettingScreen = ({navigation}) => {
@@ -101,6 +101,7 @@ const SettingScreen = ({navigation}) => {
 const SettingItem = ({title, IconComponent, screenName}) => {
   const navigation = useNavigation();
   const [subscription, setSubscription] = React.useState(null);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     const getSubscription = async () => {
@@ -138,8 +139,8 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       const token = userData?.data?.accessToken;
       try {
         const data = await get(`${API.getUserData}`, {}, token);
-        console.log('UserData:', data.data.name);
-        // setName(data.data.name);
+        console.log('UserData:', data.data.email);
+        setEmail(data.data.email);
       } catch (err) {
         console.log(err);
       }
@@ -210,14 +211,8 @@ const SettingItem = ({title, IconComponent, screenName}) => {
                 console.log('Public Key:', publicKey);
                 const userData = await getItem('userData');
                 const token = userData?.data?.accessToken;
-                console.log('token', token);
-                console.log(userData.data, 'asdasasdsa');
 
-                await registerFaceBiometric(
-                  'haider113@yopmail.com',
-                  publicKey,
-                  token,
-                );
+                await registerFaceBiometric(email, publicKey, token);
 
                 console.log(`${promptMessage} has been enabled.`);
               } catch (setupError) {
@@ -234,12 +229,6 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       const {success} = await rnBiometrics.simplePrompt({
         promptMessage,
       });
-
-      // if (success) {
-      //   Alert.alert('Biometric', 'Biometric added successfully');
-      // } else {
-      //   console.log('Biometric authentication cancelled');
-      // }
     } catch (error) {
       console.log('Biometric Error:', error);
       Alert.alert(

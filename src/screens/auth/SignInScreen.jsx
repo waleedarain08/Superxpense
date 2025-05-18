@@ -60,14 +60,10 @@ const SignInScreen = ({navigation}) => {
 
     try {
       const data = await post(API.logIn, {email, password});
-      const activeSub = data?.data?.activeSubscription;
-      const productId = activeSub?.productId || '';
-      await setStringItem('subscription', productId);
-      await setItem('userData', data);
-      await setItem('biometricEnabled', true);
       console.log('data', data);
-
-      if (
+      if (data?.data?.appCode) {
+        Alert.alert('Login Failed', 'Your email is not verified');
+      } else if (
         data?.data?.activeSubscription !== '' ||
         data?.data?.activeSubscription?.productId !== 'expired'
       ) {
@@ -75,6 +71,11 @@ const SignInScreen = ({navigation}) => {
       } else {
         navigation.replace('Subscription');
       }
+      const activeSub = data?.data?.activeSubscription;
+      const productId = activeSub?.productId || '';
+      await setStringItem('subscription', productId);
+      await setItem('userData', data);
+      await setItem('biometricEnabled', true);
     } catch (err) {
       Alert.alert('Login Failed', err.message || 'Something went wrong');
     } finally {
@@ -211,16 +212,7 @@ const SignInScreen = ({navigation}) => {
             <Text style={styles.buttonText}>Login</Text>
           )}
         </TouchableOpacity>
-        <Text
-          style={{
-            paddingVertical: 20,
-            color: Colors.txtColor,
-            textAlign: 'center',
-            fontSize: 16,
-            fontFamily: FontFamily.bold,
-          }}>
-          OR
-        </Text>
+        <Text style={styles.orTxt}>OR</Text>
         <TouchableOpacity
           onPress={biometric}
           style={[styles.faceIdButton, loading && {opacity: 0.6}]}
@@ -326,11 +318,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 70,
-    borderWidth: 1,
+    borderWidth: 2,
     width: '20%',
     alignSelf: 'center',
     borderRadius: 20,
     backgroundColor: Colors.white,
+    borderColor: Colors.txtColor,
   },
   innerContainer: {
     flexDirection: 'row',
@@ -343,5 +336,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     fontSize: 16,
+  },
+  orTxt: {
+    paddingVertical: 20,
+    color: Colors.txtColor,
+    textAlign: 'center',
+    fontSize: 16,
+    fontFamily: FontFamily.bold,
   },
 });
