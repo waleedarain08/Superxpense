@@ -44,8 +44,10 @@ import Income from './income.svg';
 import PopCorn from './popcorn.svg';
 import Soda from './soda.svg';
 import HomePurple from './homePurple.svg';
+import FaceScan from './faceScan.svg';
 
 export {
+  FaceScan,
   HomePurple,
   Gros,
   Flame,

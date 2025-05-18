@@ -1,18 +1,18 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 
+const SubscriptionModal = ({
+  visible,
+  onClose,
+  products,
+  onBuyProduct,
+  onSelectProduct,
+}) => {
+  const [selectedPlan, setSelectedPlan] = React.useState(
+    products.find(plan => plan.id === 'yearly') || null,
+  );
 
-
-const SubscriptionModal = ({ visible, onClose, products, onBuyProduct, onSelectProduct }) => {
-  const [selectedPlan, setSelectedPlan] = React.useState(products.find(plan => plan.id === 'yearly') || null);
-
-  const handleSelectPlan = (plan) => {
+  const handleSelectPlan = plan => {
     console.log('Selected plan:', plan);
     const newSelectedPlan = selectedPlan === plan ? null : plan;
     setSelectedPlan(newSelectedPlan);
@@ -33,18 +33,22 @@ const SubscriptionModal = ({ visible, onClose, products, onBuyProduct, onSelectP
                 key={index}
                 style={[
                   styles.planCard,
-                  selectedPlan === plan && { borderColor: '#0D2D2D', borderWidth: 1.5 },
+                  selectedPlan === plan && {
+                    borderColor: '#0D2D2D',
+                    borderWidth: 1.5,
+                  },
                 ]}
-                onPress={() => handleSelectPlan(plan)}
-              >
-                {plan.id === "yearly" && (
+                onPress={() => handleSelectPlan(plan)}>
+                {plan.id === 'yearly' && (
                   <View style={styles.popularHeader}>
                     <Text style={styles.popularHeaderText}>Most Popular</Text>
                   </View>
                 )}
                 <Text style={styles.planTitle}>{plan.id}</Text>
                 <Text style={styles.planPrice}>{plan.price}</Text>
-                {plan.trial && <Text style={styles.planTrial}>{plan.trial}</Text>}
+                {plan.trial && (
+                  <Text style={styles.planTrial}>{plan.trial}</Text>
+                )}
               </TouchableOpacity>
             ))}
           </View>
@@ -162,18 +166,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-  closeButton:{
+  closeButton: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
     marginBottom: 10,
     marginRight: 10,
-    backgroundColor: '#fff',
     borderRadius: 50,
     padding: 5,
+    backgroundColor: 'transparent',
   },
-  closeButtonText:{
+  closeButtonText: {
     fontSize: 18,
-    color: '#000',
   },
 });

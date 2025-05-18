@@ -22,8 +22,9 @@ import {
   setStringItem,
   getItem,
 } from '../../utilis/StorageActions';
-import {LeftBlack} from '../../assets/svgs';
+import {FaceScan, LeftBlack} from '../../assets/svgs';
 import ReactNativeBiometrics from 'react-native-biometrics';
+// import {FaceIcon} from '../../icons';
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -64,8 +65,12 @@ const SignInScreen = ({navigation}) => {
       await setStringItem('subscription', productId);
       await setItem('userData', data);
       await setItem('biometricEnabled', true);
-      // await handleBiometricLogin(data);
-      if (data?.data?.activeSubscription !== '') {
+      console.log('data', data);
+
+      if (
+        data?.data?.activeSubscription !== '' ||
+        data?.data?.activeSubscription?.productId !== 'expired'
+      ) {
         navigation.replace('Main');
       } else {
         navigation.replace('Subscription');
@@ -82,7 +87,7 @@ const SignInScreen = ({navigation}) => {
       const response = await post(
         `${API.verifyFace}`,
         {faceDescriptor: publicKey, email: email},
-        token,
+        // token,
       );
       console.log('response', response);
       console.log('Biometric registration successful.');
@@ -206,15 +211,24 @@ const SignInScreen = ({navigation}) => {
             <Text style={styles.buttonText}>Login</Text>
           )}
         </TouchableOpacity>
+        <Text
+          style={{
+            paddingVertical: 20,
+            color: Colors.txtColor,
+            textAlign: 'center',
+            fontSize: 16,
+            fontFamily: FontFamily.bold,
+          }}>
+          OR
+        </Text>
         <TouchableOpacity
           onPress={biometric}
-          style={[styles.button, {marginTop: 0}]}
+          style={[styles.faceIdButton, loading && {opacity: 0.6}]}
           disabled={loading}>
-          {loading ? (
-            <ActivityIndicator size="small" color={Colors.white} />
-          ) : (
-            <Text style={styles.buttonText}>Biometric Login</Text>
-          )}
+          <View style={styles.innerContainer}>
+            <FaceScan />
+            {/* <Text style={styles.text}>Login with Face ID</Text> */}
+          </View>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -307,5 +321,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontFamily.regular,
     color: Colors.txtColor,
+  },
+  faceIdButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 70,
+    borderWidth: 1,
+    width: '20%',
+    alignSelf: 'center',
+    borderRadius: 20,
+    backgroundColor: Colors.white,
+  },
+  innerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    marginRight: 8,
+  },
+  text: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });

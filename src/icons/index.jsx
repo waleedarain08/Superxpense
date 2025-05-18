@@ -241,3 +241,13 @@ export const ArrowRight = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const FaceIcon = ({color, size, style}) => (
+  <VectorIcon
+    name="ios-face-id"
+    color={color}
+    size={size}
+    type="Ionicons"
+    style={style}
+  />
+);
