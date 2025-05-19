@@ -31,12 +31,12 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Enabling Face ID allows you quick access to RealApp</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Superxpense wants to read your contacts</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Enabling Face ID allows you quick access to RealApp</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

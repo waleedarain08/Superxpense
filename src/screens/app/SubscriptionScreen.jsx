@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 21,
-    marginTop: '45%',
+    marginTop: '35%',
     flexGrow: 1,
   },
   proText: {

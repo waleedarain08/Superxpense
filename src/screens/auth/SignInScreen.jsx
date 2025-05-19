@@ -99,50 +99,75 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
-  const biometric = async data => {
-    const rnBiometrics = new ReactNativeBiometrics();
-    const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+  // const biometric = async data => {
+  //   const rnBiometrics = new ReactNativeBiometrics();
+  //   const {available, biometryType} = await rnBiometrics.isSensorAvailable();
 
-    console.log('Biometric Type:', biometryType);
+  //   console.log('Biometric Type:', biometryType);
+
+  //   if (!available) {
+  //     Alert.alert(
+  //       'Login with Face not available!',
+  //       'Please enable Face ID in your device settings.',
+  //     );
+  //     return;
+  //   }
+
+  //   try {
+  //     let promptMessage = 'Login with Biometrics';
+
+  //     if (
+  //       Platform.OS === 'ios' &&
+  //       biometryType === ReactNativeBiometrics.FaceID
+  //     ) {
+  //       promptMessage = 'Login with Face ID';
+  //     } else if (
+  //       Platform.OS === 'ios' &&
+  //       biometryType === ReactNativeBiometrics.TouchID
+  //     ) {
+  //       promptMessage = 'Login with Touch ID';
+  //     } else if (Platform.OS === 'android') {
+  //       promptMessage = 'Login with Fingerprint';
+  //     }
+
+  //     const {publicKey} = await rnBiometrics.createKeys();
+  //     await verifyBiometric('haider113@yopmail.com', publicKey);
+  //     const {success} = await rnBiometrics.simplePrompt({
+  //       promptMessage,
+  //     });
+  //   } catch (error) {
+  //     console.log('Biometric Error:', error);
+  //     Alert.alert(
+  //       'Authentication Error',
+  //       'Failed to authenticate using biometrics.',
+  //     );
+  //   }
+  // };
+
+  const biometric = async () => {
+    const rnBiometrics = new ReactNativeBiometrics();
+
+    const { available, biometryType } = await rnBiometrics.isSensorAvailable();
 
     if (!available) {
-      Alert.alert(
-        'Biometrics not available',
-        'Please enable Face ID or Fingerprint in your device settings.',
-      );
+      Alert.alert('Biometrics not supported on this device');
       return;
     }
 
-    try {
-      let promptMessage = 'Login with Biometrics';
+    rnBiometrics.simplePrompt({ promptMessage: 'Login with Biometrics' })
+      .then(resultObject => {
+        const { success } = resultObject;
 
-      if (
-        Platform.OS === 'ios' &&
-        biometryType === ReactNativeBiometrics.FaceID
-      ) {
-        promptMessage = 'Login with Face ID';
-      } else if (
-        Platform.OS === 'ios' &&
-        biometryType === ReactNativeBiometrics.TouchID
-      ) {
-        promptMessage = 'Login with Touch ID';
-      } else if (Platform.OS === 'android') {
-        promptMessage = 'Login with Fingerprint';
-      }
-
-      const {publicKey} = await rnBiometrics.createKeys();
-      await verifyBiometric('haider113@yopmail.com', publicKey);
-      // Step 2: Authenticate biometrically
-      const {success} = await rnBiometrics.simplePrompt({
-        promptMessage,
+        if (success) {
+          Alert.alert('Success', 'Biometric authentication successful!');
+          // Proceed to protected screen or set auth state
+        } else {
+          Alert.alert('Cancelled', 'Biometric authentication cancelled');
+        }
+      })
+      .catch(() => {
+        Alert.alert('Error', 'Biometric authentication failed');
       });
-    } catch (error) {
-      console.log('Biometric Error:', error);
-      Alert.alert(
-        'Authentication Error',
-        'Failed to authenticate using biometrics.',
-      );
-    }
   };
 
   return (
@@ -339,9 +364,9 @@ const styles = StyleSheet.create({
   },
   orTxt: {
     paddingVertical: 20,
-    color: Colors.txtColor,
+    color: Colors.grayColor,
     textAlign: 'center',
     fontSize: 16,
-    fontFamily: FontFamily.bold,
+    fontFamily: FontFamily.regular,
   },
 });

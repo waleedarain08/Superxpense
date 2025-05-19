@@ -81,7 +81,7 @@ const AccountsScreen = ({navigation}) => {
 
         {banksData.length > 0 ? (
           <ScrollView
-            style={styles.section}
+            contentContainerStyle={styles.section}
             showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Bank Connections</Text>
             {banksData.map((item, index) => {
@@ -101,7 +101,7 @@ const AccountsScreen = ({navigation}) => {
             <TouchableOpacity
               onPress={() => navigation.navigate('IssuingCountryScreen')}
               style={styles.button}>
-              <Text style={styles.buttonText}>Connect Account</Text>
+              <Text style={styles.buttonText}> + Add New Account</Text>
             </TouchableOpacity>
           </ScrollView>
         ) : (
@@ -118,7 +118,7 @@ const AccountsScreen = ({navigation}) => {
           </View>
         )}
       </View>
-      <FloatingChatButton navigation={navigation} />
+      {/* <FloatingChatButton navigation={navigation} /> */}
     </>
   );
 };
@@ -259,8 +259,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.medium,
   },
   section: {
+    flexGrow: 1,
+    //flex:1,
     paddingHorizontal: 20,
     paddingTop: 31,
+    paddingBottom: 80,
   },
   title: {
     fontSize: 25,

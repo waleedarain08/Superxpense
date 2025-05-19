@@ -179,64 +179,34 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       );
       return;
     }
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+    rnBiometrics.simplePrompt({ promptMessage: 'Register Biometric' })
+          .then(resultObject => {
+            const { success } = resultObject;
+    
+            if (success) {
+              Alert.alert('Success', 'Biometric authentication successful!');
+               rnBiometrics.createSignature()
+                .then((resultObject) => {
+                  const { publicKey } = resultObject
+                  console.log(publicKey)
+                })
+                
+                //await registerFaceBiometric(email, publicKey, token);
 
-    try {
-      let promptMessage = 'Login with Biometrics';
-
-      if (
-        Platform.OS === 'ios' &&
-        biometryType === ReactNativeBiometrics.FaceID
-      ) {
-        promptMessage = 'Login with Face ID';
-      } else if (
-        Platform.OS === 'ios' &&
-        biometryType === ReactNativeBiometrics.TouchID
-      ) {
-        promptMessage = 'Login with Touch ID';
-      } else if (Platform.OS === 'android') {
-        promptMessage = 'Login with Fingerprint';
-      }
-
-      // Step 1: Ask if user wants to enable biometrics
-
-      Alert.alert(
-        promptMessage,
-        `Would you like to enable ${promptMessage} authentication for the next time?`,
-        [
-          {
-            text: 'Yes please',
-            onPress: async () => {
-              try {
-                const {publicKey} = await rnBiometrics.createKeys();
-                console.log('Public Key:', publicKey);
-                const userData = await getItem('userData');
-                const token = userData?.data?.accessToken;
-
-                await registerFaceBiometric(email, publicKey, token);
-
-                console.log(`${promptMessage} has been enabled.`);
-              } catch (setupError) {
-                console.log('Biometric Setup Error:', setupError);
-                Alert.alert('Error', 'Failed to enable biometric login.');
-              }
-            },
-          },
-          {text: 'Cancel', style: 'cancel'},
-        ],
-      );
-
-      // Step 2: Authenticate biometrically
-      const {success} = await rnBiometrics.simplePrompt({
-        promptMessage,
-      });
-    } catch (error) {
-      console.log('Biometric Error:', error);
-      Alert.alert(
-        'Authentication Error',
-        'Failed to authenticate using biometrics.',
-      );
+            } else {
+              Alert.alert('Cancelled', 'Biometric authentication cancelled');
+            }
+          })
+           .catch((e) => {
+            console.log('Biometric Error:', e);
+            // Handle the error he
+                  Alert.alert('Error', 'Biometric authentication failed');
+          });
     }
-  };
+
+  
 
   return (
     <TouchableOpacity

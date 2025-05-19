@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalButtonText: {
-    color: 'white',
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
   },
@@ -174,9 +174,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderRadius: 50,
     padding: 5,
-    backgroundColor: 'transparent',
+    backgroundColor: '#ffffff',
   },
   closeButtonText: {
     fontSize: 18,
+    backgroundColor: '#fff',
   },
 });
