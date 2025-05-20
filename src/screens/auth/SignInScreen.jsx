@@ -110,13 +110,13 @@ const SignInScreen = ({navigation}) => {
         // token,
       );
       if (response.statusCode === 201) {
-        console.log('here');
+        console.log('face challenge',response.data);
         const result = await hmacSHA256(response.data, publicKey);
         console.log('HMAC SHA256 Result:', result);
         await verifyFace(result);
       }
     } catch (error) {
-      console.error('Biometric API Error:', error);
+      console.error('api error:', error);
       throw error;
     }
   };
