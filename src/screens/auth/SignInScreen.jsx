@@ -20,14 +20,11 @@ import {
   removeItem,
   setItem,
   setStringItem,
-  getItem,
   getStringItem,
 } from '../../utilis/StorageActions';
 import {FaceScan, LeftBlack} from '../../assets/svgs';
 import ReactNativeBiometrics from 'react-native-biometrics';
-import {hmacSHA256} from 'react-native-hmac';
-
-// import {FaceIcon} from '../../icons';
+import CryptoJS from 'crypto-js';
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -90,8 +87,8 @@ const SignInScreen = ({navigation}) => {
     const userEmail = await getStringItem('userEmail');
     try {
       const response = await post(`${API.verifyFace}`, {
-        signedChallenge: publicKey,
         email: userEmail,
+        signedChallenge: publicKey,
       });
       console.log('response', response);
     } catch (error) {
@@ -100,6 +97,29 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
+  // const FunctionHmacSHA256 = (challenge, secret) => {
+  //   const key = CryptoJS.enc.Utf8.parse(secret); // mimic TextEncoder for secret
+  //   const message = CryptoJS.enc.Utf8.parse(challenge); // mimic TextEncoder for challenge
+
+  //   const hash = CryptoJS.HmacSHA256(message, key);
+  //   return hash.toString(CryptoJS.enc.Hex);
+  // };
+
+  function hmacSHA256(challenge, secret) {
+    const challengeUtf8 = CryptoJS.enc.Utf8.parse(challenge);
+    const secretUtf8 = CryptoJS.enc.Utf8.parse(secret);
+
+    const hash = CryptoJS.HmacSHA256(challengeUtf8, secretUtf8);
+    return hash.toString(CryptoJS.enc.Hex); // Convert to hex (like your backend's .map().join(''))
+  }
+
+  // function hmacSHA256(challenge, secret) {
+  //   const hash = CryptoJS.HmacSHA256(
+  //     CryptoJS.enc.Utf8.parse(challenge),
+  //     CryptoJS.enc.Utf8.parse(secret),
+  //   );
+  //   return hash.toString(CryptoJS.enc.Hex);
+  // }
   const faceChallenge = async publicKey => {
     const userEmail = await getStringItem('userEmail');
 
@@ -110,7 +130,6 @@ const SignInScreen = ({navigation}) => {
         // token,
       );
       if (response.statusCode === 201) {
-        console.log('here');
         const result = await hmacSHA256(response.data, publicKey);
         console.log('HMAC SHA256 Result:', result);
         await verifyFace(result);
@@ -123,7 +142,7 @@ const SignInScreen = ({navigation}) => {
 
   const biometric = async () => {
     const rnBiometrics = new ReactNativeBiometrics();
-    const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+    const {available} = await rnBiometrics.isSensorAvailable();
 
     if (!available) {
       Alert.alert(
@@ -133,41 +152,31 @@ const SignInScreen = ({navigation}) => {
       return;
     }
 
-    const userData = await getItem('userData');
-    const token = userData?.data?.accessToken;
-
     try {
-      // Always delete any existing keys first
-      await rnBiometrics.deleteKeys();
-
-      // Now create new keys
-      const result = await rnBiometrics.createKeys();
-      const publicKey = result.publicKey;
-      console.log('New Public Key Generated:', publicKey);
-
-      // Prompt biometric scan
       const promptResult = await rnBiometrics.simplePrompt({
-        promptMessage: 'Register Biometric',
+        promptMessage: 'Authenticate to Register Biometrics',
         cancelButtonText: 'Cancel',
       });
 
-      if (promptResult.success) {
-        // Register public key with backend
-        await faceChallenge(publicKey);
-      } else {
+      if (!promptResult.success) {
         Alert.alert('Cancelled', 'Biometric authentication cancelled');
+        return;
       }
+
+      // Delete old keys if any
+      await rnBiometrics.deleteKeys();
+
+      // Create new keys after successful biometric
+      const {publicKey} = await rnBiometrics.createKeys();
+      console.log('New Public Key Generated:', publicKey);
+
+      // Register public key with backend
+      await faceChallenge(publicKey);
     } catch (error) {
       console.log('Biometric Error:', error);
       Alert.alert('Error', 'Biometric authentication failed');
     }
   };
-
-  // const result = await hmacSHA256(
-  //     'ce38796d49c02f34d0e49ffdcab333dbae81818c60a3d41a4edbc4d76c625ac7',
-  //     'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAouEmUFvGivluWjlP3OCvSE5+1eaBtss/G0eQYrSHzXAb62laY7zs5Dwlj/Op9b6LABr1I3WbHYOPAOx7vSY8FjHusKFDcYPOMXan1dwHbVhdsC2JcT52JyThwr6ZeWgyceE5TtObZomVndscHZkkSqvTIdyKVH5JeG0vFBESbgEw8WNcOrKf8MvkK7xFSRxpeYNF5ODmnCFc66di3DOt8fFoBjDgCZB3ccrrNB8W4iJ2y1D+jUiDnXJQ3ElggTCBFGNB7ZtwOJAatcIkb+wPjHI6ZTnM38rYUTu79gicstVoBp86I7fIwf6HCJuwLDmJd5zR3avVphmMeq/wVfOckwIDAQAB',
-  //   );
-  //   console.log('HMAC SHA256 Result:', result);
 
   return (
     <SafeAreaView style={styles.safeStyle}>
