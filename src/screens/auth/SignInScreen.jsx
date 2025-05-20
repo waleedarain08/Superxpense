@@ -21,10 +21,11 @@ import {
   setItem,
   setStringItem,
   getItem,
+  getStringItem,
 } from '../../utilis/StorageActions';
 import {FaceScan, LeftBlack} from '../../assets/svgs';
 import ReactNativeBiometrics from 'react-native-biometrics';
-import { hmacSHA256 } from "react-native-hmac";
+import {hmacSHA256} from 'react-native-hmac';
 
 // import {FaceIcon} from '../../icons';
 
@@ -85,100 +86,88 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
-  const verifyBiometric = async publicKey => {
+  const verifyFace = async publicKey => {
+    const userEmail = await getStringItem('userEmail');
     try {
-      const response = await post(
-        `${API.verifyFace}`,
-        {faceDescriptor: publicKey, email: email},
-        // token,
-      );
+      const response = await post(`${API.verifyFace}`, {
+        signedChallenge: publicKey,
+        email: userEmail,
+      });
       console.log('response', response);
-      console.log('Biometric registration successful.');
-      Alert.alert('Success', 'Biometric registration successful.');
     } catch (error) {
       console.error('Biometric API Error:', error);
       throw error;
     }
   };
 
-  // const biometric = async data => {
-  //   const rnBiometrics = new ReactNativeBiometrics();
-  //   const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+  const faceChallenge = async publicKey => {
+    const userEmail = await getStringItem('userEmail');
 
-  //   console.log('Biometric Type:', biometryType);
-
-  //   if (!available) {
-  //     Alert.alert(
-  //       'Login with Face not available!',
-  //       'Please enable Face ID in your device settings.',
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     let promptMessage = 'Login with Biometrics';
-
-  //     if (
-  //       Platform.OS === 'ios' &&
-  //       biometryType === ReactNativeBiometrics.FaceID
-  //     ) {
-  //       promptMessage = 'Login with Face ID';
-  //     } else if (
-  //       Platform.OS === 'ios' &&
-  //       biometryType === ReactNativeBiometrics.TouchID
-  //     ) {
-  //       promptMessage = 'Login with Touch ID';
-  //     } else if (Platform.OS === 'android') {
-  //       promptMessage = 'Login with Fingerprint';
-  //     }
-
-  //     const {publicKey} = await rnBiometrics.createKeys();
-  //     await verifyBiometric('haider113@yopmail.com', publicKey);
-  //     const {success} = await rnBiometrics.simplePrompt({
-  //       promptMessage,
-  //     });
-  //   } catch (error) {
-  //     console.log('Biometric Error:', error);
-  //     Alert.alert(
-  //       'Authentication Error',
-  //       'Failed to authenticate using biometrics.',
-  //     );
-  //   }
-  // };
+    try {
+      const response = await post(
+        `${API.faceChallenge}`,
+        {email: userEmail},
+        // token,
+      );
+      if (response.statusCode === 201) {
+        console.log('here');
+        const result = await hmacSHA256(response.data, publicKey);
+        console.log('HMAC SHA256 Result:', result);
+        await verifyFace(result);
+      }
+    } catch (error) {
+      console.error('Biometric API Error:', error);
+      throw error;
+    }
+  };
 
   const biometric = async () => {
-    //first param is challenge from api and second is public key
-    const result = await hmacSHA256('ce38796d49c02f34d0e49ffdcab333dbae81818c60a3d41a4edbc4d76c625ac7','MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAouEmUFvGivluWjlP3OCvSE5+1eaBtss/G0eQYrSHzXAb62laY7zs5Dwlj/Op9b6LABr1I3WbHYOPAOx7vSY8FjHusKFDcYPOMXan1dwHbVhdsC2JcT52JyThwr6ZeWgyceE5TtObZomVndscHZkkSqvTIdyKVH5JeG0vFBESbgEw8WNcOrKf8MvkK7xFSRxpeYNF5ODmnCFc66di3DOt8fFoBjDgCZB3ccrrNB8W4iJ2y1D+jUiDnXJQ3ElggTCBFGNB7ZtwOJAatcIkb+wPjHI6ZTnM38rYUTu79gicstVoBp86I7fIwf6HCJuwLDmJd5zR3avVphmMeq/wVfOckwIDAQAB');
-    console.log('HMAC SHA256 Result:', result);
-    //64159c1260e747cc4106c4af94c0fbbc5af47a1a3062949ca072eff6fab2d3d4
-
-    //call face/verify api after this and send the sha256 result , face descriptor and email in it . 
-    return;
-
     const rnBiometrics = new ReactNativeBiometrics();
-
-    const { available, biometryType } = await rnBiometrics.isSensorAvailable();
+    const {available, biometryType} = await rnBiometrics.isSensorAvailable();
 
     if (!available) {
-      Alert.alert('Biometrics not supported on this device');
+      Alert.alert(
+        'Biometrics not available',
+        'Please enable Face ID or Fingerprint in your device settings.',
+      );
       return;
     }
 
-    rnBiometrics.simplePrompt({ promptMessage: 'Login with Biometrics' })
-      .then(resultObject => {
-        const { success } = resultObject;
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
 
-        if (success) {
-          Alert.alert('Success', 'Biometric authentication successful!');
-          // Proceed to protected screen or set auth state
-        } else {
-          Alert.alert('Cancelled', 'Biometric authentication cancelled');
-        }
-      })
-      .catch(() => {
-        Alert.alert('Error', 'Biometric authentication failed');
+    try {
+      // Always delete any existing keys first
+      await rnBiometrics.deleteKeys();
+
+      // Now create new keys
+      const result = await rnBiometrics.createKeys();
+      const publicKey = result.publicKey;
+      console.log('New Public Key Generated:', publicKey);
+
+      // Prompt biometric scan
+      const promptResult = await rnBiometrics.simplePrompt({
+        promptMessage: 'Register Biometric',
+        cancelButtonText: 'Cancel',
       });
+
+      if (promptResult.success) {
+        // Register public key with backend
+        await faceChallenge(publicKey);
+      } else {
+        Alert.alert('Cancelled', 'Biometric authentication cancelled');
+      }
+    } catch (error) {
+      console.log('Biometric Error:', error);
+      Alert.alert('Error', 'Biometric authentication failed');
+    }
   };
+
+  // const result = await hmacSHA256(
+  //     'ce38796d49c02f34d0e49ffdcab333dbae81818c60a3d41a4edbc4d76c625ac7',
+  //     'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAouEmUFvGivluWjlP3OCvSE5+1eaBtss/G0eQYrSHzXAb62laY7zs5Dwlj/Op9b6LABr1I3WbHYOPAOx7vSY8FjHusKFDcYPOMXan1dwHbVhdsC2JcT52JyThwr6ZeWgyceE5TtObZomVndscHZkkSqvTIdyKVH5JeG0vFBESbgEw8WNcOrKf8MvkK7xFSRxpeYNF5ODmnCFc66di3DOt8fFoBjDgCZB3ccrrNB8W4iJ2y1D+jUiDnXJQ3ElggTCBFGNB7ZtwOJAatcIkb+wPjHI6ZTnM38rYUTu79gicstVoBp86I7fIwf6HCJuwLDmJd5zR3avVphmMeq/wVfOckwIDAQAB',
+  //   );
+  //   console.log('HMAC SHA256 Result:', result);
 
   return (
     <SafeAreaView style={styles.safeStyle}>

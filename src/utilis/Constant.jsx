@@ -24,4 +24,5 @@ export const API = {
   resendEmail: `${baseUrl}auth/resend-verification-email`,
   faceRegister: `${baseUrl}auth/face/register`,
   verifyFace: `${baseUrl}auth/face/verify`,
+  faceChallenge: `${baseUrl}auth/face/challenge`,
 };

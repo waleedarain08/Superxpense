@@ -23,7 +23,13 @@ import {
 } from '../../assets/svgs';
 import {ChevronRight} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
-import {getItem, getStringItem, removeItem} from '../../utilis/StorageActions';
+import {
+  getItem,
+  getStringItem,
+  removeItem,
+  setItem,
+  setStringItem,
+} from '../../utilis/StorageActions';
 import FloatingChatButton from '../../component/FloatingChatButton';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
@@ -141,6 +147,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         const data = await get(`${API.getUserData}`, {}, token);
         console.log('UserData:', data.data.email);
         setEmail(data.data.email);
+        await setStringItem('email', data.data.email);
       } catch (err) {
         console.log(err);
       }
@@ -151,14 +158,17 @@ const SettingItem = ({title, IconComponent, screenName}) => {
   }, [navigation]);
 
   const registerFaceBiometric = async (email, publicKey, token) => {
+    console.log('publicKey', publicKey, email, token);
+
     try {
       const response = await post(
         `${API.faceRegister}`,
-        {faceDescriptor: publicKey, email: email},
+        {faceDescriptor: publicKey},
         token,
       );
       console.log('response', response);
       console.log('Biometric registration successful.');
+      await setStringItem('userEmail', email);
       Alert.alert('Success', 'Biometric registration successful.');
     } catch (error) {
       console.error('Biometric API Error:', error);
@@ -166,11 +176,63 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     }
   };
 
+  // const handleBiometricLogin = async () => {
+  //   const rnBiometrics = new ReactNativeBiometrics();
+  //   const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+
+  //   console.log('Biometric Type:', biometryType);
+
+  //   if (!available) {
+  //     Alert.alert(
+  //       'Biometrics not available',
+  //       'Please enable Face ID or Fingerprint in your device settings.',
+  //     );
+  //     return;
+  //   }
+
+  //   // Get the user token from storage
+  //   const userData = await getItem('userData');
+  //   const token = userData?.data?.accessToken;
+
+  //   try {
+  //     // Prompt the user to register biometric authentication
+  //     const simplePromptResult = await rnBiometrics.simplePrompt({
+  //       promptMessage: 'Register Biometric',
+  //       cancelButtonText: 'Cancel',
+  //     });
+
+  //     if (simplePromptResult.success) {
+  //       Alert.alert('Success', 'Biometric authentication successful!');
+
+  //       // Create a biometric signature, and ensure to provide a prompt message
+  //       const signatureResult = await rnBiometrics.createSignature({
+  //         promptMessage: 'Confirm biometric registration',
+  //         cancelButtonText: 'Cancel',
+  //       });
+
+  //       // Check if a public key is returned
+  //       if (signatureResult.publicKey) {
+  //         const {publicKey} = signatureResult;
+  //         console.log('Public Key:', publicKey);
+  //         await registerFaceBiometric(email, publicKey, token);
+  //       } else {
+  //         Alert.alert(
+  //           'Error',
+  //           'Signature generation failed, no public key returned.',
+  //         );
+  //       }
+  //     } else {
+  //       Alert.alert('Cancelled', 'Biometric authentication cancelled');
+  //     }
+  //   } catch (e) {
+  //     console.log('Biometric Error:', e);
+  //     Alert.alert('Error', 'Biometric authentication failed');
+  //   }
+  // };
+
   const handleBiometricLogin = async () => {
     const rnBiometrics = new ReactNativeBiometrics();
     const {available, biometryType} = await rnBiometrics.isSensorAvailable();
-
-    console.log('Biometric Type:', biometryType);
 
     if (!available) {
       Alert.alert(
@@ -179,34 +241,87 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       );
       return;
     }
+
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
-    rnBiometrics.simplePrompt({ promptMessage: 'Register Biometric' })
-          .then(resultObject => {
-            const { success } = resultObject;
-    
-            if (success) {
-              Alert.alert('Success', 'Biometric authentication successful!');
-               rnBiometrics.createSignature()
-                .then((resultObject) => {
-                  const { publicKey } = resultObject
-                  console.log(publicKey)
-                })
-                
-                //await registerFaceBiometric(email, publicKey, token);
 
-            } else {
-              Alert.alert('Cancelled', 'Biometric authentication cancelled');
-            }
-          })
-           .catch((e) => {
-            console.log('Biometric Error:', e);
-            // Handle the error he
-                  Alert.alert('Error', 'Biometric authentication failed');
-          });
+    try {
+      const {keysExist} = await rnBiometrics.biometricKeysExist();
+
+      // Generate keys if they don’t exist
+      let publicKey = '';
+      if (!keysExist) {
+        const result = await rnBiometrics.createKeys();
+        publicKey = result.publicKey;
+        console.log('New Public Key Generated:', publicKey);
+      } else {
+        console.log(
+          'Keys already exist. You can skip key generation if needed.',
+        );
+        // Optionally: regenerate keys here if needed
+        const result = await rnBiometrics.createKeys(); // or fetch old key if stored
+        publicKey = result.publicKey;
+      }
+
+      // Prompt biometric scan
+      const result = await rnBiometrics.simplePrompt({
+        promptMessage: 'Register Biometric',
+        cancelButtonText: 'Cancel',
+      });
+
+      if (result.success) {
+        // Register public key with backend
+        await registerFaceBiometric(email, publicKey, token);
+      } else { 
+        Alert.alert('Cancelled', 'Biometric authentication cancelled');
+      }
+    } catch (error) {
+      console.log('Biometric Error:', error);
+      Alert.alert('Error', 'Biometric authentication failed');
     }
+  };
 
-  
+  // const handleBiometricLogin = async () => {
+  //   const rnBiometrics = new ReactNativeBiometrics();
+  //   const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+
+  //   console.log('Biometric Type:', biometryType);
+
+  //   if (!available) {
+  //     Alert.alert(
+  //       'Biometrics not available',
+  //       'Please enable Face ID or Fingerprint in your device settings.',
+  //     );
+  //     return;
+  //   }
+  //   const userData = await getItem('userData');
+  //   const token = userData?.data?.accessToken;
+  //   rnBiometrics
+  //     .simplePrompt({
+  //       promptMessage: 'Register Biometric',
+  //       cancelButtonText: 'Cancel', // <-- add this line
+  //     })
+  //     .then(async resultObject => {
+  //       const {success} = resultObject;
+
+  //       if (success) {
+  //         Alert.alert('Success', 'Biometric authentication successful!');
+  //         rnBiometrics.createSignature().then(resultObject => {
+  //           const {publicKey} = resultObject;
+  //           console.log(publicKey);
+  //         });
+
+  //         await registerFaceBiometric(email, publicKey, token);
+  //       } else {
+  //         Alert.alert('Cancelled', 'Biometric authentication cancelled');
+  //       }
+  //     })
+  //     .catch(e => {
+  //       console.log('Biometric Error:', e);
+  //       // Handle the error he
+  //       Alert.alert('Error', 'Biometric authentication failed');
+  //     });
+  // };
 
   return (
     <TouchableOpacity
