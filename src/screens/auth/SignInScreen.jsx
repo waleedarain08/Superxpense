@@ -147,7 +147,7 @@ const SignInScreen = ({navigation}) => {
 
       // Prompt biometric scan
       const promptResult = await rnBiometrics.simplePrompt({
-        promptMessage: 'Register Biometric',
+        promptMessage: 'Login with Biometric',
         cancelButtonText: 'Cancel',
       });
 
