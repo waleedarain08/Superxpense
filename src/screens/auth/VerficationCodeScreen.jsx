@@ -119,6 +119,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
                 focusedIndex === index && styles.focusedInput,
               ]}
               keyboardType="number-pad"
+              returnKeyType='done'
               maxLength={1}
               value={digit}
               onFocus={() => setFocusedIndex(index)}

@@ -97,29 +97,27 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
-  // const FunctionHmacSHA256 = (challenge, secret) => {
-  //   const key = CryptoJS.enc.Utf8.parse(secret); // mimic TextEncoder for secret
-  //   const message = CryptoJS.enc.Utf8.parse(challenge); // mimic TextEncoder for challenge
+ 
 
-  //   const hash = CryptoJS.HmacSHA256(message, key);
-  //   return hash.toString(CryptoJS.enc.Hex);
-  // };
+  // function hmacSHA256(challenge) {
+  // const secret = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAouEmUFvGivluWjlP3OCvSE5+1eaBtss/G0eQYrSHzXAb62laY7zs5Dwlj/Op9b6LABr1I3WbHYOPAOx7vSY8FjHusKFDcYPOMXan1dwHbVhdsC2JcT52JyThwr6ZeWgyceE5TtObZomVndscHZkkSqvTIdyKVH5JeG0vFBESbgEw8WNcOrKf8MvkK7xFSRxpeYNF5ODmnCFc66di3DOt8fFoBjDgCZB3ccrrNB8W4iJ2y1D+jUiDnXJQ3ElggTCBFGNB7ZtwOJAatcIkb+wPjHI6ZTnM38rYUTu79gicstVoBp86I7fIwf6HCJuwLDmJd5zR3avVphmMeq/wVfOckwIDAQAC";
 
-  function hmacSHA256(challenge, secret) {
-    const challengeUtf8 = CryptoJS.enc.Utf8.parse(challenge);
-    const secretUtf8 = CryptoJS.enc.Utf8.parse(secret);
-
-    const hash = CryptoJS.HmacSHA256(challengeUtf8, secretUtf8);
-    return hash.toString(CryptoJS.enc.Hex); // Convert to hex (like your backend's .map().join(''))
-  }
-
-  // function hmacSHA256(challenge, secret) {
-  //   const hash = CryptoJS.HmacSHA256(
-  //     CryptoJS.enc.Utf8.parse(challenge),
-  //     CryptoJS.enc.Utf8.parse(secret),
-  //   );
-  //   return hash.toString(CryptoJS.enc.Hex);
+  // const signature = CryptoJS.HmacSHA256(challenge, secret);
+  // return signature.toString(CryptoJS.enc.Hex);
   // }
+
+  function hmacSHA256(challengeHex, secretBase64) {
+  // 1️⃣ Decode inputs to WordArrays (= raw bytes for crypto-js)
+  const keyWordArray  = CryptoJS.enc.Base64.parse(secretBase64.trim());
+  const msgWordArray  = CryptoJS.enc.Hex.parse(challengeHex.trim());
+
+  // 2️⃣ Compute HMAC
+  const hmacWordArray = CryptoJS.HmacSHA256(msgWordArray, keyWordArray);
+
+  // 3️⃣ Convert result to hex string for transport
+  return hmacWordArray.toString(CryptoJS.enc.Hex);
+  }
+ 
   const faceChallenge = async publicKey => {
     const userEmail = await getStringItem('userEmail');
 
@@ -130,8 +128,9 @@ const SignInScreen = ({navigation}) => {
         // token,
       );
       if (response.statusCode === 201) {
-        const result = await hmacSHA256(response.data, publicKey);
-        console.log('HMAC SHA256 Result:', result);
+        const result = await hmacSHA256(response.data,publicKey);
+        console.log('signed challenge', result);
+        
         await verifyFace(result);
       }
     } catch (error) {
@@ -154,7 +153,7 @@ const SignInScreen = ({navigation}) => {
 
     try {
       const promptResult = await rnBiometrics.simplePrompt({
-        promptMessage: 'Authenticate to Register Biometrics',
+        promptMessage: 'Login with Face ID',
         cancelButtonText: 'Cancel',
       });
 
@@ -164,7 +163,7 @@ const SignInScreen = ({navigation}) => {
       }
 
       // Delete old keys if any
-      await rnBiometrics.deleteKeys();
+     // await rnBiometrics.deleteKeys();
 
       // Create new keys after successful biometric
       const {publicKey} = await rnBiometrics.createKeys();
@@ -173,7 +172,7 @@ const SignInScreen = ({navigation}) => {
       // Register public key with backend
       await faceChallenge(publicKey);
     } catch (error) {
-      console.log('Biometric Error:', error);
+      //console.log('Biometric Error:', error);
       Alert.alert('Error', 'Biometric authentication failed');
     }
   };
