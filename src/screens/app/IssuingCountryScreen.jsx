@@ -68,7 +68,9 @@ const IssuingCountryScreen = ({navigation}) => {
   const [leanToken, setLeanToken] = useState('');
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [bankIdentifier, setBankIdentifier] = useState('');
+  //const [bankIdentifier, setBankIdentifier] = useState('');
+
+ 
 
   const Lean = useRef(null);
 
@@ -76,7 +78,8 @@ const IssuingCountryScreen = ({navigation}) => {
     country.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const hitLeanApi = async () => {
+  const hitLeanApi = async (bankIdentifier) => {
+    console.log('hitLeanApi', bankIdentifier);
     try {
       setLoading(true);
       const userData = await getItem('userData');
@@ -91,17 +94,18 @@ const IssuingCountryScreen = ({navigation}) => {
 
       const data = await get(`${API.leanCustomer}`, {userId: userId}, token);
       const r = data.data;
-      console.log('r:', r);
+      //console.log('r:', r);
       setCustomerID(r.customerId);
       setLeanToken(r.accessToken);
-      connectLean(r);
+      connectLean(r,bankIdentifier);
     } catch (error) {
       setLoading(false);
       console.error('Failed to load user data or call API:', error);
     }
   };
 
-  const connectLean = r => {
+  const connectLean = (r,bankIdentifier) => {
+    console.log(bankIdentifier, 'bankIdentifier');
     if (Lean.current) {
       Lean.current.connect({
         customer_id: r.customerId,
@@ -120,11 +124,9 @@ const IssuingCountryScreen = ({navigation}) => {
   };
 
   const handleBankSelect = bank => {
-    console.log('Selected Bank:', bank);
-    setBankIdentifier(bank.identifier);
-    console.log('Bank Identifier:', bank.identifier);
-
-    hitLeanApi();
+    //setBankIdentifier(bank.identifier);
+    //console.log('bankIdentifier', bankIdentifier);
+    hitLeanApi(bank.identifier);
   };
 
   const renderCountry = ({item}) => {

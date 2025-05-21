@@ -86,6 +86,9 @@ const SignInScreen = ({navigation}) => {
 
   const verifyFace = async (payload,signature) => {
     const userEmail = await getStringItem('userEmail');
+    console.log('userEmail', userEmail);
+    console.log('payload', payload);
+    console.log('signature', signature);
     await removeItem('userData');
     try {
       const data = await post(`${API.verifyFace}`, {
@@ -136,10 +139,10 @@ const SignInScreen = ({navigation}) => {
       return;
     }
   
-   const { status, message } = await verifyFace({
+   const { status, message } = await verifyFace(
       payload,
       signature
-    });
+    );
   
     if (status !== 'success') {
       Alert.alert('Oops!', message);
