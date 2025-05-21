@@ -21,6 +21,7 @@ import LinkSDK from 'lean-react-native';
 import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
 import {getItem, setItem} from '../../utilis/StorageActions';
+import BankModal from '../../component/BankModal';
 
 const countries = [
   {
@@ -66,6 +67,8 @@ const IssuingCountryScreen = ({navigation}) => {
   const [customerID, setCustomerID] = useState('');
   const [leanToken, setLeanToken] = useState('');
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [bankIdentifier, setBankIdentifier] = useState('');
 
   const Lean = useRef(null);
 
@@ -102,6 +105,7 @@ const IssuingCountryScreen = ({navigation}) => {
     if (Lean.current) {
       Lean.current.connect({
         customer_id: r.customerId,
+
         permissions: [
           'identity',
           'accounts',
@@ -110,13 +114,17 @@ const IssuingCountryScreen = ({navigation}) => {
           'payments',
         ],
         access_token: r.accessToken,
-        customization: {
-          theme_color: '#00B67A',
-          button_text_color: Colors.white,
-          overlay_color: Colors.bgColor,
-        },
+        bank_identifier: bankIdentifier,
       });
     }
+  };
+
+  const handleBankSelect = bank => {
+    console.log('Selected Bank:', bank);
+    setBankIdentifier(bank.identifier);
+    console.log('Bank Identifier:', bank.identifier);
+
+    hitLeanApi();
   };
 
   const renderCountry = ({item}) => {
@@ -126,7 +134,8 @@ const IssuingCountryScreen = ({navigation}) => {
       <TouchableOpacity
         style={styles.countryItem}
         activeOpacity={0.7}
-        onPress={() => hitLeanApi()}>
+        // onPress={() => hitLeanApi()}
+        onPress={() => setModalVisible(true)}>
         <Image source={item.flag} style={styles.flag} />
         <View>
           <Text style={styles.countryName}>{item.name}</Text>
@@ -138,6 +147,11 @@ const IssuingCountryScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
+      <BankModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onBankSelect={handleBankSelect}
+      />
       {loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#00B67A" />
@@ -230,6 +244,12 @@ const IssuingCountryScreen = ({navigation}) => {
           appToken="6420a4cb-7fc4-4e6e-bd98-156435654be9"
           customerId={customerID}
           sandbox
+          customization={{
+            theme_color: Colors.btnColor,
+            button_text_color: Colors.white,
+            button_border_radius: 50,
+            link_color: Colors.btnColor,
+          }}
           callback={async response => {
             setLoading(false);
             if (response.status !== 'SUCCESS') {

@@ -25,4 +25,5 @@ export const API = {
   faceRegister: `${baseUrl}auth/face/register`,
   verifyFace: `${baseUrl}auth/face/verify`,
   faceChallenge: `${baseUrl}auth/face/challenge`,
+  banks: `${baseUrl}accounts/banks`,
 };

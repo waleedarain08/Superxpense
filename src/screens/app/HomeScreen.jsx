@@ -7,16 +7,15 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
 import SpendingSummary from '../../component/SpendingSummary';
 import StackedChart from '../../component/StackedChart';
 import BudgetCard from '../../component/BudgetCard';
-import {Dropdown, Notification, Plus, Stars} from '../../assets/svgs';
+import {Plus, Stars} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import UpcomingBills from '../../component/UpcomingBills';
 import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
