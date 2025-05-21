@@ -66,7 +66,10 @@ const SignInScreen = ({navigation}) => {
       await setItem('userData', data);
       //await setItem('biometricEnabled', true);
       //console.log('data', data);
-       if (
+      if (data?.data?.appCode) {
+        Alert.alert('Login Failed', 'Your email is not verified');
+      } 
+      else if (
         data?.data?.activeSubscription !== '' ||
         data?.data?.activeSubscription?.productId !== 'expired'
       ) {
@@ -97,9 +100,7 @@ const SignInScreen = ({navigation}) => {
       await setItem('userData', data);
       //await setItem('biometricEnabled', true);
       //console.log('data', data);
-      if (data?.data?.appCode) {
-        Alert.alert('Login Failed', 'Your email is not verified');
-      } else if (
+      if (
         data?.data?.activeSubscription !== '' ||
         data?.data?.activeSubscription?.productId !== 'expired'
       ) {
