@@ -20,14 +20,11 @@ import {
   removeItem,
   setItem,
   setStringItem,
-  getItem,
   getStringItem,
 } from '../../utilis/StorageActions';
 import {FaceScan, LeftBlack} from '../../assets/svgs';
 import ReactNativeBiometrics from 'react-native-biometrics';
-import {hmacSHA256} from 'react-native-hmac';
-
-// import {FaceIcon} from '../../icons';
+import CryptoJS from 'crypto-js';
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -67,11 +64,9 @@ const SignInScreen = ({navigation}) => {
       const productId = activeSub?.productId || '';
       await setStringItem('subscription', productId);
       await setItem('userData', data);
-      await setItem('biometricEnabled', true);
-      console.log('data', data);
-      if (data?.data?.appCode) {
-        Alert.alert('Login Failed', 'Your email is not verified');
-      } else if (
+      //await setItem('biometricEnabled', true);
+      //console.log('data', data);
+       if (
         data?.data?.activeSubscription !== '' ||
         data?.data?.activeSubscription?.productId !== 'expired'
       ) {
@@ -86,34 +81,31 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
-  const verifyFace = async publicKey => {
+  const verifyFace = async (payload,signature) => {
     const userEmail = await getStringItem('userEmail');
+    await removeItem('userData');
     try {
-      const response = await post(`${API.verifyFace}`, {
-        signedChallenge: publicKey,
+      const data = await post(`${API.verifyFace}`, {
         email: userEmail,
+        payload: payload,
+        signature: signature,
       });
-      console.log('response', response);
-    } catch (error) {
-      console.error('Biometric API Error:', error);
-      throw error;
-    }
-  };
-
-  const faceChallenge = async publicKey => {
-    const userEmail = await getStringItem('userEmail');
-
-    try {
-      const response = await post(
-        `${API.faceChallenge}`,
-        {email: userEmail},
-        // token,
-      );
-      if (response.statusCode === 201) {
-        console.log('face challenge',response.data);
-        const result = await hmacSHA256(response.data, publicKey);
-        console.log('HMAC SHA256 Result:', result);
-        await verifyFace(result);
+      console.log('api response', data);
+      const activeSub = data?.data?.activeSubscription;
+      const productId = activeSub?.productId || '';
+      await setStringItem('subscription', productId);
+      await setItem('userData', data);
+      //await setItem('biometricEnabled', true);
+      //console.log('data', data);
+      if (data?.data?.appCode) {
+        Alert.alert('Login Failed', 'Your email is not verified');
+      } else if (
+        data?.data?.activeSubscription !== '' ||
+        data?.data?.activeSubscription?.productId !== 'expired'
+      ) {
+        navigation.replace('Main');
+      } else {
+        navigation.replace('Subscription');
       }
     } catch (error) {
       console.error('api error:', error);
@@ -121,9 +113,43 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
+  const doBiometricLogin = async () => {
+
+    let epochTimeSeconds = Math.round((new Date()).getTime() / 1000).toString()
+    let payload = epochTimeSeconds + 'Superxpense';
+    //console.log('payload', payload);
+    const rnBiometrics = new ReactNativeBiometrics();
+    const { success, signature } = await rnBiometrics.createSignature(
+      {
+        promptMessage: 'Sign in',
+        payload,
+      },
+    );
+    //console.log('signature', signature);
+  
+    if (!success) {
+      Alert.alert(
+        'Oops!',
+        'Something went wrong during authentication with Face ID. Please try again.',
+      );
+      return;
+    }
+  
+   const { status, message } = await verifyFace({
+      payload,
+      signature
+    });
+  
+    if (status !== 'success') {
+      Alert.alert('Oops!', message);
+      return;
+    }
+  }
+ 
+ 
   const biometric = async () => {
     const rnBiometrics = new ReactNativeBiometrics();
-    const {available, biometryType} = await rnBiometrics.isSensorAvailable();
+    const {available} = await rnBiometrics.isSensorAvailable();
 
     if (!available) {
       Alert.alert(
@@ -133,41 +159,18 @@ const SignInScreen = ({navigation}) => {
       return;
     }
 
-    const userData = await getItem('userData');
-    const token = userData?.data?.accessToken;
+    rnBiometrics.biometricKeysExist()
+    .then((resultObject) => {
+    const { keysExist } = resultObject
 
-    try {
-      // Always delete any existing keys first
-      await rnBiometrics.deleteKeys();
-
-      // Now create new keys
-      const result = await rnBiometrics.createKeys();
-      const publicKey = result.publicKey;
-      console.log('New Public Key Generated:', publicKey);
-
-      // Prompt biometric scan
-      const promptResult = await rnBiometrics.simplePrompt({
-        promptMessage: 'Login with Biometric',
-        cancelButtonText: 'Cancel',
-      });
-
-      if (promptResult.success) {
-        // Register public key with backend
-        await faceChallenge(publicKey);
-      } else {
-        Alert.alert('Cancelled', 'Biometric authentication cancelled');
-      }
-    } catch (error) {
-      console.log('Biometric Error:', error);
-      Alert.alert('Error', 'Biometric authentication failed');
+    if (keysExist) {
+      doBiometricLogin();
+    } else {
+      Alert.alert('Please register your face ID first from settings');
     }
+    })
+    
   };
-
-  // const result = await hmacSHA256(
-  //     'ce38796d49c02f34d0e49ffdcab333dbae81818c60a3d41a4edbc4d76c625ac7',
-  //     'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAouEmUFvGivluWjlP3OCvSE5+1eaBtss/G0eQYrSHzXAb62laY7zs5Dwlj/Op9b6LABr1I3WbHYOPAOx7vSY8FjHusKFDcYPOMXan1dwHbVhdsC2JcT52JyThwr6ZeWgyceE5TtObZomVndscHZkkSqvTIdyKVH5JeG0vFBESbgEw8WNcOrKf8MvkK7xFSRxpeYNF5ODmnCFc66di3DOt8fFoBjDgCZB3ccrrNB8W4iJ2y1D+jUiDnXJQ3ElggTCBFGNB7ZtwOJAatcIkb+wPjHI6ZTnM38rYUTu79gicstVoBp86I7fIwf6HCJuwLDmJd5zR3avVphmMeq/wVfOckwIDAQAB',
-  //   );
-  //   console.log('HMAC SHA256 Result:', result);
 
   return (
     <SafeAreaView style={styles.safeStyle}>

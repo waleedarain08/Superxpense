@@ -12,7 +12,7 @@ import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {ArrowRight} from '../../icons';
-import {getItem, setItem} from '../../utilis/StorageActions';
+import {getItem, setItem, setStringItem} from '../../utilis/StorageActions';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 
@@ -49,7 +49,10 @@ const VerficationCodeScreen = ({navigation, route}) => {
         },
         token,
       );
-      console.log(response, 'verfiy');
+      //console.log(response, 'verfiy');
+      const activeSub = response?.data?.activeSubscription;
+      const productId = activeSub?.productId || '';
+      await setStringItem('subscription', productId);
       await setItem('userData', response);
       navigation.replace('OnBoarding');
       Alert.alert('Verified', 'Email Verified successfully');
@@ -119,6 +122,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
                 focusedIndex === index && styles.focusedInput,
               ]}
               keyboardType="number-pad"
+              returnKeyType="done"
               maxLength={1}
               value={digit}
               onFocus={() => setFocusedIndex(index)}
