@@ -64,11 +64,9 @@ const SignInScreen = ({navigation}) => {
       const productId = activeSub?.productId || '';
       await setStringItem('subscription', productId);
       await setItem('userData', data);
-      await setItem('biometricEnabled', true);
-      console.log('data', data);
-      if (data?.data?.appCode) {
-        Alert.alert('Login Failed', 'Your email is not verified');
-      } else if (
+      //await setItem('biometricEnabled', true);
+      //console.log('data', data);
+       if (
         data?.data?.activeSubscription !== '' ||
         data?.data?.activeSubscription?.productId !== 'expired'
       ) {
@@ -83,55 +81,31 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
-  const verifyFace = async publicKey => {
+  const verifyFace = async (payload,signature) => {
     const userEmail = await getStringItem('userEmail');
+    await removeItem('userData');
     try {
-      const response = await post(`${API.verifyFace}`, {
+      const data = await post(`${API.verifyFace}`, {
         email: userEmail,
-        signedChallenge: publicKey,
+        payload: payload,
+        signature: signature,
       });
-      console.log('response', response);
-    } catch (error) {
-      console.error('Biometric API Error:', error);
-      throw error;
-    }
-  };
-
- 
-
-  // function hmacSHA256(challenge) {
-  // const secret = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAouEmUFvGivluWjlP3OCvSE5+1eaBtss/G0eQYrSHzXAb62laY7zs5Dwlj/Op9b6LABr1I3WbHYOPAOx7vSY8FjHusKFDcYPOMXan1dwHbVhdsC2JcT52JyThwr6ZeWgyceE5TtObZomVndscHZkkSqvTIdyKVH5JeG0vFBESbgEw8WNcOrKf8MvkK7xFSRxpeYNF5ODmnCFc66di3DOt8fFoBjDgCZB3ccrrNB8W4iJ2y1D+jUiDnXJQ3ElggTCBFGNB7ZtwOJAatcIkb+wPjHI6ZTnM38rYUTu79gicstVoBp86I7fIwf6HCJuwLDmJd5zR3avVphmMeq/wVfOckwIDAQAC";
-
-  // const signature = CryptoJS.HmacSHA256(challenge, secret);
-  // return signature.toString(CryptoJS.enc.Hex);
-  // }
-
-  function hmacSHA256(challengeHex, secretBase64) {
-  // 1️⃣ Decode inputs to WordArrays (= raw bytes for crypto-js)
-  const keyWordArray  = CryptoJS.enc.Base64.parse(secretBase64.trim());
-  const msgWordArray  = CryptoJS.enc.Hex.parse(challengeHex.trim());
-
-  // 2️⃣ Compute HMAC
-  const hmacWordArray = CryptoJS.HmacSHA256(msgWordArray, keyWordArray);
-
-  // 3️⃣ Convert result to hex string for transport
-  return hmacWordArray.toString(CryptoJS.enc.Hex);
-  }
- 
-  const faceChallenge = async publicKey => {
-    const userEmail = await getStringItem('userEmail');
-
-    try {
-      const response = await post(
-        `${API.faceChallenge}`,
-        {email: userEmail},
-        // token,
-      );
-      if (response.statusCode === 201) {
-        const result = await hmacSHA256(response.data,publicKey);
-        console.log('signed challenge', result);
-        
-        await verifyFace(result);
+      console.log('api response', data);
+      const activeSub = data?.data?.activeSubscription;
+      const productId = activeSub?.productId || '';
+      await setStringItem('subscription', productId);
+      await setItem('userData', data);
+      //await setItem('biometricEnabled', true);
+      //console.log('data', data);
+      if (data?.data?.appCode) {
+        Alert.alert('Login Failed', 'Your email is not verified');
+      } else if (
+        data?.data?.activeSubscription !== '' ||
+        data?.data?.activeSubscription?.productId !== 'expired'
+      ) {
+        navigation.replace('Main');
+      } else {
+        navigation.replace('Subscription');
       }
     } catch (error) {
       console.error('Biometric API Error:', error);
@@ -139,6 +113,40 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
+  const doBiometricLogin = async () => {
+
+    let epochTimeSeconds = Math.round((new Date()).getTime() / 1000).toString()
+    let payload = epochTimeSeconds + 'Superxpense';
+    //console.log('payload', payload);
+    const rnBiometrics = new ReactNativeBiometrics();
+    const { success, signature } = await rnBiometrics.createSignature(
+      {
+        promptMessage: 'Sign in',
+        payload,
+      },
+    );
+    //console.log('signature', signature);
+  
+    if (!success) {
+      Alert.alert(
+        'Oops!',
+        'Something went wrong during authentication with Face ID. Please try again.',
+      );
+      return;
+    }
+  
+   const { status, message } = await verifyFace({
+      payload,
+      signature
+    });
+  
+    if (status !== 'success') {
+      Alert.alert('Oops!', message);
+      return;
+    }
+  }
+ 
+ 
   const biometric = async () => {
     const rnBiometrics = new ReactNativeBiometrics();
     const {available} = await rnBiometrics.isSensorAvailable();
@@ -151,30 +159,17 @@ const SignInScreen = ({navigation}) => {
       return;
     }
 
-    try {
-      const promptResult = await rnBiometrics.simplePrompt({
-        promptMessage: 'Login with Face ID',
-        cancelButtonText: 'Cancel',
-      });
+    rnBiometrics.biometricKeysExist()
+    .then((resultObject) => {
+    const { keysExist } = resultObject
 
-      if (!promptResult.success) {
-        Alert.alert('Cancelled', 'Biometric authentication cancelled');
-        return;
-      }
-
-      // Delete old keys if any
-     // await rnBiometrics.deleteKeys();
-
-      // Create new keys after successful biometric
-      const {publicKey} = await rnBiometrics.createKeys();
-      console.log('New Public Key Generated:', publicKey);
-
-      // Register public key with backend
-      await faceChallenge(publicKey);
-    } catch (error) {
-      //console.log('Biometric Error:', error);
-      Alert.alert('Error', 'Biometric authentication failed');
+    if (keysExist) {
+      doBiometricLogin();
+    } else {
+      Alert.alert('Please register your face ID first from settings');
     }
+    })
+    
   };
 
   return (
