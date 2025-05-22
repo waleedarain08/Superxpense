@@ -26,4 +26,5 @@ export const API = {
   verifyFace: `${baseUrl}auth/face/verify`,
   faceChallenge: `${baseUrl}auth/face/challenge`,
   banks: `${baseUrl}accounts/banks`,
+  addContacts: `${baseUrl}access/save-contacts`,
 };

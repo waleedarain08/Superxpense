@@ -117,26 +117,84 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     getSubscription();
   }, []);
 
+  // const syncContacts = async () => {
+  //   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
+  //     title: 'Contacts',
+  //     message: 'This app would like to view your contacts.',
+  //     buttonPositive: 'Please accept bare mortal',
+  //   })
+  //     .then(res => {
+  //       console.log('Permission: ', res);
+  //       Contacts.getAll()
+  //         .then(contacts => {
+  //           // work with contacts
+  //           console.log('contacts', contacts);
+
+  //           Alert.alert(`${contacts?.length} Contacts Synced Successfully`);
+  //         })
+  //         .catch(e => {
+  //           console.log(e);
+  //         });
+  //     })
+  //     .catch(error => {
+  //       console.error('Permission error: ', error);
+  //     });
+  // };
+
   const syncContacts = async () => {
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
-      title: 'Contacts',
-      message: 'This app would like to view your contacts.',
-      buttonPositive: 'Please accept bare mortal',
-    })
-      .then(res => {
-        console.log('Permission: ', res);
-        Contacts.getAll()
-          .then(contacts => {
-            // work with contacts
-            Alert.alert(`${contacts?.length} Contacts Synced Successfully`);
-          })
-          .catch(e => {
-            console.log(e);
-          });
-      })
-      .catch(error => {
-        console.error('Permission error: ', error);
-      });
+    try {
+      const permission = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        {
+          title: 'Contacts',
+          message: 'This app would like to view your contacts.',
+          buttonPositive: 'Please accept bare mortal',
+        },
+      );
+
+      if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+        console.warn('Contacts permission denied');
+        return;
+      }
+
+      const contacts = await Contacts.getAll();
+
+      const validContacts = contacts
+        .filter(
+          contact =>
+            Array.isArray(contact.phoneNumbers) &&
+            contact.phoneNumbers.length > 0,
+        )
+        .map(contact => ({
+          givenName: contact.givenName || '',
+          familyName: contact.familyName || '',
+          phoneNumbers: contact.phoneNumbers.map(p => ({
+            label: p.label || 'other',
+            phoneNumber: p.number || '',
+          })),
+        }));
+
+      if (validContacts.length <= 1) {
+        Alert.alert('Not enough contacts with phone numbers to sync.');
+        return;
+      }
+
+      const userData = await getItem('userData');
+      const token = userData?.data?.accessToken;
+      console.log(token, 'sadasdasdds');
+
+      const response = await post(
+        `${API.addContacts}`,
+        {records: validContacts},
+        token,
+      );
+
+      console.log('API Response:', response.data);
+      Alert.alert(`${validContacts.length} Contacts Synced Successfully`);
+    } catch (error) {
+      console.error('Sync error:', error);
+      Alert.alert('Error syncing contacts');
+    }
   };
 
   useEffect(() => {
