@@ -181,7 +181,6 @@ const SettingItem = ({title, IconComponent, screenName}) => {
 
       const userData = await getItem('userData');
       const token = userData?.data?.accessToken;
-      console.log(token, 'sadasdasdds');
 
       const response = await post(
         `${API.addContacts}`,
@@ -189,7 +188,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         token,
       );
 
-      console.log('API Response:', response.data);
+      console.log('API Response:', response);
       Alert.alert(`${validContacts.length} Contacts Synced Successfully`);
     } catch (error) {
       console.error('Sync error:', error);
