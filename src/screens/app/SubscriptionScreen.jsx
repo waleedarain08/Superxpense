@@ -33,9 +33,9 @@ const SubscriptionScreen = ({navigation}) => {
     const initIAP = async () => {
       try {
         await RNIap.initConnection();
-        const items = await RNIap.getProducts({skus: productIds});
-        console.log('Products:', items);
-        //setProducts(items);
+        const items = await RNIap.getSubscriptions({skus: productIds});
+        console.log('subscriptions:', items);
+        setProducts(items);
       } catch (err) {
         console.log(err);
       }
@@ -49,17 +49,17 @@ const SubscriptionScreen = ({navigation}) => {
   }, []);
 
   const buyProduct = async () => {
-    //console.log('Selected product:::', Object.keys(selectedProduct).length);
-    // Alert.alert('Product', Object.keys(selectedProduct).length === 0 ? products[0].id : selectedProduct.id);
-    // try {
-    //   const purchase = await RNIap.requestPurchase({sku: selectedProduct.id});
-    //   Alert.alert('Purchase successful:', purchase);
-    // } catch (err) {
-    //   if (err.code !== 'E_USER_CANCELLED') {
-    //     Alert.alert('Purchase failed:', err);
-    //   }
-    // }
-    Alert.alert('in-app purchase approval pending in your developer account');
+    console.log('Selected product:::', Object.keys(selectedProduct).length);
+    Alert.alert('Product', Object.keys(selectedProduct).length === 0 ? products[0].id : selectedProduct.id);
+    try {
+      const purchase = await RNIap.requestPurchase({sku: selectedProduct.id});
+      Alert.alert('Purchase successful:', purchase);
+    } catch (err) {
+      if (err.code !== 'E_USER_CANCELLED') {
+        Alert.alert('Purchase failed:', err);
+      }
+    }
+    //Alert.alert('in-app purchase approval pending in your developer account');
   };
 
   const FeatureItem = ({text}) => (

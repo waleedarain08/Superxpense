@@ -141,15 +141,19 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
             {/* <Text style={styles.backArrow}>←</Text> */}
             <LeftBlack />
           </TouchableOpacity>
-          <Text style={styles.title}>Select a bank</Text>
+          <Text style={styles.title}>Connect Your Bank Seamlessly</Text>
           <TouchableOpacity onPress={onClose}>
-            <Text style={styles.close}>✕</Text>
+            <Text style={styles.close}> </Text>
           </TouchableOpacity>
         </View>
 
         {/* Subheading */}
         <Text style={styles.subtitle}>
-          Please select the bank you’d like to connect to superxpense app.
+Linking your bank account is quick, secure, and fully integrated within the app. It unlocks the best experience, allowing you to manage everything in one place - no redirects, no hassle.
+        </Text>
+
+        <Text style={styles.subtitle2}>
+          Please select the bank you’d like to connect to superexpense app.
         </Text>
 
         {/* Search Input */}
@@ -206,6 +210,11 @@ const styles = StyleSheet.create({
   subtitle: {
     textAlign: 'center',
     color: Colors.lightTxtColor,
+    marginVertical: 18,
+  },
+  subtitle2: {
+    textAlign: 'center',
+    color: Colors.black,
     marginVertical: 18,
   },
   searchContainer: {

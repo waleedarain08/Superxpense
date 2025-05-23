@@ -36,7 +36,7 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick access to RealApp</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Wants to use location for app access</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

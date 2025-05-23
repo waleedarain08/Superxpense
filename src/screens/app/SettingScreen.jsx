@@ -166,10 +166,10 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         {faceDescriptor: publicKey},
         token,
       );
-      console.log('response', response);
-      console.log('Biometric registration successful.');
+      //console.log('response', response);
+      //console.log('Biometric registration successful.');
       await setStringItem('userEmail', email);
-      Alert.alert('Success', 'Biometric registration successful.');
+      Alert.alert('Success', 'Registration successful');
     } catch (error) {
       console.error('Biometric API Error:', error);
       throw error;
@@ -211,12 +211,12 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       if (!keysExist) {
         const keyResult = await rnBiometrics.createKeys();
         publicKey = keyResult.publicKey;
-        console.log('New Public Key Generated:', publicKey);
+        //console.log('New Public Key Generated:', publicKey);
       } else {
         // Optionally fetch or reuse existing key
         const keyResult = await rnBiometrics.createKeys(); // or store/retrieve securely
         publicKey = keyResult.publicKey;
-        console.log('Using existing or regenerated public key:', publicKey);
+       // console.log('Using existing or regenerated public key:', publicKey);
       }
 
       // Now send public key to backend

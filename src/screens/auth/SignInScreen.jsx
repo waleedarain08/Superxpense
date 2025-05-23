@@ -86,9 +86,9 @@ const SignInScreen = ({navigation}) => {
 
   const verifyFace = async (payload,signature) => {
     const userEmail = await getStringItem('userEmail');
-    console.log('userEmail', userEmail);
-    console.log('payload', payload);
-    console.log('signature', signature);
+    //console.log('userEmail', userEmail);
+    //console.log('payload', payload);
+    //console.log('signature', signature);
     await removeItem('userData');
     try {
       const data = await post(`${API.verifyFace}`, {
@@ -112,7 +112,7 @@ const SignInScreen = ({navigation}) => {
         navigation.replace('Subscription');
       }
     } catch (error) {
-      console.error('api error:', error);
+      Alert.alert('Something went wrong!', error);
       throw error;
     }
   };
