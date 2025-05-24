@@ -138,7 +138,6 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose}>
-            {/* <Text style={styles.backArrow}>←</Text> */}
             <LeftBlack />
           </TouchableOpacity>
           <Text style={styles.title}>Connect Your Bank Seamlessly</Text>
@@ -149,7 +148,9 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
 
         {/* Subheading */}
         <Text style={styles.subtitle}>
-Linking your bank account is quick, secure, and fully integrated within the app. It unlocks the best experience, allowing you to manage everything in one place - no redirects, no hassle.
+          Linking your bank account is quick, secure, and fully integrated
+          within the app. It unlocks the best experience, allowing you to manage
+          everything in one place - no redirects, no hassle.
         </Text>
 
         <Text style={styles.subtitle2}>

@@ -1,10 +1,18 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {ChevronRight, Refresh, ThreeDots} from '../icons';
+import {ChevronRight, DeleteIcon, Refresh, ThreeDots} from '../icons';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
-const BankCard = ({bankID,bankName, totalBalance, accounts, logo, onPress}) => {
+const BankCard = ({
+  bankID,
+  bankName,
+  totalBalance,
+  accounts,
+  logo,
+  onPress,
+  deletePress,
+}) => {
   return (
     <View style={styles.card}>
       {/* Top: Logo, Bank name, Balance, Options */}
@@ -19,6 +27,9 @@ const BankCard = ({bankID,bankName, totalBalance, accounts, logo, onPress}) => {
         {/* <TouchableOpacity>
           <ThreeDots size={20} color="black" />
         </TouchableOpacity> */}
+        <TouchableOpacity style={styles.deleteIcon} onPress={deletePress}>
+          <DeleteIcon size={15} color={Colors.white} />
+        </TouchableOpacity>
       </View>
 
       {/* Bottom: Accounts */}
@@ -43,7 +54,7 @@ const BankCard = ({bankID,bankName, totalBalance, accounts, logo, onPress}) => {
             <TouchableOpacity
               key={index}
               style={styles.mainContainer}
-              onPress={() => onPress(account,bankID,bankName)}>
+              onPress={() => onPress(account, bankID, bankName)}>
               <View>
                 <View style={styles.accountRow}>
                   <View style={styles.accountLeft}>
@@ -95,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.purple,
     justifyContent: 'center',
     alignItems: 'center',
-    padding:3
+    padding: 3,
   },
   bankLogo: {
     width: 35,
@@ -189,6 +200,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  deleteIcon: {
+    alignSelf: 'center',
+    backgroundColor: Colors.background,
+    height: 30,
+    width: 30,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -251,3 +251,13 @@ export const FaceIcon = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const DeleteIcon = ({color, size, style}) => (
+  <VectorIcon
+    name="delete"
+    color={color}
+    size={size}
+    type="AntDesign"
+    style={style}
+  />
+);

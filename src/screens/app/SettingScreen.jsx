@@ -8,6 +8,8 @@ import {
   Alert,
   Platform,
   StatusBar,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
@@ -108,7 +110,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
   const navigation = useNavigation();
   const [subscription, setSubscription] = React.useState(null);
   const [email, setEmail] = useState('');
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getSubscription = async () => {
       const subscriptionn = await getStringItem('subscription');
@@ -117,32 +119,9 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     getSubscription();
   }, []);
 
-  // const syncContacts = async () => {
-  //   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
-  //     title: 'Contacts',
-  //     message: 'This app would like to view your contacts.',
-  //     buttonPositive: 'Please accept bare mortal',
-  //   })
-  //     .then(res => {
-  //       console.log('Permission: ', res);
-  //       Contacts.getAll()
-  //         .then(contacts => {
-  //           // work with contacts
-  //           console.log('contacts', contacts);
-
-  //           Alert.alert(`${contacts?.length} Contacts Synced Successfully`);
-  //         })
-  //         .catch(e => {
-  //           console.log(e);
-  //         });
-  //     })
-  //     .catch(error => {
-  //       console.error('Permission error: ', error);
-  //     });
-  // };
-
   const syncContacts = async () => {
     try {
+      setLoading(true);
       const permission = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
         {
@@ -187,11 +166,12 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         {records: validContacts},
         token,
       );
-
+      setLoading(false);
       console.log('API Response:', response);
       Alert.alert(`${validContacts.length} Contacts Synced Successfully`);
     } catch (error) {
       console.error('Sync error:', error);
+      setLoading(false);
       Alert.alert('Error syncing contacts');
     }
   };
@@ -273,7 +253,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         // Optionally fetch or reuse existing key
         const keyResult = await rnBiometrics.createKeys(); // or store/retrieve securely
         publicKey = keyResult.publicKey;
-       // console.log('Using existing or regenerated public key:', publicKey);
+        // console.log('Using existing or regenerated public key:', publicKey);
       }
 
       // Now send public key to backend
@@ -285,53 +265,114 @@ const SettingItem = ({title, IconComponent, screenName}) => {
   };
 
   return (
-    <TouchableOpacity
-      style={styles.item}
-      onPress={async () => {
-        console.log('Setting item pressed:', screenName); // Add this
-        if (screenName === 'Welcome') {
-          await removeItem('userData');
-          navigation.replace('Welcome');
-        } else if (screenName === 'SyncContacts') {
-          Alert.alert('Sync Contacts', 'Do you want to sync your contacts?', [
-            {text: 'Yes', onPress: () => syncContacts()},
-            {text: 'No', onPress: () => ''},
-          ]);
-        } else if (screenName === 'EnableBiometric') {
-          handleBiometricLogin();
-        } else {
-          navigation.navigate(screenName);
-        }
-      }}>
-      <View style={styles.itemLeft}>
-        {IconComponent}
-        <Text style={styles.itemText}>{title}</Text>
-      </View>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {title === 'Subscription' && (
-          <View
-            style={{
-              backgroundColor: '#C9FFE8',
-              padding: 5,
-              borderRadius: 10,
-              marginRight: 10,
-            }}>
-            <Text
+    // <TouchableOpacity
+    //   style={styles.item}
+    //   onPress={async () => {
+    //     console.log('Setting item pressed:', screenName); // Add this
+    //     if (screenName === 'Welcome') {
+    //       await removeItem('userData');
+    //       navigation.replace('Welcome');
+    //     } else if (screenName === 'SyncContacts') {
+    //       Alert.alert('Sync Contacts', 'Do you want to sync your contacts?', [
+    //         {text: 'Yes', onPress: () => syncContacts()},
+    //         {text: 'No', onPress: () => ''},
+    //       ]);
+    //     } else if (screenName === 'EnableBiometric') {
+    //       handleBiometricLogin();
+    //     } else {
+    //       navigation.navigate(screenName);
+    //     }
+    //   }}>
+    //   <View style={styles.itemLeft}>
+    //     {IconComponent}
+    //     <Text style={styles.itemText}>{title}</Text>
+    //   </View>
+    //   <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    //     {title === 'Subscription' && (
+    //       <View
+    //         style={{
+    //           backgroundColor: '#C9FFE8',
+    //           padding: 5,
+    //           borderRadius: 10,
+    //           marginRight: 10,
+    //         }}>
+    //         <Text
+    //           style={{
+    //             //marginRight: 10,
+    //             color: Colors.txtColor,
+    //             fontFamily: FontFamily.medium,
+    //             fontSize: 16,
+    //             marginLeft: 10,
+    //             marginRight: 10,
+    //           }}>
+    //           {subscription?.toUpperCase()}
+    //         </Text>
+    //       </View>
+    //     )}
+    //     <ChevronRight />
+    //   </View>
+    // </TouchableOpacity>
+    <>
+      <Modal
+        transparent
+        animationType="fade"
+        visible={loading}
+        onRequestClose={() => {}}>
+        <View style={styles.loaderModalContainer}>
+          <View style={styles.loaderBox}>
+            <ActivityIndicator size="large" color={Colors.background} />
+            <Text style={styles.loadingText}>Please wait...</Text>
+          </View>
+        </View>
+      </Modal>
+
+      <TouchableOpacity
+        style={styles.item}
+        onPress={async () => {
+          console.log('Setting item pressed:', screenName); // Add this
+          if (screenName === 'Welcome') {
+            await removeItem('userData');
+            navigation.replace('Welcome');
+          } else if (screenName === 'SyncContacts') {
+            Alert.alert('Sync Contacts', 'Do you want to sync your contacts?', [
+              {text: 'Yes', onPress: () => syncContacts()},
+              {text: 'No', onPress: () => ''},
+            ]);
+          } else if (screenName === 'EnableBiometric') {
+            handleBiometricLogin();
+          } else {
+            navigation.navigate(screenName);
+          }
+        }}>
+        <View style={styles.itemLeft}>
+          {IconComponent}
+          <Text style={styles.itemText}>{title}</Text>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {title === 'Subscription' && (
+            <View
               style={{
-                //marginRight: 10,
-                color: Colors.txtColor,
-                fontFamily: FontFamily.medium,
-                fontSize: 16,
-                marginLeft: 10,
+                backgroundColor: '#C9FFE8',
+                padding: 5,
+                borderRadius: 10,
                 marginRight: 10,
               }}>
-              {subscription?.toUpperCase()}
-            </Text>
-          </View>
-        )}
-        <ChevronRight />
-      </View>
-    </TouchableOpacity>
+              <Text
+                style={{
+                  color: Colors.txtColor,
+                  fontFamily: FontFamily.medium,
+                  fontSize: 16,
+                  marginLeft: 10,
+                  marginRight: 10,
+                }}>
+                {subscription?.toUpperCase()}
+              </Text>
+            </View>
+          )}
+          <ChevronRight />
+        </View>
+      </TouchableOpacity>
+    </>
   );
 };
 
@@ -378,6 +419,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontFamily.medium,
     color: Colors.txtColor,
+  },
+  loaderModalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loaderBox: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minWidth: 150,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: '#333',
   },
 });
 
