@@ -15,7 +15,7 @@ import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import BankCard from '../../component/BankCard';
 import {API} from '../../utilis/Constant';
-import {get} from '../../utilis/Api';
+import {del, get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 
 const ConnectedAccountsScreen = ({navigation, route}) => {
@@ -53,6 +53,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
       setBanksData(rawBanks);
 
       setAccountsData(rawBanks);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log('Error fetching transactions:', error);
@@ -93,6 +94,49 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     });
   };
 
+  const deletePress = async item => {
+    console.log(item);
+    const bankId = item.bankId;
+    console.log(bankId);
+
+    const userData = await getItem('userData');
+    const token = userData.data?.accessToken;
+    console.log(token);
+
+    Alert.alert(
+      'Delete Bank',
+      'Are you sure you want to delete this bank account?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            try {
+              const data = await del(
+                `${API.deleteAccount}`,
+                {entityId: bankId},
+                token,
+              );
+
+              console.log('Deleted successfully:', data);
+              // fetchAccounts();
+              setBanksData([]);
+              // Optionally trigger state update or show toast
+              Alert.alert('Success', 'Bank account deleted successfully');
+            } catch (error) {
+              console.error('Delete failed:', error);
+              Alert.alert('Error', 'Failed to delete bank account');
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -125,6 +169,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
                   totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
                   accounts={item.accounts}
                   onPress={handleAccountPress}
+                  deletePress={() => deletePress(item)}
                 />
               );
             })
