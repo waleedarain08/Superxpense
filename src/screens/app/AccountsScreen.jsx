@@ -62,6 +62,7 @@ const AccountsScreen = ({navigation}) => {
   const deletePress = async item => {
     console.log(item);
     const bankId = item.bankId;
+    console.log(bankId);
 
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
@@ -88,6 +89,7 @@ const AccountsScreen = ({navigation}) => {
               console.log('Deleted successfully:', data);
               // Optionally trigger state update or show toast
               Alert.alert('Success', 'Bank account deleted successfully');
+              fetchAccounts();
             } catch (error) {
               console.error('Delete failed:', error);
               Alert.alert('Error', 'Failed to delete bank account');
