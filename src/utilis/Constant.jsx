@@ -27,5 +27,6 @@ export const API = {
   faceChallenge: `${baseUrl}auth/face/challenge`,
   banks: `${baseUrl}accounts/banks`,
   addContacts: `${baseUrl}access/save-contacts`,
-  deleteAccount: `${baseUrl}accounts/bank`
+  deleteAccount: `${baseUrl}accounts/bank`,
+  billingSubscription: `${baseUrl}billing/verify-subscription`,
 };

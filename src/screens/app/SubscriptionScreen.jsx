@@ -13,6 +13,8 @@ import {Colors} from '../../utilis/Colors';
 import SubscriptionModal from '../../component/SubscriptionModal';
 import * as RNIap from 'react-native-iap';
 import {Platform} from 'react-native';
+import {post} from '../../utilis/Api';
+import {API} from '../../utilis/Constant';
 
 const SubscriptionScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(true);
@@ -48,13 +50,34 @@ const SubscriptionScreen = ({navigation}) => {
   }, []);
 
   const buyProduct = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
     console.log('Selected product:::', Object.keys(selectedProduct).length);
-    Alert.alert('Product', Object.keys(selectedProduct).length === 0 ? products[0].productId : selectedProduct.productId);
+    Alert.alert(
+      'Product',
+      Object.keys(selectedProduct).length === 0
+        ? products[0].productId
+        : selectedProduct.productId,
+    );
+
     try {
-      const purchase = await RNIap.requestPurchase({sku: selectedProduct.productId});
+      const purchase = await RNIap.requestPurchase({
+        sku: selectedProduct.productId,
+      });
+      const receipt = purchase.transactionReceipt;
       console.log('Purchase successful:', purchase);
       Alert.alert('Purchase successful:', purchase);
       //billing/verify-subscription here
+      const response = await post(
+        `${API.billingSubscription}`,
+        {
+          platform: 'apple',
+          receipt: receipt,
+          subscriptionId: selectedProduct.productId,
+        },
+        token,
+      );
+      console.log('data', response);
     } catch (err) {
       if (err.code !== 'E_USER_CANCELLED') {
         Alert.alert('Purchase failed:', err);
