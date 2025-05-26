@@ -16,16 +16,7 @@ import {Platform} from 'react-native';
 
 const SubscriptionScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(true);
-  const [products, setProducts] = useState([
-    {
-      id: 'yearly',
-      price: 'AED 119.99',
-    },
-    {
-      id: 'monthly',
-      price: 'AED 14.99',
-    },
-  ]);
+  const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({});
   const productIds = ['yearly', 'monthly']; // replace with your real product id(s)
 
@@ -36,6 +27,14 @@ const SubscriptionScreen = ({navigation}) => {
         const items = await RNIap.getSubscriptions({skus: productIds});
         console.log('subscriptions:', items);
         setProducts(items);
+        // setProducts([{
+        // productId: 'yearly',
+        // localizedPrice: 'AED 119.99',
+        // },
+        // {
+        // productId: 'monthly',
+        // localizedPrice: 'AED 14.99',
+        // }]);
       } catch (err) {
         console.log(err);
       }
@@ -55,6 +54,7 @@ const SubscriptionScreen = ({navigation}) => {
       const purchase = await RNIap.requestPurchase({sku: selectedProduct.productId});
       console.log('Purchase successful:', purchase);
       Alert.alert('Purchase successful:', purchase);
+      //billing/verify-subscription here
     } catch (err) {
       if (err.code !== 'E_USER_CANCELLED') {
         Alert.alert('Purchase failed:', err);

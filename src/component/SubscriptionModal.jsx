@@ -53,8 +53,8 @@ const SubscriptionModal = ({
             ))}
           </View>
 
-          <Text style={styles.modalText}>119.99 AED / year</Text>
-          <Text style={styles.modalSubText}>And 14.99 AED / month</Text>
+          <Text style={styles.modalText}>Choose subscription plan</Text>
+          <Text style={styles.modalSubText}>Unlock the full potential of our app by selecting the plan that best fits your needs. Enjoy premium features, enhanced performance, and priority support—tailored to help you get the most out of your experience.</Text>
 
           <TouchableOpacity style={styles.modalButton} onPress={onBuyProduct}>
             <Text style={styles.modalButtonText}>Subscribe</Text>
