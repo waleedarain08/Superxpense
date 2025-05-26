@@ -119,35 +119,38 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     getSubscription();
   }, []);
 
-  const syncContacts = async () => {
-    try {
-      setLoading(true);
-
-      // Request permission based on platform
-      let permissionGranted = false;
-
-      if (Platform.OS === 'android') {
-        const permission = await PermissionsAndroid.request(
+  const requestContactsPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
           {
-            title: 'Contacts',
-            message: 'This app would like to view your contacts.',
-            buttonPositive: 'Please accept bare mortal',
-          },
+            title: 'Contacts Permission',
+            message: 'This app needs access to your contacts.',
+            buttonPositive: 'OK',
+          }
         );
-
-        permissionGranted = permission === PermissionsAndroid.RESULTS.GRANTED;
-      } else if (Platform.OS === 'ios') {
-        const permission = await Contacts.requestPermission(); // returns 'authorized' or 'denied'
-        permissionGranted = permission === 'authorized';
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
       }
+    }
+    return true; // iOS handles permission internally via Info.plist
+  };
 
-      if (!permissionGranted) {
-        console.warn('Contacts permission denied');
-        setLoading(false);
-        return;
-      }
+  const syncContacts = async () => {
+      // Request permission based on platform
+    const permissionGranted = await requestContactsPermission();
+    if (permissionGranted) {
+      loadContacts();
+    } else {
+      console.warn('Permission denied');
+    }
+  };
 
+  const loadContacts = async () => {
+    try {
       const contacts = await Contacts.getAll();
 
       const validContacts = contacts
@@ -167,13 +170,13 @@ const SettingItem = ({title, IconComponent, screenName}) => {
 
       if (validContacts.length <= 1) {
         Alert.alert('Not enough contacts with phone numbers to sync.');
-        setLoading(false);
+        //setLoading(false);
         return;
       }
 
       const userData = await getItem('userData');
       const token = userData?.data?.accessToken;
-
+      setLoading(true);
       const response = await post(
         `${API.addContacts}`,
         {records: validContacts},
@@ -181,14 +184,15 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       );
 
       setLoading(false);
-      console.log('API Response:', response);
+      //console.log('API Response:', response);
       Alert.alert(`${validContacts.length} Contacts Synced Successfully`);
     } catch (error) {
       console.error('Sync error:', error);
       setLoading(false);
       Alert.alert('Error syncing contacts');
     }
-  };
+
+  }
 
   // const syncContacts = async () => {
   //   try {
@@ -406,8 +410,8 @@ const SettingItem = ({title, IconComponent, screenName}) => {
             navigation.replace('Welcome');
           } else if (screenName === 'SyncContacts') {
             Alert.alert('Sync Contacts', 'Do you want to sync your contacts?', [
-              {text: 'Yes', onPress: () => syncContacts()},
               {text: 'No', onPress: () => ''},
+               {text: 'Yes', onPress: () => syncContacts()}
             ]);
           } else if (screenName === 'EnableBiometric') {
             handleBiometricLogin();
