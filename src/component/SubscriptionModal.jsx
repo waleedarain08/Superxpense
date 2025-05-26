@@ -9,7 +9,7 @@ const SubscriptionModal = ({
   onSelectProduct,
 }) => {
   const [selectedPlan, setSelectedPlan] = React.useState(
-    products.find(plan => plan.id === 'yearly') || null,
+    products.find(plan => plan.productId === 'yearly') || null,
   );
 
   const handleSelectPlan = plan => {
@@ -39,13 +39,13 @@ const SubscriptionModal = ({
                   },
                 ]}
                 onPress={() => handleSelectPlan(plan)}>
-                {plan.id === 'yearly' && (
+                {plan.productId === 'yearly' && (
                   <View style={styles.popularHeader}>
                     <Text style={styles.popularHeaderText}>Most Popular</Text>
                   </View>
                 )}
-                <Text style={styles.planTitle}>{plan.id}</Text>
-                <Text style={styles.planPrice}>{plan.price}</Text>
+                <Text style={styles.planTitle}>{plan.productId}</Text>
+                <Text style={styles.planPrice}>{plan.localizedPrice}</Text>
                 {plan.trial && (
                   <Text style={styles.planTrial}>{plan.trial}</Text>
                 )}

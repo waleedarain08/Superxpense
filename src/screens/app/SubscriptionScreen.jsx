@@ -50,9 +50,10 @@ const SubscriptionScreen = ({navigation}) => {
 
   const buyProduct = async () => {
     console.log('Selected product:::', Object.keys(selectedProduct).length);
-    Alert.alert('Product', Object.keys(selectedProduct).length === 0 ? products[0].id : selectedProduct.id);
+    Alert.alert('Product', Object.keys(selectedProduct).length === 0 ? products[0].productId : selectedProduct.productId);
     try {
-      const purchase = await RNIap.requestPurchase({sku: selectedProduct.id});
+      const purchase = await RNIap.requestPurchase({sku: selectedProduct.productId});
+      console.log('Purchase successful:', purchase);
       Alert.alert('Purchase successful:', purchase);
     } catch (err) {
       if (err.code !== 'E_USER_CANCELLED') {
