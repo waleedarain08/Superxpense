@@ -95,6 +95,7 @@ const SignUpScreen = ({navigation}) => {
         mobileNumber,
         countryCode,
       });
+      //console.log('SignUp Response:', data);
       await setItem('userData', data);
       setName('');
       setEmail('');

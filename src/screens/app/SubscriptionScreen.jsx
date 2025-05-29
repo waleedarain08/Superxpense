@@ -15,6 +15,9 @@ import * as RNIap from 'react-native-iap';
 import {Platform} from 'react-native';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
+import {
+  getItem
+} from '../../utilis/StorageActions';
 
 const SubscriptionScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(true);
@@ -52,35 +55,42 @@ const SubscriptionScreen = ({navigation}) => {
   const buyProduct = async () => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
-    console.log('Selected product:::', Object.keys(selectedProduct).length);
-    Alert.alert(
-      'Product',
-      Object.keys(selectedProduct).length === 0
-        ? products[0].productId
-        : selectedProduct.productId,
-    );
+    //console.log('Token:', token);
+    const selectedProducts = Object.keys(selectedProduct).length;
+    if (selectedProducts === 0) {
+      Alert.alert(
+        'Please select a subscription plan',
+        'You must select a subscription plan before proceeding.',
+      );
+      return;
+    }
+    
 
     try {
       const purchase = await RNIap.requestPurchase({
         sku: selectedProduct.productId,
       });
       const receipt = purchase.transactionReceipt;
-      console.log('Purchase successful:', purchase);
-      Alert.alert('Purchase successful:', purchase);
+      setModalVisible(false);
+      navigation.navigate('Main');
+      //console.log('Purchase successfull apple', purchase);
+      //Alert.alert('Purchase successful:', purchase);
       //billing/verify-subscription here
       const response = await post(
         `${API.billingSubscription}`,
         {
-          platform: 'apple',
+          platform: 'ios',
           receipt: receipt,
           subscriptionId: selectedProduct.productId,
         },
         token,
       );
       console.log('data', response);
+      
     } catch (err) {
+      console.warn('Purchase failed:', err);
       if (err.code !== 'E_USER_CANCELLED') {
-        Alert.alert('Purchase failed:', err);
+        //Alert.alert('Purchase failed:', err);
       }
     }
     //Alert.alert('in-app purchase approval pending in your developer account');

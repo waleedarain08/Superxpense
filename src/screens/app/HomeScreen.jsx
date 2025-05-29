@@ -165,13 +165,16 @@ const HomeScreen = ({navigation}) => {
   const fetchBarGraph = async () => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
-
+     //console.log(token);
+     //console.log(month, year);
     try {
       const response = await get(
         `${API.incomeMonth}`,
         {month: month, year: year},
         token,
       );
+
+     
 
       const {netWorthExpense} = response.data || {};
 

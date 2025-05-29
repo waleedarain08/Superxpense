@@ -126,6 +126,9 @@ const AccountsScreen = ({navigation}) => {
             contentContainerStyle={styles.section}
             showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Bank Connections</Text>
+            <Text style={styles.subtitle}>
+              Handle your bank connection and see transactions in one place.
+            </Text>
             {banksData.map((item, index) => {
               //console.log('item:', item);
               return (

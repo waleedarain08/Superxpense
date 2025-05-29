@@ -18,7 +18,7 @@ import {Colors} from '../../utilis/Colors';
 import StepperHeader from '../../component/StepperHeader';
 import {FontFamily} from '../../utilis/Fonts';
 import LinkSDK from 'lean-react-native';
-import {API} from '../../utilis/Constant';
+import {API,leanAppToken} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
 import {getItem, setItem} from '../../utilis/StorageActions';
 import BankModal from '../../component/BankModal';
@@ -105,7 +105,7 @@ const IssuingCountryScreen = ({navigation}) => {
   };
 
   const connectLean = (r,bankIdentifier) => {
-    console.log(bankIdentifier, 'bankIdentifier');
+    //console.log(bankIdentifier, 'bankIdentifier');
     if (Lean.current) {
       Lean.current.connect({
         customer_id: r.customerId,
@@ -243,9 +243,9 @@ const IssuingCountryScreen = ({navigation}) => {
           webViewProps={{
             androidHardwareAccelerationDisabled: true,
           }}
-          appToken="6420a4cb-7fc4-4e6e-bd98-156435654be9"
+          appToken={leanAppToken} 
           customerId={customerID}
-          sandbox
+          sandbox={false}
           customization={{
             theme_color: Colors.btnColor,
             button_text_color: Colors.white,

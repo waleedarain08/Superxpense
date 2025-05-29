@@ -154,7 +154,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
       <View style={styles.section}>
         <Text style={styles.title}>Bank Connections</Text>
         <Text style={styles.subtitle}>
-          Handle your bank connection and learn more about automatic syncing
+          Handle your bank connection and see transactions in one place.
         </Text>
 
         {banksData.length > 0
