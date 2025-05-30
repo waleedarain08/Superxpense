@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
-import { Text, Image, StyleSheet, Animated, ImageBackground } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
-import { getApp } from '@react-native-firebase/app';
-import { getItem, getStringItem } from '../../utilis/StorageActions';
-import { FontFamily } from '../../utilis/Fonts';
-import { Colors } from '../../utilis/Colors';
+import React, {useEffect} from 'react';
+import {Text, Image, StyleSheet, Animated, ImageBackground} from 'react-native';
+import {getItem, getStringItem} from '../../utilis/StorageActions';
+import {FontFamily} from '../../utilis/Fonts';
+import {Colors} from '../../utilis/Colors';
 
-const SplashScreen = ({ navigation }) => {
+const SplashScreen = ({navigation}) => {
   const fadeAnim = new Animated.Value(0);
   const scaleAnim = new Animated.Value(0.3);
 
@@ -25,9 +23,6 @@ const SplashScreen = ({ navigation }) => {
       }),
     ]).start();
 
-    requestUserPermission();
-    getFcmToken();
-
     const timer = setTimeout(async () => {
       const userData = await getItem('userData');
       const subscription = await getStringItem('subscription');
@@ -44,38 +39,20 @@ const SplashScreen = ({ navigation }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const requestUserPermission = async () => {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-    console.log('Authorization status:', authStatus);
-    }
-  };
-
-  const getFcmToken = async (app) => {
-   const fcmToken = await messaging().getToken();
-   console.log('FCM Token:', fcmToken);        
-  };
-
   return (
     <ImageBackground
       source={require('../../assets/images/splashBack.png')}
       style={styles.container}
-      imageStyle={{ resizeMode: 'cover' }}
-      resizeMode="cover"
-    >
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
       <Animated.View
         style={[
           styles.content,
           {
             opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           },
-        ]}
-      >
+        ]}>
         <Image
           source={require('./../../assets/images/logo.png')}
           style={styles.logo}

@@ -31,4 +31,5 @@ export const API = {
   addContacts: `${baseUrl}access/save-contacts`,
   deleteAccount: `${baseUrl}accounts/bank`,
   billingSubscription: `${baseUrl}billing/verify-subscription`,
+  gmailIntegration: `${baseUrl}integrations/gmail-connect`,
 };

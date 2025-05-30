@@ -31,6 +31,8 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSPushNotificationsUsageDescription</key>
+	<string>We use push notifications to send you important updates.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Superxpense wants to read your contacts</string>
 	<key>NSFaceIDUsageDescription</key>

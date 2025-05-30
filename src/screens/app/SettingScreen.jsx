@@ -69,6 +69,11 @@ const SettingScreen = ({navigation}) => {
               screenName="SyncContacts"
               IconComponent={<Globe />}
             />
+            <SettingItem
+              title="Gmail Integration"
+              screenName="GmailIntegration"
+              IconComponent={<Globe />}
+            />
           </View>
 
           {/* Security Section */}
@@ -128,7 +133,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
             title: 'Contacts Permission',
             message: 'This app needs access to your contacts.',
             buttonPositive: 'OK',
-          }
+          },
         );
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
@@ -140,7 +145,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
   };
 
   const syncContacts = async () => {
-      // Request permission based on platform
+    // Request permission based on platform
     const permissionGranted = await requestContactsPermission();
     if (permissionGranted) {
       loadContacts();
@@ -191,65 +196,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       setLoading(false);
       Alert.alert('Error syncing contacts');
     }
-
-  }
-
-  // const syncContacts = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const permission = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-  //       {
-  //         title: 'Contacts',
-  //         message: 'This app would like to view your contacts.',
-  //         buttonPositive: 'Please accept bare mortal',
-  //       },
-  //     );
-
-  //     if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
-  //       console.warn('Contacts permission denied');
-  //       return;
-  //     }
-
-  //     const contacts = await Contacts.getAll();
-
-  //     const validContacts = contacts
-  //       .filter(
-  //         contact =>
-  //           Array.isArray(contact.phoneNumbers) &&
-  //           contact.phoneNumbers.length > 0,
-  //       )
-  //       .map(contact => ({
-  //         givenName: contact.givenName || '',
-  //         familyName: contact.familyName || '',
-  //         phoneNumbers: contact.phoneNumbers.map(p => ({
-  //           label: p.label || 'other',
-  //           phoneNumber: p.number || '',
-  //         })),
-  //       }));
-
-  //     if (validContacts.length <= 1) {
-  //       Alert.alert('Not enough contacts with phone numbers to sync.');
-  //       return;
-  //     }
-
-  //     const userData = await getItem('userData');
-  //     const token = userData?.data?.accessToken;
-
-  //     const response = await post(
-  //       `${API.addContacts}`,
-  //       {records: validContacts},
-  //       token,
-  //     );
-  //     setLoading(false);
-  //     console.log('API Response:', response);
-  //     Alert.alert(`${validContacts.length} Contacts Synced Successfully`);
-  //   } catch (error) {
-  //     console.error('Sync error:', error);
-  //     setLoading(false);
-  //     Alert.alert('Error syncing contacts');
-  //   }
-  // };
+  };
 
   useEffect(() => {
     const getUserData = async () => {
@@ -339,54 +286,22 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     }
   };
 
+  const handleGmailIntegration = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(`${API.gmailIntegration}`, {}, token);
+      console.log('res', response);
+      if (response.data) {
+        Alert.alert('Success', 'Gmail Integrated Successfully');
+      }
+    } catch (error) {
+      console.log('Error fetching user data:', error);
+    }
+  };
+
   return (
-    // <TouchableOpacity
-    //   style={styles.item}
-    //   onPress={async () => {
-    //     console.log('Setting item pressed:', screenName); // Add this
-    //     if (screenName === 'Welcome') {
-    //       await removeItem('userData');
-    //       navigation.replace('Welcome');
-    //     } else if (screenName === 'SyncContacts') {
-    //       Alert.alert('Sync Contacts', 'Do you want to sync your contacts?', [
-    //         {text: 'Yes', onPress: () => syncContacts()},
-    //         {text: 'No', onPress: () => ''},
-    //       ]);
-    //     } else if (screenName === 'EnableBiometric') {
-    //       handleBiometricLogin();
-    //     } else {
-    //       navigation.navigate(screenName);
-    //     }
-    //   }}>
-    //   <View style={styles.itemLeft}>
-    //     {IconComponent}
-    //     <Text style={styles.itemText}>{title}</Text>
-    //   </View>
-    //   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-    //     {title === 'Subscription' && (
-    //       <View
-    //         style={{
-    //           backgroundColor: '#C9FFE8',
-    //           padding: 5,
-    //           borderRadius: 10,
-    //           marginRight: 10,
-    //         }}>
-    //         <Text
-    //           style={{
-    //             //marginRight: 10,
-    //             color: Colors.txtColor,
-    //             fontFamily: FontFamily.medium,
-    //             fontSize: 16,
-    //             marginLeft: 10,
-    //             marginRight: 10,
-    //           }}>
-    //           {subscription?.toUpperCase()}
-    //         </Text>
-    //       </View>
-    //     )}
-    //     <ChevronRight />
-    //   </View>
-    // </TouchableOpacity>
     <>
       <Modal
         transparent
@@ -411,10 +326,12 @@ const SettingItem = ({title, IconComponent, screenName}) => {
           } else if (screenName === 'SyncContacts') {
             Alert.alert('Sync Contacts', 'Do you want to sync your contacts?', [
               {text: 'No', onPress: () => ''},
-               {text: 'Yes', onPress: () => syncContacts()}
+              {text: 'Yes', onPress: () => syncContacts()},
             ]);
           } else if (screenName === 'EnableBiometric') {
             handleBiometricLogin();
+          } else if (screenName === 'GmailIntegration') {
+            handleGmailIntegration();
           } else {
             navigation.navigate(screenName);
           }
