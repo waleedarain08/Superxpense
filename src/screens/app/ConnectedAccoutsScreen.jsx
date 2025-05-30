@@ -30,7 +30,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     //setStateEntityId(id);
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
-    //console.log('token:', token);
+    console.log('token:', token);
     // try {
     //   setLoading(true);
     //   const data = await get(
@@ -47,6 +47,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     try {
       setLoading(true);
       const data = await get(`${API.bankAccounts}`, null, token);
+      
       setBankName(data.data[0].bankName);
       const rawBanks = data?.data || [];
 

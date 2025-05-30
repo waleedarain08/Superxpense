@@ -245,7 +245,7 @@ const IssuingCountryScreen = ({navigation}) => {
           }}
           appToken={leanAppToken} 
           customerId={customerID}
-          sandbox={false}
+          sandbox={true}
           customization={{
             theme_color: Colors.btnColor,
             button_text_color: Colors.white,

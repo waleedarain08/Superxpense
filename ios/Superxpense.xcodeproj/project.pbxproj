@@ -11,6 +11,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		7E7765662DD152310008F1FC /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E7765652DD152300008F1FC /* StoreKit.framework */; };
+		7EA9DC6E2DEA02C5006B0892 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7EA9DC6D2DEA02C5006B0892 /* GoogleService-Info.plist */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C0EFA8EDDBA53985EC8997C8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,8 @@
 		72958664E8184790BF0C9AF9 /* Gilroy-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Medium.ttf"; path = "../src/assets/fonts/Gilroy-Medium.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Superxpense/AppDelegate.swift; sourceTree = "<group>"; };
 		7E7765652DD152300008F1FC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		7EA9DC6C2DE9E981006B0892 /* Superxpense.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Superxpense.entitlements; path = Superxpense/Superxpense.entitlements; sourceTree = "<group>"; };
+		7EA9DC6D2DEA02C5006B0892 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Superxpense/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		884E8352786F4262B02CFB2B /* Gilroy-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Gilroy-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		8947A49FB1C249059575C92D /* Gilroy-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Gilroy-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
@@ -65,6 +68,7 @@
 		13B07FAE1A68108700A75B9A /* Superxpense */ = {
 			isa = PBXGroup;
 			children = (
+				7EA9DC6C2DE9E981006B0892 /* Superxpense.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -121,6 +125,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				7EA9DC6D2DEA02C5006B0892 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* Superxpense */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -211,6 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				7EA9DC6E2DEA02C5006B0892 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				C0EFA8EDDBA53985EC8997C8 /* PrivacyInfo.xcprivacy in Resources */,
 			);
@@ -319,6 +325,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Superxpense/Superxpense.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
@@ -358,6 +365,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Superxpense/Superxpense.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
