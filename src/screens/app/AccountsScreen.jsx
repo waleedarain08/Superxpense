@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,22 +8,23 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
 
-import {Dropdown, Notification, Plus, Stars} from '../../assets/svgs';
+import {Plus} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 
-import {API} from '../../utilis/Constant';
+import {API, leanAppToken} from '../../utilis/Constant';
 import {del, get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import BankCard from '../../component/BankCard';
 import {useFocusEffect} from '@react-navigation/native';
-import FloatingChatButton from '../../component/FloatingChatButton';
+import LinkSDK from 'lean-react-native';
 
 const AccountsScreen = ({navigation}) => {
   const [banksData, setBanksData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const Lean = useRef(null);
 
   const fetchAccounts = async () => {
     const userData = await getItem('userData');
@@ -33,6 +33,7 @@ const AccountsScreen = ({navigation}) => {
       setLoading(true);
       const data = await get(`${API.bankAccounts}`, null, token);
       const rawBanks = data?.data || [];
+      console.log(data, 'adsdsadas');
 
       setBanksData(rawBanks);
     } catch (error) {
@@ -48,15 +49,36 @@ const AccountsScreen = ({navigation}) => {
   );
 
   const handleAccountPress = (account, bankID, bankName) => {
-    //console.log('Account pressed:', account);
-    //console.log('Bank Name:', bankName);
-    navigation.navigate('BankTransaction', {
-      accountId: account.accountId,
-      accountBalance: account.accountBalance,
-      accountType: account.accountType,
-      BankName: bankName,
-      entityId: bankID,
-    });
+    if (account.status === 'RECONNECT_REQUIRED') {
+      // console.log('Reconnect Required for account:', account.accountId);
+      // console.log('Reconnect ID:', account.reconnectId); // 👈 log reconnectId
+
+      Alert.alert(
+        'Reconnect Required',
+        'This account needs to be reconnected before you can view transactions.',
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {
+            text: 'Reconnect Now',
+            onPress: () => {
+              console.log('reconnectId:', account.reconnectId);
+              Lean.current.reconnect({
+                reconnect_id: account.reconnectId,
+                // bank_identifier: 'LEANMB1_SAU',
+              });
+            },
+          },
+        ],
+      );
+    } else {
+      navigation.navigate('BankTransaction', {
+        accountId: account.accountId,
+        accountBalance: account.accountBalance,
+        accountType: account.accountType,
+        BankName: bankName,
+        entityId: bankID,
+      });
+    }
   };
 
   const deletePress = async item => {
@@ -163,6 +185,23 @@ const AccountsScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
         )}
+        <LinkSDK
+          ref={Lean}
+          webViewProps={{
+            androidHardwareAccelerationDisabled: true,
+          }}
+          appToken={leanAppToken}
+          sandbox={true}
+          customization={{
+            theme_color: Colors.btnColor,
+            button_text_color: Colors.white,
+            button_border_radius: 50,
+            link_color: Colors.btnColor,
+          }}
+          callback={async response => {
+            console.log('responseeeeeeeeeeeeeeeeeee:', response);
+          }}
+        />
       </View>
       {/* <FloatingChatButton navigation={navigation} /> */}
     </>

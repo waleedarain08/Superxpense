@@ -1,4 +1,5 @@
 import {
+  Alert,
   Platform,
   ScrollView,
   StatusBar,
@@ -7,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
 import SpendingSummary from '../../component/SpendingSummary';
 import StackedChart from '../../component/StackedChart';
@@ -16,7 +17,7 @@ import {Plus, Stars} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import {API} from '../../utilis/Constant';
+import {API, leanAppToken} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import BankCard from '../../component/BankCard';
@@ -26,6 +27,7 @@ import moment from 'moment';
 import LargestPurchaseCard from '../../component/LargestPurchaseCard';
 import SpendingChart from '../../component/SpendingChart';
 import FloatingChatButton from '../../component/FloatingChatButton';
+import LinkSDK from 'lean-react-native';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -62,7 +64,8 @@ const HomeScreen = ({navigation}) => {
   const [monthlySpending, setMonthlySpending] = useState(null);
   const [lastSpending, setLastSpending] = useState(null);
   const [budgetCategoryData, setBudgetCategoryData] = useState([]);
-
+  const [reconnectId, setReconnectId] = useState(null);
+  const Lean = useRef(null);
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
@@ -86,36 +89,13 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  // const leanConnection = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const userData = await getItem('userData');
-  //     const token = userData.data?.accessToken;
-  //     const data = await get(`${API.leanConnection}`, null, token);
-  //     setActiveData(data.data);
-  //     setBankName(data.data[0].bank_identifier);
-  //     const r = data.data;
-  //     const id = r[0].id;
-  //     setStateEntityId(id);
-
-  //     fetchTransactions();
-  //     setLoading(false);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     Alert.alert('Failed to load user data', error);
-  //   }
-  // };
-
   useFocusEffect(
     useCallback(() => {
       fetchAccounts();
-      //leanConnection();
     }, []),
   );
 
   const handleAccountPress = (account, bankID, bankName) => {
-    //console.log('Account pressed:', account);
-    //console.log('Bank Name:', bankName);
     navigation.navigate('BankTransaction', {
       accountId: account.accountId,
       accountBalance: account.accountBalance,
@@ -165,16 +145,33 @@ const HomeScreen = ({navigation}) => {
   const fetchBarGraph = async () => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
-     //console.log(token);
-     //console.log(month, year);
     try {
       const response = await get(
         `${API.incomeMonth}`,
         {month: month, year: year},
         token,
       );
-
-     
+      if (response.data.status === 'RECONNECT_REQUIRED') {
+        Alert.alert(
+          'Reconnect Required',
+          'Your bank connection has expired. Please reconnect.',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                console.log('reconnectId:', response.data.reconnectId);
+                setReconnectId(response.data.reconnectId);
+                // hitLeanApi();
+                Lean.current.reconnect({
+                  reconnect_id: response.data.reconnectId,
+                  // bank_identifier: 'LEANMB1_SAU',
+                });
+              },
+            },
+          ],
+        );
+        return;
+      }
 
       const {netWorthExpense} = response.data || {};
 
@@ -252,15 +249,6 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     fetchMonthlyExpense();
-  //     fetchBarGraph();
-  //     fetchMonthlyIncome();
-  //     fetchBudgetBycategory();
-  //   }, [month, year]),
-  // );
-
   useFocusEffect(
     useCallback(() => {
       const timeout = setTimeout(() => {
@@ -321,14 +309,6 @@ const HomeScreen = ({navigation}) => {
           <ScrollView
             contentContainerStyle={styles.safeView}
             showsVerticalScrollIndicator={false}>
-            {/* <Text
-            style={{
-              marginLeft: '37%',
-              marginTop: 10,
-              color: Colors.lightblack,
-            }}>
-            Coming Soon
-          </Text> */}
             <CalendarHeader
               currentDate={selectedDate}
               onDateChange={handleDateChange}
@@ -365,14 +345,6 @@ const HomeScreen = ({navigation}) => {
           <ScrollView
             contentContainerStyle={styles.safeView}
             showsVerticalScrollIndicator={false}>
-            {/* <Text
-            style={{
-              marginLeft: '37%',
-              marginTop: 10,
-              color: Colors.lightblack,
-            }}>
-            Coming Soon
-          </Text> */}
             <CalendarHeader
               currentDate={selectedDate}
               onDateChange={handleDateChange}
@@ -400,7 +372,6 @@ const HomeScreen = ({navigation}) => {
               showsVerticalScrollIndicator={false}>
               <Text style={styles.title}>Bank Connections</Text>
               {banksData.map((item, index) => {
-                //console.log('item:', item);
                 return (
                   <BankCard
                     key={index}
@@ -427,6 +398,24 @@ const HomeScreen = ({navigation}) => {
               </TouchableOpacity>
             </View>
           ))}
+        <LinkSDK
+          ref={Lean}
+          webViewProps={{
+            androidHardwareAccelerationDisabled: true,
+          }}
+          appToken={leanAppToken}
+          // customerId={customerID}
+          sandbox={true}
+          customization={{
+            theme_color: Colors.btnColor,
+            button_text_color: Colors.white,
+            button_border_radius: 50,
+            link_color: Colors.btnColor,
+          }}
+          callback={async response => {
+            console.log('responseeeeeeeeeeeeeeeeeee:', response);
+          }}
+        />
       </View>
       <FloatingChatButton navigation={navigation} />
     </>
