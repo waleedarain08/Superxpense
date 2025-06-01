@@ -71,6 +71,7 @@ const AccountsScreen = ({navigation}) => {
   };
 
   const handleAccountPress = (account, bankID, bankName) => {
+    console.log(customerID, leanToken, 'customerID, leanToken');
     if (account.status === 'RECONNECT_REQUIRED') {
       hitLeanApi();
       Alert.alert(
@@ -84,8 +85,7 @@ const AccountsScreen = ({navigation}) => {
               Lean.current.reconnect({
                 app_token: leanAppToken,
                 reconnect_id: account.reconnectId,
-                customer_id: customerID,
-                sandbox: true,
+                //customer_id: customerID,
                 access_token: leanToken,
               });
             },
@@ -207,8 +207,8 @@ const AccountsScreen = ({navigation}) => {
           webViewProps={{
             androidHardwareAccelerationDisabled: true,
           }}
-          customer_id={customerID}
-          access_token={leanToken}
+          customerId={customerID}
+          appToken={leanAppToken}
           sandbox={true}
           customization={{
             theme_color: Colors.btnColor,
@@ -217,6 +217,7 @@ const AccountsScreen = ({navigation}) => {
             link_color: Colors.btnColor,
           }}
           callback={async response => {
+            console.log('response:', response);
             if (response.status !== 'SUCCESS') {
               Alert.alert('Connection Failed', response.status);
             } else {
