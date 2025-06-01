@@ -34,9 +34,6 @@ const AccountsScreen = ({navigation}) => {
     try {
       const data = await get(`${API.bankAccounts}`, null, token);
       const rawBanks = data?.data || [];
-      if (data.data[0].accounts[0].status === 'RECONNECT_REQUIRED') {
-        setIsReconnect(true);
-      }
 
       setBanksData(rawBanks);
     } catch (error) {
@@ -47,6 +44,7 @@ const AccountsScreen = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       fetchAccounts();
+      hitLeanApi();
     }, []),
   );
 
@@ -73,7 +71,6 @@ const AccountsScreen = ({navigation}) => {
   const handleAccountPress = (account, bankID, bankName) => {
     console.log(customerID, leanToken, 'customerID, leanToken');
     if (account.status === 'RECONNECT_REQUIRED') {
-      hitLeanApi();
       Alert.alert(
         'Reconnect Required',
         'This account needs to be reconnected before you can view transactions.',
@@ -169,6 +166,26 @@ const AccountsScreen = ({navigation}) => {
               Handle your bank connection and see transactions in one place.
             </Text>
             {banksData.map((item, index) => {
+              const reconnectAccounts = item.accounts?.filter(
+                acc => acc.status === 'RECONNECT_REQUIRED',
+              );
+
+              const hasReconnect = reconnectAccounts.length > 0;
+
+              if (hasReconnect) {
+                console.log(
+                  `Bank: ${item.bankName} has ${reconnectAccounts.length} account(s) requiring reconnect:`,
+                );
+                reconnectAccounts.forEach(acc => {
+                  console.log({
+                    bankName: item.bankName,
+                    accountId: acc.accountId,
+                    reconnectId: acc.reconnectId,
+                    accountType: acc.accountType,
+                  });
+                });
+              }
+
               return (
                 <BankCard
                   key={index}
@@ -179,7 +196,7 @@ const AccountsScreen = ({navigation}) => {
                   accounts={item.accounts}
                   onPress={handleAccountPress}
                   deletePress={() => deletePress(item)}
-                  isReconnect={reconnect}
+                  isReconnect={hasReconnect}
                 />
               );
             })}

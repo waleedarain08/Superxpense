@@ -16,10 +16,11 @@ import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {API} from '../../utilis/Constant';
 import {post} from '../../utilis/Api';
-import {removeItem, setItem} from '../../utilis/StorageActions';
+import {getStringItem, removeItem, setItem} from '../../utilis/StorageActions';
 import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import PhoneInputCustom from '../../component/PhoneInputCustome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -83,10 +84,11 @@ const SignUpScreen = ({navigation}) => {
 
     const countryCode = error.countryCode;
     const mobileNumber = phoneNumber.trim();
-
+    const checkToken = await getStringItem('fcmToken');
     setLoading(true);
     await removeItem('userData');
-
+    console.log('checkToken', checkToken, 'Tokennnnnnnn');
+    
     try {
       const data = await post(API.signUp, {
         email,
@@ -94,8 +96,11 @@ const SignUpScreen = ({navigation}) => {
         name,
         mobileNumber,
         countryCode,
+        fcmToken: checkToken,
+        fcmPlatform: Platform.OS === 'ios' ? 'ios' : 'android',
       });
-      //console.log('SignUp Response:', data);
+      console.log('SignUp Response:', data);
+
       await setItem('userData', data);
       setName('');
       setEmail('');
