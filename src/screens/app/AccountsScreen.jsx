@@ -23,21 +23,23 @@ import LinkSDK from 'lean-react-native';
 
 const AccountsScreen = ({navigation}) => {
   const [banksData, setBanksData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [customerID, setCustomerID] = useState('');
+  const [leanToken, setLeanToken] = useState('');
+  const [reconnect, setIsReconnect] = useState(false);
   const Lean = useRef(null);
 
   const fetchAccounts = async () => {
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
     try {
-      setLoading(true);
       const data = await get(`${API.bankAccounts}`, null, token);
       const rawBanks = data?.data || [];
-      console.log(data, 'adsdsadas');
+      if (data.data[0].accounts[0].status === 'RECONNECT_REQUIRED') {
+        setIsReconnect(true);
+      }
 
       setBanksData(rawBanks);
     } catch (error) {
-      setLoading(false);
       console.log('Error fetching transactions:', error);
     }
   };
@@ -48,11 +50,29 @@ const AccountsScreen = ({navigation}) => {
     }, []),
   );
 
+  const hitLeanApi = async () => {
+    try {
+      const userData = await getItem('userData');
+      if (!userData || !userData.data?.accessToken || !userData.data?.id) {
+        console.error('Invalid user data');
+        return;
+      }
+
+      const token = userData.data?.accessToken;
+      const userId = userData.data.id;
+
+      const data = await get(`${API.leanCustomer}`, {userId: userId}, token);
+      const r = data.data;
+      setCustomerID(r.customerId);
+      setLeanToken(r.accessToken);
+    } catch (error) {
+      console.error('Failed to load user data or call API:', error);
+    }
+  };
+
   const handleAccountPress = (account, bankID, bankName) => {
     if (account.status === 'RECONNECT_REQUIRED') {
-      // console.log('Reconnect Required for account:', account.accountId);
-      // console.log('Reconnect ID:', account.reconnectId); // 👈 log reconnectId
-
+      hitLeanApi();
       Alert.alert(
         'Reconnect Required',
         'This account needs to be reconnected before you can view transactions.',
@@ -61,10 +81,12 @@ const AccountsScreen = ({navigation}) => {
           {
             text: 'Reconnect Now',
             onPress: () => {
-              console.log('reconnectId:', account.reconnectId);
               Lean.current.reconnect({
+                app_token: leanAppToken,
                 reconnect_id: account.reconnectId,
-                // bank_identifier: 'LEANMB1_SAU',
+                customer_id: customerID,
+                sandbox: true,
+                access_token: leanToken,
               });
             },
           },
@@ -84,11 +106,9 @@ const AccountsScreen = ({navigation}) => {
   const deletePress = async item => {
     console.log(item);
     const bankId = item.bankId;
-    console.log(bankId);
 
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
-    console.log(token);
 
     Alert.alert(
       'Delete Bank',
@@ -128,10 +148,7 @@ const AccountsScreen = ({navigation}) => {
       <View>
         <View style={styles.container}>
           <View style={styles.topRow}>
-            <TouchableOpacity style={styles.accountSelector}>
-              {/* <Text style={styles.accountText}>Demo Account</Text>
-              <Dropdown /> */}
-            </TouchableOpacity>
+            <TouchableOpacity style={styles.accountSelector}></TouchableOpacity>
 
             <View style={styles.actionButtons}>
               <TouchableOpacity
@@ -152,7 +169,6 @@ const AccountsScreen = ({navigation}) => {
               Handle your bank connection and see transactions in one place.
             </Text>
             {banksData.map((item, index) => {
-              //console.log('item:', item);
               return (
                 <BankCard
                   key={index}
@@ -163,6 +179,7 @@ const AccountsScreen = ({navigation}) => {
                   accounts={item.accounts}
                   onPress={handleAccountPress}
                   deletePress={() => deletePress(item)}
+                  isReconnect={reconnect}
                 />
               );
             })}
@@ -190,7 +207,8 @@ const AccountsScreen = ({navigation}) => {
           webViewProps={{
             androidHardwareAccelerationDisabled: true,
           }}
-          appToken={leanAppToken}
+          customer_id={customerID}
+          access_token={leanToken}
           sandbox={true}
           customization={{
             theme_color: Colors.btnColor,
@@ -199,7 +217,14 @@ const AccountsScreen = ({navigation}) => {
             link_color: Colors.btnColor,
           }}
           callback={async response => {
-            console.log('responseeeeeeeeeeeeeeeeeee:', response);
+            if (response.status !== 'SUCCESS') {
+              Alert.alert('Connection Failed', response.status);
+            } else {
+              // Alert.alert('Connection Failed', response.status);
+              console.log('response:', response);
+              setIsReconnect(false);
+              fetchAccounts();
+            }
           }}
         />
       </View>

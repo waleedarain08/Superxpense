@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
 import SpendingSummary from '../../component/SpendingSummary';
 import StackedChart from '../../component/StackedChart';
@@ -17,7 +17,7 @@ import {Plus, Stars} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import {API, leanAppToken} from '../../utilis/Constant';
+import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import BankCard from '../../component/BankCard';
@@ -27,7 +27,6 @@ import moment from 'moment';
 import LargestPurchaseCard from '../../component/LargestPurchaseCard';
 import SpendingChart from '../../component/SpendingChart';
 import FloatingChatButton from '../../component/FloatingChatButton';
-import LinkSDK from 'lean-react-native';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -64,8 +63,6 @@ const HomeScreen = ({navigation}) => {
   const [monthlySpending, setMonthlySpending] = useState(null);
   const [lastSpending, setLastSpending] = useState(null);
   const [budgetCategoryData, setBudgetCategoryData] = useState([]);
-  const [reconnectId, setReconnectId] = useState(null);
-  const Lean = useRef(null);
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
@@ -151,6 +148,7 @@ const HomeScreen = ({navigation}) => {
         {month: month, year: year},
         token,
       );
+
       if (response.data.status === 'RECONNECT_REQUIRED') {
         Alert.alert(
           'Reconnect Required',
@@ -159,13 +157,7 @@ const HomeScreen = ({navigation}) => {
             {
               text: 'OK',
               onPress: () => {
-                console.log('reconnectId:', response.data.reconnectId);
-                setReconnectId(response.data.reconnectId);
-                // hitLeanApi();
-                Lean.current.reconnect({
-                  reconnect_id: response.data.reconnectId,
-                  // bank_identifier: 'LEANMB1_SAU',
-                });
+                navigation.navigate('Accounts');
               },
             },
           ],
@@ -398,24 +390,6 @@ const HomeScreen = ({navigation}) => {
               </TouchableOpacity>
             </View>
           ))}
-        <LinkSDK
-          ref={Lean}
-          webViewProps={{
-            androidHardwareAccelerationDisabled: true,
-          }}
-          appToken={leanAppToken}
-          // customerId={customerID}
-          sandbox={true}
-          customization={{
-            theme_color: Colors.btnColor,
-            button_text_color: Colors.white,
-            button_border_radius: 50,
-            link_color: Colors.btnColor,
-          }}
-          callback={async response => {
-            console.log('responseeeeeeeeeeeeeeeeeee:', response);
-          }}
-        />
       </View>
       <FloatingChatButton navigation={navigation} />
     </>

@@ -12,6 +12,7 @@ const BankCard = ({
   logo,
   onPress,
   deletePress,
+  isReconnect,
 }) => {
   return (
     <View style={styles.card}>
@@ -24,9 +25,7 @@ const BankCard = ({
           <Text style={styles.bankTitle}>{bankName}</Text>
           <Text style={styles.bankBalance}>{totalBalance}</Text>
         </View>
-        {/* <TouchableOpacity>
-          <ThreeDots size={20} color="black" />
-        </TouchableOpacity> */}
+
         <TouchableOpacity style={styles.deleteIcon} onPress={deletePress}>
           <DeleteIcon size={15} color={Colors.white} />
         </TouchableOpacity>
@@ -61,9 +60,11 @@ const BankCard = ({
                     <Text style={styles.accountType}>
                       {account.accountType}
                     </Text>
-                    {/* <View style={styles.refreshIcon}>
-                      <Refresh size={10} color="green" />
-                    </View> */}
+                    {isReconnect && (
+                      <View style={styles.refreshIcon}>
+                        <Refresh size={10} color="green" />
+                      </View>
+                    )}
                   </View>
                 </View>
                 <View style={styles.accountRight}>
