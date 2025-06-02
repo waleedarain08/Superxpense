@@ -60,6 +60,8 @@ const SignInScreen = ({navigation}) => {
 
     try {
       const data = await post(API.logIn, {email, password});
+      console.log(data, 'data');
+
       const activeSub = data?.data?.activeSubscription;
       const productId = activeSub?.productId || '';
       await setStringItem('subscription', productId);
@@ -68,8 +70,7 @@ const SignInScreen = ({navigation}) => {
       //console.log('data', data);
       if (data?.data?.appCode) {
         Alert.alert('Login Failed', 'Your email is not verified');
-      } 
-      else if (
+      } else if (
         data?.data?.activeSubscription !== '' ||
         data?.data?.activeSubscription?.productId !== 'expired'
       ) {
@@ -84,7 +85,7 @@ const SignInScreen = ({navigation}) => {
     }
   };
 
-  const verifyFace = async (payload,signature) => {
+  const verifyFace = async (payload, signature) => {
     const userEmail = await getStringItem('userEmail');
     //console.log('userEmail', userEmail);
     //console.log('payload', payload);
@@ -118,19 +119,16 @@ const SignInScreen = ({navigation}) => {
   };
 
   const doBiometricLogin = async () => {
-
-    let epochTimeSeconds = Math.round((new Date()).getTime() / 1000).toString()
+    let epochTimeSeconds = Math.round(new Date().getTime() / 1000).toString();
     let payload = epochTimeSeconds + 'Superxpense';
     //console.log('payload', payload);
     const rnBiometrics = new ReactNativeBiometrics();
-    const { success, signature } = await rnBiometrics.createSignature(
-      {
-        promptMessage: 'Sign in',
-        payload,
-      },
-    );
+    const {success, signature} = await rnBiometrics.createSignature({
+      promptMessage: 'Sign in',
+      payload,
+    });
     //console.log('signature', signature);
-  
+
     if (!success) {
       Alert.alert(
         'Oops!',
@@ -138,19 +136,15 @@ const SignInScreen = ({navigation}) => {
       );
       return;
     }
-  
-   const { status, message } = await verifyFace(
-      payload,
-      signature
-    );
-  
+
+    const {status, message} = await verifyFace(payload, signature);
+
     if (status !== 'success') {
       Alert.alert('Oops!', message);
       return;
     }
-  }
- 
- 
+  };
+
   const biometric = async () => {
     const rnBiometrics = new ReactNativeBiometrics();
     const {available} = await rnBiometrics.isSensorAvailable();
@@ -163,17 +157,15 @@ const SignInScreen = ({navigation}) => {
       return;
     }
 
-    rnBiometrics.biometricKeysExist()
-    .then((resultObject) => {
-    const { keysExist } = resultObject
+    rnBiometrics.biometricKeysExist().then(resultObject => {
+      const {keysExist} = resultObject;
 
-    if (keysExist) {
-      doBiometricLogin();
-    } else {
-      Alert.alert('Please register your face ID first from settings');
-    }
-    })
-    
+      if (keysExist) {
+        doBiometricLogin();
+      } else {
+        Alert.alert('Please register your face ID first from settings');
+      }
+    });
   };
 
   return (

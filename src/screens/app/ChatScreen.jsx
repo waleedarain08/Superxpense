@@ -5,30 +5,20 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Image,
   ActivityIndicator,
   Platform,
-  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   StatusBar,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {
-  AddExpense,
-  ChatHeader,
-  Plan,
-  SetBudget,
-  ViewSummary,
-  Voice,
-} from '../../assets/svgs';
 import {VectorIcon} from '../../icons';
 import {get, post} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import {API} from '../../utilis/Constant';
+import DocumentPicker from 'react-native-document-picker';
 
 const HomeScreen = ({navigation}) => {
   const [chats, setChats] = useState([]);
@@ -88,53 +78,215 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  const handleSend = async () => {
-    if (!message.trim()) return;
+  const handleDocumentPick = async () => {
+    try {
+      const file = await DocumentPicker.pickSingle({
+        type: DocumentPicker.types.allFiles,
+      });
+
+      await handleSendMessage(file);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('User cancelled document picker');
+      } else {
+        console.error('Document pick error:', err);
+      }
+    }
+  };
+
+  // const handleDocumentPick = async () => {
+  //   try {
+  //     const res = await DocumentPicker.pickSingle({
+  //       type: DocumentPicker.types.allFiles,
+  //     });
+
+  //     const userData = await getItem('userData');
+  //     const token = userData.data?.accessToken;
+
+  //     const formData = new FormData();
+  //     formData.append('file', {
+  //       uri: res.uri,
+  //       name: res.name,
+  //       type: res.type || 'application/octet-stream',
+  //     });
+
+  //     setSendMessageLoading(true);
+
+  //     setChats(prevChats => [
+  //       ...prevChats,
+  //       {
+  //         message: `Sending document: ${res.name}`,
+  //         isUser: true,
+  //         timestamp: new Date().toLocaleTimeString(),
+  //       },
+  //       {
+  //         message: 'Thinking...',
+  //         isUser: false,
+  //         isThinking: true,
+  //         timestamp: new Date().toLocaleTimeString(),
+  //       },
+  //     ]);
+
+  //     const response = await fetch(API.uploadDocument, {
+  //       method: 'POST',
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       body: formData,
+  //     });
+
+  //     const data = await response.json();
+
+  //     // Remove thinking and show response
+  //     setChats(prevChats => {
+  //       const newChats = prevChats.filter(chat => !chat.isThinking);
+  //       return [
+  //         ...newChats,
+  //         {
+  //           message: data.message || 'Document uploaded successfully.',
+  //           isUser: false,
+  //           timestamp: new Date().toLocaleTimeString(),
+  //         },
+  //       ];
+  //     });
+  //   } catch (err) {
+  //     if (DocumentPicker.isCancel(err)) {
+  //       console.log('User cancelled document picker');
+  //     } else {
+  //       console.error('Document upload error:', err);
+  //       setChats(prevChats => prevChats.filter(chat => !chat.isThinking));
+  //     }
+  //   } finally {
+  //     setSendMessageLoading(false);
+  //   }
+  // };
+
+  const handleSendMessage = async (file = null) => {
+    if (!message.trim() && !file) return;
+
     try {
       setSendMessageLoading(true);
-
-      setMessage('');
       const userData = await getItem('userData');
       const token = userData.data?.accessToken;
 
-      // Add user message and thinking message
+      const timestamp = new Date().toLocaleTimeString();
+
+      // Add user message or file-sending indicator
       setChats(prevChats => [
         ...prevChats,
         {
-          message: message,
+          message: file ? `Sending document: ${file.name}` : message,
           isUser: true,
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp,
         },
         {
           message: 'Thinking...',
           isUser: false,
           isThinking: true,
-          timestamp: new Date().toLocaleTimeString(),
+          timestamp,
         },
       ]);
 
-      const response = await post(`${API.createChat}`, {query: message}, token);
+      let formData;
+      let headers;
 
-      // Remove thinking message and add bot response
+      if (file) {
+        formData = new FormData();
+        formData.append('file', {
+          uri: file.uri,
+          name: file.name,
+          type: file.type || 'application/octet-stream',
+        });
+        formData.append('query', message); // optionally include the message too
+        headers = {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        };
+      }
+
+      const response = await fetch(API.createChat, {
+        method: 'POST',
+        headers: file
+          ? headers
+          : {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+        body: file ? formData : JSON.stringify({query: message}),
+      });
+
+      const data = await response.json();
+
+      // Remove thinking and show bot reply
       setChats(prevChats => {
         const newChats = prevChats.filter(chat => !chat.isThinking);
         return [
           ...newChats,
           {
-            message: response.data,
+            message: data.message || 'Received response.',
             isUser: false,
             timestamp: new Date().toLocaleTimeString(),
           },
         ];
       });
-    } catch (error) {
-      console.error('Error sending message:', error);
-      // Remove thinking message on error
+
+      setMessage('');
+    } catch (err) {
+      console.error('Send error:', err);
       setChats(prevChats => prevChats.filter(chat => !chat.isThinking));
     } finally {
       setSendMessageLoading(false);
     }
   };
+
+  // const handleSend = async () => {
+  //   if (!message.trim()) return;
+  //   try {
+  //     setSendMessageLoading(true);
+
+  //     setMessage('');
+  //     const userData = await getItem('userData');
+  //     const token = userData.data?.accessToken;
+
+  //     // Add user message and thinking message
+  //     setChats(prevChats => [
+  //       ...prevChats,
+  //       {
+  //         message: message,
+  //         isUser: true,
+  //         timestamp: new Date().toLocaleTimeString(),
+  //       },
+  //       {
+  //         message: 'Thinking...',
+  //         isUser: false,
+  //         isThinking: true,
+  //         timestamp: new Date().toLocaleTimeString(),
+  //       },
+  //     ]);
+
+  //     const response = await post(`${API.createChat}`, {query: message}, token);
+
+  //     // Remove thinking message and add bot response
+  //     setChats(prevChats => {
+  //       const newChats = prevChats.filter(chat => !chat.isThinking);
+  //       return [
+  //         ...newChats,
+  //         {
+  //           message: response.data,
+  //           isUser: false,
+  //           timestamp: new Date().toLocaleTimeString(),
+  //         },
+  //       ];
+  //     });
+  //   } catch (error) {
+  //     console.error('Error sending message:', error);
+  //     // Remove thinking message on error
+  //     setChats(prevChats => prevChats.filter(chat => !chat.isThinking));
+  //   } finally {
+  //     setSendMessageLoading(false);
+  //   }
+  // };
 
   return (
     <KeyboardAvoidingView
@@ -206,7 +358,7 @@ const HomeScreen = ({navigation}) => {
         </ScrollView>
 
         {/* Bottom Input Bar */}
-        <View style={styles.inputBar}>
+        {/* <View style={styles.inputBar}>
           <TextInput
             style={styles.input}
             placeholder="Ask me Anything"
@@ -215,6 +367,68 @@ const HomeScreen = ({navigation}) => {
             onChangeText={setMessage}
           />
           <TouchableOpacity onPress={handleSend}>
+            {sendMessageLoading ? (
+              <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+              <VectorIcon
+                name="send"
+                color={Colors.primary}
+                size={20}
+                type="Ionicons"
+              />
+            )}
+          </TouchableOpacity>
+        </View> */}
+        {/* <View style={styles.inputBar}>
+          <TouchableOpacity
+            onPress={handleDocumentPick}
+            style={styles.iconStyle}>
+            <VectorIcon
+              name="document-attach"
+              type="Ionicons"
+              size={22}
+              color={Colors.primary}
+            />
+          </TouchableOpacity>
+          <TextInput
+            style={styles.input}
+            placeholder="Ask me Anything"
+            placeholderTextColor="#999"
+            value={message}
+            onChangeText={setMessage}
+          />
+          <TouchableOpacity onPress={handleSend}>
+            {sendMessageLoading ? (
+              <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+              <VectorIcon
+                name="send"
+                color={Colors.primary}
+                size={20}
+                type="Ionicons"
+              />
+            )}
+          </TouchableOpacity>
+        </View> */}
+        <View style={styles.inputBar}>
+          <TouchableOpacity
+            onPress={handleDocumentPick}
+            style={styles.iconStyle}>
+            <VectorIcon
+              name="document-attach"
+              type="Ionicons"
+              size={22}
+              color={Colors.primary}
+            />
+          </TouchableOpacity>
+          <TextInput
+            style={styles.input}
+            placeholder="Ask me Anything"
+            placeholderTextColor="#999"
+            value={message}
+            onChangeText={setMessage}
+          />
+          <TouchableOpacity onPress={() => handleSendMessage()}>
             {sendMessageLoading ? (
               <ActivityIndicator size="small" color={Colors.primary} />
             ) : (
@@ -361,6 +575,9 @@ const styles = StyleSheet.create({
   thinkingText: {
     fontStyle: 'italic',
     color: Colors.lightTxtColor,
+  },
+  iconStyle: {
+    marginRight: 8,
   },
 });
 

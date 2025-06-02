@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,16 @@ import {FontFamily} from '../../utilis/Fonts';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
-import {getItem} from '../../utilis/StorageActions';
+import {getItem, getStringItem} from '../../utilis/StorageActions';
 
 const ActiveSubscriptionScreen = ({navigation}) => {
+  const [subscription, setSubscription] = useState('');
+  const [userData, setUserData] = useState('');
+
   useEffect(() => {
     const getUserData = async () => {
       const userData = await getItem('userData');
+      setUserData(userData);
       const token = userData?.data?.accessToken;
       try {
         const data = await get(`${API.getUserData}`, {}, token);
@@ -31,6 +35,23 @@ const ActiveSubscriptionScreen = ({navigation}) => {
 
     getUserData();
   }, [navigation]);
+
+  useEffect(() => {
+    const getSubscription = async () => {
+      const subscriptionn = await getStringItem('subscription');
+      setSubscription(subscriptionn);
+    };
+    getSubscription();
+  }, [navigation]);
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth is zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2); // Get last 2 digits
+    return `${month}/${day}/${year}`;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -50,9 +71,17 @@ const ActiveSubscriptionScreen = ({navigation}) => {
           source={require('../../assets/images/cardBackground.png')} // Update the path based on your project structure
           style={styles.card}
           imageStyle={styles.cardImage}>
-          <Text style={styles.planLabel}>Basic Plan</Text>
-          <Text style={styles.planTitle}>Free Access</Text>
-          <Text style={styles.trialText}>7 Days free trial</Text>
+          <Text style={styles.planLabel}>
+            {subscription === 'trial' ? 'Basic Plan' : `Premium Plan`}
+          </Text>
+          <Text style={styles.planTitle}>
+            {subscription === 'trial' ? `Free Access` : `Premium Access`}
+          </Text>
+          <Text style={styles.trialText}>
+            {subscription === 'trial'
+              ? `7 Days free trial`
+              : `Monthly Subscription`}
+          </Text>
         </ImageBackground>
 
         {/* Billing Info Section */}
@@ -60,15 +89,24 @@ const ActiveSubscriptionScreen = ({navigation}) => {
         <View style={styles.billingCard}>
           <View style={styles.billingRow}>
             <Text style={styles.billingLabelRed}>Membership</Text>
-            <Text style={styles.billingValue}>Trial</Text>
+            <Text style={styles.billingValue}>
+              {subscription?.toUpperCase()}
+            </Text>
           </View>
           <View style={styles.billingRow}>
             <Text style={styles.billingLabel}>Amount</Text>
-            <Text style={styles.billingValue}>0.00 AED</Text>
+            <Text style={styles.billingValue}>
+              {userData?.data?.activeSubscription.amount
+                ? userData?.data?.activeSubscription.amount
+                : `0.00`}{' '}
+              AED
+            </Text>
           </View>
           <View style={styles.billingRow}>
             <Text style={styles.billingLabel}>Next Billing Date</Text>
-            <Text style={styles.billingValue}>20/05/2025</Text>
+            <Text style={styles.billingValue}>
+              {formatDate(userData?.data?.activeSubscription.endDate)}
+            </Text>
           </View>
         </View>
 
