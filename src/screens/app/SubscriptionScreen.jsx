@@ -7,12 +7,12 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Platform
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
 import SubscriptionModal from '../../component/SubscriptionModal';
 import * as RNIap from 'react-native-iap';
-import {Platform} from 'react-native';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 import {
@@ -29,17 +29,13 @@ const SubscriptionScreen = ({navigation}) => {
     const initIAP = async () => {
       try {
         await RNIap.initConnection();
-        const items = await RNIap.getSubscriptions({skus: productIds});
-        console.log('subscriptions:', items);
-        setProducts(items);
-        // setProducts([{
-        // productId: 'yearly',
-        // localizedPrice: 'AED 119.99',
-        // },
-        // {
-        // productId: 'monthly',
-        // localizedPrice: 'AED 14.99',
-        // }]);
+        if (Platform.OS === 'ios') {
+          const items = await RNIap.getSubscriptions({skus: productIds});
+          console.log('subscriptions:', items);
+          setProducts(items);
+        } else if (Platform.OS === 'android') {
+          //android here
+        }
       } catch (err) {
         console.log(err);
       }
@@ -64,36 +60,40 @@ const SubscriptionScreen = ({navigation}) => {
       );
       return;
     }
-    
 
-    try {
-      const purchase = await RNIap.requestPurchase({
-        sku: selectedProduct.productId,
-      });
-      const receipt = purchase.transactionReceipt;
-      setModalVisible(false);
-      navigation.navigate('Main');
-      //console.log('Purchase successfull apple', purchase);
-      //Alert.alert('Purchase successful:', purchase);
-      //billing/verify-subscription here
-      const response = await post(
-        `${API.billingSubscription}`,
-        {
-          platform: 'ios',
-          receipt: receipt,
-          subscriptionId: selectedProduct.productId,
-        },
-        token,
-      );
-      console.log('data', response);
-      
-    } catch (err) {
-      console.warn('Purchase failed:', err);
-      if (err.code !== 'E_USER_CANCELLED') {
-        //Alert.alert('Purchase failed:', err);
+    if(Platform.OS === 'ios') {
+    
+      try {
+        const purchase = await RNIap.requestPurchase({
+          sku: selectedProduct.productId,
+        });
+        const receipt = purchase.transactionReceipt;
+        console.log('Purchase receipt:', receipt);
+        console.log('subscriptionId:', selectedProduct.productId);
+        console.log('Token:', token);
+        const response = await post(
+          `${API.billingSubscription}`,
+          {
+            platform: 'apple',
+            receipt: receipt,
+            subscriptionId: selectedProduct.productId,
+          },
+          token,
+        );
+        console.log('data', response);
+        Alert.alert(
+          'Purchase Successful',
+          'Your subscription has been successfully activated.',
+        );
+        setModalVisible(false);
+        navigation.navigate('Main');
+      } catch (err) {
+        console.warn('Purchase failed:', err);
+        if (err.code !== 'E_USER_CANCELLED') {
+          Alert.alert('Purchase failed:', err);
+        }
       }
-    }
-    //Alert.alert('in-app purchase approval pending in your developer account');
+  }
   };
 
   const FeatureItem = ({text}) => (

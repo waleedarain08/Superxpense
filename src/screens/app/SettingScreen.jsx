@@ -62,7 +62,7 @@ const SettingScreen = ({navigation}) => {
             <SettingItem
               title="Enable Biometric"
               screenName="EnableBiometric"
-              IconComponent={<Help />}
+              IconComponent={<Shield />}
             />
             <SettingItem
               title="Sync Contacts"
@@ -72,7 +72,7 @@ const SettingScreen = ({navigation}) => {
             <SettingItem
               title="Gmail Integration"
               screenName="GmailIntegration"
-              IconComponent={<Globe />}
+              IconComponent={<Bulb />}
             />
           </View>
 
@@ -88,7 +88,7 @@ const SettingScreen = ({navigation}) => {
           <View style={styles.card}>
             <SettingItem
               title="Help & Support"
-              IconComponent={<Help />}
+              IconComponent={<Flag />}
               screenName="Help"
             />
             {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
@@ -297,7 +297,11 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         Alert.alert('Success', 'Gmail Integrated Successfully');
       }
     } catch (error) {
-      console.log('Error fetching user data:', error);
+      Alert.alert(
+        'Error',
+        'Failed to integrate Gmail. Please try again later.',
+      );
+      console.log('Gmail Integration Error:', error);
     }
   };
 
