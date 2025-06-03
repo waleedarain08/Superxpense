@@ -97,7 +97,7 @@ const SignInScreen = ({navigation}) => {
         payload: payload,
         signature: signature,
       });
-      console.log('api response', data);
+      //console.log('api response', data);
       const activeSub = data?.data?.activeSubscription;
       const productId = activeSub?.productId || '';
       await setStringItem('subscription', productId);

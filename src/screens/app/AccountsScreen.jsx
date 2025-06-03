@@ -14,7 +14,7 @@ import {Colors} from '../../utilis/Colors';
 import {Plus} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 
-import {API, leanAppToken} from '../../utilis/Constant';
+import {API, leanAppToken, isSandbox} from '../../utilis/Constant';
 import {del, get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import BankCard from '../../component/BankCard';
@@ -69,7 +69,7 @@ const AccountsScreen = ({navigation}) => {
   };
 
   const handleAccountPress = (account, bankID, bankName) => {
-    console.log(customerID, leanToken, 'customerID, leanToken');
+    //console.log(customerID, leanToken, 'customerID, leanToken');
     if (account.status === 'RECONNECT_REQUIRED') {
       Alert.alert(
         'Reconnect Required',
@@ -226,7 +226,7 @@ const AccountsScreen = ({navigation}) => {
           }}
           customerId={customerID}
           appToken={leanAppToken}
-          sandbox={true}
+          sandbox={isSandbox}
           customization={{
             theme_color: Colors.btnColor,
             button_text_color: Colors.white,

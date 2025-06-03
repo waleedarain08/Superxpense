@@ -52,6 +52,7 @@ const BankTransactionScreen = ({navigation, route}) => {
   const fetchTransactions = async () => {
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
+    console.log('Token:', token);
     console.log(
       'accounts data',
       accountId,

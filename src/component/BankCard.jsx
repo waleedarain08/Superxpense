@@ -23,7 +23,7 @@ const BankCard = ({
         </View>
         <View style={styles.bankInfo}>
           <Text style={styles.bankTitle}>{bankName}</Text>
-          <Text style={styles.bankBalance}>{totalBalance}</Text>
+          <Text style={styles.bankBalance}>{totalBalance==='null AED'?'Reconnect Required':totalBalance}</Text>
         </View>
 
         <TouchableOpacity style={styles.deleteIcon} onPress={deletePress}>
@@ -62,7 +62,7 @@ const BankCard = ({
                     </Text>
                     {isReconnect && (
                       <View style={styles.refreshIcon}>
-                        <Refresh size={10} color="green" />
+                        <Refresh size={12} color="green" />
                       </View>
                     )}
                   </View>
