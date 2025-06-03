@@ -49,7 +49,12 @@ const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
     '',
   );
 
-  const lastPoint = points[points.length - 1] || { x: 0, y: 0, date: '', amount: 0 };
+  const lastPoint = points[points.length - 1] || {
+    x: 0,
+    y: 0,
+    date: '',
+    amount: 0,
+  };
 
   const tooltipWidth = 120; // Estimate or measure the actual width of tooltip
   const clampedLeft = Math.min(
@@ -147,6 +152,14 @@ const SpendingChart = ({data = [], monthlySpending, lastSpending}) => {
               ${monthlySpending - lastSpending}
             </Text>{' '}
             more than last month
+          </Text>
+        ) : lastSpending > monthlySpending ? (
+          <Text style={styles.footerText}>
+            You’ve spent{' '}
+            <Text style={{fontWeight: '600'}}>
+              ${Math.abs(lastSpending - monthlySpending).toFixed(2)}
+            </Text>{' '}
+            less than last month
           </Text>
         ) : (
           <Text style={styles.footerText}>No comparison to show</Text>
