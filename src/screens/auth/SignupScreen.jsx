@@ -87,7 +87,7 @@ const SignUpScreen = ({navigation}) => {
     const checkToken = await getStringItem('fcmToken');
     setLoading(true);
     await removeItem('userData');
-    console.log('checkToken', checkToken, 'Tokennnnnnnn');
+    //console.log('checkToken', checkToken, 'Tokennnnnnnn');
     
     try {
       const data = await post(API.signUp, {
@@ -99,7 +99,7 @@ const SignUpScreen = ({navigation}) => {
         fcmToken: checkToken,
         fcmPlatform: Platform.OS === 'ios' ? 'ios' : 'android',
       });
-      console.log('SignUp Response:', data);
+      ///console.log('SignUp Response:', data);
 
       await setItem('userData', data);
       setName('');

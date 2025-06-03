@@ -45,18 +45,18 @@ const HelpScreen = ({navigation}) => {
         <View style={styles.infoCard}>
           <Icon name="email" size={24} color="#007aff" style={styles.icon} />
           <Text style={styles.infoText} onPress={handleEmail}>
-            support@superxpense.com
+            info@superxpense.com
           </Text>
         </View>
 
         <View style={styles.infoCard}>
           <Icon name="phone" size={24} color="#34c759" style={styles.icon} />
           <Text style={styles.infoText} onPress={handlePhone}>
-            +971 5507895
+            +971 50 171 0513
           </Text>
         </View>
 
-        <View style={styles.infoCard}>
+        {/* <View style={styles.infoCard}>
           <Icon
             name="location-on"
             size={24}
@@ -66,7 +66,7 @@ const HelpScreen = ({navigation}) => {
           <Text style={styles.infoText} onPress={handleAddress}>
             123 Main Street, City, Dubai
           </Text>
-        </View>
+        </View> */}
 
         <Text style={styles.note}>
           We're here to help! Reach out via any method above.
@@ -114,10 +114,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 15,
     width: '90%',
-    shadowColor: '#000',
+    shadowColor: '#aeaeae',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,

@@ -13,7 +13,7 @@ export async function requestUserPermission() {
 
 const getFcmToken = async () => {
   let checkToken = await AsyncStorage.getItem('fcmToken');
-  console.log(checkToken, 'Tokennnnnnnn');
+  //console.log(checkToken, 'Tokennnnnnnn');
 
   if (!checkToken) {
     try {
