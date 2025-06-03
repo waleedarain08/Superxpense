@@ -23,7 +23,7 @@ const BankCard = ({
         </View>
         <View style={styles.bankInfo}>
           <Text style={styles.bankTitle}>{bankName}</Text>
-          <Text style={styles.bankBalance}>{totalBalance==='null AED'?'Reconnect Required':totalBalance}</Text>
+          <Text style={styles.bankBalance}>{totalBalance==='null AED'?'Session Expired':totalBalance}</Text>
         </View>
 
         <TouchableOpacity style={styles.deleteIcon} onPress={deletePress}>
@@ -63,6 +63,7 @@ const BankCard = ({
                     {isReconnect && (
                       <View style={styles.refreshIcon}>
                         <Refresh size={12} color="green" />
+                        <Text style={{fontSize:12}}>Reconnect</Text>
                       </View>
                     )}
                   </View>
@@ -180,12 +181,13 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   refreshIcon: {
-    width: 20,
+    width: 90,
     height: 20,
     borderRadius: 9,
     backgroundColor: Colors.lightestGreen,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   accountRight: {
     flexDirection: 'row',
