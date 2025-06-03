@@ -149,21 +149,21 @@ const HomeScreen = ({navigation}) => {
         token,
       );
       console.log('Bar graph response:', response);
-      // if (response.data.status === 'RECONNECT_REQUIRED') {
-      //   Alert.alert(
-      //     'Reconnect Required',
-      //     'Your bank connection has expired. Please reconnect.',
-      //     [
-      //       {
-      //         text: 'OK',
-      //         onPress: () => {
-      //           navigation.navigate('Accounts');
-      //         },
-      //       },
-      //     ],
-      //   );
-      //   return;
-      // }
+      if (response.data.status === 'RECONNECT_REQUIRED') {
+        Alert.alert(
+          'Reconnect Required',
+          'Your bank connection has expired. Please reconnect.',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                navigation.navigate('Accounts');
+              },
+            },
+          ],
+        );
+        return;
+      }
 
       const {netWorthExpense} = response.data || {};
 

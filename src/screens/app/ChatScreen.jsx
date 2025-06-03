@@ -224,7 +224,7 @@ const HomeScreen = ({navigation}) => {
         return [
           ...newChats,
           {
-            message: data.message || 'Received response.',
+            message: data.data || 'Received response.',
             isUser: false,
             timestamp: new Date().toLocaleTimeString(),
           },
@@ -357,8 +357,6 @@ const HomeScreen = ({navigation}) => {
           )}
         </ScrollView>
 
-        
-
         {/* Bottom Input Bar */}
         <View style={styles.inputBar}>
           <TextInput
@@ -380,32 +378,37 @@ const HomeScreen = ({navigation}) => {
               />
             )}
           </TouchableOpacity>
-          <View style={{flexDirection: 'row', alignItems: 'center', marginHorizontal: 6, marginBottom: 8}}>
-          <TouchableOpacity
-            onPress={handleDocumentPick}
-            style={[
-              styles.iconStyle,
-              {
-                backgroundColor: Colors.lightestGreen,
-                borderRadius: 100,
-                padding: 6,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.15,
-                shadowRadius: 2,
-                elevation: 2,
-              },
-            ]}>
-            <VectorIcon
-              name="document-attach"
-              type="Ionicons"
-              size={22}
-              color={Colors.background}
-            />
-          </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginHorizontal: 6,
+              marginBottom: 8,
+            }}>
+            <TouchableOpacity
+              onPress={handleDocumentPick}
+              style={[
+                styles.iconStyle,
+                {
+                  backgroundColor: Colors.lightestGreen,
+                  borderRadius: 100,
+                  padding: 6,
+                  shadowColor: '#000',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.15,
+                  shadowRadius: 2,
+                  elevation: 2,
+                },
+              ]}>
+              <VectorIcon
+                name="document-attach"
+                type="Ionicons"
+                size={22}
+                color={Colors.background}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        </View>
-        
       </View>
     </KeyboardAvoidingView>
   );
@@ -544,7 +547,7 @@ const styles = StyleSheet.create({
   iconStyle: {
     marginRight: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.15,
     shadowRadius: 2,
     elevation: 2,
