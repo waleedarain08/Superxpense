@@ -64,7 +64,7 @@ const BankTransactionScreen = ({navigation, route}) => {
       setLoading(true);
       const data = await get(
         `${API.tansActions}`,
-        {accountId: accountId, entityId: entityId},
+        {accountId: accountId, entityId: entityId,page:1,size:10},
         token,
       );
 
@@ -169,7 +169,7 @@ const BankTransactionScreen = ({navigation, route}) => {
         </View>
         {loading ? (
           <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="large" color="#00B67A" />
+            <Text style={styles.loadingText}>Fetching Transactions...</Text>
           </View>
         ) : fetchedTransactions.length > 0 ? (
           fetchedTransactions
