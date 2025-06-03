@@ -18,7 +18,7 @@ import {Colors} from '../../utilis/Colors';
 import StepperHeader from '../../component/StepperHeader';
 import {FontFamily} from '../../utilis/Fonts';
 import LinkSDK from 'lean-react-native';
-import {API,leanAppToken} from '../../utilis/Constant';
+import {API,leanAppToken,isSandbox} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
 import {getItem, setItem} from '../../utilis/StorageActions';
 import BankModal from '../../component/BankModal';
@@ -105,7 +105,7 @@ const IssuingCountryScreen = ({navigation}) => {
   };
 
   const connectLean = (r,bankIdentifier) => {
-    //console.log(bankIdentifier, 'bankIdentifier');
+    //console.log(bankIdentifier, r);
     if (Lean.current) {
       Lean.current.connect({
         customer_id: r.customerId,
@@ -245,7 +245,7 @@ const IssuingCountryScreen = ({navigation}) => {
           }}
           appToken={leanAppToken} 
           customerId={customerID}
-          sandbox={true}
+          sandbox={isSandbox}
           customization={{
             theme_color: Colors.btnColor,
             button_text_color: Colors.white,
@@ -253,6 +253,7 @@ const IssuingCountryScreen = ({navigation}) => {
             link_color: Colors.btnColor,
           }}
           callback={async response => {
+            console.log('Lean response:', response);
             setLoading(false);
             if (response.status !== 'SUCCESS') {
               Alert.alert('Connection Failed', response.status);
