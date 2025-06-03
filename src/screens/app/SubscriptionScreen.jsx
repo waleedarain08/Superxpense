@@ -143,7 +143,7 @@ const SubscriptionScreen = ({navigation}) => {
 
         <View style={styles.priceContainer}>
           <Text style={styles.priceText}>119.99 AED / year</Text>
-          <Text style={styles.subText}>14.99 AED / month, cancel anytime</Text>
+          <Text style={styles.subText}>14.99 AED / month</Text>
         </View>
 
         <TouchableOpacity

@@ -48,8 +48,8 @@ const ActiveSubscriptionScreen = ({navigation}) => {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth is zero-based
     const day = String(date.getDate()).padStart(2, '0');
-    const year = String(date.getFullYear()).slice(-2); // Get last 2 digits
-    return `${month}/${day}/${year}`;
+    const year = String(date.getFullYear()); // Get last 2 digits
+    return `${day}/${month}/${year}`;
   }
 
   return (
@@ -78,9 +78,8 @@ const ActiveSubscriptionScreen = ({navigation}) => {
             {subscription === 'trial' ? `Free Access` : `Premium Access`}
           </Text>
           <Text style={styles.trialText}>
-            {subscription === 'trial'
-              ? `7 Days free trial`
-              : `Monthly Subscription`}
+            {`${subscription?.toUpperCase()} Subscription`}
+            
           </Text>
         </ImageBackground>
 

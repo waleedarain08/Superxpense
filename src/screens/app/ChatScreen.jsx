@@ -357,70 +357,10 @@ const HomeScreen = ({navigation}) => {
           )}
         </ScrollView>
 
+        
+
         {/* Bottom Input Bar */}
-        {/* <View style={styles.inputBar}>
-          <TextInput
-            style={styles.input}
-            placeholder="Ask me Anything"
-            placeholderTextColor="#999"
-            value={message}
-            onChangeText={setMessage}
-          />
-          <TouchableOpacity onPress={handleSend}>
-            {sendMessageLoading ? (
-              <ActivityIndicator size="small" color={Colors.primary} />
-            ) : (
-              <VectorIcon
-                name="send"
-                color={Colors.primary}
-                size={20}
-                type="Ionicons"
-              />
-            )}
-          </TouchableOpacity>
-        </View> */}
-        {/* <View style={styles.inputBar}>
-          <TouchableOpacity
-            onPress={handleDocumentPick}
-            style={styles.iconStyle}>
-            <VectorIcon
-              name="document-attach"
-              type="Ionicons"
-              size={22}
-              color={Colors.primary}
-            />
-          </TouchableOpacity>
-          <TextInput
-            style={styles.input}
-            placeholder="Ask me Anything"
-            placeholderTextColor="#999"
-            value={message}
-            onChangeText={setMessage}
-          />
-          <TouchableOpacity onPress={handleSend}>
-            {sendMessageLoading ? (
-              <ActivityIndicator size="small" color={Colors.primary} />
-            ) : (
-              <VectorIcon
-                name="send"
-                color={Colors.primary}
-                size={20}
-                type="Ionicons"
-              />
-            )}
-          </TouchableOpacity>
-        </View> */}
         <View style={styles.inputBar}>
-          <TouchableOpacity
-            onPress={handleDocumentPick}
-            style={styles.iconStyle}>
-            <VectorIcon
-              name="document-attach"
-              type="Ionicons"
-              size={22}
-              color={Colors.primary}
-            />
-          </TouchableOpacity>
           <TextInput
             style={styles.input}
             placeholder="Ask me Anything"
@@ -440,7 +380,32 @@ const HomeScreen = ({navigation}) => {
               />
             )}
           </TouchableOpacity>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginHorizontal: 6, marginBottom: 8}}>
+          <TouchableOpacity
+            onPress={handleDocumentPick}
+            style={[
+              styles.iconStyle,
+              {
+                backgroundColor: Colors.lightestGreen,
+                borderRadius: 100,
+                padding: 6,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 2,
+                elevation: 2,
+              },
+            ]}>
+            <VectorIcon
+              name="document-attach"
+              type="Ionicons"
+              size={22}
+              color={Colors.background}
+            />
+          </TouchableOpacity>
         </View>
+        </View>
+        
       </View>
     </KeyboardAvoidingView>
   );
@@ -520,7 +485,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 30,
     marginHorizontal: 16,
-    marginBottom: Platform.OS === 'ios' ? 20 : 16,
+    marginBottom: Platform.OS === 'ios' ? 26 : 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -536,13 +501,13 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     color: '#333',
   },
-  iconStyle: {
-    height: 28,
-    width: 32,
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // iconStyle: {
+  //   height: 28,
+  //   width: 32,
+  //   borderRadius: 100,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   quickAction: {
     width: '47%',
     backgroundColor: Colors.white,
@@ -578,6 +543,11 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     marginRight: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 2,
+    elevation: 2,
   },
 });
 
