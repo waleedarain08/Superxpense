@@ -1,4 +1,4 @@
-//export const baseUrl = 'https://superxpnsebe.cntxt.tools/'; // production
+//export const baseUrl = 'https://superxpnsebe.prod.cntxt.tools/'; // production
 export const baseUrl = 'https://superxpnsebe.dev.cntxt.tools/'; //development
 export const leanAppToken = '9c7c7f5f-5258-4b49-a498-dba6375a8f86'; // production
 //export const leanAppToken = '6dda512f-8201-488a-9884-ae7236615282'; // development
