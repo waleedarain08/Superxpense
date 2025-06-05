@@ -90,11 +90,13 @@ const IssuingCountryScreen = ({navigation}) => {
       }
 
       const token = userData.data?.accessToken;
+      console.log('token:', token);
       const userId = userData.data.id;
 
       const data = await get(`${API.leanCustomer}`, {userId: userId}, token);
       const r = data.data;
-      console.log('r:', r.accessToken);
+      //console.log('leantoken:', r.accessToken);
+      //console.log('customerId:', r.customerId);
       setCustomerID(r.customerId);
       setLeanToken(r.accessToken);
       connectLean(r,bankIdentifier);
