@@ -49,7 +49,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
         },
         token,
       );
-      //console.log(response, 'verfiy');
+      //console.log(token,userId,code, 'verfiy');
       const activeSub = response?.data?.activeSubscription;
       const productId = activeSub?.productId || '';
       await setStringItem('subscription', productId);
