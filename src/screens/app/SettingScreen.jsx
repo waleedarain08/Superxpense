@@ -23,7 +23,7 @@ import {
   Personal,
   Shield,
 } from '../../assets/svgs';
-import {ChevronRight} from '../../icons';
+import {ChevronRight, DeleteIcon} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
 import {
   getItem,
@@ -36,7 +36,7 @@ import FloatingChatButton from '../../component/FloatingChatButton';
 import {PermissionsAndroid} from 'react-native';
 import Contacts from 'react-native-contacts';
 import ReactNativeBiometrics from 'react-native-biometrics';
-import {get, post} from '../../utilis/Api';
+import {del, get, post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 
 const SettingScreen = ({navigation}) => {
@@ -90,6 +90,19 @@ const SettingScreen = ({navigation}) => {
               title="Help & Support"
               IconComponent={<Flag />}
               screenName="Help"
+            />
+            {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
+            {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
+          </View>
+
+          <Text style={styles.sectionTitle}>Delete</Text>
+          <View style={styles.card}>
+            <SettingItem
+              title="Delete Account"
+              IconComponent={
+                <DeleteIcon color={Colors.transactionCard} size={15} />
+              }
+              screenName="Delete"
             />
             {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
             {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
@@ -195,6 +208,24 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       console.error('Sync error:', error);
       setLoading(false);
       Alert.alert('Error syncing contacts');
+    }
+  };
+
+  const deleteAccount = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+    const response = await del(`${API.deleteUserAccount}`, {}, token);
+    console.log('response', response);
+    // if (response.data) {
+    //   Alert.alert('Success', 'Account deleted successfully');
+    //   removeItem('userData');
+    //   navigation.replace('Welcome');
+    // } else {
+    //   Alert.alert('Error', 'Failed to delete account');
+    // }
+    if (response) {
+      await removeItem('userData');
+      navigation.replace('Welcome');
     }
   };
 
@@ -336,6 +367,15 @@ const SettingItem = ({title, IconComponent, screenName}) => {
             handleBiometricLogin();
           } else if (screenName === 'GmailIntegration') {
             handleGmailIntegration();
+          } else if (screenName === 'Delete') {
+            Alert.alert(
+              'Delete Account',
+              'Do you want to delete your account? You can recover your account by contacting support within 40 days ',
+              [
+                {text: 'No', onPress: () => ''},
+                {text: 'Yes', onPress: () => deleteAccount()},
+              ],
+            );
           } else {
             navigation.navigate(screenName);
           }
