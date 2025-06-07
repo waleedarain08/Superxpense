@@ -119,7 +119,7 @@ const SettingScreen = ({navigation}) => {
           </View>
         </ScrollView>
       </View>
-      <FloatingChatButton navigation={navigation} />
+      {/* <FloatingChatButton navigation={navigation} /> */}
     </>
   );
 };
@@ -215,18 +215,12 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
     const response = await del(`${API.deleteUserAccount}`, {}, token);
-    console.log('response', response);
-    // if (response.data) {
-    //   Alert.alert('Success', 'Account deleted successfully');
-    //   removeItem('userData');
-    //   navigation.replace('Welcome');
-    // } else {
-    //   Alert.alert('Error', 'Failed to delete account');
-    // }
-    if (response) {
+    //console.log('response', response);
+   // if (response) {
+      Alert.alert('Success', 'Account deletion request generated successfully,Your account will be deleted within 48 hours.');
       await removeItem('userData');
       navigation.replace('Welcome');
-    }
+   // }
   };
 
   useEffect(() => {
@@ -368,13 +362,19 @@ const SettingItem = ({title, IconComponent, screenName}) => {
           } else if (screenName === 'GmailIntegration') {
             handleGmailIntegration();
           } else if (screenName === 'Delete') {
-            Alert.alert(
-              'Delete Account',
-              'Do you want to delete your account? You can recover your account by contacting support within 40 days ',
+             Alert.alert(
+              "Delete Account",
+              "Deleting your account is permanent and cannot be reversed. All your data associated with this account will be removed. Are you sure you want to proceed?",
               [
-                {text: 'No', onPress: () => ''},
-                {text: 'Yes', onPress: () => deleteAccount()},
-              ],
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Delete",
+                  style: "destructive",
+                  onPress: async () => {
+                    deleteAccount();
+                  }
+                }
+              ]
             );
           } else {
             navigation.navigate(screenName);
@@ -417,6 +417,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: Colors.bgColor,
     paddingHorizontal: 20,
+    paddingBottom: 50,
   },
   header: {
     fontSize: 18,

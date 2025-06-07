@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  Platform
+  Platform,
+  Linking
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
@@ -20,7 +21,7 @@ import {
 } from '../../utilis/StorageActions';
 
 const SubscriptionScreen = ({navigation}) => {
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({});
   const productIds = ['yearly', 'monthly']; // replace with your real product id(s)
@@ -31,7 +32,8 @@ const SubscriptionScreen = ({navigation}) => {
         await RNIap.initConnection();
         if (Platform.OS === 'ios') {
           const items = await RNIap.getSubscriptions({skus: productIds});
-          console.log('subscriptions:', items);
+          //const items = [{productId: 'yearly', title: 'Yearly Subscription', description: 'Premium access for a year at discounted price', localizedPrice: 'AED 119.99', subscriptionPeriodUnitIOS: 'year'}, {productId: 'monthly', title: 'Monthly Subscription', description: 'Allow access to premium features for a month', localizedPrice: 'AED 14.99', subscriptionPeriodUnitIOS: 'month'}];
+          //console.log('subscriptions:', items);
           setProducts(items);
         } else if (Platform.OS === 'android') {
           //android here
@@ -55,7 +57,7 @@ const SubscriptionScreen = ({navigation}) => {
     const selectedProducts = Object.keys(selectedProduct).length;
     if (selectedProducts === 0) {
       Alert.alert(
-        'Please select a subscription plan',
+        'Choose subscription plan',
         'You must select a subscription plan before proceeding.',
       );
       return;
@@ -138,12 +140,16 @@ const SubscriptionScreen = ({navigation}) => {
           <FeatureItem text="Understand your spending" />
           <FeatureItem text="Share and collaborate on budgets" />
           <FeatureItem text="Easy-to-use budgets" />
-          <FeatureItem text="Customize the app as you want" />
+          <FeatureItem text="Ai-assisted chatbot" />
         </View>
 
         <View style={styles.priceContainer}>
-          <Text style={styles.priceText}>119.99 AED / year</Text>
-          <Text style={styles.subText}>14.99 AED / month</Text>
+         {products.map(product => (
+          console.log('Product:', product),
+          <Text key={product.productId} style={styles.priceText}>
+          {product.title} - {product.localizedPrice} / {product.subscriptionPeriodUnitIOS || 'period'}
+          </Text>
+        ))}
         </View>
 
         <TouchableOpacity
@@ -152,11 +158,38 @@ const SubscriptionScreen = ({navigation}) => {
           <Text style={styles.buttonText}>Choose Plan</Text>
         </TouchableOpacity>
 
-        {/* <TouchableOpacity
-           onPress={() => setModalVisible(true)}
+        <View style={{ marginTop: 10, alignItems: 'center' }}>
+        <Text style={{ color: '#fff', fontSize: 12, textAlign: 'center', marginBottom: 5 }}>
+          Payment will be charged to your Apple ID account at confirmation of purchase. 
+          Your subscription automatically renews unless auto-renew is turned off at least 
+          24-hours before the end of the current period. You can manage or cancel your 
+          subscription in your App Store account settings at any time.
+        </Text>
+
+      <Text style={{ color: '#fff', fontSize: 12 ,marginBottom: 10, textAlign: 'center'}}>
+        By subscribing, you agree to our{' '}
+        <Text
+          style={{ textDecorationLine: 'underline', color: '#1AAA76' }}
+          onPress={() => {
+            // Replace with your hosted URL
+            Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/terms.html');
+          }}
         >
-          <Text style={styles.seeAllText}>See all subscriptions</Text>
-        </TouchableOpacity> */}
+          Terms of Use
+        </Text>{' '}
+        and{' '}
+        <Text
+          style={{ textDecorationLine: 'underline', color: '#1AAA76' }}
+          onPress={() => {
+            // Replace with your hosted URL
+            Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/privacy.html');
+          }}
+        >
+          Privacy Policy
+        </Text>.
+    </Text>
+  </View>
+
       </ScrollView>
     </ImageBackground>
   );
@@ -168,7 +201,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 21,
-    marginTop: '35%',
+    marginTop: '30%',
     flexGrow: 1,
   },
   proText: {
@@ -198,7 +231,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
   },
   features: {
-    marginBottom: 32,
+    marginBottom: 20,
     flex: 1,
   },
   feature: {
@@ -226,7 +259,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 30,
     alignItems: 'center',
-    marginBottom: 22,
+    marginBottom: 15,
   },
   buttonText: {
     color: Colors.white,

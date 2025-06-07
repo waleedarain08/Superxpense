@@ -46,6 +46,7 @@ const SubscriptionModal = ({
                 )}
                 <Text style={styles.planTitle}>{plan.productId}</Text>
                 <Text style={styles.planPrice}>{plan.localizedPrice}</Text>
+                <Text style={styles.planDesc}>{plan.description}</Text>
                 {plan.trial && (
                   <Text style={styles.planTrial}>{plan.trial}</Text>
                 )}
@@ -132,6 +133,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 4,
     color: '#000',
+  },
+  planDesc: {
+    fontSize: 9,
+    //fontWeight: 'bold',
+    marginVertical: 4,
+    color: '#000',
+    textAlign: 'center',
+    paddingHorizontal: 4,
   },
   planSub: {
     fontSize: 12,
