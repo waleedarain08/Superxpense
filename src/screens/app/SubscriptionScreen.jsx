@@ -8,7 +8,7 @@ import {
   ScrollView,
   Alert,
   Platform,
-  Linking
+  Linking,
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
@@ -17,7 +17,8 @@ import * as RNIap from 'react-native-iap';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 import {
-  getItem
+  getItem,
+  setStringItem
 } from '../../utilis/StorageActions';
 
 const SubscriptionScreen = ({navigation}) => {
@@ -25,6 +26,7 @@ const SubscriptionScreen = ({navigation}) => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({});
   const productIds = ['yearly', 'monthly']; // replace with your real product id(s)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const initIAP = async () => {
@@ -73,6 +75,7 @@ const SubscriptionScreen = ({navigation}) => {
         //console.log('Purchase receipt:', receipt);
         //console.log('subscriptionId:', selectedProduct.productId);
         //console.log('Token:', token);
+        setLoading(true);
         const response = await post(
           `${API.billingSubscription}`,
           {
@@ -82,7 +85,11 @@ const SubscriptionScreen = ({navigation}) => {
           },
           token,
         );
-        console.log('data', response);
+        console.log('receipt verify resp', response);
+        const activeSub = response?.data?.plan;
+        const productId = activeSub?.productId || '';
+        await setStringItem('subscription', productId);
+        setLoading(false);
         Alert.alert(
           'Purchase Successful',
           'Your subscription has been successfully activated.',
@@ -118,6 +125,7 @@ const SubscriptionScreen = ({navigation}) => {
         onBuyProduct={() => buyProduct()}
         onClose={() => setModalVisible(false)}
         onSelectProduct={product => setSelectedProduct(product)}
+        loading={loading}
       />
       <TouchableOpacity
         style={styles.closeButton}
@@ -145,7 +153,7 @@ const SubscriptionScreen = ({navigation}) => {
 
         <View style={styles.priceContainer}>
          {products.map(product => (
-          console.log('Product:', product),
+          //console.log('Product:', product),
           <Text key={product.productId} style={styles.priceText}>
           {product.title} - {product.localizedPrice} / {product.subscriptionPeriodUnitIOS || 'period'}
           </Text>

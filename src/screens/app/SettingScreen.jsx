@@ -216,11 +216,11 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     const token = userData?.data?.accessToken;
     const response = await del(`${API.deleteUserAccount}`, {}, token);
     //console.log('response', response);
-   // if (response) {
-      Alert.alert('Success', 'Account deletion request generated successfully,Your account will be deleted within 48 hours.');
+    if (response) {
+      Alert.alert('Success', 'Account deletion request generated successfully,Your account will be deleted within 24 hours.');
       await removeItem('userData');
       navigation.replace('Welcome');
-   // }
+    }
   };
 
   useEffect(() => {
@@ -348,7 +348,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
       <TouchableOpacity
         style={styles.item}
         onPress={async () => {
-          console.log('Setting item pressed:', screenName); // Add this
+          //console.log('Setting item pressed:', screenName); // Add this
           if (screenName === 'Welcome') {
             await removeItem('userData');
             navigation.replace('Welcome');

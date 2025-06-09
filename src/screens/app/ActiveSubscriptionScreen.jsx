@@ -19,15 +19,26 @@ import {getItem, getStringItem} from '../../utilis/StorageActions';
 const ActiveSubscriptionScreen = ({navigation}) => {
   const [subscription, setSubscription] = useState('');
   const [userData, setUserData] = useState('');
+  const [amount, setAmount] = useState('0.00'); // Default amount for trial, change as needed
 
   useEffect(() => {
     const getUserData = async () => {
       const userData = await getItem('userData');
-      setUserData(userData);
+      //setUserData(userData);
       const token = userData?.data?.accessToken;
       try {
         const data = await get(`${API.getUserData}`, {}, token);
-        console.log('UserData:', data.data.activeSubscription);
+        setSubscription(data.data.activeSubscription.productId);
+        setUserData(data.data.activeSubscription);
+        if (data.data.activeSubscription.productId === 'trial') {
+          setAmount('0.00'); // Set amount to 0 for trial subscription
+        } else if (data.data.activeSubscription.productId === 'yearly') {
+          setAmount('119.99'); // Set amount for yearly subscription
+        }
+        else if (data.data.activeSubscription.productId === 'monthly') {
+          setAmount('14.99'); // Set amount for monthly subscription
+        }
+        //console.log('UserData:', data.data.activeSubscription);
       } catch (err) {
         console.log(err);
       }
@@ -36,13 +47,13 @@ const ActiveSubscriptionScreen = ({navigation}) => {
     getUserData();
   }, [navigation]);
 
-  useEffect(() => {
-    const getSubscription = async () => {
-      const subscriptionn = await getStringItem('subscription');
-      setSubscription(subscriptionn);
-    };
-    getSubscription();
-  }, [navigation]);
+  // useEffect(() => {
+  //   const getSubscription = async () => {
+  //     const subscriptionn = await getStringItem('subscription');
+  //     setSubscription(subscriptionn);
+  //   };
+  //   getSubscription();
+  // }, [navigation]);
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -95,16 +106,14 @@ const ActiveSubscriptionScreen = ({navigation}) => {
           <View style={styles.billingRow}>
             <Text style={styles.billingLabel}>Amount</Text>
             <Text style={styles.billingValue}>
-              {userData?.data?.activeSubscription.amount
-                ? userData?.data?.activeSubscription.amount
-                : `0.00`}{' '}
+              {amount}{' '}
               AED
             </Text>
           </View>
           <View style={styles.billingRow}>
             <Text style={styles.billingLabel}>Next Billing Date</Text>
             <Text style={styles.billingValue}>
-              {formatDate(userData?.data?.activeSubscription.endDate)}
+              {formatDate(userData?.endDate)}
             </Text>
           </View>
         </View>

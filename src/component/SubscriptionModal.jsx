@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Modal, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, Modal, StyleSheet, TouchableOpacity,ActivityIndicator} from 'react-native';
 
 const SubscriptionModal = ({
   visible,
@@ -7,6 +7,7 @@ const SubscriptionModal = ({
   products,
   onBuyProduct,
   onSelectProduct,
+  loading
 }) => {
   const [selectedPlan, setSelectedPlan] = React.useState(
     products.find(plan => plan.productId === 'yearly') || null,
@@ -58,7 +59,11 @@ const SubscriptionModal = ({
           <Text style={styles.modalSubText}>Unlock the full potential of our app by selecting the plan that best fits your needs. Enjoy premium features, enhanced performance, and priority support—tailored to help you get the most out of your experience.</Text>
 
           <TouchableOpacity style={styles.modalButton} onPress={onBuyProduct}>
-            <Text style={styles.modalButtonText}>Subscribe</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <Text style={styles.modalButtonText}>Subscribe</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>

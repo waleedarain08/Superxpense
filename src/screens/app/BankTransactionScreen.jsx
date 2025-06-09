@@ -64,7 +64,7 @@ const BankTransactionScreen = ({navigation, route}) => {
       setLoading(true);
       const data = await get(
         `${API.tansActions}`,
-        {accountId: accountId, entityId: entityId,page:1,size:10},
+        {accountId: accountId, entityId: entityId,page:1,size:50},
         token,
       );
 
