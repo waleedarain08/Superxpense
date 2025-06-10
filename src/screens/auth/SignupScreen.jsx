@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Platform,
   StatusBar,
+  Linking
 } from 'react-native';
 import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
@@ -69,11 +70,11 @@ const SignUpScreen = ({navigation}) => {
       setNameError(true);
     }
 
-    if (phoneNumber.length < 7 || phoneNumber.length > 10) {
-      errors.phoneNumber = 'Mobile number must be between 7 and 10 digits';
-      isValid = false;
-      setMobileNumberError(true);
-    }
+    // if (phoneNumber.length < 7 || phoneNumber.length > 10) {
+    //   errors.phoneNumber = 'Mobile number must be between 7 and 10 digits';
+    //   isValid = false;
+    //   setMobileNumberError(true);
+    // }
 
     setError(errors);
     return isValid;
@@ -158,21 +159,12 @@ const SignUpScreen = ({navigation}) => {
           />
           {emailError && <Text style={styles.errorText}>{error.email}</Text>}
 
-          <PhoneInputCustom
-            value={phoneNumber}
-            onChangeText={text => {
-              setPhoneNumber(text);
-              if (mobileNumberError) setMobileNumberError(false); // clear error when typing
-            }}
-            error={mobileNumberError}
-          />
-          {mobileNumberError && (
-            <Text style={styles.errorText}>{error.phoneNumber}</Text>
-          )}
+          
 
           <View style={styles.passwordContainer}>
             <TextInput
               placeholder="Password"
+              placeholderTextColor={Colors.lightTxt}
               style={[
                 styles.input,
                 error.password && styles.inputError,
@@ -181,7 +173,6 @@ const SignUpScreen = ({navigation}) => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={hidePassword}
-              placeholderTextColor={Colors.greyColor}
             />
             <TouchableOpacity
               onPress={() => setHidePassword(!hidePassword)}
@@ -198,6 +189,19 @@ const SignUpScreen = ({navigation}) => {
               Password must be atleast 6 Characters long
             </Text>
           )}
+
+          <PhoneInputCustom
+            value={phoneNumber}
+            onChangeText={text => {
+              setPhoneNumber(text);
+              if (mobileNumberError) setMobileNumberError(false); // clear error when typing
+            }}
+            error={mobileNumberError}
+          />
+          {mobileNumberError && (
+            <Text style={styles.errorText}>{error.phoneNumber}</Text>
+          )}
+          
           <TouchableOpacity
             onPress={handleSignUp}
             style={styles.button}
@@ -211,8 +215,8 @@ const SignUpScreen = ({navigation}) => {
 
           <Text style={styles.terms}>
             By agreeing to continue, you agree to our{' '}
-            <Text style={styles.link}>terms</Text> and acknowledge our{' '}
-            <Text style={styles.link}>privacy policy</Text>
+            <Text  onPress={() => {Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/terms.html');}} style={styles.link}>terms</Text> and acknowledge our{' '}
+            <Text onPress={() => {Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/privacy.html');}} style={styles.link}>privacy policy</Text>
           </Text>
 
           <Text style={styles.signIn}>

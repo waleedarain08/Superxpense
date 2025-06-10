@@ -31,7 +31,7 @@ const PhoneInputCustom = ({value, onChangeText, error}) => {
       <TextInput
         value={value}
         onChangeText={onChangeText}
-        placeholder="10 Digit Number"
+        placeholder="Phone No (Optional)"
         keyboardType="phone-pad"
         maxLength={10}
         style={styles.textInput}
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
     color: '#374151',
   },
 });
