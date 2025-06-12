@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   StatusBar,
+  Alert,
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
@@ -94,73 +95,7 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  // const handleDocumentPick = async () => {
-  //   try {
-  //     const res = await DocumentPicker.pickSingle({
-  //       type: DocumentPicker.types.allFiles,
-  //     });
-
-  //     const userData = await getItem('userData');
-  //     const token = userData.data?.accessToken;
-
-  //     const formData = new FormData();
-  //     formData.append('file', {
-  //       uri: res.uri,
-  //       name: res.name,
-  //       type: res.type || 'application/octet-stream',
-  //     });
-
-  //     setSendMessageLoading(true);
-
-  //     setChats(prevChats => [
-  //       ...prevChats,
-  //       {
-  //         message: `Sending document: ${res.name}`,
-  //         isUser: true,
-  //         timestamp: new Date().toLocaleTimeString(),
-  //       },
-  //       {
-  //         message: 'Thinking...',
-  //         isUser: false,
-  //         isThinking: true,
-  //         timestamp: new Date().toLocaleTimeString(),
-  //       },
-  //     ]);
-
-  //     const response = await fetch(API.uploadDocument, {
-  //       method: 'POST',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       body: formData,
-  //     });
-
-  //     const data = await response.json();
-
-  //     // Remove thinking and show response
-  //     setChats(prevChats => {
-  //       const newChats = prevChats.filter(chat => !chat.isThinking);
-  //       return [
-  //         ...newChats,
-  //         {
-  //           message: data.message || 'Document uploaded successfully.',
-  //           isUser: false,
-  //           timestamp: new Date().toLocaleTimeString(),
-  //         },
-  //       ];
-  //     });
-  //   } catch (err) {
-  //     if (DocumentPicker.isCancel(err)) {
-  //       console.log('User cancelled document picker');
-  //     } else {
-  //       console.error('Document upload error:', err);
-  //       setChats(prevChats => prevChats.filter(chat => !chat.isThinking));
-  //     }
-  //   } finally {
-  //     setSendMessageLoading(false);
-  //   }
-  // };
+  
 
   const handleSendMessage = async (file = null) => {
     if (!message.trim() && !file) return;
@@ -176,7 +111,7 @@ const HomeScreen = ({navigation}) => {
       setChats(prevChats => [
         ...prevChats,
         {
-          message: file ? `Sending document: ${file.name}` : message,
+          message: file ? `Uploading document: ${file.name}` : message,
           isUser: true,
           timestamp,
         },
@@ -231,6 +166,15 @@ const HomeScreen = ({navigation}) => {
         ];
       });
 
+      if (file) {
+        Alert.alert(
+          'Payment Reminders Set',
+          'You will be notified when payment is due.',
+          [{text: 'OK'}],
+          {cancelable: false},
+        );
+      }
+
       setMessage('');
     } catch (err) {
       console.error('Send error:', err);
@@ -240,53 +184,7 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  // const handleSend = async () => {
-  //   if (!message.trim()) return;
-  //   try {
-  //     setSendMessageLoading(true);
-
-  //     setMessage('');
-  //     const userData = await getItem('userData');
-  //     const token = userData.data?.accessToken;
-
-  //     // Add user message and thinking message
-  //     setChats(prevChats => [
-  //       ...prevChats,
-  //       {
-  //         message: message,
-  //         isUser: true,
-  //         timestamp: new Date().toLocaleTimeString(),
-  //       },
-  //       {
-  //         message: 'Thinking...',
-  //         isUser: false,
-  //         isThinking: true,
-  //         timestamp: new Date().toLocaleTimeString(),
-  //       },
-  //     ]);
-
-  //     const response = await post(`${API.createChat}`, {query: message}, token);
-
-  //     // Remove thinking message and add bot response
-  //     setChats(prevChats => {
-  //       const newChats = prevChats.filter(chat => !chat.isThinking);
-  //       return [
-  //         ...newChats,
-  //         {
-  //           message: response.data,
-  //           isUser: false,
-  //           timestamp: new Date().toLocaleTimeString(),
-  //         },
-  //       ];
-  //     });
-  //   } catch (error) {
-  //     console.error('Error sending message:', error);
-  //     // Remove thinking message on error
-  //     setChats(prevChats => prevChats.filter(chat => !chat.isThinking));
-  //   } finally {
-  //     setSendMessageLoading(false);
-  //   }
-  // };
+  
 
   return (
     <KeyboardAvoidingView
@@ -341,12 +239,19 @@ const HomeScreen = ({navigation}) => {
                     styles.messageContainer,
                     chat.isUser ? styles.userMessage : styles.botMessage,
                   ]}>
-                  <Text
+                  {/* <Text
                     style={[
                       styles.messageText,
                       chat.isThinking && styles.thinkingText,
                     ]}>
                     {chat.message}
+                  </Text> */}
+                  <Text
+                    style={[
+                      styles.messageText,
+                      chat.isThinking && styles.thinkingText,
+                    ]}>
+                    {chat.isUser ? chat.message : formatAndHighlightAmounts(chat.message)}
                   </Text>
                   {!chat.isThinking && (
                     <Text style={styles.timestampText}>{chat.timestamp}</Text>
@@ -470,9 +375,10 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontFamily: FontFamily.regular,
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.txtColor,
     marginBottom: 4,
+    lineHeight:21
   },
   timestampText: {
     fontFamily: FontFamily.regular,
@@ -555,3 +461,18 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
+const formatAndHighlightAmounts = (text) => {
+  const parts = text.split(/(\d{6,})/); // Split around numbers with 6+ digits
+  return parts.map((part, index) => {
+    if (/^\d{6,}$/.test(part)) {
+      const formatted = Number(part).toLocaleString(); // Add commas
+      return (
+        <Text key={index} style={{ fontWeight: 'bold', fontSize:18 }}>
+          {formatted} AED
+        </Text>
+      );
+    }
+    return <Text key={index}>{part}</Text>;
+  });
+};
