@@ -1,48 +1,65 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+} from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 
 const WelcomeScreen = ({navigation}) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.signInButton}
-        onPress={() => navigation.navigate('SignIn')}>
-        <Text style={styles.signInText}>Sign In</Text>
-      </TouchableOpacity>
-
-      <View style={styles.header}>
-        <Text style={styles.welcome}>WELCOME TO SUPERXPENSE</Text>
-        <Text style={styles.subtitle}>
-          The modern way of managing{'\n'}money, budgets, and spendings.
-        </Text>
-      </View>
-
-      <View style={styles.cardsContainer}>
-        <Image
-          source={require('./../../assets/images/welcomeCard.png')} // Replace with your assets
-          style={styles.cardImage}
-        />
-      </View>
-
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={styles.emailButton}
-          onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.buttonText}>Continue with Email</Text>
-        </TouchableOpacity>
-
-        {/* <TouchableOpacity style={styles.appleButton} onPress = {()=>navigation.navigate('Main')}>
-          <Text style={styles.appleIcon}></Text>
-          <Text style={styles.appleButtonText}>Continue with Apple</Text>
+    <ImageBackground
+      source={require('../../assets/images/welcomeScreenBack.png')}
+      style={styles.container}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
+      <View style={styles.container}>
+        {/* <TouchableOpacity
+          style={styles.signInButton}
+          onPress={() => navigation.navigate('SignIn')}>
+          <Text style={styles.signInText}>Sign In</Text>
         </TouchableOpacity> */}
 
-        {/* <TouchableOpacity onPress = {()=>navigation.navigate('Main')}>
-          <Text style={styles.guestText}>Continue as Guest</Text>
-        </TouchableOpacity> */}
+        <View style={styles.header}>
+          <Text style={styles.welcome}>SUPERXPENSE</Text>
+          <Text style={styles.subtitle}>
+            Get more out of your {'\n'}money & spending.
+          </Text>
+        </View>
+
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={styles.emailButton}
+            onPress={() => navigation.navigate('SignUp')}>
+            <Text style={styles.buttonText}>Continue with Email</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.appleButton}
+            onPress={() => navigation.navigate('Main')}>
+            <Text style={styles.appleIcon}></Text>
+            <Text style={styles.appleButtonText}>Continue with Apple</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.appleButton}
+            onPress={() => navigation.navigate('Main')}>
+            <Text style={styles.appleIcon}></Text>
+            <Text style={styles.appleButtonText}>Continue with Google</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Main')}
+            style={styles.guestButton}>
+            <Text style={styles.guestText}>Continue as Guest</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -51,8 +68,8 @@ export default WelcomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.bgColor,
-    padding: 20,
+    justifyContent: 'flex-end',
+    alignContent: 'center',
   },
   signInButton: {
     alignSelf: 'flex-end',
@@ -65,19 +82,18 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   header: {
-    marginTop: 30,
+    // marginTop: 30,
     alignItems: 'center',
   },
   welcome: {
-    fontSize: 16,
-    color: Colors.txtColor,
-    fontFamily: FontFamily.medium,
-    letterSpacing: 1,
+    fontSize: 18,
+    color: '#1AA875',
+    fontFamily: FontFamily.semiBold,
   },
   subtitle: {
-    fontSize: 24,
+    fontSize: 32,
     color: Colors.txtColor,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.bold,
     textAlign: 'center',
     marginTop: 5,
   },
@@ -101,9 +117,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   buttonsContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
+    marginTop: 45,
+    paddingHorizontal: 20,
   },
   emailButton: {
     backgroundColor: '#1AAA76',
@@ -127,7 +142,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     width: '100%',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   appleIcon: {
     fontSize: 18,
@@ -143,5 +158,9 @@ const styles = StyleSheet.create({
     color: '#0D2D2D',
     fontSize: 15,
     fontWeight: '500',
+  },
+  guestButton: {
+    marginBottom: 25,
+    alignItems: 'center',
   },
 });

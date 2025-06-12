@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Platform,
   StatusBar,
-  Linking
+  Linking,
 } from 'react-native';
 import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
@@ -22,6 +22,8 @@ import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import PhoneInputCustom from '../../component/PhoneInputCustome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import IconInput from '../../component/IconInput';
+import PasswordInput from '../../component/PasswordInput';
 
 const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -88,8 +90,7 @@ const SignUpScreen = ({navigation}) => {
     const checkToken = await getStringItem('fcmToken');
     setLoading(true);
     await removeItem('userData');
-    //console.log('checkToken', checkToken, 'Tokennnnnnnn');
-    
+
     try {
       const data = await post(API.signUp, {
         email,
@@ -100,7 +101,6 @@ const SignUpScreen = ({navigation}) => {
         fcmToken: checkToken,
         fcmPlatform: Platform.OS === 'ios' ? 'ios' : 'android',
       });
-      ///console.log('SignUp Response:', data);
 
       await setItem('userData', data);
       setName('');
@@ -108,7 +108,6 @@ const SignUpScreen = ({navigation}) => {
       setPassword('');
       setPhoneNumber('');
       navigation.navigate('VerificationCode', {email});
-      //Alert.alert('Success', 'Signup successful');
     } catch (err) {
       Alert.alert(err.message || 'Something went wrong');
     } finally {
@@ -118,7 +117,7 @@ const SignUpScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.safeStyle}>
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <StepperHeader
           step={2}
           totalSteps={6}
@@ -131,59 +130,35 @@ const SignUpScreen = ({navigation}) => {
             account.
           </Text>
 
-          <TextInput
+          <IconInput
+            icon="user"
             placeholder="Full Name"
-            placeholderTextColor={Colors.lightTxt}
-            style={[
-              styles.input,
-              nameError && styles.inputError,
-              {marginBottom: nameError ? 5 : 20},
-            ]}
-            onChangeText={setName}
             value={name}
+            onChangeText={setName}
+            error={nameError}
+            style={{marginBottom: nameError ? 5 : 20}}
           />
           {nameError && <Text style={styles.errorText}>{error.name}</Text>}
 
-          <TextInput
+          <IconInput
+            icon="mail"
             placeholder="Email Address"
-            placeholderTextColor={Colors.lightTxt}
-            style={[
-              styles.input,
-              emailError && styles.inputError,
-              {marginBottom: emailError ? 4 : 10, marginTop: 10},
-            ]}
-            onChangeText={setEmail}
             value={email}
+            onChangeText={setEmail}
+            error={emailError}
             keyboardType="email-address"
             autoCapitalize="none"
+            style={{marginBottom: emailError ? 4 : 10, marginTop: 10}}
           />
           {emailError && <Text style={styles.errorText}>{error.email}</Text>}
 
-          
-
-          <View style={styles.passwordContainer}>
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor={Colors.lightTxt}
-              style={[
-                styles.input,
-                error.password && styles.inputError,
-                {marginBottom: 5, color: Colors.black},
-              ]}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={hidePassword}
-            />
-            <TouchableOpacity
-              onPress={() => setHidePassword(!hidePassword)}
-              style={styles.eyeIcon}>
-              <Icon
-                name={hidePassword ? 'eye-off' : 'eye'}
-                size={20}
-                color={Colors.greyColor}
-              />
-            </TouchableOpacity>
-          </View>
+          <PasswordInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            error={passwordError}
+            style={{marginBottom: 5, marginTop: 10}}
+          />
           {passwordError && (
             <Text style={styles.errorText}>
               Password must be atleast 6 Characters long
@@ -201,7 +176,7 @@ const SignUpScreen = ({navigation}) => {
           {mobileNumberError && (
             <Text style={styles.errorText}>{error.phoneNumber}</Text>
           )}
-          
+
           <TouchableOpacity
             onPress={handleSignUp}
             style={styles.button}
@@ -215,8 +190,25 @@ const SignUpScreen = ({navigation}) => {
 
           <Text style={styles.terms}>
             By agreeing to continue, you agree to our{' '}
-            <Text  onPress={() => {Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/terms.html');}} style={styles.link}>terms</Text> and acknowledge our{' '}
-            <Text onPress={() => {Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/privacy.html');}} style={styles.link}>privacy policy</Text>
+            <Text
+              onPress={() => {
+                Linking.openURL(
+                  'https://harmonious-rolypoly-9889e6.netlify.app/terms.html',
+                );
+              }}
+              style={styles.link}>
+              terms
+            </Text>{' '}
+            and acknowledge our{' '}
+            <Text
+              onPress={() => {
+                Linking.openURL(
+                  'https://harmonious-rolypoly-9889e6.netlify.app/privacy.html',
+                );
+              }}
+              style={styles.link}>
+              privacy policy
+            </Text>
           </Text>
 
           <Text style={styles.signIn}>

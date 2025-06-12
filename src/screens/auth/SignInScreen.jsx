@@ -10,6 +10,7 @@ import {
   Alert,
   Platform,
   StatusBar,
+  ImageBackground,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import Icon from 'react-native-vector-icons/Feather';
@@ -169,98 +170,98 @@ const SignInScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.safeStyle}>
-      <View style={styles.container}>
-        <LeftBlack
-          onPress={() => navigation.goBack()}
-          style={{marginBottom: 20}}
-        />
-        <Text style={styles.heading}>Sign In Now</Text>
-        <Text style={styles.subHeading}>
-          Log in to your account by entering your email and password.
-        </Text>
+    <ImageBackground
+      source={require('../../assets/images/commonBack.png')}
+      style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
+      <SafeAreaView style={styles.safeStyle}>
+        <View>
+          <LeftBlack
+            onPress={() => navigation.goBack()}
+            style={{marginBottom: 20}}
+          />
+          <Text style={styles.heading}>Welcome Back</Text>
+          <Text style={styles.subHeading}>
+            Enter your email address associated with your superxpense account.
+          </Text>
 
-        <TextInput
-          placeholder="Enter Email Address"
-          placeholderTextColor={Colors.greyColor}
-          style={[
-            styles.input,
-            error.email && styles.inputError,
-            {marginBottom: 5},
-          ]}
-          onChangeText={setEmail}
-          value={email}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        {error.email ? (
-          <Text style={styles.errorText}>{error.email}</Text>
-        ) : null}
-
-        <View style={styles.passwordContainer}>
           <TextInput
-            placeholder="Password"
+            placeholder="Enter Email Address"
             placeholderTextColor={Colors.greyColor}
             style={[
               styles.input,
-              error.password && styles.inputError,
-              {marginBottom: 5, color: Colors.black},
+              error.email && styles.inputError,
+              {marginBottom: 5},
             ]}
-            secureTextEntry={hidePassword}
-            value={password}
-            onChangeText={setPassword}
+            onChangeText={setEmail}
+            value={email}
+            keyboardType="email-address"
+            autoCapitalize="none"
           />
-          <TouchableOpacity
-            onPress={() => setHidePassword(!hidePassword)}
-            style={styles.eyeIcon}>
-            <Icon
-              name={hidePassword ? 'eye-off' : 'eye'}
-              size={20}
-              color={Colors.greyColor}
+          {error.email ? (
+            <Text style={styles.errorText}>{error.email}</Text>
+          ) : null}
+
+          <View style={styles.passwordContainer}>
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor={Colors.greyColor}
+              style={[
+                styles.input,
+                error.password && styles.inputError,
+                {marginBottom: 5, color: Colors.black},
+              ]}
+              secureTextEntry={hidePassword}
+              value={password}
+              onChangeText={setPassword}
             />
+            <TouchableOpacity
+              onPress={() => setHidePassword(!hidePassword)}
+              style={styles.eyeIcon}>
+              <Icon
+                name={hidePassword ? 'eye-off' : 'eye'}
+                size={20}
+                color={Colors.greyColor}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {error.password ? (
+            <Text style={styles.errorText}>{error.password}</Text>
+          ) : null}
+
+          <TouchableOpacity
+            onPress={handleSignIn}
+            style={styles.button}
+            disabled={loading}>
+            {loading ? (
+              <ActivityIndicator size="small" color={Colors.white} />
+            ) : (
+              <Text style={styles.buttonText}>Login</Text>
+            )}
+          </TouchableOpacity>
+          <Text style={styles.orTxt}>OR</Text>
+          <TouchableOpacity
+            onPress={biometric}
+            style={[styles.faceIdButton, loading && {opacity: 0.6}]}
+            disabled={loading}>
+            <View style={styles.innerContainer}>
+              <FaceScan />
+              {/* <Text style={styles.text}>Login with Face ID</Text> */}
+            </View>
           </TouchableOpacity>
         </View>
-
-        {error.password ? (
-          <Text style={styles.errorText}>{error.password}</Text>
-        ) : null}
-
-        <TouchableOpacity
-          onPress={handleSignIn}
-          style={styles.button}
-          disabled={loading}>
-          {loading ? (
-            <ActivityIndicator size="small" color={Colors.white} />
-          ) : (
-            <Text style={styles.buttonText}>Login</Text>
-          )}
-        </TouchableOpacity>
-        <Text style={styles.orTxt}>OR</Text>
-        <TouchableOpacity
-          onPress={biometric}
-          style={[styles.faceIdButton, loading && {opacity: 0.6}]}
-          disabled={loading}>
-          <View style={styles.innerContainer}>
-            <FaceScan />
-            {/* <Text style={styles.text}>Login with Face ID</Text> */}
-          </View>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 export default SignInScreen;
 
 const styles = StyleSheet.create({
-  safeStyle: {
-    flex: 1,
-    backgroundColor: Colors.progressBackground,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
+  safeStyle: {},
   container: {
-    backgroundColor: Colors.progressBackground,
-    justifyContent: 'center',
     paddingVertical: 32,
     paddingHorizontal: 20,
   },

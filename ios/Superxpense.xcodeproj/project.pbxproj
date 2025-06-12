@@ -345,7 +345,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
-				DEVELOPMENT_TEAM = WQ8NU3AU8M;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Superxpense/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Superxpense;
@@ -385,7 +385,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
-				DEVELOPMENT_TEAM = WQ8NU3AU8M;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Superxpense/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Superxpense;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";

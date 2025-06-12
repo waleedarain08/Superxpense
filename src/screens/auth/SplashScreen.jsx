@@ -28,7 +28,7 @@ const SplashScreen = ({navigation}) => {
       const subscription = await getStringItem('subscription');
 
       if (!userData) {
-        navigation.replace('Welcome');
+        navigation.replace('Welcome1');
       } else if (!subscription) {
         navigation.replace('Subscription');
       } else {

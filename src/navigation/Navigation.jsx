@@ -28,6 +28,7 @@ import HelpScreen from '../screens/app/Help';
 import AddGoals from '../screens/app/AddGoals';
 import ActiveSubscriptionScreen from '../screens/app/ActiveSubscriptionScreen';
 import VerficationCodeScreen from '../screens/auth/VerficationCodeScreen';
+import WelcomeScreen1 from '../screens/auth/WelcomeScreen1';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -49,6 +50,7 @@ const Navigation = () => {
           }}
         />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="Welcome1" component={WelcomeScreen1} />
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignupScreen} />
         <Stack.Screen name="OnBoarding" component={OnBoardingScreen} />
