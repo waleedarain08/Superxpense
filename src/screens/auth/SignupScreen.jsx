@@ -2,28 +2,26 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   Alert,
   ActivityIndicator,
   Platform,
-  StatusBar,
   Linking,
+  ImageBackground,
 } from 'react-native';
-import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {API} from '../../utilis/Constant';
 import {post} from '../../utilis/Api';
 import {getStringItem, removeItem, setItem} from '../../utilis/StorageActions';
-import Icon from 'react-native-vector-icons/Feather'; // Using Feather icons
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import PhoneInputCustom from '../../component/PhoneInputCustome';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import IconInput from '../../component/IconInput';
 import PasswordInput from '../../component/PasswordInput';
+import {Email, FullName, LeftBlack, Password} from '../../assets/svgs';
 
 const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -116,123 +114,131 @@ const SignUpScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.safeStyle}>
-      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-        <StepperHeader
-          step={2}
-          totalSteps={6}
-          onBack={() => navigation.goBack()}
-        />
-        <View style={styles.container}>
-          <Text style={styles.heading}>Create your account</Text>
-          <Text style={styles.subHeading}>
-            We need some basic info to verify your identity and set up your
-            account.
-          </Text>
-
-          <IconInput
-            icon="user"
-            placeholder="Full Name"
-            value={name}
-            onChangeText={setName}
-            error={nameError}
-            style={{marginBottom: nameError ? 5 : 20}}
-          />
-          {nameError && <Text style={styles.errorText}>{error.name}</Text>}
-
-          <IconInput
-            icon="mail"
-            placeholder="Email Address"
-            value={email}
-            onChangeText={setEmail}
-            error={emailError}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            style={{marginBottom: emailError ? 4 : 10, marginTop: 10}}
-          />
-          {emailError && <Text style={styles.errorText}>{error.email}</Text>}
-
-          <PasswordInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            error={passwordError}
-            style={{marginBottom: 5, marginTop: 10}}
-          />
-          {passwordError && (
-            <Text style={styles.errorText}>
-              Password must be atleast 6 Characters long
+    <ImageBackground
+      source={require('../../assets/images/commonBack.png')}
+      style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{flex: 1}}>
+        <SafeAreaView style={styles.safeStyle}>
+          <View style={{flex: 1}}>
+            <LeftBlack
+              onPress={() => navigation.goBack()}
+              style={{marginBottom: 20}}
+            />
+            <Text style={styles.heading}>Let’s get started</Text>
+            <Text style={styles.subHeading}>
+              We’ll need some quick info to get your account set up and
+              protected. Just a few quick details
             </Text>
-          )}
+            <IconInput
+              svgIcon={<FullName />}
+              placeholder="FullName"
+              value={name}
+              onChangeText={setName}
+              error={nameError}
+              style={{marginBottom: nameError ? 5 : 10}}
+            />
+            {nameError && <Text style={styles.errorText}>{error.name}</Text>}
 
-          <PhoneInputCustom
-            value={phoneNumber}
-            onChangeText={text => {
-              setPhoneNumber(text);
-              if (mobileNumberError) setMobileNumberError(false); // clear error when typing
-            }}
-            error={mobileNumberError}
-          />
-          {mobileNumberError && (
-            <Text style={styles.errorText}>{error.phoneNumber}</Text>
-          )}
+            <IconInput
+              svgIcon={<Email />}
+              placeholder="Email Address"
+              value={email}
+              onChangeText={setEmail}
+              error={emailError}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={{marginBottom: emailError ? 4 : 10, marginTop: 10}}
+            />
+            {emailError && <Text style={styles.errorText}>{error.email}</Text>}
 
-          <TouchableOpacity
-            onPress={handleSignUp}
-            style={styles.button}
-            disabled={loading}>
-            {loading ? (
-              <ActivityIndicator size="small" color={Colors.white} />
-            ) : (
-              <Text style={styles.buttonText}>Next</Text>
+            <PhoneInputCustom
+              value={phoneNumber}
+              onChangeText={text => {
+                setPhoneNumber(text);
+                if (mobileNumberError) setMobileNumberError(false); // clear error when typing
+              }}
+              error={mobileNumberError}
+            />
+            {mobileNumberError && (
+              <Text style={styles.errorText}>{error.phoneNumber}</Text>
             )}
-          </TouchableOpacity>
 
-          <Text style={styles.terms}>
-            By agreeing to continue, you agree to our{' '}
-            <Text
-              onPress={() => {
-                Linking.openURL(
-                  'https://harmonious-rolypoly-9889e6.netlify.app/terms.html',
-                );
-              }}
-              style={styles.link}>
-              terms
-            </Text>{' '}
-            and acknowledge our{' '}
-            <Text
-              onPress={() => {
-                Linking.openURL(
-                  'https://harmonious-rolypoly-9889e6.netlify.app/privacy.html',
-                );
-              }}
-              style={styles.link}>
-              privacy policy
-            </Text>
-          </Text>
+            <PasswordInput
+              svgIcon={<Password />}
+              placeholder="Create Password"
+              value={password}
+              onChangeText={setPassword}
+              error={passwordError}
+              style={{marginBottom: 5, marginTop: 10}}
+            />
+            {passwordError && (
+              <Text style={styles.errorText}>
+                Password must be atleast 6 Characters long
+              </Text>
+            )}
 
-          <Text style={styles.signIn}>
-            Already have an account?{' '}
-            <Text
-              style={[
-                styles.link,
-                {color: Colors.background, fontFamily: FontFamily.bold},
-              ]}
-              onPress={() => navigation.navigate('Welcome')}>
-              Sign In
+            <PasswordInput
+              svgIcon={<Password />}
+              placeholder="Retype Password"
+              value={password}
+              onChangeText={setPassword}
+              error={passwordError}
+              style={{marginBottom: 5, marginTop: 15}}
+            />
+            {passwordError && (
+              <Text style={styles.errorText}>
+                Password must be atleast 6 Characters long
+              </Text>
+            )}
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={handleSignUp}
+              style={styles.button}
+              disabled={loading}>
+              {loading ? (
+                <ActivityIndicator size="small" color={Colors.white} />
+              ) : (
+                <Text style={styles.buttonText}>Next</Text>
+              )}
+            </TouchableOpacity>
+
+            <Text style={styles.terms}>
+              By agreeing to continue, you agree to our{' '}
+              <Text
+                onPress={() => {
+                  Linking.openURL(
+                    'https://harmonious-rolypoly-9889e6.netlify.app/terms.html',
+                  );
+                }}
+                style={styles.link}>
+                terms
+              </Text>{' '}
+              and acknowledge our{' '}
+              <Text
+                onPress={() => {
+                  Linking.openURL(
+                    'https://harmonious-rolypoly-9889e6.netlify.app/privacy.html',
+                  );
+                }}
+                style={styles.link}>
+                privacy policy
+              </Text>
             </Text>
-          </Text>
-        </View>
+          </View>
+        </SafeAreaView>
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   safeStyle: {
     flex: 1,
-    backgroundColor: Colors.progressBackground,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
     backgroundColor: Colors.progressBackground,
@@ -250,8 +256,8 @@ const styles = StyleSheet.create({
     top: 20,
   },
   heading: {
-    fontSize: 24,
-    FontFamily: FontFamily.medium,
+    fontSize: 28,
+    FontFamily: FontFamily.semiBold,
     marginBottom: 5,
     color: Colors.txtColor,
   },
@@ -290,11 +296,10 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     marginBottom: 12,
-    marginTop: 20,
   },
   buttonText: {
     color: Colors.white,
-    fontWeight: '500',
+    fontFamily: FontFamily.medium,
     fontSize: 16,
   },
   terms: {
@@ -302,7 +307,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     textAlign: 'center',
     color: Colors.lightTxt,
-    marginBottom: 130,
   },
   link: {
     color: Colors.black,

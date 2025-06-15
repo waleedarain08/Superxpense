@@ -45,8 +45,14 @@ import PopCorn from './popcorn.svg';
 import Soda from './soda.svg';
 import HomePurple from './homePurple.svg';
 import FaceScan from './faceScan.svg';
+import Email from './email.svg';
+import Password from './password.svg';
+import FullName from './fullName.svg';
 
 export {
+  FullName,
+  Password,
+  Email,
   FaceScan,
   HomePurple,
   Gros,

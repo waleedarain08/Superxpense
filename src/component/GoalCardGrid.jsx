@@ -1,8 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {Colors} from '../utilis/Colors';
+import {CheckCircle} from '../icons';
 
 const GoalCardGrid = ({data, onPress}) => {
-  const [selectedId, setSelectedId] = React.useState(null);
+  const [selectedIds, setSelectedIds] = React.useState([]);
 
   return (
     <FlatList
@@ -11,29 +13,37 @@ const GoalCardGrid = ({data, onPress}) => {
       numColumns={2}
       contentContainerStyle={styles.grid}
       columnWrapperStyle={{justifyContent: 'space-between'}}
-      extraData={selectedId}
+      extraData={selectedIds}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       renderItem={({item}) => {
-        const isSelected = selectedId === item.id;
+        const isSelected = selectedIds.includes(item.id);
         return (
           <TouchableOpacity
-            style={[
-              styles.card,
-              {backgroundColor: isSelected ? '#00B67A' : '#fff'},
-            ]}
+            style={[styles.card, {backgroundColor: Colors.lightWhite}]}
             onPress={() => {
-              setSelectedId(item.id);
-              onPress(item.id);
+              setSelectedIds(prev =>
+                isSelected
+                  ? prev.filter(id => id !== item.id)
+                  : [...prev, item.id],
+              );
+              onPress(
+                isSelected
+                  ? selectedIds.filter(id => id !== item.id)
+                  : [...selectedIds, item.id],
+              );
             }}>
-            <View
-              style={[
-                styles.iconWrapper,
-                {backgroundColor: isSelected ? '#ffffff' : item.bgColor},
-              ]}>
-              <item.SvgIcon width={24} height={24} />
+            {isSelected ? (
+              <View style={styles.checkCircle}>
+                <CheckCircle color={Colors.black} size={18} />
+              </View>
+            ) : null}
+            <View style={[styles.iconWrapper, {backgroundColor: item.bgColor}]}>
+              <item.SvgIcon width={60} height={60} />
             </View>
-            <Text style={[styles.label,{color: isSelected ? '#ffffff' : '#000000'}]}>{item.label}</Text>
+            <Text style={[styles.label, {color: Colors.txtColor}]}>
+              {item.label}
+            </Text>
           </TouchableOpacity>
         );
       }}
@@ -66,6 +76,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#222',
     textAlign: 'center',
+  },
+  checkCircle: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });
 

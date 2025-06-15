@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
@@ -18,12 +19,14 @@ import {
   MoneyBag,
   Track,
   Investment,
+  LeftBlack,
 } from '../../assets/svgs';
 import SuccessModal from '../../component/SucessModal';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {getItem} from '../../utilis/StorageActions';
 import {get} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
+import {FontFamily} from '../../utilis/Fonts';
 
 const OnBoardingScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -36,27 +39,23 @@ const OnBoardingScreen = ({navigation}) => {
       id: '1',
       label: 'Manage my budget',
       SvgIcon: Budget,
-      bgColor: '#E6F0FF',
     },
-    {id: '2', label: 'Pay off debt', SvgIcon: MoneyBag, bgColor: '#FFEFEF'},
-    {id: '3', label: 'Save for a goal', SvgIcon: Goal, bgColor: '#E8FCE8'},
+    {id: '2', label: 'Pay off debt', SvgIcon: MoneyBag},
+    {id: '3', label: 'Save for a goal', SvgIcon: Goal},
     {
       id: '4',
       label: 'Track my Spending',
       SvgIcon: Track,
-      bgColor: '#FFF5E5',
     },
     {
       id: '5',
       label: 'Track my investment',
       SvgIcon: Investment,
-      bgColor: '#E5F6FF',
     },
     {
       id: '6',
       label: 'Manage my money\nwith my partner',
       SvgIcon: Heart,
-      bgColor: '#F5E5FF',
     },
   ];
 
@@ -100,67 +99,73 @@ const OnBoardingScreen = ({navigation}) => {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={styles.safeStyle}>
-      <KeyboardAwareScrollView>
-        <StepperHeader
-          step={3}
-          totalSteps={6}
-          onBack={() => navigation.goBack()}
-        />
-        <View style={styles.container}>
-          <Text style={styles.heading}>What brings you to Superxpense?</Text>
-          <Text style={styles.subHeading}>
-            Tell us what you're interested in and we will customize the app for
-            your needs
-          </Text>
+    <ImageBackground
+      source={require('../../assets/images/commonBack.png')}
+      style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
+      <SafeAreaView style={styles.safeStyle}>
+        <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+          {/* <LeftBlack onPress={() => navigation.goBack()} /> */}
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}>
+            {/* Replace with your Back Icon SVG */}
+            <LeftBlack />
+          </TouchableOpacity>
+          <View style={styles.container}>
+            <Text style={styles.heading}>
+              What do you want to achieve with Superxpense?
+            </Text>
+            <Text style={styles.subHeading}>
+              Select everything you want superxpense to do for you.
+            </Text>
 
-          <GoalCardGrid
-            data={data}
-            onPress={handlePress}
-            selectedIds={selectedGoals}
+            <GoalCardGrid
+              data={data}
+              onPress={handlePress}
+              selectedIds={selectedGoals}
+            />
+          </View>
+          <TouchableOpacity style={styles.button} onPress={handleNext}>
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
+          <LoaderModal visible={loading} />
+          <SuccessModal
+            visible={successVisible}
+            onContinue={() => {
+              setSuccessVisible(false);
+              navigation.replace('Main');
+            }}
+            userName={name}
           />
-        </View>
-        <TouchableOpacity style={styles.button} onPress={handleNext}>
-          <Text style={styles.buttonText}>Next</Text>
-        </TouchableOpacity>
-        <LoaderModal visible={loading} />
-        <SuccessModal
-          visible={successVisible}
-          onContinue={() => {
-            setSuccessVisible(false);
-            navigation.replace('Main');
-          }}
-          userName={name}
-        />
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   safeStyle: {
     flex: 1,
-    backgroundColor: Colors.progressBackground,
   },
   container: {
-    backgroundColor: Colors.progressBackground,
     justifyContent: 'center',
-    paddingTop: 32,
+    paddingTop: 12,
     paddingBottom: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   heading: {
-    fontSize: 24,
-    fontWeight: '500',
-    textAlign: 'center',
+    fontSize: 28,
+    fontFamily: FontFamily.semiBold,
     marginBottom: 5,
     color: Colors.txtColor,
   },
   subHeading: {
     color: Colors.txtColor,
     fontSize: 16,
+    fontFamily: FontFamily.semiBold,
     marginBottom: 24,
-    textAlign: 'center',
   },
   button: {
     backgroundColor: Colors.btnColor,
@@ -176,6 +181,16 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontWeight: '500',
     fontSize: 16,
+  },
+  backButton: {
+    zIndex: 100,
+    marginLeft: 20,
+    backgroundColor: Colors.white,
+    height: 32,
+    width: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

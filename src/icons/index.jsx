@@ -261,3 +261,13 @@ export const DeleteIcon = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const CheckCircle = ({color, size, style}) => (
+  <VectorIcon
+    name="check-circle"
+    color={color}
+    size={size}
+    type="Octicons"
+    style={style}
+  />
+);

@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
 import {Colors} from '../utilis/Colors';
 
 const IconInput = ({
-  icon,
+  svgIcon,
   placeholder,
   value,
   onChangeText,
@@ -17,10 +16,10 @@ const IconInput = ({
 }) => {
   return (
     <View style={[styles.container, error && styles.errorContainer, style]}>
-      <Icon name={icon} size={20} color={Colors.greyColor} style={styles.icon} />
+      {svgIcon && <View style={styles.icon}>{svgIcon}</View>}
       <TextInput
         placeholder={placeholder}
-        placeholderTextColor={Colors.lightTxt}
+        placeholderTextColor={Colors.txtColor}
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
@@ -37,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.lightWhite,
     borderRadius: 12,
     height: 56,
     paddingHorizontal: 16,
@@ -57,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IconInput; 
+export default IconInput;

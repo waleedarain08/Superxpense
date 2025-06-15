@@ -85,7 +85,7 @@ const WelcomeScreen1 = ({navigation}) => {
       <View style={{paddingHorizontal: 20}}>
         <TouchableOpacity
           style={[styles.emailButton, {backgroundColor: Colors.white}]}
-          onPress={() => navigation.navigate('SignUp')}>
+          onPress={() => navigation.navigate('Welcome')}>
           <Text style={[styles.buttonText, {color: Colors.black}]}>
             Sign up
           </Text>

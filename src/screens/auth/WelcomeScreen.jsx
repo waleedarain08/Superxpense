@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
+import {LeftBlack} from '../../assets/svgs';
 
 const WelcomeScreen = ({navigation}) => {
   return (
@@ -17,12 +18,13 @@ const WelcomeScreen = ({navigation}) => {
       style={styles.container}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}>
+        {/* Replace with your Back Icon SVG */}
+        <LeftBlack />
+      </TouchableOpacity>
       <View style={styles.container}>
-        {/* <TouchableOpacity
-          style={styles.signInButton}
-          onPress={() => navigation.navigate('SignIn')}>
-          <Text style={styles.signInText}>Sign In</Text>
-        </TouchableOpacity> */}
 
         <View style={styles.header}>
           <Text style={styles.welcome}>SUPERXPENSE</Text>
@@ -161,6 +163,17 @@ const styles = StyleSheet.create({
   },
   guestButton: {
     marginBottom: 25,
+    alignItems: 'center',
+  },
+  backButton: {
+    zIndex: 100,
+    marginTop: 50,
+    marginLeft: 20,
+    backgroundColor: Colors.white,
+    height: 32,
+    width: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

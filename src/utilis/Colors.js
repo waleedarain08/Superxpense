@@ -49,4 +49,5 @@ export const Colors = {
   greenTxt: '#1DC693',
   newBorderColor: '#79797933',
   dotsColors: '#0000004D',
+  lightWhite: '#FFFFFFCC',
 };

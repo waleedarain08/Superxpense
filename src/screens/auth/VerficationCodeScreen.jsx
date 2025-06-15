@@ -7,6 +7,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
@@ -15,6 +16,7 @@ import {ArrowRight} from '../../icons';
 import {getItem, setItem, setStringItem} from '../../utilis/StorageActions';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
+import {LeftBlack} from '../../assets/svgs';
 
 const VerficationCodeScreen = ({navigation, route}) => {
   const [code, setCode] = useState(['', '', '', '', '', '']);
@@ -99,37 +101,53 @@ const VerficationCodeScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <StepperHeader
-        step={2}
-        totalSteps={6}
-        onBack={() => navigation.goBack()}
-      />
-      <View style={styles.container}>
-        <Text style={styles.title}>Enter your verification code</Text>
-        <Text style={styles.subtitle}>
-          We just sent a verification code to your email
-        </Text>
-        <Text style={styles.email}>{email}</Text>
-
-        <View style={styles.codeContainer}>
-          {code.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={ref => (inputRefs.current[index] = ref)} // ✅ set persistent refs
-              style={[
-                styles.codeInput,
-                focusedIndex === index && styles.focusedInput,
-              ]}
-              keyboardType="number-pad"
-              returnKeyType="done"
-              maxLength={1}
-              value={digit}
-              onFocus={() => setFocusedIndex(index)}
-              onBlur={() => setFocusedIndex(null)}
-              onChangeText={text => handleInputChange(text, index)}
-            />
-          ))}
+    <ImageBackground
+      source={require('../../assets/images/commonBack.png')}
+      style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
+      <SafeAreaView style={{flex: 1}}>
+        <View style={{flex: 1}}>
+          <LeftBlack
+            onPress={() => navigation.goBack()}
+            style={{marginBottom: 20}}
+          />
+          <Text style={styles.heading}>Enter your verification code</Text>
+          <Text style={styles.subHeading}>
+            We just sent a verification code to your email
+            <Text style={styles.email}>{email}</Text>
+          </Text>
+          <View style={styles.codeContainer}>
+            {code.map((digit, index) => (
+              <React.Fragment key={index}>
+                <TextInput
+                  ref={ref => (inputRefs.current[index] = ref)}
+                  style={[
+                    styles.codeInput,
+                    focusedIndex === index && styles.focusedInput,
+                  ]}
+                  keyboardType="number-pad"
+                  returnKeyType="done"
+                  maxLength={1}
+                  value={digit}
+                  onFocus={() => setFocusedIndex(index)}
+                  onBlur={() => setFocusedIndex(null)}
+                  onChangeText={text => handleInputChange(text, index)}
+                />
+                {index === 2 && (
+                  <Text
+                    style={{
+                      fontSize: 32,
+                      marginHorizontal: 2,
+                      color: Colors.white,
+                      fontFamily: FontFamily.regular,
+                    }}>
+                    -
+                  </Text>
+                )}
+              </React.Fragment>
+            ))}
+          </View>
         </View>
         <View style={styles.resendContainer}>
           {timer > 0 ? (
@@ -148,8 +166,8 @@ const VerficationCodeScreen = ({navigation, route}) => {
             Continue <ArrowRight size={14} />
           </Text>
         </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -183,12 +201,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   codeInput: {
-    width: 50,
-    height: 50,
+    width: 48,
+    height: 48,
     borderRadius: 8,
     textAlign: 'center',
     fontSize: 18,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.lightWhite,
     color: Colors.txtColor,
     fontFamily: FontFamily.regular,
     borderWidth: 1,
@@ -222,6 +240,18 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontFamily: FontFamily.medium,
     fontSize: 16,
+  },
+  heading: {
+    fontSize: 28,
+    FontFamily: FontFamily.semiBold,
+    marginBottom: 5,
+    color: Colors.txtColor,
+  },
+  subHeading: {
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
+    fontSize: 16,
+    marginBottom: 24,
   },
 });
 
