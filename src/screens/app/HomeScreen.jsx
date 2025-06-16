@@ -349,18 +349,25 @@ const HomeScreen = ({navigation}) => {
     } catch (err) {
       console.error('Send error:', err);
       // Remove thinking message and show error message to user
-      setChats(prevChats => {
-        const newChats = prevChats.filter(chat => !chat.isThinking);
-        return [
-          ...newChats,
-          {
-            message: 'Sorry, I encountered an error. Please try again later.',
-            isUser: false,
-            timestamp: new Date().toLocaleTimeString(),
-            isError: true,
-          },
-        ];
-      });
+      // setChats(prevChats => {
+      //   const newChats = prevChats.filter(chat => !chat.isThinking);
+      //   return [
+      //     ...newChats,
+      //     {
+      //       message: 'Sorry, I encountered an error. Please try again later.',
+      //       isUser: false,
+      //       timestamp: new Date().toLocaleTimeString(),
+      //       isError: true,
+      //     },
+      //   ];
+      // });
+      setChats([]);
+      Alert.alert(
+        'Error',
+        'Sorry, we encountered an error. Please try again later.',
+        [{text: 'OK'}],
+        {cancelable: false},
+      );
     } finally {
       setSendMessageLoading(false);
     }
