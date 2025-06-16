@@ -348,19 +348,6 @@ const HomeScreen = ({navigation}) => {
       setMessage('');
     } catch (err) {
       console.error('Send error:', err);
-      // Remove thinking message and show error message to user
-      // setChats(prevChats => {
-      //   const newChats = prevChats.filter(chat => !chat.isThinking);
-      //   return [
-      //     ...newChats,
-      //     {
-      //       message: 'Sorry, I encountered an error. Please try again later.',
-      //       isUser: false,
-      //       timestamp: new Date().toLocaleTimeString(),
-      //       isError: true,
-      //     },
-      //   ];
-      // });
       setChats([]);
       Alert.alert(
         'Error',
@@ -464,7 +451,17 @@ const HomeScreen = ({navigation}) => {
                 </View>
               </LinearGradient>
             </TouchableOpacity>
-
+            {chats.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setChats([])}
+                style={{alignItems: 'flex-end', marginBottom: 10}}>
+                <Icon
+                  name="close-circle"
+                  size={25}
+                  color={Colors.txtColor}
+                />
+              </TouchableOpacity>
+            )}
             {sendMessageLoading ? (
               <View style={[styles.superCard2, styles.loadingContainer]}>
                 <ActivityIndicator size="large" color={Colors.background} />
