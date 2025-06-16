@@ -542,7 +542,7 @@ const HomeScreen = ({navigation}) => {
                 onPress={handleDocumentPick}
                 style={[styles.superCard2]}>
                 <Text style={styles.recentLabel3}>
-                  Upload your contract file to set Payment reminders
+                  Upload your contract file to set Payment Reminders
                 </Text>
                 <View style={styles.fileUploadArea}>
                   <Icon
