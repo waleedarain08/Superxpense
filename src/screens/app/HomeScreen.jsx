@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   Platform,
   ScrollView,
@@ -27,6 +28,7 @@ import moment from 'moment';
 import LargestPurchaseCard from '../../component/LargestPurchaseCard';
 import SpendingChart from '../../component/SpendingChart';
 import FloatingChatButton from '../../component/FloatingChatButton';
+import DocumentPicker from 'react-native-document-picker';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -63,6 +65,9 @@ const HomeScreen = ({navigation}) => {
   const [monthlySpending, setMonthlySpending] = useState(null);
   const [lastSpending, setLastSpending] = useState(null);
   const [budgetCategoryData, setBudgetCategoryData] = useState([]);
+  const [message, setMessage] = useState('');
+  const [sendMessageLoading, setSendMessageLoading] = useState(false);
+  const [chats, setChats] = useState([]);
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
@@ -254,6 +259,128 @@ const HomeScreen = ({navigation}) => {
       return () => clearTimeout(timeout);
     }, [month, year]),
   );
+  const handleSendMessage = async (file = null) => {
+    if (!message.trim() && !file) return;
+
+    try {
+      setSendMessageLoading(true);
+      const userData = await getItem('userData');
+      const token = userData.data?.accessToken;
+
+      const timestamp = new Date().toLocaleTimeString();
+
+      // Add user message or file-sending indicator
+      setChats(prevChats => [
+        ...prevChats,
+        {
+          message: file ? `Uploading document: ${file.name}` : message,
+          isUser: true,
+          timestamp,
+        },
+        {
+          message: 'Thinking...',
+          isUser: false,
+          isThinking: true,
+          timestamp,
+        },
+      ]);
+
+      let formData;
+      let headers;
+
+      if (file) {
+        formData = new FormData();
+        formData.append('file', {
+          uri: file.uri,
+          name: file.name,
+          type: file.type || 'application/octet-stream',
+        });
+        formData.append('query', message); // optionally include the message too
+        headers = {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        };
+      }
+
+      const response = await fetch(API.createChat, {
+        method: 'POST',
+        headers: file
+          ? headers
+          : {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+        body: file ? formData : JSON.stringify({query: message}),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // Remove thinking and show bot reply
+      setChats(prevChats => {
+        const newChats = prevChats.filter(chat => !chat.isThinking);
+        return [
+          ...newChats,
+          {
+            message: file
+              ? data?.data?.response ||
+                'Sorry, there was an error processing your request'
+              : data?.data ||
+                'Sorry, there was an error processing your request',
+            isUser: false,
+            timestamp: new Date().toLocaleTimeString(),
+            installments: data?.data?.installments || [],
+          },
+        ];
+      });
+
+      if (file && data?.data?.response) {
+        Alert.alert(
+          'Payment Reminders Set',
+          'You will be notified when payment is due.',
+          [{text: 'OK'}],
+          {cancelable: false},
+        );
+      }
+
+      setMessage('');
+    } catch (err) {
+      console.error('Send error:', err);
+      // Remove thinking message and show error message to user
+      setChats(prevChats => {
+        const newChats = prevChats.filter(chat => !chat.isThinking);
+        return [
+          ...newChats,
+          {
+            message: 'Sorry, I encountered an error. Please try again later.',
+            isUser: false,
+            timestamp: new Date().toLocaleTimeString(),
+            isError: true,
+          },
+        ];
+      });
+    } finally {
+      setSendMessageLoading(false);
+    }
+  };
+
+  const handleDocumentPick = async () => {
+    try {
+      const file = await DocumentPicker.pickSingle({
+        type: DocumentPicker.types.allFiles,
+      });
+
+      await handleSendMessage(file);
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        console.log('User cancelled document picker');
+      } else {
+        console.error('Document pick error:', err);
+      }
+    }
+  };
 
   return (
     <>
@@ -310,6 +437,7 @@ const HomeScreen = ({navigation}) => {
               data={categoryData}
               month={selectedDate.format('MMM YYYY')}
             />
+
             <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
               <LinearGradient
                 colors={['#6CFFC2', '#FFFFFF']}
@@ -329,6 +457,97 @@ const HomeScreen = ({navigation}) => {
                 </View>
               </LinearGradient>
             </TouchableOpacity>
+
+            {sendMessageLoading ? (
+              <View style={[styles.superCard2, styles.loadingContainer]}>
+                <ActivityIndicator size="large" color={Colors.txtColor} />
+                <Text style={styles.loadingText}>Processing your file...</Text>
+              </View>
+            ) : chats.length > 0 ? (
+              <View style={styles.chatContainer}>
+                {chats.map((chat, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.messageContainer,
+                      chat.isUser ? styles.userMessage : styles.botMessage,
+                    ]}>
+                    {Array.isArray(chat.installments) &&
+                      chat.installments.length > 0 && (
+                        <View
+                          style={{
+                            marginTop: 8,
+                            backgroundColor: Colors.white,
+                            borderRadius: 8,
+                            padding: 4,
+                            marginBotton: 4,
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              borderBottomWidth: 1,
+                              borderColor: '#e0e0e0',
+                              paddingBottom: 4,
+                              marginBottom: 4,
+                            }}>
+                            <Text style={{flex: 0.3, fontSize: 10}}>No</Text>
+                            <Text style={{flex: 1, fontSize: 10}}>
+                              Milestone
+                            </Text>
+                            <Text style={{flex: 1, fontSize: 10}}>
+                              Due Date
+                            </Text>
+                            <Text style={{flex: 1, fontSize: 10}}>Amount</Text>
+                          </View>
+                          {chat.installments.map((inst, idx) => (
+                            <View
+                              key={idx}
+                              style={{
+                                flexDirection: 'row',
+                                paddingVertical: 2,
+                              }}>
+                              <Text style={{flex: 0.3, fontSize: 11}}>
+                                {inst.installment_no}
+                              </Text>
+                              <Text style={{flex: 1, fontSize: 11}}>
+                                {inst.milestone}
+                              </Text>
+                              <Text style={{flex: 1, fontSize: 11}}>
+                                {inst.date}
+                              </Text>
+                              <Text
+                                style={{
+                                  flex: 1,
+                                  fontSize: 12,
+                                  fontWeight: 'bold',
+                                }}>
+                                {Number(inst.amount).toLocaleString()} AED
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      )}
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={handleDocumentPick}
+                style={[styles.superCard2]}>
+                <Text style={styles.recentLabel3}>
+                  Drag and drop your files here or click to browse
+                </Text>
+                <View style={styles.fileUploadArea}>
+                  <Icon
+                    name="cloud-upload-outline"
+                    size={32}
+                    color={Colors.black}
+                  />
+                  <Text style={styles.uploadText}>Drop files here</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+
             <BudgetCard data={budgetCategoryData?.data || []} month={month} />
             {/* <UpcomingBills navigation={navigation} /> */}
           </ScrollView>
@@ -494,6 +713,23 @@ const styles = StyleSheet.create({
     borderLeftColor: Colors.greenColor,
     marginBottom: 15,
   },
+
+  superCard2: {
+    borderRadius: 24,
+    backgroundColor: Colors.white,
+    borderLeftWidth: 1,
+    borderLeftColor: Colors.greenColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 40,
+    marginBottom: 15,
+  },
+  fileUploadArea: {
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 10,
+  },
   recentLabel: {
     fontSize: 12,
     fontFamily: FontFamily.medium,
@@ -505,6 +741,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     color: Colors.black,
     marginLeft: 16,
+  },
+  recentLabel3: {
+    fontSize: 15,
+    fontFamily: FontFamily.regular,
+    color: Colors.black,
+    textAlign: 'center',
   },
   superCardHeader: {
     marginTop: 11,
@@ -564,5 +806,11 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontWeight: '500',
     fontSize: 16,
+  },
+  chatContainer: {
+    backgroundColor: Colors.white,
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 15,
   },
 });
