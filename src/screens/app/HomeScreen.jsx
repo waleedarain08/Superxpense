@@ -543,7 +543,7 @@ const HomeScreen = ({navigation}) => {
                     size={32}
                     color={Colors.black}
                   />
-                  <Text style={styles.uploadText}>Upload files here</Text>
+                  <Text style={styles.uploadText}>Upload file here</Text>
                 </View>
               </TouchableOpacity>
             )}
