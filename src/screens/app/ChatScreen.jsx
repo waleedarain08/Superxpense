@@ -55,6 +55,7 @@ const HomeScreen = ({navigation}) => {
       const userData = await getItem('userData');
       const token = userData.data?.accessToken;
       const response = await get(`${API.getAllChats}`, null, token);
+      console.log('Fetched chats:', response);
       // Transform the history into chat messages and reverse the order
       const formattedChats = response.data.history
         .reverse() // Reverse the array to show oldest messages first
@@ -152,16 +153,17 @@ const HomeScreen = ({navigation}) => {
       });
 
       const data = await response.json();
-
+      //console.log('Response data:', data);
       // Remove thinking and show bot reply
       setChats(prevChats => {
         const newChats = prevChats.filter(chat => !chat.isThinking);
         return [
           ...newChats,
           {
-            message: data.data || 'Received response.',
+            message: file ? data.data.response : data.data,
             isUser: false,
             timestamp: new Date().toLocaleTimeString(),
+            installments: data.data.installments || [],
           },
         ];
       });
@@ -251,8 +253,34 @@ const HomeScreen = ({navigation}) => {
                       styles.messageText,
                       chat.isThinking && styles.thinkingText,
                     ]}>
-                    {chat.isUser ? chat.message : formatAndHighlightAmounts(chat.message)}
+                    {chat.message}
                   </Text>
+                  {Array.isArray(chat.installments) && chat.installments.length > 0 && (
+                    <View style={{ marginTop: 8, backgroundColor: '#f7f7f7', borderRadius: 8, padding: 4,marginBotton:4 }}>
+                      <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: '#e0e0e0', paddingBottom: 4, marginBottom: 4 }}>
+                        <Text style={{ flex: 0.3,  fontSize: 10 }}>No</Text>
+                        <Text style={{ flex: 1,  fontSize: 10 }}>Milestone</Text>
+                        <Text style={{ flex: 1,  fontSize: 10 }}>Due Date</Text>
+                        <Text style={{ flex: 1,  fontSize: 10 }}>Amount</Text>
+                      </View>
+                      {chat.installments.map((inst, idx) => (
+                        <View key={idx} style={{ flexDirection: 'row', paddingVertical: 2 }}>
+                          <Text style={{ flex: 0.3, fontSize: 11 }}>
+                            {inst.installment_no}
+                          </Text>
+                          <Text style={{ flex: 1, fontSize: 11 }}>
+                            {inst.milestone}
+                          </Text>
+                          <Text style={{ flex: 1, fontSize: 11 }}>
+                            {inst.date}
+                          </Text>
+                           <Text style={{ flex: 1, fontSize: 12, fontWeight: 'bold' }}>
+                            {Number(inst.amount).toLocaleString()} AED
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  )}
                   {!chat.isThinking && (
                     <Text style={styles.timestampText}>{chat.timestamp}</Text>
                   )}
@@ -462,17 +490,17 @@ const styles = StyleSheet.create({
 
 export default HomeScreen;
 
-const formatAndHighlightAmounts = (text) => {
-  const parts = text.split(/(\d{6,})/); // Split around numbers with 6+ digits
-  return parts.map((part, index) => {
-    if (/^\d{6,}$/.test(part)) {
-      const formatted = Number(part).toLocaleString(); // Add commas
-      return (
-        <Text key={index} style={{ fontWeight: 'bold', fontSize:18 }}>
-          {formatted} AED
-        </Text>
-      );
-    }
-    return <Text key={index}>{part}</Text>;
-  });
-};
+// const formatAndHighlightAmounts = (text) => {
+//   const parts = text.split(/(\d{6,})/); 
+//   return parts.map((part, index) => {
+//     if (/^\d{6,}$/.test(part)) {
+//       const formatted = Number(part).toLocaleString(); // Add commas
+//       return (
+//         <Text key={index} style={{ fontWeight: 'bold', fontSize:18 }}>
+//           {formatted} AED
+//         </Text>
+//       );
+//     }
+//     return <Text key={index}>{part}</Text>;
+//   });
+// };
