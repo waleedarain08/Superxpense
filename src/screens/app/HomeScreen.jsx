@@ -29,6 +29,7 @@ import LargestPurchaseCard from '../../component/LargestPurchaseCard';
 import SpendingChart from '../../component/SpendingChart';
 import FloatingChatButton from '../../component/FloatingChatButton';
 import DocumentPicker from 'react-native-document-picker';
+import ContractInstallmentsTable from '../../component/ContractInstallmentTable';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -68,6 +69,7 @@ const HomeScreen = ({navigation}) => {
   const [message, setMessage] = useState('');
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [chats, setChats] = useState([]);
+  const [contractData, setContractData] = useState([]);
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
@@ -245,6 +247,19 @@ const HomeScreen = ({navigation}) => {
       console.log('Error fetching LineGraph Data:', error);
     }
   };
+  const fetchDocumentReminder = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(`${API.documentReminder}`, {}, token);
+      setContractData(response.data[0]);
+      // setBudgetCategoryData(response); // or response?.data if needed
+      // console.log(response.data[0]);
+    } catch (error) {
+      console.log('Error fetching LineGraph Data:', error);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -253,6 +268,7 @@ const HomeScreen = ({navigation}) => {
         fetchBarGraph();
         fetchMonthlyIncome();
         fetchBudgetBycategory();
+        fetchDocumentReminder();
       }, 1500); // 1.5 seconds
 
       // Cleanup timeout if screen is unfocused before timeout completes
@@ -451,109 +467,8 @@ const HomeScreen = ({navigation}) => {
                 </View>
               </LinearGradient>
             </TouchableOpacity>
-            {chats.length > 0 && (
-              <TouchableOpacity
-                onPress={() => setChats([])}
-                style={{alignItems: 'flex-end', marginBottom: 10}}>
-                <Icon
-                  name="close-circle"
-                  size={25}
-                  color={Colors.txtColor}
-                />
-              </TouchableOpacity>
-            )}
-            {sendMessageLoading ? (
-              <View style={[styles.superCard2, styles.loadingContainer]}>
-                <ActivityIndicator size="large" color={Colors.background} />
-                <Text style={styles.loadingText}>Processing your file...</Text>
-              </View>
-            ) : chats.length > 0 ? (
-              <View style={styles.chatContainer}>
-                {chats.map((chat, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.messageContainer,
-                      chat.isUser ? styles.userMessage : styles.botMessage,
-                    ]}>
-                    {Array.isArray(chat.installments) &&
-                      chat.installments.length > 0 && (
-                        <View
-                          style={{
-                            marginTop: 8,
-                            backgroundColor: Colors.white,
-                            borderRadius: 8,
-                            padding: 4,
-                            marginBotton: 4,
-                          }}>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              borderBottomWidth: 1,
-                              borderColor: '#e0e0e0',
-                              paddingBottom: 4,
-                              marginBottom: 4,
-                            }}>
-                            <Text style={{flex: 0.3, fontSize: 10}}>No</Text>
-                            <Text style={{flex: 1, fontSize: 10}}>
-                              Milestone
-                            </Text>
-                            <Text style={{flex: 1, fontSize: 10}}>
-                              Due Date
-                            </Text>
-                            <Text style={{flex: 1, fontSize: 10}}>Amount</Text>
-                          </View>
-                          {chat.installments.map((inst, idx) => (
-                            <View
-                              key={idx}
-                              style={{
-                                flexDirection: 'row',
-                                paddingVertical: 4,
-                              }}>
-                              <Text style={{flex: 0.3, fontSize: 11}}>
-                                {inst.installment_no}
-                              </Text>
-                              <Text style={{flex: 1, fontSize: 11}}>
-                                {inst.milestone}
-                              </Text>
-                              <Text style={{flex: 1, fontSize: 11}}>
-                                {inst.date}
-                              </Text>
-                              <Text
-                                style={{
-                                  flex: 1,
-                                  fontSize: 12,
-                                  fontWeight: 'bold',
-                                }}>
-                                {Number(inst.amount).toLocaleString()} AED
-                              </Text>
-                            </View>
-                          ))}
-                        </View>
-                      )}
-                  </View>
-                ))}
-              </View>
-            ) : (
-              <TouchableOpacity
-                onPress={handleDocumentPick}
-                style={[styles.superCard2]}>
-                <Text style={styles.recentLabel3}>
-                  Upload your contract file to set Payment Reminders
-                </Text>
-                <View style={styles.fileUploadArea}>
-                  <Icon
-                    name="cloud-upload-outline"
-                    size={32}
-                    color={Colors.black}
-                  />
-                  <Text style={styles.uploadText}>Upload file here</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-
+            <ContractInstallmentsTable contract={contractData || []} />
             <BudgetCard data={budgetCategoryData?.data || []} month={month} />
-            {/* <UpcomingBills navigation={navigation} /> */}
           </ScrollView>
         )}
         {selectedTab === 'Spending' && (
