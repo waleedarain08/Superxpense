@@ -29,7 +29,7 @@ import LargestPurchaseCard from '../../component/LargestPurchaseCard';
 import SpendingChart from '../../component/SpendingChart';
 import FloatingChatButton from '../../component/FloatingChatButton';
 import DocumentPicker from 'react-native-document-picker';
-import ContractInstallmentsTable from '../../component/ContractInstallmentTable';
+import ContractInstallmentsList from '../../component/ContractInstallmentTable';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -467,7 +467,7 @@ const HomeScreen = ({navigation}) => {
                 </View>
               </LinearGradient>
             </TouchableOpacity>
-            <ContractInstallmentsTable contract={contractData || []} />
+            <ContractInstallmentsList contract={contractData || []} />
             <BudgetCard data={budgetCategoryData?.data || []} month={month} />
           </ScrollView>
         )}
