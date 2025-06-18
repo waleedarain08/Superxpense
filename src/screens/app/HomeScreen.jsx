@@ -275,122 +275,122 @@ const HomeScreen = ({navigation}) => {
       return () => clearTimeout(timeout);
     }, [month, year]),
   );
-  const handleSendMessage = async (file = null) => {
-    if (!message.trim() && !file) return;
+  // const handleSendMessage = async (file = null) => {
+  //   if (!message.trim() && !file) return;
 
-    try {
-      setSendMessageLoading(true);
-      const userData = await getItem('userData');
-      const token = userData.data?.accessToken;
+  //   try {
+  //     setSendMessageLoading(true);
+  //     const userData = await getItem('userData');
+  //     const token = userData.data?.accessToken;
 
-      const timestamp = new Date().toLocaleTimeString();
+  //     const timestamp = new Date().toLocaleTimeString();
 
-      // Add user message or file-sending indicator
-      setChats(prevChats => [
-        ...prevChats,
-        {
-          message: file ? `Uploading document: ${file.name}` : message,
-          isUser: true,
-          timestamp,
-        },
-        {
-          message: 'Thinking...',
-          isUser: false,
-          isThinking: true,
-          timestamp,
-        },
-      ]);
+  //     // Add user message or file-sending indicator
+  //     setChats(prevChats => [
+  //       ...prevChats,
+  //       {
+  //         message: file ? `Uploading document: ${file.name}` : message,
+  //         isUser: true,
+  //         timestamp,
+  //       },
+  //       {
+  //         message: 'Thinking...',
+  //         isUser: false,
+  //         isThinking: true,
+  //         timestamp,
+  //       },
+  //     ]);
 
-      let formData;
-      let headers;
+  //     let formData;
+  //     let headers;
 
-      if (file) {
-        formData = new FormData();
-        formData.append('file', {
-          uri: file.uri,
-          name: file.name,
-          type: file.type || 'application/octet-stream',
-        });
-        formData.append('query', message); // optionally include the message too
-        headers = {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        };
-      }
+  //     if (file) {
+  //       formData = new FormData();
+  //       formData.append('file', {
+  //         uri: file.uri,
+  //         name: file.name,
+  //         type: file.type || 'application/octet-stream',
+  //       });
+  //       formData.append('query', message); // optionally include the message too
+  //       headers = {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'multipart/form-data',
+  //       };
+  //     }
 
-      const response = await fetch(API.createChat, {
-        method: 'POST',
-        headers: file
-          ? headers
-          : {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-        body: file ? formData : JSON.stringify({query: message}),
-      });
+  //     const response = await fetch(API.createChat, {
+  //       method: 'POST',
+  //       headers: file
+  //         ? headers
+  //         : {
+  //             'Content-Type': 'application/json',
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //       body: file ? formData : JSON.stringify({query: message}),
+  //     });
 
-      if (!response.ok) {
-        throw new Error(`Server responded with status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`Server responded with status: ${response.status}`);
+  //     }
 
-      const data = await response.json();
-      // Remove thinking and show bot reply
-      setChats(prevChats => {
-        const newChats = prevChats.filter(chat => !chat.isThinking);
-        return [
-          ...newChats,
-          {
-            message: file
-              ? data?.data?.response ||
-                'Sorry, there was an error processing your request'
-              : data?.data ||
-                'Sorry, there was an error processing your request',
-            isUser: false,
-            timestamp: new Date().toLocaleTimeString(),
-            installments: data?.data?.installments || [],
-          },
-        ];
-      });
+  //     const data = await response.json();
+  //     // Remove thinking and show bot reply
+  //     setChats(prevChats => {
+  //       const newChats = prevChats.filter(chat => !chat.isThinking);
+  //       return [
+  //         ...newChats,
+  //         {
+  //           message: file
+  //             ? data?.data?.response ||
+  //               'Sorry, there was an error processing your request'
+  //             : data?.data ||
+  //               'Sorry, there was an error processing your request',
+  //           isUser: false,
+  //           timestamp: new Date().toLocaleTimeString(),
+  //           installments: data?.data?.installments || [],
+  //         },
+  //       ];
+  //     });
 
-      if (file && data?.data?.response) {
-        Alert.alert(
-          'Payment Reminders Set',
-          'You will be notified when payment is due.',
-          [{text: 'OK'}],
-          {cancelable: false},
-        );
-      }
+  //     if (file && data?.data?.response) {
+  //       Alert.alert(
+  //         'Payment Reminders Set',
+  //         'You will be notified when payment is due.',
+  //         [{text: 'OK'}],
+  //         {cancelable: false},
+  //       );
+  //     }
 
-      setMessage('');
-    } catch (err) {
-      console.error('Send error:', err);
-      setChats([]);
-      Alert.alert(
-        'Error',
-        'Sorry, we encountered an error. Please try again later.',
-        [{text: 'OK'}],
-        {cancelable: false},
-      );
-    } finally {
-      setSendMessageLoading(false);
-    }
-  };
+  //     setMessage('');
+  //   } catch (err) {
+  //     console.error('Send error:', err);
+  //     setChats([]);
+  //     Alert.alert(
+  //       'Error',
+  //       'Sorry, we encountered an error. Please try again later.',
+  //       [{text: 'OK'}],
+  //       {cancelable: false},
+  //     );
+  //   } finally {
+  //     setSendMessageLoading(false);
+  //   }
+  // };
 
-  const handleDocumentPick = async () => {
-    try {
-      const file = await DocumentPicker.pickSingle({
-        type: DocumentPicker.types.allFiles,
-      });
+  // const handleDocumentPick = async () => {
+  //   try {
+  //     const file = await DocumentPicker.pickSingle({
+  //       type: DocumentPicker.types.allFiles,
+  //     });
 
-      await handleSendMessage(file);
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        console.log('User cancelled document picker');
-      } else {
-        console.error('Document pick error:', err);
-      }
-    }
-  };
+  //     await handleSendMessage(file);
+  //   } catch (err) {
+  //     if (DocumentPicker.isCancel(err)) {
+  //       console.log('User cancelled document picker');
+  //     } else {
+  //       console.error('Document pick error:', err);
+  //     }
+  //   }
+  // };
 
   return (
     <>

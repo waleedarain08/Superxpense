@@ -8,7 +8,7 @@ const InstallmentCard = ({installment}) => {
   return (
     <View
       style={{
-        backgroundColor: '#fff',
+        backgroundColor: Colors.white,
         borderRadius: 12,
         padding: 14,
         marginBottom: 12,
@@ -22,23 +22,24 @@ const InstallmentCard = ({installment}) => {
       }}>
       {/* Header Row */}
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{fontWeight: '600', fontSize: 14, color: '#111827'}}>
+        <Text style={{fontWeight: '500', fontSize: 13, color: '#111827'}}>
           Installment #{installment.installmentNo}
         </Text>
         <View
           style={{
-            backgroundColor: '#59f7ad',
+            backgroundColor: Colors.green,
             paddingVertical: 4,
             paddingHorizontal: 10,
             borderRadius: 16,
-            borderWidth: 1,
+            borderWidth: 0.1,
             borderColor: Colors.background,
           }}>
           <Text
             style={{
-              fontSize: 12,
+              fontSize: 14,
               color: Colors.black,
               fontFamily: FontFamily.medium,
+              fontWeight: '600',
             }}>
             {Number(installment.amount).toLocaleString()} AED
           </Text>
@@ -46,6 +47,7 @@ const InstallmentCard = ({installment}) => {
       </View>
 
       {/* Sub Info */}
+      <View style={{flexDirection:'row',justifyContent:'space-between', marginTop: 8}}>
       <Text
         style={{
           marginTop: 4,
@@ -56,17 +58,9 @@ const InstallmentCard = ({installment}) => {
         {moment(installment.dueDate).format('ddd, MMM D, YYYY')}
       </Text>
 
-      {/* Milestone Badge */}
-      <View
-        style={{
-          marginTop: 10,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <View
+       <View
           style={{
-            backgroundColor: '#F3F4F6',
+            backgroundColor: Colors.lightestGreen,
             paddingVertical: 4,
             paddingHorizontal: 10,
             borderRadius: 16,
@@ -80,21 +74,22 @@ const InstallmentCard = ({installment}) => {
             {installment.milestone}
           </Text>
         </View>
-      </View>
+        </View>
+
     </View>
   );
 };
 
 const ContractInstallmentsList = ({contract}) => {
   return (
-    <View style={{padding: 16}}>
+    <View style={{padding: 0}}>
       <Text
         style={{fontSize: 18, fontFamily: FontFamily.bold, marginBottom: 12}}>
-        Installment Schedule
+        Payment Schedule
       </Text>
 
       {Array.isArray(contract?.installments) &&
-      contract.installments.length > 0 ? (
+      contract?.installments?.length > 0 ? (
         <FlatList
           data={[...contract.installments].sort(
             (a, b) => a.installmentNo - b.installmentNo,
@@ -111,7 +106,7 @@ const ContractInstallmentsList = ({contract}) => {
             textAlign: 'center',
             marginTop: 20,
           }}>
-          No installments available.
+          No Data Found.
         </Text>
       )}
     </View>
