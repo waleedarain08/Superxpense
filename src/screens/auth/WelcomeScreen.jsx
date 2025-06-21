@@ -20,45 +20,46 @@ const WelcomeScreen = ({navigation}) => {
       resizeMode="cover">
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => navigation.goBack()}>
+        onPress={() => navigation.navigate('Welcome1')}>
         {/* Replace with your Back Icon SVG */}
         <LeftBlack />
       </TouchableOpacity>
       <View style={styles.container}>
+        <View style={styles.mainContainer}>
+          <View style={styles.header}>
+            <Text style={styles.welcome}>SUPERXPENSE</Text>
+            <Text style={styles.subtitle}>
+              Get more out of your {'\n'}money & spending.
+            </Text>
+          </View>
 
-        <View style={styles.header}>
-          <Text style={styles.welcome}>SUPERXPENSE</Text>
-          <Text style={styles.subtitle}>
-            Get more out of your {'\n'}money & spending.
-          </Text>
-        </View>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={styles.emailButton}
+              onPress={() => navigation.navigate('SignUp')}>
+              <Text style={styles.buttonText}>Continue with Email</Text>
+            </TouchableOpacity>
 
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.emailButton}
-            onPress={() => navigation.navigate('SignUp')}>
-            <Text style={styles.buttonText}>Continue with Email</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.appleButton}
+              onPress={() => navigation.navigate('Main')}>
+              <Text style={styles.appleIcon}></Text>
+              <Text style={styles.appleButtonText}>Continue with Apple</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.appleButton}
-            onPress={() => navigation.navigate('Main')}>
-            <Text style={styles.appleIcon}></Text>
-            <Text style={styles.appleButtonText}>Continue with Apple</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.appleButton}
+              onPress={() => navigation.navigate('Main')}>
+              <Text style={styles.appleIcon}></Text>
+              <Text style={styles.appleButtonText}>Continue with Google</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.appleButton}
-            onPress={() => navigation.navigate('Main')}>
-            <Text style={styles.appleIcon}></Text>
-            <Text style={styles.appleButtonText}>Continue with Google</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Main')}
-            style={styles.guestButton}>
-            <Text style={styles.guestText}>Continue as Guest</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Main')}
+              style={styles.guestButton}>
+              <Text style={styles.guestText}>Continue as Guest</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -175,5 +176,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mainContainer: {
+    backgroundColor: Colors.lightestGreen,
+    paddingTop: 24,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   },
 });

@@ -27,6 +27,8 @@ import {getItem} from '../../utilis/StorageActions';
 import {get} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 import {FontFamily} from '../../utilis/Fonts';
+import {ChevronLeft} from '../../icons';
+import StepIndicator from '../../component/StepIndicator';
 
 const OnBoardingScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -111,8 +113,11 @@ const OnBoardingScreen = ({navigation}) => {
             style={styles.backButton}
             onPress={() => navigation.goBack()}>
             {/* Replace with your Back Icon SVG */}
-            <LeftBlack />
+            <ChevronLeft size={25} color={Colors.activeTabColor} />
           </TouchableOpacity>
+          <View style={{marginTop: 24, marginHorizontal: 10}}>
+            <StepIndicator totalSteps={3} currentStep={3} />
+          </View>
           <View style={styles.container}>
             <Text style={styles.heading}>
               What do you want to achieve with Superxpense?
@@ -160,12 +165,14 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.semiBold,
     marginBottom: 5,
     color: Colors.txtColor,
+    marginHorizontal: 10,
   },
   subHeading: {
     color: Colors.txtColor,
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
     marginBottom: 24,
+    marginHorizontal: 10,
   },
   button: {
     backgroundColor: Colors.btnColor,
@@ -184,7 +191,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     zIndex: 100,
-    marginLeft: 20,
+    marginLeft: 14,
     backgroundColor: Colors.white,
     height: 32,
     width: 32,

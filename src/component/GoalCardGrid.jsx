@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {Colors} from '../utilis/Colors';
 import {CheckCircle} from '../icons';
+import {FontFamily} from '../utilis/Fonts';
+import {Bolt} from '../assets/svgs';
 
 const GoalCardGrid = ({data, onPress}) => {
   const [selectedIds, setSelectedIds] = React.useState([]);
@@ -35,7 +37,7 @@ const GoalCardGrid = ({data, onPress}) => {
             }}>
             {isSelected ? (
               <View style={styles.checkCircle}>
-                <CheckCircle color={Colors.black} size={18} />
+                <CheckCircle color={Colors.background} size={18} />
               </View>
             ) : null}
             <View style={[styles.iconWrapper, {backgroundColor: item.bgColor}]}>
@@ -44,6 +46,17 @@ const GoalCardGrid = ({data, onPress}) => {
             <Text style={[styles.label, {color: Colors.txtColor}]}>
               {item.label}
             </Text>
+            <View style={styles.boltStyle}>
+              <Bolt />
+              <Text
+                style={{
+                  fontFamily: FontFamily.medium,
+                  fontSize: 13,
+                  marginLeft: 3,
+                }}>
+                Top Picked
+              </Text>
+            </View>
           </TouchableOpacity>
         );
       }}
@@ -81,6 +94,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
+  },
+  boltStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
   },
 });
 

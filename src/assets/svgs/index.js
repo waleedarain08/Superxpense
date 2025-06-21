@@ -48,8 +48,10 @@ import FaceScan from './faceScan.svg';
 import Email from './email.svg';
 import Password from './password.svg';
 import FullName from './fullName.svg';
+import Bolt from './bolt.svg';
 
 export {
+  Bolt,
   FullName,
   Password,
   Email,

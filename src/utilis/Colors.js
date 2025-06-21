@@ -50,4 +50,10 @@ export const Colors = {
   newBorderColor: '#79797933',
   dotsColors: '#0000004D',
   lightWhite: '#FFFFFFCC',
+  lightestGreen: '#28A08C1A',
+  lightestWhite: '#FFFFFF4D',
+  lightestGreenWBlack: '#28A08C4D',
+  grayIcon: '#6B7878',
+  lightestBlack: '#00000066',
+  newGreenBackground: '#D9FFED',
 };

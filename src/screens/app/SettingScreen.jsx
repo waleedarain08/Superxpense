@@ -217,7 +217,10 @@ const SettingItem = ({title, IconComponent, screenName}) => {
     const response = await del(`${API.deleteUserAccount}`, {}, token);
     //console.log('response', response);
     if (response) {
-      Alert.alert('Success', 'Account deletion request generated successfully,Your account will be deleted within 24 hours.');
+      Alert.alert(
+        'Success',
+        'Account deletion request generated successfully,Your account will be deleted within 24 hours.',
+      );
       await removeItem('userData');
       navigation.replace('Welcome');
     }
@@ -362,19 +365,19 @@ const SettingItem = ({title, IconComponent, screenName}) => {
           } else if (screenName === 'GmailIntegration') {
             handleGmailIntegration();
           } else if (screenName === 'Delete') {
-             Alert.alert(
-              "Delete Account",
-              "Deleting your account is permanent and cannot be reversed. All your data associated with this account will be removed. Are you sure you want to proceed?",
+            Alert.alert(
+              'Delete Account',
+              'Deleting your account is permanent and cannot be reversed. All your data associated with this account will be removed. Are you sure you want to proceed?',
               [
-                { text: "Cancel", style: "cancel" },
+                {text: 'Cancel', style: 'cancel'},
                 {
-                  text: "Delete",
-                  style: "destructive",
+                  text: 'Delete',
+                  style: 'destructive',
                   onPress: async () => {
                     deleteAccount();
-                  }
-                }
-              ]
+                  },
+                },
+              ],
             );
           } else {
             navigation.navigate(screenName);

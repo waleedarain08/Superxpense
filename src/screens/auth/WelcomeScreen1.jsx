@@ -11,8 +11,10 @@ import {
 import React, {useState, useRef} from 'react';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
+import {ChevronRight} from '../../icons';
 
 const {width} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
 const WelcomeScreen1 = ({navigation}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -22,7 +24,7 @@ const WelcomeScreen1 = ({navigation}) => {
     {
       id: '1',
       image: require('../../assets/images/welcomeImage1.png'),
-      text: 'Sync accounts securely and track everything in one place',
+      text: 'Set goals, track categories, and get smart alerts ',
     },
     {
       id: '2',
@@ -40,7 +42,6 @@ const WelcomeScreen1 = ({navigation}) => {
     return (
       <View style={styles.slide}>
         <Image source={item.image} style={styles.imageStyle} />
-        <Text style={styles.txtStyle}>{item.text}</Text>
       </View>
     );
   };
@@ -57,44 +58,63 @@ const WelcomeScreen1 = ({navigation}) => {
       style={styles.container}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
-      <FlatList
-        ref={flatListRef}
-        data={slides}
-        renderItem={renderItem}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        keyExtractor={item => item.id}
-      />
-      <View style={styles.dotContainer}>
-        {slides.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              {
-                backgroundColor:
-                  index === currentIndex ? Colors.black : Colors.dotsColors,
-              },
-            ]}
-          />
-        ))}
-      </View>
-      <View style={{paddingHorizontal: 20}}>
+      <View style={styles.dotMain}>
+        <View style={styles.dotContainer}>
+          {slides.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.dot,
+
+                {
+                  backgroundColor:
+                    index === currentIndex
+                      ? Colors.background
+                      : Colors.lightestWhite,
+                  width: index === currentIndex && 24,
+                },
+              ]}
+            />
+          ))}
+        </View>
         <TouchableOpacity
-          style={[styles.emailButton, {backgroundColor: Colors.white}]}
-          onPress={() => navigation.navigate('Welcome')}>
-          <Text style={[styles.buttonText, {color: Colors.black}]}>
-            Sign up
+          onPress={() => flatListRef.current.scrollToEnd({animated: true})}
+          style={{zIndex: 100}}>
+          <Text style={styles.skipButtonTxt}>
+            Skip
+            <ChevronRight size={10} />
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.emailButton, {marginBottom: 20}]}
-          onPress={() => navigation.navigate('SignIn')}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+      </View>
+      <View style={{flex: 1}}>
+        <FlatList
+          ref={flatListRef}
+          data={slides}
+          renderItem={renderItem}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          keyExtractor={item => item.id}
+        />
+      </View>
+      <View style={styles.contentContainer}>
+        <Text style={styles.txtStyle}>{slides[currentIndex].text}</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.emailButton, {backgroundColor: Colors.white}]}
+            onPress={() => navigation.navigate('Welcome')}>
+            <Text style={[styles.buttonText, {color: Colors.black}]}>
+              Sign up
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.emailButton, {marginBottom: 20}]}
+            onPress={() => navigation.navigate('SignIn')}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ImageBackground>
   );
@@ -105,32 +125,38 @@ export default WelcomeScreen1;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
   },
   slide: {
     width: width,
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
   },
   imageStyle: {
     width: 280,
-    height: '70%',
+    height: '100%',
     resizeMode: 'contain',
-    alignSelf: 'center',
+    marginTop: '20%',
+  },
+  contentContainer: {
+    backgroundColor: Colors.lightestGreen,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    paddingVertical: 24,
+    paddingHorizontal: 24,
+    alignItems: 'center',
   },
   txtStyle: {
     fontSize: 32,
     fontFamily: FontFamily.bold,
     textAlign: 'center',
-    marginTop: 20,
-    marginHorizontal: 22,
+    color: Colors.black,
+    marginBottom: 40,
   },
   dotContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 50,
   },
   dot: {
     width: 19,
@@ -138,6 +164,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: Colors.dotsColors,
     marginHorizontal: 4,
+  },
+  buttonContainer: {
+    width: '100%',
   },
   emailButton: {
     backgroundColor: '#1AAA76',
@@ -152,5 +181,19 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontFamily: FontFamily.bold,
+  },
+  dotMain: {
+    flexDirection: 'row',
+    position: 'absolute',
+    top: height / 5 - 100,
+    left: 24,
+    justifyContent: 'space-between',
+  },
+  skipButtonTxt: {
+    right: 0,
+    left: width / 2 + 50,
+    fontSize: 13,
+    fontFamily: FontFamily.medium,
+    color: Colors.background,
   },
 });

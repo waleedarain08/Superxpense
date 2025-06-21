@@ -122,8 +122,8 @@ const BottomNavigator = () => {
                   tintColor: focused
                     ? Colors.activeTabColor
                     : Colors.inactiveTabColor,
-                  height: 25,
-                  width: 25,
+                  height: 21,
+                  width: 21,
                 }}
               />
             ),
@@ -141,32 +141,31 @@ const BottomNavigator = () => {
                   tintColor: focused
                     ? Colors.activeTabColor
                     : Colors.inactiveTabColor,
-                  height: 25,
-                  width: 25,
+                  height: 21,
+                  width: 21,
                 }}
               />
             ),
           }}
         />
-        {/* <BottomStack.Screen
+        <BottomStack.Screen
           name="Bills"
           component={BillsScreen}
           options={{
             headerShown: false,
+            tabBarLabel: () => null, // 👈 This hides the label
             tabBarIcon: ({focused}) => (
               <Image
-                source={require('../assets/images/bulbBottom.png')}
+                source={require('../assets/images/bottomIcon.png')}
                 style={{
-                  tintColor: focused
-                    ? Colors.activeTabColor
-                    : Colors.inactiveTabColor,
-                  height: 25,
-                  width: 25,
+                  height: 45,
+                  width: 45,
+                  marginTop: 10,
                 }}
               />
             ),
           }}
-        /> */}
+        />
         <BottomStack.Screen
           name="Accounts"
           component={AccountsScreen}
@@ -179,8 +178,8 @@ const BottomNavigator = () => {
                   tintColor: focused
                     ? Colors.activeTabColor
                     : Colors.inactiveTabColor,
-                  height: 25,
-                  width: 25,
+                  height: 21,
+                  width: 21,
                 }}
               />
             ),
@@ -218,8 +217,8 @@ const BottomNavigator = () => {
                   tintColor: focused
                     ? Colors.activeTabColor
                     : Colors.inactiveTabColor,
-                  height: 25,
-                  width: 25,
+                  height: 21,
+                  width: 21,
                 }}
               />
             ),

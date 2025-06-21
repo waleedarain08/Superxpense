@@ -32,7 +32,7 @@ const PasswordInput = ({
         <Icon
           name={hidePassword ? 'eye-off' : 'eye'}
           size={20}
-          color={Colors.greyColor}
+          color={Colors.grayIcon}
         />
       </TouchableOpacity>
     </View>

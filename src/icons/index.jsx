@@ -271,3 +271,13 @@ export const CheckCircle = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const ChevronLeft = ({color, size, style}) => (
+  <VectorIcon
+    name="chevron-left"
+    color={color}
+    size={size}
+    type="Feather"
+    style={style}
+  />
+);

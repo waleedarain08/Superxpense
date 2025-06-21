@@ -15,13 +15,14 @@ import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import {API} from '../../utilis/Constant';
 import {post} from '../../utilis/Api';
-import {getStringItem, removeItem, setItem} from '../../utilis/StorageActions';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import PhoneInputCustom from '../../component/PhoneInputCustome';
-
 import IconInput from '../../component/IconInput';
 import PasswordInput from '../../component/PasswordInput';
-import {Email, FullName, LeftBlack, Password} from '../../assets/svgs';
+import {Email, FullName, Password} from '../../assets/svgs';
+import StepIndicator from '../../component/StepIndicator';
+import {ChevronLeft} from '../../icons';
+import {getStringItem, removeItem, setItem} from '../../utilis/StorageActions';
 
 const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -124,10 +125,12 @@ const SignUpScreen = ({navigation}) => {
         contentContainerStyle={{flex: 1}}>
         <SafeAreaView style={styles.safeStyle}>
           <View style={{flex: 1}}>
-            <LeftBlack
-              onPress={() => navigation.goBack()}
-              style={{marginBottom: 20}}
-            />
+            <TouchableOpacity
+              style={styles.backStyle}
+              onPress={() => navigation.goBack()}>
+              <ChevronLeft size={25} color={Colors.activeTabColor} />
+            </TouchableOpacity>
+            <StepIndicator totalSteps={3} currentStep={1} />
             <Text style={styles.heading}>Let’s get started</Text>
             <Text style={styles.subHeading}>
               We’ll need some quick info to get your account set up and
@@ -135,7 +138,7 @@ const SignUpScreen = ({navigation}) => {
             </Text>
             <IconInput
               svgIcon={<FullName />}
-              placeholder="FullName"
+              placeholder="Full Name"
               value={name}
               onChangeText={setName}
               error={nameError}
@@ -195,6 +198,7 @@ const SignUpScreen = ({navigation}) => {
               </Text>
             )}
           </View>
+
           <View>
             <TouchableOpacity
               onPress={handleSignUp}
@@ -260,6 +264,7 @@ const styles = StyleSheet.create({
     FontFamily: FontFamily.semiBold,
     marginBottom: 5,
     color: Colors.txtColor,
+    marginTop: 24,
   },
   subHeading: {
     fontFamily: FontFamily.regular,
@@ -318,6 +323,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: FontFamily.regular,
     color: Colors.txtColor,
+  },
+  backStyle: {
+    height: 32,
+    width: 32,
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+    marginBottom: 24,
   },
 });
 

@@ -23,9 +23,12 @@ import {
   setStringItem,
   getStringItem,
 } from '../../utilis/StorageActions';
-import {FaceScan, LeftBlack} from '../../assets/svgs';
+import {Email, FaceScan, LeftBlack, Password} from '../../assets/svgs';
 import ReactNativeBiometrics from 'react-native-biometrics';
 import CryptoJS from 'crypto-js';
+import {ChevronLeft} from '../../icons';
+import IconInput from '../../component/IconInput';
+import PasswordInput from '../../component/PasswordInput';
 
 const SignInScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -177,54 +180,42 @@ const SignInScreen = ({navigation}) => {
       resizeMode="cover">
       <SafeAreaView style={styles.safeStyle}>
         <View>
-          <LeftBlack
-            onPress={() => navigation.goBack()}
-            style={{marginBottom: 20}}
-          />
+          <TouchableOpacity
+            style={styles.backStyle}
+            onPress={() => navigation.goBack()}>
+            <ChevronLeft size={25} color={Colors.activeTabColor} />
+          </TouchableOpacity>
           <Text style={styles.heading}>Welcome Back</Text>
           <Text style={styles.subHeading}>
             Enter your email address associated with your superxpense account.
           </Text>
-
-          <TextInput
-            placeholder="Enter Email Address"
-            placeholderTextColor={Colors.greyColor}
+          <IconInput
+            svgIcon={<Email />}
+            placeholder="Email Address"
+            value={email}
+            onChangeText={setEmail}
+            error={error.email}
+            keyboardType="email-address"
+            autoCapitalize="none"
             style={[
               styles.input,
               error.email && styles.inputError,
               {marginBottom: 5},
             ]}
-            onChangeText={setEmail}
-            value={email}
-            keyboardType="email-address"
-            autoCapitalize="none"
           />
           {error.email ? (
             <Text style={styles.errorText}>{error.email}</Text>
           ) : null}
 
           <View style={styles.passwordContainer}>
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor={Colors.greyColor}
-              style={[
-                styles.input,
-                error.password && styles.inputError,
-                {marginBottom: 5, color: Colors.black},
-              ]}
-              secureTextEntry={hidePassword}
+            <PasswordInput
+              svgIcon={<Password />}
+              placeholder="Retype Password"
               value={password}
               onChangeText={setPassword}
+              error={error.password}
+              style={{marginBottom: 5, marginTop: 15}}
             />
-            <TouchableOpacity
-              onPress={() => setHidePassword(!hidePassword)}
-              style={styles.eyeIcon}>
-              <Icon
-                name={hidePassword ? 'eye-off' : 'eye'}
-                size={20}
-                color={Colors.greyColor}
-              />
-            </TouchableOpacity>
           </View>
 
           {error.password ? (
@@ -270,7 +261,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginBottom: 5,
     color: Colors.txtColor,
-    marginTop: 20,
   },
   subHeading: {
     color: Colors.txtColor,
@@ -299,7 +289,6 @@ const styles = StyleSheet.create({
   },
   passwordContainer: {
     position: 'relative',
-    marginTop: 10,
   },
   eyeIcon: {
     position: 'absolute',
@@ -367,5 +356,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontFamily: FontFamily.regular,
+  },
+  backStyle: {
+    height: 32,
+    width: 32,
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+    marginBottom: 24,
   },
 });

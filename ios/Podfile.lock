@@ -1398,6 +1398,30 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-biometrics (3.0.1):
     - React-Core
+  - react-native-blur (4.4.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-contacts (8.0.5):
     - DoubleConversion
     - glog
@@ -2127,6 +2151,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-biometrics (from `../node_modules/react-native-biometrics`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-hmac (from `../node_modules/react-native-hmac`)
@@ -2272,6 +2297,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-biometrics:
     :path: "../node_modules/react-native-biometrics"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
   react-native-document-picker:
@@ -2418,6 +2445,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 27137b7073dc8f7533fa9bd2cacd71479818f628
   React-microtasksnativemodule: 2e853f993ae655b9dcf26c99ebfcd1134822b77a
   react-native-biometrics: 352e5a794bfffc46a0c86725ea7dc62deb085bdc
+  react-native-blur: d179f9d0898977578a42b0b536d4df57b8d7bd21
   react-native-contacts: 746e1752328cf27e82f89d286bba9b6cb5a7c8c3
   react-native-document-picker: f3c62667a9eea6bf101a45f24a70dfe5f04b6fe5
   react-native-hmac: 384cffc546826f255f809f9bd9382364a4004501

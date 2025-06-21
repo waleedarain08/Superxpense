@@ -11,6 +11,7 @@ import {
   ScrollView,
   StatusBar,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
@@ -20,6 +21,10 @@ import {get, post} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import {API} from '../../utilis/Constant';
 import DocumentPicker from 'react-native-document-picker';
+import Header from '../../component/Header';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import ChatInputBar from '../../component/ChatInputBar';
+import {Stars} from '../../assets/svgs';
 
 const HomeScreen = ({navigation}) => {
   const [chats, setChats] = useState([]);
@@ -27,6 +32,13 @@ const HomeScreen = ({navigation}) => {
   const [message, setMessage] = useState('');
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [name, setName] = useState('');
+
+  const predefinedMessages = [
+    'Where did I spend most this week?',
+    'How much did I save this month?',
+    'Suggest a monthly budget',
+    'Compare this month to last month',
+  ];
 
   const scrollViewRef = useRef(null);
 
@@ -95,8 +107,6 @@ const HomeScreen = ({navigation}) => {
       }
     }
   };
-
-  
 
   const handleSendMessage = async (file = null) => {
     if (!message.trim() && !file) return;
@@ -186,171 +196,216 @@ const HomeScreen = ({navigation}) => {
     }
   };
 
-  
-
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
-      {/* Top Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={{width: '10%'}}
-          onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={Colors.white} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Chat</Text>
-        <TouchableOpacity style={{width: '10%'}}>
-          {/* <ChatHeader /> */}
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.contentContainer}>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={{
-            flexGrow: 1,
-          }}
-          ref={scrollViewRef}
-          onContentSizeChange={() =>
-            scrollViewRef.current?.scrollToEnd({animated: true})
-          }
-          onLayout={() => scrollViewRef.current?.scrollToEnd({animated: true})}
-          enableOnAndroid={true}
-          enableAutomaticScroll={true}
-          keyboardShouldPersistTaps="handled"
-          extraScrollHeight={Platform.OS === 'ios' ? 90 : 0}>
-          {loading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={Colors.primary} />
-            </View>
-          ) : chats.length === 0 ? (
-            <View style={styles.greetingContainer}>
-              <Text style={styles.greetingText}>Welcome, {name}</Text>
-              <Text style={styles.subGreetingText}>
-                Let's make your money work for you.
-              </Text>
-            </View>
-          ) : (
-            <View style={styles.chatContainer}>
-              {chats.map((chat, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.messageContainer,
-                    chat.isUser ? styles.userMessage : styles.botMessage,
-                  ]}>
-                  {/* <Text
-                    style={[
-                      styles.messageText,
-                      chat.isThinking && styles.thinkingText,
-                    ]}>
-                    {chat.message}
-                  </Text> */}
-                  <Text
-                    style={[
-                      styles.messageText,
-                      chat.isThinking && styles.thinkingText,
-                    ]}>
-                    {chat.message}
-                  </Text>
-                  {Array.isArray(chat.installments) && chat.installments.length > 0 && (
-                    <View style={{ marginTop: 8, backgroundColor: '#f7f7f7', borderRadius: 8, padding: 4,marginBotton:4 }}>
-                      <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: '#e0e0e0', paddingBottom: 4, marginBottom: 4 }}>
-                        <Text style={{ flex: 0.3,  fontSize: 10 }}>No</Text>
-                        <Text style={{ flex: 1,  fontSize: 10 }}>Milestone</Text>
-                        <Text style={{ flex: 1,  fontSize: 10 }}>Due Date</Text>
-                        <Text style={{ flex: 1,  fontSize: 10 }}>Amount</Text>
-                      </View>
-                      {chat.installments.map((inst, idx) => (
-                        <View key={idx} style={{ flexDirection: 'row', paddingVertical: 2 }}>
-                          <Text style={{ flex: 0.3, fontSize: 11 }}>
-                            {inst.installment_no}
-                          </Text>
-                          <Text style={{ flex: 1, fontSize: 11 }}>
-                            {inst.milestone}
-                          </Text>
-                          <Text style={{ flex: 1, fontSize: 11 }}>
-                            {inst.date}
-                          </Text>
-                           <Text style={{ flex: 1, fontSize: 12, fontWeight: 'bold' }}>
-                            {Number(inst.amount).toLocaleString()} AED
-                          </Text>
-                        </View>
-                      ))}
-                    </View>
-                  )}
-                  {!chat.isThinking && (
-                    <Text style={styles.timestampText}>{chat.timestamp}</Text>
-                  )}
-                </View>
-              ))}
-            </View>
-          )}
-        </ScrollView>
-
-        {/* Bottom Input Bar */}
-        <View style={styles.inputBar}>
-          <TextInput
-            style={styles.input}
-            placeholder="Ask me Anything"
-            placeholderTextColor="#999"
-            value={message}
-            onChangeText={setMessage}
+    <ImageBackground
+      source={require('../../assets/images/greenishBackground.png')}
+      style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
+      <SafeAreaView style={{flex: 1}}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
+          <Header
+            onBackPress={() => navigation.goBack()}
+            onMenuPress={() => console.log('Menu pressed')}
           />
-          <TouchableOpacity onPress={() => handleSendMessage()}>
-            {sendMessageLoading ? (
-              <ActivityIndicator size="small" color={Colors.primary} />
-            ) : (
-              <VectorIcon
-                name="send"
-                color={Colors.primary}
-                size={20}
-                type="Ionicons"
+
+          <View style={styles.contentContainer}>
+            <ScrollView
+              style={styles.scrollView}
+              contentContainerStyle={{
+                flexGrow: 1,
+              }}
+              ref={scrollViewRef}
+              onContentSizeChange={() =>
+                scrollViewRef.current?.scrollToEnd({animated: true})
+              }
+              onLayout={() =>
+                scrollViewRef.current?.scrollToEnd({animated: true})
+              }
+              enableOnAndroid={true}
+              enableAutomaticScroll={true}
+              keyboardShouldPersistTaps="handled"
+              extraScrollHeight={Platform.OS === 'ios' ? 90 : 0}>
+              {loading ? (
+                <View style={styles.loadingContainer}>
+                  <ActivityIndicator size="large" color={Colors.primary} />
+                </View>
+              ) : chats.length === 0 ? (
+                <View style={styles.greetingContainer}>
+                  <Text style={styles.greetingText}>Hey {name} 👋</Text>
+                  <Text style={styles.subGreetingText}>
+                    What would you like help with today?
+                  </Text>
+                  <View style={styles.quickActionsContainer}>
+                    {predefinedMessages.map((item, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        style={styles.quickAction}
+                        onPress={() => setMessage(item)}>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <Stars width={20} height={20} />
+                          <Text style={styles.quickActionText}>{item}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              ) : (
+                <View style={styles.chatContainer}>
+                  {chats.map((chat, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles.messageContainer,
+                        chat.isUser ? styles.userMessage : styles.botMessage,
+                      ]}>
+                      <Text
+                        style={[
+                          chat.isUser ? styles.userText : styles.messageText,
+                          chat.isThinking && styles.thinkingText,
+                        ]}>
+                        {chat.message}
+                      </Text>
+                      {Array.isArray(chat.installments) &&
+                        chat.installments.length > 0 && (
+                          <View
+                            style={{
+                              marginTop: 8,
+                              backgroundColor: '#f7f7f7',
+                              borderRadius: 8,
+                              padding: 4,
+                              marginBotton: 4,
+                            }}>
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                borderBottomWidth: 1,
+                                borderColor: '#e0e0e0',
+                                paddingBottom: 4,
+                                marginBottom: 4,
+                              }}>
+                              <Text style={{flex: 0.3, fontSize: 10}}>No</Text>
+                              <Text style={{flex: 1, fontSize: 10}}>
+                                Milestone
+                              </Text>
+                              <Text style={{flex: 1, fontSize: 10}}>
+                                Due Date
+                              </Text>
+                              <Text style={{flex: 1, fontSize: 10}}>
+                                Amount
+                              </Text>
+                            </View>
+                            {chat.installments.map((inst, idx) => (
+                              <View
+                                key={idx}
+                                style={{
+                                  flexDirection: 'row',
+                                  paddingVertical: 2,
+                                }}>
+                                <Text style={{flex: 0.3, fontSize: 11}}>
+                                  {inst.installment_no}
+                                </Text>
+                                <Text style={{flex: 1, fontSize: 11}}>
+                                  {inst.milestone}
+                                </Text>
+                                <Text style={{flex: 1, fontSize: 11}}>
+                                  {inst.date}
+                                </Text>
+                                <Text
+                                  style={{
+                                    flex: 1,
+                                    fontSize: 12,
+                                    fontWeight: 'bold',
+                                  }}>
+                                  {Number(inst.amount).toLocaleString()} AED
+                                </Text>
+                              </View>
+                            ))}
+                          </View>
+                        )}
+                      {/* {!chat.isThinking && (
+                        <Text style={styles.timestampText}>
+                          {chat.timestamp}
+                        </Text>
+                      )} */}
+                    </View>
+                  ))}
+                </View>
+              )}
+            </ScrollView>
+            {/* <View style={styles.inputBar}>
+              <TextInput
+                style={styles.input}
+                placeholder="Ask me Anything"
+                placeholderTextColor="#999"
+                value={message}
+                onChangeText={setMessage}
               />
-            )}
-          </TouchableOpacity>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginHorizontal: 6,
-              marginBottom: 8,
-            }}>
-            <TouchableOpacity
-              onPress={handleDocumentPick}
-              style={[
-                styles.iconStyle,
-                {
-                  backgroundColor: Colors.lightestGreen,
-                  borderRadius: 100,
-                  padding: 6,
-                  shadowColor: '#000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.15,
-                  shadowRadius: 2,
-                  elevation: 2,
-                },
-              ]}>
-              <VectorIcon
-                name="document-attach"
-                type="Ionicons"
-                size={22}
-                color={Colors.background}
-              />
-            </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleSendMessage()}>
+                {sendMessageLoading ? (
+                  <ActivityIndicator size="small" color={Colors.primary} />
+                ) : (
+                  <VectorIcon
+                    name="send"
+                    color={Colors.primary}
+                    size={20}
+                    type="Ionicons"
+                  />
+                )}
+              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginHorizontal: 6,
+                  marginBottom: 8,
+                }}>
+                <TouchableOpacity
+                  onPress={handleDocumentPick}
+                  style={[
+                    styles.iconStyle,
+                    {
+                      backgroundColor: Colors.lightestGreen,
+                      borderRadius: 100,
+                      padding: 6,
+                      shadowColor: '#000',
+                      shadowOffset: {width: 0, height: 2},
+                      shadowOpacity: 0.15,
+                      shadowRadius: 2,
+                      elevation: 2,
+                    },
+                  ]}>
+                  <VectorIcon
+                    name="document-attach"
+                    type="Ionicons"
+                    size={22}
+                    color={Colors.background}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View> */}
+            <ChatInputBar
+              message={message}
+              setMessage={setMessage}
+              handleSendMessage={handleSendMessage}
+              sendMessageLoading={sendMessageLoading}
+              handleDocumentPick={handleDocumentPick}
+              // handleMicPress={handleMicPress}
+            />
           </View>
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.bgColor,
   },
   contentContainer: {
     flex: 1,
@@ -365,7 +420,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    // paddingTop: 60,
     paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight,
     paddingBottom: 16,
     width: '100%',
@@ -394,19 +448,26 @@ const styles = StyleSheet.create({
   },
   userMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: Colors.lightestGreen,
+    backgroundColor: Colors.background,
     //opacity: 0.9,
   },
   botMessage: {
     alignSelf: 'flex-start',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.lightestGreen,
   },
   messageText: {
     fontFamily: FontFamily.regular,
     fontSize: 16,
     color: Colors.txtColor,
     marginBottom: 4,
-    lineHeight:21
+    lineHeight: 21,
+  },
+  userText: {
+    fontFamily: FontFamily.regular,
+    fontSize: 16,
+    color: Colors.white,
+    marginBottom: 4,
+    lineHeight: 21,
   },
   timestampText: {
     fontFamily: FontFamily.regular,
@@ -438,41 +499,44 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     color: '#333',
   },
-  // iconStyle: {
-  //   height: 28,
-  //   width: 32,
-  //   borderRadius: 100,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
+  quickActionsContainer: {
+    marginTop: 20,
+    paddingHorizontal: 16,
+  },
   quickAction: {
-    width: '47%',
-    backgroundColor: Colors.white,
-    borderRadius: 16,
-    marginBottom: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   quickActionText: {
     fontSize: 14,
     fontFamily: FontFamily.medium,
-    marginTop: 20,
+    color: Colors.txtColor,
+    marginLeft: 10,
   },
   greetingContainer: {
-    marginTop: 200,
-    alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    marginBottom: 30,
+    alignItems: 'center',
+    paddingHorizontal: 16,
   },
   greetingText: {
-    fontSize: 24,
-    fontFamily: FontFamily.medium,
-    marginBottom: 10,
+    fontSize: 22,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+    textAlign: 'center',
   },
   subGreetingText: {
-    fontSize: 14,
+    fontSize: 16,
     fontFamily: FontFamily.regular,
-    color: Colors.lightTxtColor,
+    color: Colors.txtColor,
+    marginTop: 8,
+    textAlign: 'center',
+    marginBottom: 20,
   },
   thinkingText: {
     fontStyle: 'italic',
@@ -489,18 +553,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-
-// const formatAndHighlightAmounts = (text) => {
-//   const parts = text.split(/(\d{6,})/); 
-//   return parts.map((part, index) => {
-//     if (/^\d{6,}$/.test(part)) {
-//       const formatted = Number(part).toLocaleString(); // Add commas
-//       return (
-//         <Text key={index} style={{ fontWeight: 'bold', fontSize:18 }}>
-//           {formatted} AED
-//         </Text>
-//       );
-//     }
-//     return <Text key={index}>{part}</Text>;
-//   });
-// };

@@ -9,14 +9,13 @@ import {
   Alert,
   ImageBackground,
 } from 'react-native';
-import StepperHeader from '../../component/StepperHeader';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import {ArrowRight} from '../../icons';
+import {ArrowRight, ChevronLeft} from '../../icons';
 import {getItem, setItem, setStringItem} from '../../utilis/StorageActions';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
-import {LeftBlack} from '../../assets/svgs';
+import StepIndicator from '../../component/StepIndicator';
 
 const VerficationCodeScreen = ({navigation, route}) => {
   const [code, setCode] = useState(['', '', '', '', '', '']);
@@ -108,10 +107,12 @@ const VerficationCodeScreen = ({navigation, route}) => {
       resizeMode="cover">
       <SafeAreaView style={{flex: 1}}>
         <View style={{flex: 1}}>
-          <LeftBlack
-            onPress={() => navigation.goBack()}
-            style={{marginBottom: 20}}
-          />
+          <TouchableOpacity
+            style={styles.backStyle}
+            onPress={() => navigation.goBack()}>
+            <ChevronLeft size={25} color={Colors.activeTabColor} />
+          </TouchableOpacity>
+          <StepIndicator totalSteps={3} currentStep={2} />
           <Text style={styles.heading}>Enter your verification code</Text>
           <Text style={styles.subHeading}>
             We just sent a verification code to your email
@@ -246,11 +247,21 @@ const styles = StyleSheet.create({
     FontFamily: FontFamily.semiBold,
     marginBottom: 5,
     color: Colors.txtColor,
+    marginTop: 24,
   },
   subHeading: {
     fontFamily: FontFamily.regular,
     color: Colors.txtColor,
     fontSize: 16,
+    marginBottom: 24,
+  },
+  backStyle: {
+    height: 32,
+    width: 32,
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
     marginBottom: 24,
   },
 });

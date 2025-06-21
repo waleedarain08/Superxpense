@@ -1,5 +1,6 @@
 import {
   Alert,
+  ImageBackground,
   Platform,
   ScrollView,
   StatusBar,
@@ -27,6 +28,8 @@ import moment from 'moment';
 import LargestPurchaseCard from '../../component/LargestPurchaseCard';
 import SpendingChart from '../../component/SpendingChart';
 import FloatingChatButton from '../../component/FloatingChatButton';
+import MainHeader from '../../component/MainHeader';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -256,13 +259,18 @@ const HomeScreen = ({navigation}) => {
   );
 
   return (
-    <>
-      <View>
+    <ImageBackground
+      source={require('../../assets/images/commonBack.png')}
+      style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
+      <SafeAreaView>
+        <MainHeader />
+      </SafeAreaView>
+      {/* <View>
         <View style={styles.container}>
           <View style={styles.topRow}>
             <TouchableOpacity style={styles.accountSelector}>
-              {/* <Text style={styles.accountText}>Demo Account</Text>
-            <Dropdown /> */}
             </TouchableOpacity>
 
             <View style={styles.actionButtons}>
@@ -271,9 +279,9 @@ const HomeScreen = ({navigation}) => {
                 onPress={() => navigation.navigate('IssuingCountryScreen')}>
                 <Plus />
               </TouchableOpacity>
-              {/* <TouchableOpacity style={styles.bellButton}>
+              <TouchableOpacity style={styles.bellButton}>
               <Notification />
-            </TouchableOpacity> */}
+            </TouchableOpacity>
             </View>
           </View>
 
@@ -330,7 +338,7 @@ const HomeScreen = ({navigation}) => {
               </LinearGradient>
             </TouchableOpacity>
             <BudgetCard data={budgetCategoryData?.data || []} month={month} />
-            {/* <UpcomingBills navigation={navigation} /> */}
+            <UpcomingBills navigation={navigation} />
           </ScrollView>
         )}
         {selectedTab === 'Spending' && (
@@ -370,7 +378,7 @@ const HomeScreen = ({navigation}) => {
                     logo={{uri: item.bankIcon}}
                     bankID={item.bankId}
                     bankName={item.bankName}
-                    totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
+                    totalBalance={`${item.bankBalance} AED`} 
                     accounts={item.accounts}
                     onPress={handleAccountPress}
                   />
@@ -391,8 +399,9 @@ const HomeScreen = ({navigation}) => {
             </View>
           ))}
       </View>
+      <FloatingChatButton navigation={navigation} /> */}
       <FloatingChatButton navigation={navigation} />
-    </>
+    </ImageBackground>
   );
 };
 

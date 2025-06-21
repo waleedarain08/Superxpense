@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 45,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.semiBoldI,
     color: Colors.txtColor,
   },
 });
