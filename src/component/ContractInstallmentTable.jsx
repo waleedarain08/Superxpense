@@ -104,7 +104,8 @@ const ContractInstallmentsList = ({contract}) => {
             fontSize: 14,
             color: '#6B7280',
             textAlign: 'center',
-            marginTop: 20,
+            marginTop: 10,
+            marginBottom: 10,
           }}>
           No Data Found.
         </Text>

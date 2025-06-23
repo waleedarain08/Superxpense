@@ -113,7 +113,13 @@ const SignInScreen = ({navigation}) => {
         navigation.replace('Subscription');
       }
     } catch (error) {
-      Alert.alert('Something went wrong!', error);
+      //console.log('Something went wrong!', error);
+      if (error?.error === 'Unauthorized') {
+        Alert.alert(
+          'Authentication Failed',
+          'No face ID registered. Please register your face ID first from settings.',
+        );
+      }
       throw error;
     }
   };
