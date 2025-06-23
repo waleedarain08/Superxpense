@@ -5,16 +5,21 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Colors} from '../utilis/Colors';
 import {ChevronLeft} from '../icons';
 
-const Header = ({onBackPress, onMenuPress, dots}) => {
+const Header = ({
+  onBackPress,
+  onMenuPress,
+  dots,
+  mainContainer,
+  ScreenName = 'Superxpense AI',
+}) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, mainContainer]}>
       <TouchableOpacity style={styles.iconButton} onPress={onBackPress}>
         <ChevronLeft size={25} />
       </TouchableOpacity>
 
       <View style={styles.titleContainer}>
-        <Text style={styles.logo}>✨</Text>
-        <Text style={styles.title}>Superxpense AI</Text>
+        <Text style={styles.title}>{ScreenName}</Text>
       </View>
 
       {dots ? (

@@ -1,4 +1,10 @@
-import {Platform, StyleSheet, View, Image} from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  Image,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -29,6 +35,7 @@ import AddGoals from '../screens/app/AddGoals';
 import ActiveSubscriptionScreen from '../screens/app/ActiveSubscriptionScreen';
 import VerficationCodeScreen from '../screens/auth/VerficationCodeScreen';
 import WelcomeScreen1 from '../screens/auth/WelcomeScreen1';
+import NotificationScreen from '../screens/app/NotificationScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -79,6 +86,7 @@ const Navigation = () => {
           name="VerificationCode"
           component={VerficationCodeScreen}
         />
+        <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Main" component={BottomNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -148,7 +156,7 @@ const BottomNavigator = () => {
             ),
           }}
         />
-        <BottomStack.Screen
+        {/* <BottomStack.Screen
           name="Bills"
           component={BillsScreen}
           options={{
@@ -163,6 +171,28 @@ const BottomNavigator = () => {
                   marginTop: 10,
                 }}
               />
+            ),
+          }}
+        /> */}
+        <BottomStack.Screen
+          name="Dummy"
+          component={() => null} // Blank component
+          options={{
+            tabBarLabel: () => null,
+            tabBarIcon: ({focused}) => (
+              <Image
+                source={require('../assets/images/bottomIcon.png')}
+                style={{
+                  height: 45,
+                  width: 45,
+                  marginTop: 10,
+                }}
+              />
+            ),
+            tabBarButton: props => (
+              <TouchableWithoutFeedback onPress={() => {}}>
+                <View {...props} />
+              </TouchableWithoutFeedback>
             ),
           }}
         />

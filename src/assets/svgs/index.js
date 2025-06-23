@@ -49,6 +49,7 @@ import Email from './email.svg';
 import Password from './password.svg';
 import FullName from './fullName.svg';
 import Bolt from './bolt.svg';
+import Search from './search.svg';
 
 export {
   Bolt,
@@ -102,4 +103,5 @@ export {
   Track,
   Money,
   LeftIcon,
+  Search,
 };

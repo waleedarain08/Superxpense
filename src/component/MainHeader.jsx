@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -12,13 +12,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
 import {Notification} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
+import {BlurView} from '@react-native-community/blur';
 
 const {width} = Dimensions.get('window');
 
-const MainHeader = () => {
-  const [activeTab, setActiveTab] = useState('Accounts');
-
-  const tabs = ['Accounts', 'Overview', 'Spending'];
+const MainHeader = ({navigation, selectedTab, setSelectedTab}) => {
+  const tabs = ['Overview', 'Spending'];
 
   return (
     <View>
@@ -36,9 +35,11 @@ const MainHeader = () => {
           />
         </View>
 
-        <View style={[styles.avatar, {marginLeft: 12}]}>
+        <TouchableOpacity
+          style={[styles.avatar, {marginLeft: 12}]}
+          onPress={() => navigation.navigate('Notification')}>
           <Notification />
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/* Big Impact Section */}
@@ -53,25 +54,26 @@ const MainHeader = () => {
       </View>
 
       {/* Tabs */}
-      <View style={styles.tabsContainer}>
-        {tabs.map(tab => (
-          <TouchableOpacity
-            key={tab}
-            style={[
-              styles.tabButton,
-              activeTab === tab && styles.activeTabButton,
-            ]}
-            onPress={() => setActiveTab(tab)}>
-            <Text
-              style={[
-                styles.tabText,
-                activeTab === tab && styles.activeTabText,
-              ]}>
-              {tab}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <LinearGradient
+        colors={['#bae4e0', '#BDECE8']}
+        style={styles.gradientBackground}>
+        <View style={styles.tabContainer}>
+          {tabs.map(tab => {
+            const isActive = selectedTab === tab;
+            return (
+              <TouchableOpacity
+                key={tab}
+                style={[styles.tab, isActive && styles.activeTab]}
+                onPress={() => setSelectedTab(tab)}>
+                <Text
+                  style={[styles.tabText, isActive && styles.activeTabText]}>
+                  {tab}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </LinearGradient>
     </View>
   );
 };
@@ -138,28 +140,40 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     color: '#11956D',
   },
-  tabsContainer: {
+  gradientBackground: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 32,
+    borderRadius: 50,
+  },
+  tabContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 24,
-    backgroundColor: Colors.lightestGreen,
+    backgroundColor: 'rgba(255, 255, 255, 0.6)', // translucent white
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: 'white',
   },
-  tabButton: {
-    paddingVertical: 6,
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 20,
+    alignItems: 'center',
+    borderRadius: 40,
   },
-  activeTabButton: {
-    backgroundColor: '#ffffff',
+  activeTab: {
+    backgroundColor: Colors.txtColor, // dark fill for active
   },
   tabText: {
-    color: '#3e3e3e',
+    color: Colors.txtColor,
     fontSize: 14,
-    fontWeight: '500',
+    fontFamily: FontFamily.medium,
   },
   activeTabText: {
-    color: '#013a2d',
-    fontWeight: '700',
+    color: Colors.white,
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
   },
 });
 

@@ -258,6 +258,12 @@ const HomeScreen = ({navigation}) => {
     }, [month, year]),
   );
 
+  // Custom setSelectedTab function to log the tab change
+  const handleSetSelectedTab = tab => {
+    console.log('Tab changed to:', tab);
+    setSelectedTab(tab);
+  };
+
   return (
     <ImageBackground
       source={require('../../assets/images/commonBack.png')}
@@ -265,46 +271,13 @@ const HomeScreen = ({navigation}) => {
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
       <SafeAreaView>
-        <MainHeader />
+        <MainHeader
+          navigation={navigation}
+          selectedTab={selectedTab}
+          setSelectedTab={handleSetSelectedTab}
+        />
       </SafeAreaView>
-      {/* <View>
-        <View style={styles.container}>
-          <View style={styles.topRow}>
-            <TouchableOpacity style={styles.accountSelector}>
-            </TouchableOpacity>
-
-            <View style={styles.actionButtons}>
-              <TouchableOpacity
-                style={styles.plusButton}
-                onPress={() => navigation.navigate('IssuingCountryScreen')}>
-                <Plus />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.bellButton}>
-              <Notification />
-            </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.tabRow}>
-            {tabs.map(tab => (
-              <TouchableOpacity
-                key={tab}
-                style={[
-                  styles.tabButton,
-                  selectedTab === tab && styles.activeTabButton,
-                ]}
-                onPress={() => setSelectedTab(tab)}>
-                <Text
-                  style={[
-                    styles.tabText,
-                    selectedTab === tab && styles.activeTabText,
-                  ]}>
-                  {tab}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+      <View>
         {selectedTab === 'Overview' && (
           <ScrollView
             contentContainerStyle={styles.safeView}
@@ -338,7 +311,7 @@ const HomeScreen = ({navigation}) => {
               </LinearGradient>
             </TouchableOpacity>
             <BudgetCard data={budgetCategoryData?.data || []} month={month} />
-            <UpcomingBills navigation={navigation} />
+            {/* <UpcomingBills navigation={navigation} /> */}
           </ScrollView>
         )}
         {selectedTab === 'Spending' && (
@@ -378,7 +351,7 @@ const HomeScreen = ({navigation}) => {
                     logo={{uri: item.bankIcon}}
                     bankID={item.bankId}
                     bankName={item.bankName}
-                    totalBalance={`${item.bankBalance} AED`} 
+                    totalBalance={`${item.bankBalance} AED`}
                     accounts={item.accounts}
                     onPress={handleAccountPress}
                   />
@@ -399,8 +372,8 @@ const HomeScreen = ({navigation}) => {
             </View>
           ))}
       </View>
-      <FloatingChatButton navigation={navigation} /> */}
       <FloatingChatButton navigation={navigation} />
+      {/* <FloatingChatButton navigation={navigation} /> */}
     </ImageBackground>
   );
 };

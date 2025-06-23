@@ -100,6 +100,8 @@ const SignUpScreen = ({navigation}) => {
         fcmToken: checkToken,
         fcmPlatform: Platform.OS === 'ios' ? 'ios' : 'android',
       });
+      console.log(data);
+      
 
       await setItem('userData', data);
       setName('');
