@@ -19,7 +19,7 @@ const WelcomeScreen = ({navigation}) => {
       style={styles.container}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
-      <View style={{flex: 1.13}}>
+      <View style={{flex: 1.34}}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.navigate('Welcome1')}>
