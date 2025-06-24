@@ -101,7 +101,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/commonBack.png')}
+      source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
@@ -222,15 +222,18 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   grayText: {
-    color: Colors.black,
+    color: '#0F172A',
+    fontFamily: FontFamily.regular,
+    fontSize: 16,
   },
   resendLink: {
-    color: '#00807E',
+    color: Colors.black,
+    textDecorationLine: 'underline',
     fontFamily: FontFamily.semiBold,
     fontSize: 16,
   },
   continueButton: {
-    backgroundColor: '#1AAA76',
+    backgroundColor: Colors.newButtonBack,
     height: 48,
     justifyContent: 'center',
     borderRadius: 1000,
@@ -238,8 +241,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   continueText: {
-    color: Colors.white,
-    fontFamily: FontFamily.medium,
+    color: Colors.newWhite,
+    fontFamily: FontFamily.semiBold,
     fontSize: 16,
   },
   heading: {

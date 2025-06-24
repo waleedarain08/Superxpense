@@ -55,7 +55,7 @@ const MainHeader = ({navigation, selectedTab, setSelectedTab}) => {
 
       {/* Tabs */}
       <LinearGradient
-        colors={['#bae4e0', '#BDECE8']}
+        colors={['#ccf3f3', '#d0f4f4']}
         style={styles.gradientBackground}>
         <View style={styles.tabContainer}>
           {tabs.map(tab => {
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.6)', // translucent white
+    backgroundColor: 'rgba(255, 255, 255, 0.27)', // translucent white
     paddingHorizontal: 8,
     paddingVertical: 5,
     borderRadius: 50,

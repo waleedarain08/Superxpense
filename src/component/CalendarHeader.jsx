@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
+import LinearGradient from 'react-native-linear-gradient';
 
 const CalendarHeader = ({currentDate, onDateChange}) => {
   const handleMonthChange = direction => {
@@ -13,34 +14,48 @@ const CalendarHeader = ({currentDate, onDateChange}) => {
   };
 
   return (
-    <View style={styles.card}>
-      <TouchableOpacity onPress={() => handleMonthChange(-1)}>
-        <Icon name="chevron-back" size={14} color={Colors.black} />
-      </TouchableOpacity>
-      <Text style={styles.month}>{currentDate.format('MMM YYYY')}</Text>
-      <TouchableOpacity onPress={() => handleMonthChange(1)}>
-        <Icon name="chevron-forward" size={14} color={Colors.black} />
-      </TouchableOpacity>
-    </View>
+    <LinearGradient
+      colors={['#bae4e0', '#BDECE8']}
+      style={styles.gradientBackground}>
+      <View style={styles.tabContainer}>
+        {/* <View style={styles.card}> */}
+        <TouchableOpacity onPress={() => handleMonthChange(-1)}>
+          <Icon name="chevron-back" size={14} color={Colors.black} />
+        </TouchableOpacity>
+        <Text style={styles.month}>{currentDate.format('MMM YYYY')}</Text>
+        <TouchableOpacity onPress={() => handleMonthChange(1)}>
+          <Icon name="chevron-forward" size={14} color={Colors.black} />
+        </TouchableOpacity>
+        {/* </View> */}
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 13,
-    backgroundColor: Colors.white,
-    height: 50,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    marginBottom: 21,
-  },
   month: {
     color: Colors.txtColor,
     fontSize: 16,
     fontFamily: FontFamily.medium,
+  },
+  gradientBackground: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 40,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)', // translucent white
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    flexDirection: 'row',
+    height: 50,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 40,
+    width: '100%',
   },
 });
 

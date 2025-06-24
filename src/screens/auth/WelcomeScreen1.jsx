@@ -103,9 +103,9 @@ const WelcomeScreen1 = ({navigation}) => {
         <Text style={styles.txtStyle}>{slides[currentIndex].text}</Text>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.emailButton, {backgroundColor: Colors.white}]}
+            style={[styles.emailButton, {backgroundColor: Colors.newWhite}]}
             onPress={() => navigation.navigate('Welcome')}>
-            <Text style={[styles.buttonText, {color: Colors.black}]}>
+            <Text style={[styles.buttonText, {color: Colors.txtColor}]}>
               Sign up
             </Text>
           </TouchableOpacity>
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.black,
     marginBottom: 40,
+    paddingHorizontal: 26,
   },
   dotContainer: {
     flexDirection: 'row',
@@ -169,18 +170,18 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   emailButton: {
-    backgroundColor: '#1AAA76',
+    backgroundColor: Colors.newButtonBack,
     borderRadius: 40,
     paddingVertical: 14,
     paddingHorizontal: 20,
     width: '100%',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   buttonText: {
     color: Colors.white,
     fontSize: 16,
-    fontFamily: FontFamily.bold,
+    fontFamily: FontFamily.semiBold,
   },
   dotMain: {
     flexDirection: 'row',
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   },
   skipButtonTxt: {
     right: 0,
-    left: width / 2 + 50,
+    left: width / 1.7 + 50,
     fontSize: 13,
     fontFamily: FontFamily.medium,
     color: Colors.background,

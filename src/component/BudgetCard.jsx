@@ -42,45 +42,54 @@ const BudgetCard = ({data = [], month}) => {
   const readableMonth = monthNames[(month ?? 1) - 1]; // subtract 1 because array is 0-indexed
 
   return (
-    <View style={styles.container}>
-      {/* Top Text Section */}
-      <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
-      <Text style={styles.statusText}>
-      {Number(budgetLeft).toFixed(2)>0?`Great job! you have ${Number(budgetLeft).toFixed(2)} AED left`:`You are ${Number(budgetLeft).toFixed(2)} AED less from your budget`}
-      </Text>
+    <LinearGradient
+      colors={['#ccf3f3', '#d0f4f4']}
+      style={styles.gradientBackground}>
+      <View style={styles.container}>
+        {/* <View style={styles.container}> */}
+        {/* Top Text Section */}
+        <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
+        <Text style={styles.statusText}>
+          {Number(budgetLeft).toFixed(2) > 0
+            ? `Great job! you have ${Number(budgetLeft).toFixed(2)} AED left`
+            : `You are ${Number(budgetLeft).toFixed(
+                2,
+              )} AED less from your budget`}
+        </Text>
 
-      {/* Progress Bar with Linear Gradient */}
-      <View style={styles.progressBarBackground}>
-        <LinearGradient
-          colors={['#0D9488', '#FFFFFF40']} // Gradient colors for the progress bar
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-          style={[styles.progressBarFill, {width: `${percentageUsed}%`}]}
-        />
+        {/* Progress Bar with Linear Gradient */}
+        <View style={styles.progressBarBackground}>
+          <LinearGradient
+            colors={['#0D9488', '#FFFFFF40']} // Gradient colors for the progress bar
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            style={[styles.progressBarFill, {width: `${percentageUsed}%`}]}
+          />
+        </View>
+
+        {/* Category Budgets */}
+        <Text style={styles.topBudgetText}>Top Monthly Budget</Text>
+        {Array.isArray(data) &&
+          data.map((item, index) => (
+            <View key={index} style={styles.budgetItem}>
+              <View style={styles.dotsStyle} />
+              <Text style={styles.label}>{item?.category ?? 'Unknown'}</Text>
+              <Text style={styles.amount}>
+                <Text style={{color: Colors.txtColor}}>
+                  {item?.actualAmount ?? 0}
+                </Text>{' '}
+                of {item?.budgetAmount ?? 0} AED
+              </Text>
+            </View>
+          ))}
       </View>
-
-      {/* Category Budgets */}
-      <Text style={styles.topBudgetText}>Top Monthly Budget</Text>
-      {Array.isArray(data) &&
-        data.map((item, index) => (
-          <View key={index} style={styles.budgetItem}>
-            <View style={styles.dotsStyle} />
-            <Text style={styles.label}>{item?.category ?? 'Unknown'}</Text>
-            <Text style={styles.amount}>
-              <Text style={{color: Colors.txtColor}}>
-                {item?.actualAmount ?? 0}
-              </Text>{' '}
-              of {item?.budgetAmount ?? 0} AED
-            </Text>
-          </View>
-        ))}
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
     borderRadius: 16,
     padding: 18,
   },
@@ -152,6 +161,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: '#0D9488',
     marginRight: 6,
+  },
+  gradientBackground: {
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
 });
 

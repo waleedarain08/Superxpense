@@ -174,7 +174,7 @@ const SignInScreen = ({navigation}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/commonBack.png')}
+      source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     top: 20,
   },
   button: {
-    backgroundColor: '#00B67A',
+    backgroundColor: Colors.newButtonBack,
     borderRadius: 100,
     alignItems: 'center',
     height: 48,
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.white,
-    fontWeight: '500',
+    fontFamily: FontFamily.semiBold,
     fontSize: 16,
   },
   terms: {
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 20,
     backgroundColor: Colors.white,
-    borderColor: Colors.txtColor,
+    borderColor: Colors.newButtonBack,
   },
   innerContainer: {
     flexDirection: 'row',

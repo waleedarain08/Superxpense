@@ -286,12 +286,14 @@ const HomeScreen = ({navigation}) => {
               currentDate={selectedDate}
               onDateChange={handleDateChange}
             />
-            <StackedChart chartData={barData} />
+            <View style={{marginTop: 16}}>
+              <StackedChart chartData={barData} />
+            </View>
             <SpendingSummary
               data={categoryData}
               month={selectedDate.format('MMM YYYY')}
             />
-            <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+            {/* <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
               <LinearGradient
                 colors={['#6CFFC2', '#FFFFFF']}
                 start={{x: 0, y: 3}}
@@ -309,7 +311,7 @@ const HomeScreen = ({navigation}) => {
                   <Icon name="chevron-forward" size={14} color={Colors.black} />
                 </View>
               </LinearGradient>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <BudgetCard data={budgetCategoryData?.data || []} month={month} />
             {/* <UpcomingBills navigation={navigation} /> */}
           </ScrollView>
@@ -322,11 +324,13 @@ const HomeScreen = ({navigation}) => {
               currentDate={selectedDate}
               onDateChange={handleDateChange}
             />
-            <SpendingChart
-              data={lineChartData}
-              monthlySpending={monthlySpending}
-              lastSpending={lastSpending}
-            />
+            <View style={{marginTop: 16}}>
+              <SpendingChart
+                data={lineChartData}
+                monthlySpending={monthlySpending}
+                lastSpending={lastSpending}
+              />
+            </View>
             <LargestPurchaseCard
               largestAmount={largestTransaction?.amount || 0}
               date={selectedDate.format('MMMM YYYY')}
@@ -372,7 +376,6 @@ const HomeScreen = ({navigation}) => {
             </View>
           ))}
       </View>
-      <FloatingChatButton navigation={navigation} />
       {/* <FloatingChatButton navigation={navigation} /> */}
     </ImageBackground>
   );
@@ -382,8 +385,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   safeView: {
-    paddingHorizontal: 20,
-    paddingBottom: 180,
+    paddingBottom: 350,
     flexGrow: 1,
   },
   container: {

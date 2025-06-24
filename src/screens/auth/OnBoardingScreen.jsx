@@ -102,7 +102,7 @@ const OnBoardingScreen = ({navigation}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/commonBack.png')}
+      source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   button: {
-    backgroundColor: Colors.btnColor,
+    backgroundColor: Colors.newButtonBack,
     borderRadius: 100,
     alignItems: 'center',
     height: 48,
@@ -185,8 +185,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    color: Colors.white,
-    fontWeight: '500',
+    color: Colors.newWhite,
+    fontFamily: FontFamily.semiBold,
     fontSize: 16,
   },
   backButton: {

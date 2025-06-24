@@ -80,8 +80,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 45,
-    fontFamily: FontFamily.semiBoldI,
-    color: Colors.txtColor,
+    fontFamily: FontFamily.regularI,
+    color: Colors.newButtonBack,
   },
 });
 

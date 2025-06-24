@@ -4,40 +4,51 @@ import {Colors} from '../utilis/Colors';
 import {Wallet} from '../assets/svgs';
 import {ChevronRight} from '../icons';
 import {FontFamily} from '../utilis/Fonts';
+import LinearGradient from 'react-native-linear-gradient';
 
-const LargestPurchaseCard = ({largestAmount, date , category}) => {
+const LargestPurchaseCard = ({largestAmount, date, category}) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Largest purchase</Text>
-      {/*  <Text style={styles.subtitle}>
+    <LinearGradient
+      colors={['#bae4e0', '#BDECE8']}
+      style={styles.gradientBackground}>
+      <View style={styles.container}>
+        {/* <View style={styles.container}> */}
+        <Text style={styles.title}>Largest purchase</Text>
+        {/*  <Text style={styles.subtitle}>
         You can tap on a transaction to ignore it from your budget or spendings
-            </Text> */} 
+            </Text> */}
 
-            <TouchableOpacity style={styles.card} activeOpacity={0.7}>
-        <View style={styles.iconWrapper}>
-          <Wallet />
-        </View>
-        <View style={styles.textWrapper}>
-          <Text style={styles.cardTitle}>{category.replace(/_/g, ' ')}</Text>
-          <Text style={styles.cardDate}>{date}</Text>
-        </View>
-        <View style={styles.amountWrapper}>
-          <Text style={styles.amount}>
-            AED <Text style={{color: Colors.txtColor}}>{largestAmount}</Text>
-          </Text>
-          {/* <ChevronRight /> */}
-        </View>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+          <View style={styles.iconWrapper}>
+            <Wallet />
+          </View>
+          <View style={styles.textWrapper}>
+            <Text style={styles.cardTitle}>{category.replace(/_/g, ' ')}</Text>
+            <Text style={styles.cardDate}>{date}</Text>
+          </View>
+          <View style={styles.amountWrapper}>
+            <Text style={styles.amount}>
+              AED <Text style={{color: Colors.txtColor}}>{largestAmount}</Text>
+            </Text>
+            {/* <ChevronRight /> */}
+          </View>
+        </TouchableOpacity>
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 17,
+  },
+  gradientBackground: {
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.white,
     marginTop: 15,
   },
   title: {
@@ -55,7 +66,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: 'transparent',
     borderRadius: 20,
     marginTop: 20,
   },

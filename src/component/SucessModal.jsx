@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {Colors} from '../utilis/Colors';
 import MoneyBagImage from '../assets/images/moneyBagImage.png';
+import {FontFamily} from '../utilis/Fonts';
 
 const {width, height} = Dimensions.get('window');
 
@@ -70,14 +71,14 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   button: {
-    backgroundColor: '#00B67A',
+    backgroundColor: Colors.newButtonBack,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 30,
   },
   buttonText: {
     color: Colors.white,
-    fontWeight: '500',
+    fontFamily: FontFamily.semiBold,
     fontSize: 16,
   },
 });

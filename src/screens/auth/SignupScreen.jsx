@@ -29,8 +29,10 @@ const SignUpScreen = ({navigation}) => {
   const [name, setName] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [mobileNumberError, setMobileNumberError] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -63,6 +65,12 @@ const SignUpScreen = ({navigation}) => {
       errors.password = 'Password must be at least 6 characters long';
       isValid = false;
       setPasswordError(true);
+    }
+    // Confirm password match validation
+    if (confirmPassword !== password) {
+      errors.confirmPassword = 'Passwords do not match';
+      isValid = false;
+      setConfirmPasswordError(true);
     }
 
     if (name.length < 3) {
@@ -101,7 +109,6 @@ const SignUpScreen = ({navigation}) => {
         fcmPlatform: Platform.OS === 'ios' ? 'ios' : 'android',
       });
       console.log(data);
-      
 
       await setItem('userData', data);
       setName('');
@@ -118,7 +125,7 @@ const SignUpScreen = ({navigation}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/commonBack.png')}
+      source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
@@ -189,15 +196,13 @@ const SignUpScreen = ({navigation}) => {
             <PasswordInput
               svgIcon={<Password />}
               placeholder="Retype Password"
-              value={password}
-              onChangeText={setPassword}
-              error={passwordError}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              error={confirmPasswordError}
               style={{marginBottom: 5, marginTop: 15}}
             />
-            {passwordError && (
-              <Text style={styles.errorText}>
-                Password must be atleast 6 Characters long
-              </Text>
+            {confirmPasswordError && (
+              <Text style={styles.errorText}>Passwords do not match.</Text>
             )}
           </View>
 
@@ -297,7 +302,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   button: {
-    backgroundColor: '#00B67A',
+    backgroundColor: Colors.newButtonBack,
     borderRadius: 100,
     alignItems: 'center',
     height: 48,
@@ -306,7 +311,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.white,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.semiBold,
     fontSize: 16,
   },
   terms: {
@@ -316,8 +321,9 @@ const styles = StyleSheet.create({
     color: Colors.lightTxt,
   },
   link: {
-    color: Colors.black,
-    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.regular,
+    fontSize: 14,
   },
   signIn: {
     textAlign: 'center',

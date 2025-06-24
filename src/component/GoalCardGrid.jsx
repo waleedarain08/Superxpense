@@ -40,22 +40,30 @@ const GoalCardGrid = ({data, onPress}) => {
                 <CheckCircle color={Colors.background} size={18} />
               </View>
             ) : null}
-            <View style={[styles.iconWrapper, {backgroundColor: item.bgColor}]}>
-              <item.SvgIcon width={60} height={60} />
-            </View>
-            <Text style={[styles.label, {color: Colors.txtColor}]}>
-              {item.label}
-            </Text>
-            <View style={styles.boltStyle}>
-              <Bolt />
-              <Text
-                style={{
-                  fontFamily: FontFamily.medium,
-                  fontSize: 13,
-                  marginLeft: 3,
-                }}>
-                Top Picked
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+              }}>
+              <View
+                style={[styles.iconWrapper, {backgroundColor: item.bgColor}]}>
+                <item.SvgIcon width={60} height={60} />
+              </View>
+              <Text style={[styles.label, {color: Colors.txtColor}]}>
+                {item.label}
               </Text>
+              <View style={styles.boltStyle}>
+                <Bolt />
+                <Text
+                  style={{
+                    fontFamily: FontFamily.medium,
+                    fontSize: 13,
+                    marginLeft: 3,
+                  }}>
+                  Top Picked
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
         );
@@ -73,7 +81,7 @@ const styles = StyleSheet.create({
     height: 172,
     width: '48%',
     borderRadius: 16,
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
   },

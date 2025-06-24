@@ -50,8 +50,12 @@ import Password from './password.svg';
 import FullName from './fullName.svg';
 import Bolt from './bolt.svg';
 import Search from './search.svg';
+import Google from './goolge.svg';
+import Apple from './apple.svg';
 
 export {
+  Google,
+  Apple,
   Bolt,
   FullName,
   Password,

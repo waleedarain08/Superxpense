@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import {LeftBlack} from '../../assets/svgs';
+import {Apple, Google, LeftBlack} from '../../assets/svgs';
+import {ChevronLeft} from '../../icons';
 
 const WelcomeScreen = ({navigation}) => {
   return (
@@ -18,19 +19,25 @@ const WelcomeScreen = ({navigation}) => {
       style={styles.container}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.navigate('Welcome1')}>
-        {/* Replace with your Back Icon SVG */}
-        <LeftBlack />
-      </TouchableOpacity>
-      <View style={styles.container}>
+      <View style={{flex: 1.13}}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.navigate('Welcome1')}>
+          {/* Replace with your Back Icon SVG */}
+          <ChevronLeft size={25} color={Colors.activeTabColor} />
+        </TouchableOpacity>
+      </View>
+      <View
+        style={[
+          styles.container,
+          {backgroundColor: '#FFFFFF4D', borderRadius: 40},
+        ]}>
         <View style={styles.mainContainer}>
           <View style={styles.header}>
-            <Text style={styles.welcome}>SUPERXPENSE</Text>
             <Text style={styles.subtitle}>
               Get more out of your {'\n'}money & spending.
             </Text>
+            <Text style={styles.welcome}>SUPERXPENSE</Text>
           </View>
 
           <View style={styles.buttonsContainer}>
@@ -43,14 +50,14 @@ const WelcomeScreen = ({navigation}) => {
             <TouchableOpacity
               style={styles.appleButton}
               onPress={() => navigation.navigate('Main')}>
-              <Text style={styles.appleIcon}></Text>
+              <Apple />
               <Text style={styles.appleButtonText}>Continue with Apple</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.appleButton}
               onPress={() => navigation.navigate('Main')}>
-              <Text style={styles.appleIcon}></Text>
+              <Google />
               <Text style={styles.appleButtonText}>Continue with Google</Text>
             </TouchableOpacity>
 
@@ -79,11 +86,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
     marginRight: 10,
   },
-  signInText: {
-    color: '#28A08C',
-    fontWeight: '700',
-    fontSize: 17,
-  },
   header: {
     // marginTop: 30,
     alignItems: 'center',
@@ -92,13 +94,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#1AA875',
     fontFamily: FontFamily.semiBold,
+    marginTop: 16,
   },
   subtitle: {
     fontSize: 32,
     color: Colors.txtColor,
-    fontFamily: FontFamily.bold,
+    fontFamily: FontFamily.semiBold,
     textAlign: 'center',
-    marginTop: 5,
   },
   cardsContainer: {
     alignItems: 'center',
@@ -120,11 +122,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   buttonsContainer: {
-    marginTop: 45,
+    marginTop: 40,
     paddingHorizontal: 20,
   },
   emailButton: {
-    backgroundColor: '#1AAA76',
+    backgroundColor: Colors.newButtonBack,
     borderRadius: 40,
     paddingVertical: 14,
     paddingHorizontal: 20,
@@ -133,14 +135,14 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   buttonText: {
-    color: '#fff',
+    color: Colors.newWhite,
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: FontFamily.semiBold,
   },
   appleButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#D3DEE8',
+    backgroundColor: Colors.newLightestGreen,
     borderRadius: 40,
     paddingVertical: 14,
     width: '100%',
@@ -154,13 +156,14 @@ const styles = StyleSheet.create({
   },
   appleButtonText: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#0D2D2D',
+    FontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+    marginLeft: 10,
   },
   guestText: {
-    color: '#0D2D2D',
-    fontSize: 15,
-    fontWeight: '500',
+    color: Colors.txtColor,
+    fontSize: 16,
+    fontFamily: FontFamily.regular,
   },
   guestButton: {
     marginBottom: 25,

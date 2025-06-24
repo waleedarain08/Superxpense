@@ -56,4 +56,7 @@ export const Colors = {
   grayIcon: '#6B7878',
   lightestBlack: '#00000066',
   newGreenBackground: '#D9FFED',
+  newWhite: '#F9F9F9',
+  newButtonBack: '#28A08C',
+  newLightestGreen: '#C5E5E0',
 };
