@@ -35,4 +35,5 @@ export const API = {
   billingSubscription: `${baseUrl}billing/verify-subscription`,
   gmailIntegration: `${baseUrl}integrations/gmail-connect`,
   deleteUserAccount: `${baseUrl}auth/user`,
+  documentReminder: `${baseUrl}document-reminder`
 };

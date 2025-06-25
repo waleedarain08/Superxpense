@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   ImageBackground,
   Platform,
@@ -30,6 +31,8 @@ import SpendingChart from '../../component/SpendingChart';
 import FloatingChatButton from '../../component/FloatingChatButton';
 import MainHeader from '../../component/MainHeader';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import DocumentPicker from 'react-native-document-picker';
+import ContractInstallmentsList from '../../component/ContractInstallmentTable';
 
 const categoryColors = [
   '#F17192', // lightRed
@@ -66,6 +69,10 @@ const HomeScreen = ({navigation}) => {
   const [monthlySpending, setMonthlySpending] = useState(null);
   const [lastSpending, setLastSpending] = useState(null);
   const [budgetCategoryData, setBudgetCategoryData] = useState([]);
+  const [message, setMessage] = useState('');
+  const [sendMessageLoading, setSendMessageLoading] = useState(false);
+  const [chats, setChats] = useState([]);
+  const [contractData, setContractData] = useState([]);
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
@@ -243,6 +250,19 @@ const HomeScreen = ({navigation}) => {
       console.log('Error fetching LineGraph Data:', error);
     }
   };
+  const fetchDocumentReminder = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(`${API.documentReminder}`, {}, token);
+      setContractData(response.data[0]);
+      // setBudgetCategoryData(response); // or response?.data if needed
+      // console.log(response.data[0]);
+    } catch (error) {
+      console.log('Error fetching LineGraph Data:', error);
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -251,12 +271,129 @@ const HomeScreen = ({navigation}) => {
         fetchBarGraph();
         fetchMonthlyIncome();
         fetchBudgetBycategory();
+        fetchDocumentReminder();
       }, 1500); // 1.5 seconds
 
       // Cleanup timeout if screen is unfocused before timeout completes
       return () => clearTimeout(timeout);
     }, [month, year]),
   );
+  // const handleSendMessage = async (file = null) => {
+  //   if (!message.trim() && !file) return;
+
+  //   try {
+  //     setSendMessageLoading(true);
+  //     const userData = await getItem('userData');
+  //     const token = userData.data?.accessToken;
+
+  //     const timestamp = new Date().toLocaleTimeString();
+
+  //     // Add user message or file-sending indicator
+  //     setChats(prevChats => [
+  //       ...prevChats,
+  //       {
+  //         message: file ? `Uploading document: ${file.name}` : message,
+  //         isUser: true,
+  //         timestamp,
+  //       },
+  //       {
+  //         message: 'Thinking...',
+  //         isUser: false,
+  //         isThinking: true,
+  //         timestamp,
+  //       },
+  //     ]);
+
+  //     let formData;
+  //     let headers;
+
+  //     if (file) {
+  //       formData = new FormData();
+  //       formData.append('file', {
+  //         uri: file.uri,
+  //         name: file.name,
+  //         type: file.type || 'application/octet-stream',
+  //       });
+  //       formData.append('query', message); // optionally include the message too
+  //       headers = {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'multipart/form-data',
+  //       };
+  //     }
+
+  //     const response = await fetch(API.createChat, {
+  //       method: 'POST',
+  //       headers: file
+  //         ? headers
+  //         : {
+  //             'Content-Type': 'application/json',
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //       body: file ? formData : JSON.stringify({query: message}),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error(`Server responded with status: ${response.status}`);
+  //     }
+
+  //     const data = await response.json();
+  //     // Remove thinking and show bot reply
+  //     setChats(prevChats => {
+  //       const newChats = prevChats.filter(chat => !chat.isThinking);
+  //       return [
+  //         ...newChats,
+  //         {
+  //           message: file
+  //             ? data?.data?.response ||
+  //               'Sorry, there was an error processing your request'
+  //             : data?.data ||
+  //               'Sorry, there was an error processing your request',
+  //           isUser: false,
+  //           timestamp: new Date().toLocaleTimeString(),
+  //           installments: data?.data?.installments || [],
+  //         },
+  //       ];
+  //     });
+
+  //     if (file && data?.data?.response) {
+  //       Alert.alert(
+  //         'Payment Reminders Set',
+  //         'You will be notified when payment is due.',
+  //         [{text: 'OK'}],
+  //         {cancelable: false},
+  //       );
+  //     }
+
+  //     setMessage('');
+  //   } catch (err) {
+  //     console.error('Send error:', err);
+  //     setChats([]);
+  //     Alert.alert(
+  //       'Error',
+  //       'Sorry, we encountered an error. Please try again later.',
+  //       [{text: 'OK'}],
+  //       {cancelable: false},
+  //     );
+  //   } finally {
+  //     setSendMessageLoading(false);
+  //   }
+  // };
+
+  // const handleDocumentPick = async () => {
+  //   try {
+  //     const file = await DocumentPicker.pickSingle({
+  //       type: DocumentPicker.types.allFiles,
+  //     });
+
+  //     await handleSendMessage(file);
+  //   } catch (err) {
+  //     if (DocumentPicker.isCancel(err)) {
+  //       console.log('User cancelled document picker');
+  //     } else {
+  //       console.error('Document pick error:', err);
+  //     }
+  //   }
+  // };
 
   // Custom setSelectedTab function to log the tab change
   const handleSetSelectedTab = tab => {
@@ -294,6 +431,7 @@ const HomeScreen = ({navigation}) => {
               month={selectedDate.format('MMM YYYY')}
             />
             {/* <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
               <LinearGradient
                 colors={['#6CFFC2', '#FFFFFF']}
                 start={{x: 0, y: 3}}
@@ -312,8 +450,9 @@ const HomeScreen = ({navigation}) => {
                 </View>
               </LinearGradient>
             </TouchableOpacity> */}
+            {/* </TouchableOpacity>
+            <ContractInstallmentsList contract={contractData || []} /> */}
             <BudgetCard data={budgetCategoryData?.data || []} month={month} />
-            {/* <UpcomingBills navigation={navigation} /> */}
           </ScrollView>
         )}
         {selectedTab === 'Spending' && (
@@ -478,6 +617,23 @@ const styles = StyleSheet.create({
     borderLeftColor: Colors.greenColor,
     marginBottom: 15,
   },
+
+  superCard2: {
+    borderRadius: 24,
+    backgroundColor: Colors.white,
+    borderLeftWidth: 1,
+    borderLeftColor: Colors.greenColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 40,
+    marginBottom: 15,
+  },
+  fileUploadArea: {
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 10,
+  },
   recentLabel: {
     fontSize: 12,
     fontFamily: FontFamily.medium,
@@ -489,6 +645,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     color: Colors.black,
     marginLeft: 16,
+  },
+  recentLabel3: {
+    fontSize: 15,
+    fontFamily: FontFamily.regular,
+    color: Colors.black,
+    textAlign: 'center',
   },
   superCardHeader: {
     marginTop: 11,
@@ -548,5 +710,11 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontWeight: '500',
     fontSize: 16,
+  },
+  chatContainer: {
+    backgroundColor: Colors.white,
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 15,
   },
 });
