@@ -49,23 +49,25 @@ const WelcomeScreen = ({navigation}) => {
 
             <TouchableOpacity
               style={styles.appleButton}
-              onPress={() => navigation.navigate('Main')}>
+              //onPress={() => navigation.navigate('Main')}
+              >
               <Apple />
               <Text style={styles.appleButtonText}>Continue with Apple</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.appleButton}
-              onPress={() => navigation.navigate('Main')}>
+              //onPress={() => navigation.navigate('Main')}
+              >
               <Google />
               <Text style={styles.appleButtonText}>Continue with Google</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
+            <View style={{height:20}}></View>
+            {/* <TouchableOpacity
               onPress={() => navigation.navigate('Main')}
               style={styles.guestButton}>
               <Text style={styles.guestText}>Continue as Guest</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>

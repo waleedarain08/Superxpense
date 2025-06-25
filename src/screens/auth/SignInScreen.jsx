@@ -210,7 +210,7 @@ const SignInScreen = ({navigation}) => {
           <View style={styles.passwordContainer}>
             <PasswordInput
               svgIcon={<Password />}
-              placeholder="Retype Password"
+              placeholder="Password"
               value={password}
               onChangeText={setPassword}
               error={error.password}
@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontFamily: FontFamily.semiBold,
     fontSize: 16,
+    fontWeight: '600',
   },
   terms: {
     fontSize: 14,

@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   bigImpactValue: {
     fontSize: 32,
-    fontFamily: FontFamily.bold,
+    fontFamily: FontFamily.extraBold,
     color: Colors.white,
     marginTop: 4,
   },

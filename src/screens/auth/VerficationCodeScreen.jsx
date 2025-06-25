@@ -116,7 +116,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
           <Text style={styles.heading}>Enter your verification code</Text>
           <Text style={styles.subHeading}>
             We just sent a verification code to your email
-            <Text style={styles.email}>{email}</Text>
+            <Text style={styles.email}>{' '}{email}</Text>
           </Text>
           <View style={styles.codeContainer}>
             {code.map((digit, index) => (

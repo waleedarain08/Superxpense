@@ -114,7 +114,7 @@ const SettingScreen = ({navigation}) => {
             <SettingItem
               title="Logout"
               IconComponent={<Help />}
-              screenName="Welcome"
+              screenName="Welcome1"
             />
           </View>
         </ScrollView>

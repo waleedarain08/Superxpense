@@ -181,7 +181,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.white,
     fontSize: 16,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.heavy,
+    fontWeight: '600',
   },
   dotMain: {
     flexDirection: 'row',

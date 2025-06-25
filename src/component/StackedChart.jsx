@@ -75,7 +75,7 @@ const StackedChart = ({chartData}) => {
               <View
                 style={{
                   flexDirection: 'row',
-                  paddingLeft: 8,
+                  marginLeft: '10%',
                   marginBottom: 10,
                 }}>
                 {/* Grid Lines */}
@@ -199,8 +199,9 @@ const StackedChart = ({chartData}) => {
 
 export const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.74)', // translucent white
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // translucent white
     borderRadius: 20,
+    //marginLeft: 15,
   },
   headerContainer: {
     flexDirection: 'row',

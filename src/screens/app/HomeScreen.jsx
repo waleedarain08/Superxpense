@@ -268,7 +268,7 @@ const HomeScreen = ({navigation}) => {
     <ImageBackground
       source={require('../../assets/images/commonBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'cover'}}
+      imageStyle={{resizeMode: 'stretch'}}
       resizeMode="cover">
       <SafeAreaView>
         <MainHeader
