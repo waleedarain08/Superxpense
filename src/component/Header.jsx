@@ -11,6 +11,7 @@ const Header = ({
   dots,
   mainContainer,
   ScreenName = 'Superxpense AI',
+  titleTxt,
 }) => {
   return (
     <View style={[styles.container, mainContainer]}>
@@ -19,7 +20,7 @@ const Header = ({
       </TouchableOpacity>
 
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{ScreenName}</Text>
+        <Text style={[styles.title, titleTxt]}>{ScreenName}</Text>
       </View>
 
       {dots ? (

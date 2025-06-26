@@ -2,11 +2,18 @@ import React from 'react';
 import {View, TextInput, Text, StyleSheet, Image} from 'react-native';
 import {Colors} from '../utilis/Colors';
 
-const PhoneInputCustom = ({value, onChangeText, error}) => {
+const PhoneInputCustom = ({
+  value,
+  onChangeText,
+  error,
+  textInputMain,
+  numberBack,
+  overAllBack,
+}) => {
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, overAllBack]}>
       {/* Flag and code */}
-      <View style={styles.codeBox}>
+      <View style={[styles.codeBox, numberBack]}>
         <Image
           source={{uri: 'https://flagcdn.com/w40/ae.png'}}
           style={styles.flag}
@@ -14,7 +21,8 @@ const PhoneInputCustom = ({value, onChangeText, error}) => {
         <Text style={styles.codeText}>+971</Text>
       </View>
       {/* Phone input */}
-      <View style={[styles.inputBox, error && styles.inputBoxError]}>
+      <View
+        style={[styles.inputBox, error && styles.inputBoxError, textInputMain]}>
         <TextInput
           value={value}
           onChangeText={onChangeText}
