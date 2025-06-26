@@ -199,7 +199,7 @@ const StackedChart = ({chartData}) => {
 
 export const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)', // translucent white
+    backgroundColor: 'rgba(255, 255, 255, 0.57)', // translucent white
     borderRadius: 20,
     //marginLeft: 15,
   },

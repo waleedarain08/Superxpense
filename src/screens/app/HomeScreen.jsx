@@ -221,7 +221,6 @@ const HomeScreen = ({navigation}) => {
         {entityId: stateEntityId, month: month, year: year},
         token,
       );
-      console.log('line chart response:', response);
       const {transactions} = response?.data || {};
       setMonthlySpending(response.data.currentMonthSpending);
       setLastSpending(response.data.lastMonthSpending);
@@ -232,7 +231,7 @@ const HomeScreen = ({navigation}) => {
         setLineChartData([]); // fallback for empty or unexpected data
       }
     } catch (error) {
-      console.log('Error fetching LineGraph Data:', error);
+      console.log('Error fetching LineGraph Dataaaaa:', error);
     }
   };
   const fetchBudgetBycategory = async () => {
