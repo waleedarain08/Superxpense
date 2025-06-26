@@ -108,11 +108,11 @@ const ActiveSubscriptionScreen = ({navigation}) => {
                 {subscription?.toUpperCase()}
               </Text>
             </View>
-            <View style={styles.billingRow}>
+            <View style={[styles.billingRow,{borderTopWidth:0}]}>
               <Text style={styles.billingLabel}>Amount</Text>
               <Text style={styles.billingValue}>{amount} AED</Text>
             </View>
-            <View style={styles.billingRow}>
+            <View style={[styles.billingRow,{borderTopWidth:0}]}>
               <Text style={styles.billingLabel}>Next Billing Date</Text>
               <Text style={styles.billingValue}>
                 {formatDate(userData?.endDate)}
@@ -149,8 +149,8 @@ const styles = StyleSheet.create({
   card: {
     height: 181,
     borderRadius: 16,
-    paddingHorizontal: 31,
-    paddingVertical: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
     marginBottom: 35,
     marginTop: 29,
   },
@@ -159,24 +159,24 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   planLabel: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: FontFamily.medium,
-    marginBottom: 28,
+    color: Colors.newButtonBack,
+    fontSize: 28,
+    fontFamily: FontFamily.semiBold,
+    flex:1,
   },
   planTitle: {
-    fontSize: 24,
-    fontFamily: FontFamily.semiBold,
-    color: Colors.white,
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.grayIcon,
   },
   trialText: {
-    color: Colors.white,
-    fontFamily: FontFamily.regular,
-    fontSize: 16,
+    color: Colors.newButtonBack,
+    fontFamily: FontFamily.medium,
+    fontSize: 13,
     marginTop: 4,
   },
   billingCard: {
-    backgroundColor: Colors.white,
+    backgroundColor: 'transparent',
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 21,
@@ -186,20 +186,25 @@ const styles = StyleSheet.create({
   billingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 45,
+    borderColor: Colors.white,
+    borderWidth: 1,
+    borderRadius: 10,
+    height: 56,
+    alignItems: 'center',
+    paddingHorizontal: 10,
   },
   billingLabel: {
     color: '#555',
   },
   billingLabelRed: {
-    color: Colors.red,
+    color: Colors.grayIcon,
     fontFamily: FontFamily.medium,
     fontSize: 16,
   },
   billingValue: {
-    color: Colors.stepsTextColor,
-    fontFamily: FontFamily.semiBold,
-    fontSize: 13,
+    color: Colors.grayIcon,
+    fontFamily: FontFamily.medium,
+    fontSize: 14,
   },
   descriptionText: {
     fontSize: 16,
@@ -213,15 +218,15 @@ const styles = StyleSheet.create({
     color: Colors.txtColor,
   },
   upgradeButton: {
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.newButtonBack,
     borderRadius: 999,
     height: 48,
     justifyContent: 'center',
     alignItems: 'center',
   },
   upgradeButtonText: {
-    color: Colors.white,
-    fontFamily: FontFamily.medium,
+    color: Colors.newWhite,
+    fontFamily: FontFamily.semiBold,
     fontSize: 16,
   },
   header: {
@@ -239,15 +244,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   billingTitle: {
-    fontFamily: FontFamily.medium,
-    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
+    fontSize: 16,
     color: Colors.txtColor,
-    marginBottom: 18,
   },
   cardContainer: {
     paddingHorizontal: 20,
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     marginHorizontal: 16,
     borderRadius: 20,
     borderWidth: 1,
