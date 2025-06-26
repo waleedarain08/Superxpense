@@ -52,8 +52,10 @@ import Bolt from './bolt.svg';
 import Search from './search.svg';
 import Google from './goolge.svg';
 import Apple from './apple.svg';
+import Dirham from './dirham.svg';
 
 export {
+  Dirham,
   Google,
   Apple,
   Bolt,
