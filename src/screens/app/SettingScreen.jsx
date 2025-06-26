@@ -10,6 +10,7 @@ import {
   StatusBar,
   Modal,
   ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
@@ -41,7 +42,11 @@ import {API} from '../../utilis/Constant';
 
 const SettingScreen = ({navigation}) => {
   return (
-    <>
+    <ImageBackground
+      source={require('../../assets/images/greenishBackground.png')}
+      style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'stretch'}}
+      resizeMode="cover">
       <View style={{flex: 1}}>
         <Text style={styles.header}>Settings</Text>
         <ScrollView contentContainerStyle={[styles.container]}>
@@ -120,7 +125,7 @@ const SettingScreen = ({navigation}) => {
         </ScrollView>
       </View>
       {/* <FloatingChatButton navigation={navigation} /> */}
-    </>
+    </ImageBackground>
   );
 };
 
@@ -418,7 +423,7 @@ const SettingItem = ({title, IconComponent, screenName}) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: Colors.bgColor,
+    // backgroundColor: Colors.bgColor,
     paddingHorizontal: 20,
     paddingBottom: 50,
   },
@@ -426,7 +431,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: FontFamily.medium,
     color: Colors.white,
-    backgroundColor: Colors.background,
     textAlign: 'center',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 80,
     paddingBottom: 15,
@@ -439,7 +443,6 @@ const styles = StyleSheet.create({
     color: Colors.txtColor,
   },
   card: {
-    backgroundColor: Colors.white,
     borderRadius: 12,
     padding: 10,
     marginBottom: 8,
