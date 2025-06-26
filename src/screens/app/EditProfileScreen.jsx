@@ -86,20 +86,6 @@ const EditProfileScreen = ({navigation}) => {
       imageStyle={{resizeMode: 'stretch'}}
       resizeMode="cover">
       <ScrollView style={styles.container}>
-        {/* <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <LeftBlack />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Edit Profile</Text>
-          <TouchableOpacity
-            style={[styles.saveBtn, {opacity: change ? 1 : 0.5}]}
-            onPress={() => {
-              if (change) updateUserData();
-            }}
-              >
-            <Text style={styles.saveBtnText}>Save</Text>
-          </TouchableOpacity>
-        </View> */}
         <View style={styles.header}>
           <Header
             ScreenName={'Edit Profile'}
@@ -210,7 +196,7 @@ const styles = StyleSheet.create({
   },
   header: {
     // paddingTop: 80,
-    paddingTop: Platform.OS === 'ios' ? 80 : StatusBar.currentHeight + 5,
+    paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight + 5,
     paddingBottom: '20%',
     paddingHorizontal: 20,
   },

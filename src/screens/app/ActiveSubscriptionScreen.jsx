@@ -15,6 +15,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
 import {getItem, getStringItem} from '../../utilis/StorageActions';
+import Header from '../../component/Header';
 
 const ActiveSubscriptionScreen = ({navigation}) => {
   const [subscription, setSubscription] = useState('');
@@ -34,8 +35,7 @@ const ActiveSubscriptionScreen = ({navigation}) => {
           setAmount('0.00'); // Set amount to 0 for trial subscription
         } else if (data.data.activeSubscription.productId === 'yearly') {
           setAmount('119.99'); // Set amount for yearly subscription
-        }
-        else if (data.data.activeSubscription.productId === 'monthly') {
+        } else if (data.data.activeSubscription.productId === 'monthly') {
           setAmount('14.99'); // Set amount for monthly subscription
         }
         //console.log('UserData:', data.data.activeSubscription);
@@ -64,76 +64,79 @@ const ActiveSubscriptionScreen = ({navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={{width: '10%'}}
-          onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={Colors.white} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Manage Subscription</Text>
-        <TouchableOpacity style={{width: '10%'}}>
-          {/* <ChatHeader /> */}
-        </TouchableOpacity>
-      </View>
-      <View style={{paddingHorizontal: 20, flex: 1}}>
-        {/* Card with background image */}
-        <ImageBackground
-          source={require('../../assets/images/cardBackground.png')} // Update the path based on your project structure
-          style={styles.card}
-          imageStyle={styles.cardImage}>
-          <Text style={styles.planLabel}>
-            {subscription === 'trial' ? 'Basic Plan' : `Premium Plan`}
-          </Text>
-          <Text style={styles.planTitle}>
-            {subscription === 'trial' ? `Free Access` : `Premium Access`}
-          </Text>
-          <Text style={styles.trialText}>
-            {`${subscription?.toUpperCase()} Subscription`}
-            
-          </Text>
-        </ImageBackground>
-
-        {/* Billing Info Section */}
-        <Text style={styles.billingTitle}>Billing Info</Text>
-        <View style={styles.billingCard}>
-          <View style={styles.billingRow}>
-            <Text style={styles.billingLabelRed}>Membership</Text>
-            <Text style={styles.billingValue}>
-              {subscription?.toUpperCase()}
-            </Text>
-          </View>
-          <View style={styles.billingRow}>
-            <Text style={styles.billingLabel}>Amount</Text>
-            <Text style={styles.billingValue}>
-              {amount}{' '}
-              AED
-            </Text>
-          </View>
-          <View style={styles.billingRow}>
-            <Text style={styles.billingLabel}>Next Billing Date</Text>
-            <Text style={styles.billingValue}>
-              {formatDate(userData?.endDate)}
-            </Text>
-          </View>
+    <ImageBackground
+      source={require('../../assets/images/greenishBackground.png')}
+      style={[{flex: 1}]}
+      imageStyle={{resizeMode: 'stretch'}}
+      resizeMode="cover">
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Header
+            ScreenName={'Manage Subscription'}
+            mainContainer={{paddingHorizontal: 0, marginBottom: 8}}
+            onBackPress={() => navigation.goBack()}
+            titleTxt={{
+              fontFamily: FontFamily.semiBold,
+              color: Colors.txtColor,
+              fontSize: 18,
+            }}
+          />
         </View>
+        <View style={styles.cardContainer}>
+          {/* Card with background image */}
+          <ImageBackground
+            source={require('../../assets/images/cardBackground.png')} // Update the path based on your project structure
+            style={styles.card}
+            imageStyle={styles.cardImage}>
+            <Text style={styles.planLabel}>
+              {subscription === 'trial' ? 'Basic Plan' : `Premium Plan`}
+            </Text>
+            <Text style={styles.planTitle}>
+              {subscription === 'trial' ? `Free Access` : `Premium Access`}
+            </Text>
+            <Text style={styles.trialText}>
+              {`${subscription?.toUpperCase()} Subscription`}
+            </Text>
+          </ImageBackground>
 
-        {/* Description Text */}
-        <View style={{flex: 0.8}}>
-          {/* <Text style={styles.descriptionText}>You signup using IOS</Text>
+          {/* Billing Info Section */}
+          <Text style={styles.billingTitle}>Billing Info</Text>
+          <View style={styles.billingCard}>
+            <View style={styles.billingRow}>
+              <Text style={styles.billingLabelRed}>Membership</Text>
+              <Text style={styles.billingValue}>
+                {subscription?.toUpperCase()}
+              </Text>
+            </View>
+            <View style={styles.billingRow}>
+              <Text style={styles.billingLabel}>Amount</Text>
+              <Text style={styles.billingValue}>{amount} AED</Text>
+            </View>
+            <View style={styles.billingRow}>
+              <Text style={styles.billingLabel}>Next Billing Date</Text>
+              <Text style={styles.billingValue}>
+                {formatDate(userData?.endDate)}
+              </Text>
+            </View>
+          </View>
+
+          {/* Description Text */}
+          <View style={{flex: 0.8}}>
+            {/* <Text style={styles.descriptionText}>You signup using IOS</Text>
           <Text style={styles.descriptionSubText}>
             Your iOS account is automatically{'\n'}billed each month
           </Text> */}
-        </View>
+          </View>
 
-        {/* Upgrade Button */}
-        <TouchableOpacity
-          style={styles.upgradeButton}
-          onPress={() => navigation.navigate('Subscription')}>
-          <Text style={styles.upgradeButtonText}>Upgrade Plan</Text>
-        </TouchableOpacity>
+          {/* Upgrade Button */}
+          <TouchableOpacity
+            style={styles.upgradeButton}
+            onPress={() => navigation.navigate('Subscription')}>
+            <Text style={styles.upgradeButtonText}>Upgrade Plan</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -142,7 +145,6 @@ export default ActiveSubscriptionScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.bgColor,
   },
   card: {
     height: 181,
@@ -223,10 +225,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   header: {
-    backgroundColor: Colors.background,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight,
     paddingBottom: 16,
@@ -245,5 +243,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: Colors.txtColor,
     marginBottom: 18,
+  },
+  cardContainer: {
+    paddingHorizontal: 20,
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    marginHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
 });
