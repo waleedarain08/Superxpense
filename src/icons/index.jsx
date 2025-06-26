@@ -281,3 +281,13 @@ export const ChevronLeft = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const BoldChevronLeft = ({color, size, style}) => (
+  <VectorIcon
+    name="chevron-right"
+    color={color}
+    size={size}
+    type="Feather"
+    style={style}
+  />
+);

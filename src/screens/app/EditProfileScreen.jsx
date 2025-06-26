@@ -9,15 +9,18 @@ import {
   Alert,
   Platform,
   StatusBar,
+  ImageBackground,
 } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import {LeftBlack} from '../../assets/svgs';
+import {Email, LeftBlack} from '../../assets/svgs';
 import {getItem} from '../../utilis/StorageActions';
 import {get, patch} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 import PhoneInputCustom from '../../component/PhoneInputCustome';
+import Header from '../../component/Header';
+import IconInput from '../../component/IconInput';
 
 const EditProfileScreen = ({navigation}) => {
   const phoneRef = useRef(null);
@@ -77,80 +80,124 @@ const EditProfileScreen = ({navigation}) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          {/* Replace with your Back Icon SVG */}
-          <LeftBlack />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Edit Profile</Text>
-        <TouchableOpacity
-          style={[styles.saveBtn, {opacity: change ? 1 : 0.5}]}
-          onPress={() => {
-            if (change) updateUserData();
-          }}>
-          <Text style={styles.saveBtnText}>Save</Text>
-        </TouchableOpacity>
-      </View>
+    <ImageBackground
+      source={require('../../assets/images/editProfile.png')}
+      style={[{flex: 1}]}
+      imageStyle={{resizeMode: 'stretch'}}
+      resizeMode="cover">
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Header
+            ScreenName={'Edit Profile'}
+            mainContainer={{paddingHorizontal: 0, marginBottom: 8}}
+            onBackPress={() => navigation.goBack()}
+            titleTxt={{
+              fontFamily: FontFamily.semiBold,
+              color: Colors.newWhite,
+              fontSize: 18,
+            }}
+          />
+        </View>
+        <View style={styles.form}>
+          {/* <Text style={styles.label}>Firstname</Text>
+          <TextInput
+            value={name}
+            onChangeText={text => {
+              setName(text);
+              setChange(true);
+            }}
+            style={styles.input}
+            placeholder="Firstname"
+          /> */}
+          <IconInput
+            svgIcon={<Email />}
+            placeholder="Email Address"
+            value={name}
+            onChangeText={text => {
+              setName(text);
+              setChange(true);
+            }}
+            // error={error.email}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={[
+              styles.input,
+              // error.email && styles.inputError,
+              {marginBottom: 24},
+            ]}
+          />
 
-      {/* Form */}
-      <View style={styles.form}>
-        <Text style={styles.label}>Firstname</Text>
-        <TextInput
-          value={name}
-          onChangeText={text => {
-            setName(text);
-            setChange(true);
-          }}
-          style={styles.input}
-          placeholder="Firstname"
-        />
+          {/* <Text style={styles.label}>Email Address</Text>
+          <TextInput
+            value={email}
+            onChangeText={text => {
+              setEmail(text);
+              setChange(true);
+            }}
+            editable={false}
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          /> */}
 
-        <Text style={styles.label}>Email Address</Text>
-        <TextInput
-          value={email}
-          onChangeText={text => {
-            setEmail(text);
-            setChange(true);
-          }}
-          editable={false}
-          style={styles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-
-        <Text style={styles.label}>Mobile Number</Text>
-        {/* <View style={styles.phoneWrapper}> */}
-        <PhoneInputCustom
-          value={phone}
-          onChangeText={text => {
-            setPhone(text);
-            setChange(true);
-          }}
-          error={false}
-        />
-        {/* </View> */}
-      </View>
-    </ScrollView>
+          <IconInput
+            svgIcon={<Email />}
+            placeholder="Email Address"
+            value={email}
+            onChangeText={text => {
+              setEmail(text);
+              setChange(true);
+            }}
+            // error={error.email}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={[
+              styles.input,
+              // error.email && styles.inputError,
+              {marginBottom: 14},
+            ]}
+          />
+          {/* <Text style={styles.label}>Mobile Number</Text> */}
+          <PhoneInputCustom
+            value={phone}
+            onChangeText={text => {
+              setPhone(text);
+              setChange(true);
+            }}
+            error={false}
+            numberBack={{
+              backgroundColor: 'rgba(255, 255, 255, 0.19)',
+              borderWidth: 1,
+              borderColor: Colors.white,
+            }}
+            textInputMain={{
+              backgroundColor: 'rgba(255, 255, 255, 0.19)',
+              borderWidth: 1,
+              borderColor: Colors.white,
+            }}
+          />
+        </View>
+      </ScrollView>
+      <TouchableOpacity
+        onPress={() => {
+          if (change) updateUserData();
+        }}
+        style={[styles.button, {opacity: change ? 1 : 0.5}]}>
+        <Text style={styles.buttonText}>Save Changes</Text>
+      </TouchableOpacity>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.bgColor,
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     // paddingTop: 80,
-    paddingTop: Platform.OS === 'ios' ? 80 : StatusBar.currentHeight + 5,
-    paddingBottom: 8,
-    borderBottomColor: Colors.newBorderColor,
-    borderBottomWidth: 1,
+    paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight + 5,
+    paddingBottom: '20%',
     paddingHorizontal: 20,
   },
   backArrow: {
@@ -186,6 +233,7 @@ const styles = StyleSheet.create({
   form: {
     marginTop: 16,
     paddingHorizontal: 20,
+    flex: 1,
   },
   label: {
     fontSize: 16,
@@ -194,14 +242,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   input: {
-    backgroundColor: Colors.white,
-    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.19)',
+    borderRadius: 14,
     paddingHorizontal: 12,
     height: 56,
     marginBottom: 24,
     fontFamily: FontFamily.regular,
     fontSize: 14,
     color: Colors.txtColor,
+    borderColor: Colors.white,
+    borderWidth: 1,
   },
   phoneWrapper: {
     backgroundColor: Colors.white,
@@ -217,6 +267,20 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.regular,
     fontSize: 14,
     color: Colors.txtColor,
+  },
+  button: {
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 100,
+    alignItems: 'center',
+    height: 48,
+    justifyContent: 'center',
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: Colors.white,
+    fontFamily: FontFamily.semiBold,
+    fontSize: 16,
   },
 });
 

@@ -24,7 +24,7 @@ import {
   Personal,
   Shield,
 } from '../../assets/svgs';
-import {ChevronRight, DeleteIcon} from '../../icons';
+import {BoldChevronLeft, ChevronRight, DeleteIcon} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
 import {
   getItem,
@@ -44,7 +44,7 @@ const SettingScreen = ({navigation}) => {
   return (
     <ImageBackground
       source={require('../../assets/images/greenishBackground.png')}
-      style={[styles.container, {flex: 1}]}
+      style={[{flex: 1}]}
       imageStyle={{resizeMode: 'stretch'}}
       resizeMode="cover">
       <View style={{flex: 1}}>
@@ -104,9 +104,7 @@ const SettingScreen = ({navigation}) => {
           <View style={styles.card}>
             <SettingItem
               title="Delete Account"
-              IconComponent={
-                <DeleteIcon color={Colors.transactionCard} size={15} />
-              }
+              IconComponent={<DeleteIcon color={'#28A08C'} size={15} />}
               screenName="Delete"
             />
             {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
@@ -389,31 +387,29 @@ const SettingItem = ({title, IconComponent, screenName}) => {
           }
         }}>
         <View style={styles.itemLeft}>
-          {IconComponent}
+          <View style={styles.iconStyle}>{IconComponent}</View>
           <Text style={styles.itemText}>{title}</Text>
         </View>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {title === 'Subscription' && (
             <View
               style={{
-                backgroundColor: '#C9FFE8',
-                padding: 5,
+                backgroundColor: '#28A08C1A',
+                padding: 6,
                 borderRadius: 10,
-                marginRight: 10,
+                marginRight: 3,
               }}>
               <Text
                 style={{
-                  color: Colors.txtColor,
-                  fontFamily: FontFamily.medium,
-                  fontSize: 16,
-                  marginLeft: 10,
-                  marginRight: 10,
+                  color: Colors.newButtonBack,
+                  fontFamily: FontFamily.regular,
+                  fontSize: 12,
                 }}>
                 {subscription?.toUpperCase()}
               </Text>
             </View>
           )}
-          <ChevronRight />
+          <BoldChevronLeft size={22} color={Colors.newButtonBack} />
         </View>
       </TouchableOpacity>
     </>
@@ -424,27 +420,31 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     // backgroundColor: Colors.bgColor,
-    paddingHorizontal: 20,
+    paddingHorizontal: 14,
     paddingBottom: 50,
+    backgroundColor: Colors.newLightestWhite,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    marginHorizontal: 16,
+    borderRadius: 20,
   },
   header: {
     fontSize: 18,
-    fontFamily: FontFamily.medium,
-    color: Colors.white,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
     textAlign: 'center',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 80,
     paddingBottom: 15,
   },
   sectionTitle: {
     marginTop: 16,
-    marginBottom: 18,
+    marginBottom: 12,
     fontSize: 16,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
   },
   card: {
     borderRadius: 12,
-    padding: 10,
     marginBottom: 8,
   },
   item: {
@@ -452,6 +452,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: Colors.white,
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 12,
   },
   itemLeft: {
     flexDirection: 'row',
@@ -481,6 +487,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: '#333',
+  },
+  iconStyle: {
+    backgroundColor: 'rgba(255, 255, 255, 0.36)',
+    width: 32,
+    height: 32,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
 });
 

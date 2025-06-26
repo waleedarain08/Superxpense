@@ -383,182 +383,163 @@
 
 // export default BankTransactionScreen;
 
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  FlatList,
+  TouchableOpacity,
   ScrollView,
   ImageBackground,
   SafeAreaView,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../component/Header';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
-import {Dirham} from '../../assets/svgs';
-import {getItem} from '../../utilis/StorageActions';
-import {get} from '../../utilis/Api';
-import {API} from '../../utilis/Constant';
+
+const latestTransactions = [
+  {
+    id: '1',
+    name: 'Flavours Grill Dubai',
+    date: 'Today, 24 Apr 2025',
+    amount: '-325.10 AED',
+    icon: 'silverware-fork-knife',
+    color: '#A74AD1',
+  },
+  {
+    id: '2',
+    name: 'Online Banking Transfer',
+    date: 'Today, 24 Apr 2025',
+    amount: '-325.10 AED',
+    icon: 'bank-transfer',
+    color: '#2F90EC',
+  },
+  {
+    id: '3',
+    name: 'Netflix subscription',
+    date: 'Today, 24 Apr 2025',
+    amount: '-325.10 AED',
+    icon: 'netflix',
+    color: '#D14A4A',
+  },
+];
+
+const aprilTransactions = [
+  {
+    id: '4',
+    name: 'Amazon.ae galleria mall',
+    date: '18 Apr 2025',
+    amount: '-325.10 AED',
+    icon: 'shopping',
+    color: '#4AD1A7',
+  },
+  {
+    id: '5',
+    name: "Clovo's Gym Membership",
+    date: '15 Apr 2025',
+    amount: '-325.10 AED',
+    icon: 'dumbbell',
+    color: '#A74AD1',
+  },
+  {
+    id: '6',
+    name: 'Du Wireless internet bill',
+    date: '12 Apr 2025',
+    amount: '-325.10 AED',
+    icon: 'wifi',
+    color: '#F1A340',
+  },
+  {
+    id: '7',
+    name: 'Kaza Akla grill restaurant',
+    date: '12 Apr 2025',
+    amount: '-325.10 AED',
+    icon: 'silverware-fork-knife',
+    color: '#4A90D1',
+  },
+  {
+    id: '8',
+    name: 'Aramco Car maintenance',
+    date: '12 Apr 2025',
+    amount: '-325.10 AED',
+    icon: 'car-wrench',
+    color: '#D14A4A',
+  },
+];
 
 const TransactionItem = ({item}) => (
   <View style={styles.transactionItem}>
-    <View style={[styles.iconCircle, {backgroundColor: item.color || '#999'}]}>
-      <Icon name={item.icon || 'bank'} size={20} color="#fff" />
+    <View style={[styles.iconCircle, {backgroundColor: item.color}]}>
+      <Icon name={item.icon} size={20} color="#fff" />
     </View>
     <View style={{flex: 1, marginHorizontal: 10}}>
-      <Text style={styles.transactionName}>{item.label}</Text>
+      <Text style={styles.transactionName}>{item.name}</Text>
       <Text style={styles.transactionDate}>{item.date}</Text>
     </View>
     <Text style={styles.transactionAmount}>{item.amount}</Text>
   </View>
 );
 
-const BankTransactionScreen = ({navigation, route}) => {
-  const {BankName, accountId, accountBalance, accountType, entityId} =
-    route?.params || {};
-
-  const [groupedTransactions, setGroupedTransactions] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [lastRefreshed, setLastRefreshed] = useState(null);
-
-  const fetchTransactions = async () => {
-    try {
-      setLoading(true);
-      const userData = await getItem('userData');
-      const token = userData?.data?.accessToken;
-
-      const data = await get(
-        `${API.tansActions}`,
-        {accountId, entityId, page: 1, size: 50},
-        token,
-      );
-
-      const transactions = data.data.data.transactions;
-
-      const formatted = transactions.map(tx => {
-        const isCredit = tx.credit_debit_indicator === 'CREDIT';
-        return {
-          label: tx.transaction_information ?? 'Unknown',
-          category: isCredit ? 'Credit' : 'Debit',
-          date: new Date(tx.booking_date_time).toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-          }),
-          amount: `${isCredit ? '' : '-'}${parseFloat(
-            tx.amount?.amount ?? 0,
-          ).toFixed(2)} ${tx.amount?.currency ?? ''}`,
-          icon: isCredit ? 'cash-plus' : 'cash-minus',
-          color: isCredit ? '#4AD1A7' : '#D14A4A',
-        };
-      });
-
-      const grouped = formatted.reduce((groups, tx) => {
-        const [day, month, year] = tx.date.split(' ');
-        const key = `${month} ${year}`;
-        if (!groups[key]) groups[key] = [];
-        groups[key].push(tx);
-        return groups;
-      }, {});
-
-      setGroupedTransactions(grouped);
-      setLastRefreshed(new Date());
-      setLoading(false);
-    } catch (err) {
-      console.error('Error:', err);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
-  const formatDate = date => {
-    if (!date) return '';
-    return `${date.getDate()} ${date.toLocaleString('default', {
-      month: 'short',
-    })} ${date.getFullYear()} ${date.getHours()}:${String(
-      date.getMinutes(),
-    ).padStart(2, '0')}`;
-  };
-
+const BankTransactionScreen = ({navigation}) => {
   return (
     <ImageBackground
       source={require('../../assets/images/greenishBackground.png')}
       style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
       <SafeAreaView>
         <Header
+          ScreenName={''}
+          mainContainer={{}}
+          onBackPress={() => navigation.goBack()}
           titleTxt={{
             fontFamily: FontFamily.semiBold,
             color: Colors.txtColor,
             fontSize: 18,
           }}
-          onBackPress={() => navigation.goBack()}
         />
-        <ScrollView contentContainerStyle={{paddingHorizontal: 24}}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.bankCard}>
             <View style={styles.bankHeader}>
-              <Image
-                source={{uri: 'https://picsum.photos/200/300'}}
-                style={{height: 32, width: 32, borderRadius: 20}}
-              />
-              <Text style={styles.bankName}>{BankName || 'Bank'}</Text>
+              <Icon name="bank" size={20} color="#333" />
+              <Text style={styles.bankName}> First Abu Dhabi Bank</Text>
+              <Text style={styles.accountNumber}>9090</Text>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-              <View>
-                <Text style={styles.lastSynced}>Last synced:</Text>
-                <Text style={styles.bold}>{formatDate(lastRefreshed)}</Text>
-              </View>
-              <View>
-                <Text style={styles.balanceLabel}>{accountType}</Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginTop: 12,
-                  }}>
-                  <Dirham />
-                  <Text style={styles.balanceAmount}>{accountBalance} AED</Text>
-                </View>
-              </View>
-            </View>
+            <Text style={styles.lastSynced}>
+              Last synced: <Text style={styles.bold}>24/06/2025 12:00 AM</Text>
+            </Text>
+            <Text style={styles.balanceLabel}>Current Account</Text>
+            <Text style={styles.balanceAmount}>35,000.00 AED</Text>
           </View>
 
-          {loading ? (
-            <ActivityIndicator
-              size="large"
-              color="#00B67A"
-              style={{marginTop: 24}}
-            />
-          ) : Object.keys(groupedTransactions).length > 0 ? (
-            Object.keys(groupedTransactions)
-              .sort((a, b) => new Date(`1 ${b}`) - new Date(`1 ${a}`))
-              .map(monthYear => (
-                <View style={styles.section} key={monthYear}>
-                  <Text style={[styles.sectionTitle, {marginBottom: 16}]}>
-                    {monthYear}
-                  </Text>
-                  {groupedTransactions[monthYear].map((item, index) => (
-                    <TransactionItem key={index} item={item} />
-                  ))}
-                </View>
-              ))
-          ) : (
-            <Text style={{marginTop: 24, textAlign: 'center', color: '#fff'}}>
-              No transactions found.
-            </Text>
-          )}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Latest Transactions</Text>
+              <Text style={styles.seeAll}>See all</Text>
+            </View>
+            {latestTransactions.map(item => (
+              <TransactionItem key={item.id} item={item} />
+            ))}
+            <TouchableOpacity style={styles.reviewButton}>
+              <Text style={styles.reviewButtonText}>Mark all as reviewed</Text>
+              <Icon
+                name="check-circle"
+                color="#fff"
+                size={18}
+                style={{marginLeft: 8}}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>April 2025</Text>
+            {aprilTransactions.map(item => (
+              <TransactionItem key={item.id} item={item} />
+            ))}
+          </View>
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
@@ -570,85 +551,73 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bankCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: '#d9f7f8',
+    margin: 16,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.white,
     padding: 16,
-    height: 220,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
   },
   bankHeader: {
     flexDirection: 'row',
-    flex: 1,
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   bankName: {
-    fontFamily: FontFamily.medium,
-    fontSize: 14,
-    marginLeft: 8,
-    color: Colors.txtColor,
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: 6,
   },
   accountNumber: {
     marginLeft: 'auto',
-    fontFamily: FontFamily.medium,
-    fontSize: 14,
-    color: Colors.txtColor,
+    fontWeight: '600',
   },
   lastSynced: {
-    marginBottom: 12,
-    color: Colors.grayIcon,
-    fontSize: 14,
-    fontFamily: FontFamily.medium,
+    marginTop: 8,
+    color: '#555',
+    fontSize: 12,
   },
   bold: {
-    fontFamily: FontFamily.medium,
-    fontSize: 12,
-    color: Colors.txtColor,
+    fontWeight: '600',
   },
   balanceLabel: {
-    fontFamily: FontFamily.medium,
-    color: Colors.grayIcon,
-    fontSize: 14,
+    marginTop: 16,
+    color: '#888',
   },
   balanceAmount: {
-    fontSize: 16,
-    fontFamily: FontFamily.semiBold,
-    color: Colors.newButtonBack,
-    marginLeft: 4,
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginTop: 4,
   },
   section: {
+    marginHorizontal: 16,
     marginTop: 16,
     paddingBottom: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderWidth: 1,
-    borderColor: Colors.white,
-    padding: 16,
-    borderRadius: 20,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   sectionTitle: {
     fontSize: 16,
-    fontFamily: FontFamily.semiBold,
-    color: Colors.txtColor,
+    fontWeight: '600',
   },
   seeAll: {
-    color: Colors.grayIcon,
+    color: '#00A8A8',
     fontSize: 14,
-    fontFamily: FontFamily.regular,
   },
   transactionItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderWidth: 1,
-    borderColor: Colors.white,
+    backgroundColor: '#e8f9f9',
     borderRadius: 12,
     padding: 14,
     marginVertical: 6,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   iconCircle: {
     width: 36,
@@ -658,20 +627,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   transactionName: {
-    fontFamily: FontFamily.medium,
+    fontWeight: '600',
     fontSize: 14,
-    color: Colors.txtColor,
   },
   transactionDate: {
-    color: Colors.grayIcon,
+    color: '#666',
     fontSize: 12,
-    fontFamily: FontFamily.regular,
     marginTop: 2,
   },
   transactionAmount: {
-    fontFamily: FontFamily.medium,
-    fontSize: 13,
-    color: Colors.txtColor,
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  reviewButton: {
+    flexDirection: 'row',
+    backgroundColor: '#00A8A8',
+    padding: 12,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  reviewButtonText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });
 
