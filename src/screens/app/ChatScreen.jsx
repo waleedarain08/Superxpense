@@ -98,6 +98,7 @@ const HomeScreen = ({navigation}) => {
         type: DocumentPicker.types.allFiles,
       });
 
+      console.log('Selected file:', file); // Debug log
       await handleSendMessage(file);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -110,7 +111,14 @@ const HomeScreen = ({navigation}) => {
 
   const handleSendMessage = async (file = null) => {
     if (!message.trim() && !file) return;
-
+    
+    console.log('handleSendMessage called with:', {
+      message: message,
+      file: file,
+      fileType: typeof file,
+      isFileObject: file && typeof file === 'object' && file.uri
+    });
+    
     try {
       setSendMessageLoading(true);
       const userData = await getItem('userData');
@@ -122,7 +130,7 @@ const HomeScreen = ({navigation}) => {
       setChats(prevChats => [
         ...prevChats,
         {
-          message: file ? `Uploading document: ${file.name}` : message,
+          message: file && file.name ? `Uploading document: ${file.name}` : message,
           isUser: true,
           timestamp,
         },
@@ -137,14 +145,15 @@ const HomeScreen = ({navigation}) => {
       let formData;
       let headers;
 
-      if (file) {
+      if (file && file.uri) {
+        console.log('Processing file upload:', file);
         formData = new FormData();
         formData.append('file', {
           uri: file.uri,
           name: file.name,
           type: file.type || 'application/octet-stream',
         });
-        formData.append('query', message); // optionally include the message too
+        formData.append('query', message || ''); // Handle empty message case
         headers = {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -153,32 +162,33 @@ const HomeScreen = ({navigation}) => {
 
       const response = await fetch(API.createChat, {
         method: 'POST',
-        headers: file
+        headers: file && file.uri
           ? headers
           : {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
-        body: file ? formData : JSON.stringify({query: message}),
+        body: file && file.uri ? formData : JSON.stringify({query: message}),
       });
 
       const data = await response.json();
-      //console.log('Response data:', data);
+      console.log('Response data:', data);
+      
       // Remove thinking and show bot reply
       setChats(prevChats => {
         const newChats = prevChats.filter(chat => !chat.isThinking);
         return [
           ...newChats,
           {
-            message: file ? data.data.response : data.data,
+            message: file && file.uri ? data.data?.response : data.data,
             isUser: false,
             timestamp: new Date().toLocaleTimeString(),
-            installments: data.data.installments || [],
+            installments: data.data?.installments || [],
           },
         ];
       });
 
-      if (file) {
+      if (file && file.uri) {
         Alert.alert(
           'Payment Reminders Set',
           'You will be notified when payment is due.',
