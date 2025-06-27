@@ -9,10 +9,10 @@ const FloatingChatButton = ({navigation}) => {
       style={styles.button}
       onPress={() => navigation.navigate('Chat')}>
       <Image
-        source={require('../assets/images/chatIcon.png')}
+        source={require('../assets/images/newChatIcon.png')}
         style={styles.icon}
       />
-      <Text style={styles.text}>Chat with AI</Text>
+      {/* <Text style={styles.text}>Chat with AI</Text> */}
     </TouchableOpacity>
   );
 };
@@ -22,24 +22,28 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     zIndex: 1000,
-    backgroundColor: '#000',
-    borderRadius: 30,
-    height: 48,
-    width: 164,
-    alignSelf: 'center',
+    // backgroundColor: '#000',
+    // borderRadius: 30,
+    // height: 48,
+    // width: 164,
+    width: 120,
+    height: 120,
     justifyContent: 'center',
-    flexDirection: 'row',
     alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
+    alignSelf: 'flex-end',
+    // justifyContent: 'center',
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // elevation: 5,
+    // shadowColor: '#000',
+    // shadowOffset: {width: 0, height: 2},
+    // shadowOpacity: 0.3,
+    // shadowRadius: 3,
   },
   icon: {
-    width: 18,
-    height: 18,
-    resizeMode: 'contain',
+    height: 80,
+    width: 80,
+    resizeMode: 'cover',
   },
   text: {
     color: Colors.white,

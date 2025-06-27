@@ -536,7 +536,7 @@ const HomeScreen = ({navigation}) => {
             </View>
           ))}
       </View>
-      {/* <FloatingChatButton navigation={navigation} /> */}
+      <FloatingChatButton navigation={navigation} />
     </ImageBackground>
   );
 };

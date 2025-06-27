@@ -18,9 +18,11 @@ const Header = ({
 }) => {
   return (
     <View style={[styles.container, mainContainer]}>
-      <TouchableOpacity style={styles.iconButton} onPress={onBackPress}>
-        <ChevronLeft size={25} />
-      </TouchableOpacity>
+      <View style={{width: '15%'}}>
+        <TouchableOpacity style={styles.iconButton} onPress={onBackPress}>
+          <ChevronLeft size={25} />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.titleContainer}>
         <Text style={[styles.title, titleTxt]}>{ScreenName}</Text>
@@ -31,7 +33,7 @@ const Header = ({
           <Icon name="more-vert" size={24} color="#000" />
         </TouchableOpacity>
       ) : steps ? (
-        <TouchableOpacity style={{}} onPress={onMenuPress}>
+        <TouchableOpacity style={{width: '20%'}} onPress={onMenuPress}>
           <Text style={styles.stepStyle}>Step {stepsCount} of 2</Text>
         </TouchableOpacity>
       ) : (
@@ -46,17 +48,21 @@ const styles = StyleSheet.create({
     height: 60,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 24,
   },
   iconButton: {
     backgroundColor: Colors.white,
-    borderRadius: 20,
-    padding: 6,
+    borderRadius: 100,
+    height: 32,
+    width: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    width: '70%',
+    justifyContent: 'center',
   },
   logo: {
     fontSize: 18,
@@ -69,8 +75,9 @@ const styles = StyleSheet.create({
   },
   stepStyle: {
     fontFamily: FontFamily.semiBold,
-    fontSize: 16,
+    fontSize: 14,
     color: Colors.txtColor,
+    // width: '15%',
   },
 });
 

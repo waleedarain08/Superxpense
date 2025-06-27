@@ -19,7 +19,7 @@ const WelcomeScreen = ({navigation}) => {
       style={styles.container}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
-      <View style={{flex: 1.34}}>
+      <View style={{flex: 1.48}}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.navigate('Welcome1')}>
@@ -95,13 +95,13 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 18,
     color: '#1AA875',
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.bold,
     marginTop: 16,
   },
   subtitle: {
     fontSize: 32,
     color: Colors.txtColor,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.bold,
     textAlign: 'center',
   },
   cardsContainer: {
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.newWhite,
     fontSize: 16,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.bold,
   },
   appleButton: {
     flexDirection: 'row',
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   },
   appleButtonText: {
     fontSize: 16,
-    FontFamily: FontFamily.semiBold,
+    FontFamily: FontFamily.bold,
     color: Colors.txtColor,
     marginLeft: 10,
   },
