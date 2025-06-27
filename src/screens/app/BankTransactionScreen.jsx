@@ -399,10 +399,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../component/Header';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
-import {Dirham} from '../../assets/svgs';
+import {Dirham, ReloadSvg} from '../../assets/svgs';
 import {getItem} from '../../utilis/StorageActions';
 import {get} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
+import {Refresh} from '../../icons';
 
 const TransactionItem = ({item}) => (
   <View style={styles.transactionItem}>
@@ -418,7 +419,7 @@ const TransactionItem = ({item}) => (
 );
 
 const BankTransactionScreen = ({navigation, route}) => {
-  const {BankName, accountId, accountBalance, accountType, entityId} =
+  const {BankName, accountId, accountBalance, accountType, entityId, bankData} =
     route?.params || {};
 
   const [groupedTransactions, setGroupedTransactions] = useState({});
@@ -504,10 +505,17 @@ const BankTransactionScreen = ({navigation, route}) => {
         <ScrollView contentContainerStyle={{paddingHorizontal: 24}}>
           <View style={styles.bankCard}>
             <View style={styles.bankHeader}>
-              <Image
-                source={{uri: 'https://picsum.photos/200/300'}}
-                style={{height: 32, width: 32, borderRadius: 20}}
-              />
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: Colors.white,
+                  borderRadius: 100,
+                }}>
+                <Image
+                  source={{uri: bankData[0].bankIcon}}
+                  style={{height: 32, width: 32, borderRadius: 20}}
+                />
+              </View>
               <Text style={styles.bankName}>{BankName || 'Bank'}</Text>
             </View>
             <View
@@ -518,7 +526,14 @@ const BankTransactionScreen = ({navigation, route}) => {
               }}>
               <View>
                 <Text style={styles.lastSynced}>Last synced:</Text>
-                <Text style={styles.bold}>{formatDate(lastRefreshed)}</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={styles.bold}>{formatDate(lastRefreshed)}</Text>
+                  <TouchableOpacity
+                    style={styles.refreshBtn}
+                    onPress={fetchTransactions}>
+                    <ReloadSvg />
+                  </TouchableOpacity>
+                </View>
               </View>
               <View>
                 <Text style={styles.balanceLabel}>{accountType}</Text>
@@ -587,6 +602,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 8,
     color: Colors.txtColor,
+    marginTop: 8,
   },
   accountNumber: {
     marginLeft: 'auto',
@@ -604,6 +620,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.medium,
     fontSize: 12,
     color: Colors.txtColor,
+    marginTop: 5,
   },
   balanceLabel: {
     fontFamily: FontFamily.medium,
@@ -672,6 +689,15 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.medium,
     fontSize: 13,
     color: Colors.txtColor,
+  },
+  refreshBtn: {
+    marginLeft: 8,
+    backgroundColor: '#28A08C1A',
+    height: 24,
+    width: 24,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

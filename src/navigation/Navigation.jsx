@@ -36,6 +36,7 @@ import ActiveSubscriptionScreen from '../screens/app/ActiveSubscriptionScreen';
 import VerficationCodeScreen from '../screens/auth/VerficationCodeScreen';
 import WelcomeScreen1 from '../screens/auth/WelcomeScreen1';
 import NotificationScreen from '../screens/app/NotificationScreen';
+import CustomTabBar from './CustomTabBar';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -96,7 +97,7 @@ const Navigation = () => {
 const BottomNavigator = () => {
   return (
     <View style={{backgroundColor: 'black', flex: 1}}>
-      <BottomStack.Navigator
+      {/* <BottomStack.Navigator
         initialRouteName="Home"
         screenOptions={{
           tabBarStyle: {
@@ -117,8 +118,12 @@ const BottomNavigator = () => {
           },
           tabBarActiveTintColor: Colors.activeTabColor,
           tabBarInactiveTintColor: Colors.inactiveTabColor,
-        }}>
-        <BottomStack.Screen
+        }}> */}
+      <BottomStack.Navigator
+        initialRouteName="Home"
+        tabBar={props => <CustomTabBar {...props} />}
+        >
+        {/* <BottomStack.Screen
           name="Home"
           component={HomeScreen}
           options={{
@@ -136,6 +141,26 @@ const BottomNavigator = () => {
               />
             ),
           }}
+        /> */}
+        <BottomStack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({focused}) => (
+              <Image
+                source={require('../assets/images/homeBottom.png')}
+                style={{
+                  tintColor: focused
+                    ? Colors.white
+                    : Colors.inactiveTabColor,
+                  height: 21,
+                  width: 21,
+                }}
+              />
+            ),
+            tabBarLabel: 'Home',
+          }}
         />
         <BottomStack.Screen
           name="Budgets"
@@ -147,7 +172,7 @@ const BottomNavigator = () => {
                 source={require('../assets/images/chartBottom.png')}
                 style={{
                   tintColor: focused
-                    ? Colors.activeTabColor
+                    ? Colors.white
                     : Colors.inactiveTabColor,
                   height: 21,
                   width: 21,
@@ -174,7 +199,7 @@ const BottomNavigator = () => {
             ),
           }}
         /> */}
-        <BottomStack.Screen
+        {/* <BottomStack.Screen
           name="Dummy"
           component={() => null} // Blank component
           options={{
@@ -195,7 +220,7 @@ const BottomNavigator = () => {
               </TouchableWithoutFeedback>
             ),
           }}
-        />
+        /> */}
         <BottomStack.Screen
           name="Accounts"
           component={AccountsScreen}
@@ -206,7 +231,7 @@ const BottomNavigator = () => {
                 source={require('../assets/images/bulbBottom.png')}
                 style={{
                   tintColor: focused
-                    ? Colors.activeTabColor
+                    ? Colors.white
                     : Colors.inactiveTabColor,
                   height: 21,
                   width: 21,
@@ -245,7 +270,7 @@ const BottomNavigator = () => {
                 source={require('../assets/images/settingsBottom.png')}
                 style={{
                   tintColor: focused
-                    ? Colors.activeTabColor
+                    ? Colors.white
                     : Colors.inactiveTabColor,
                   height: 21,
                   width: 21,

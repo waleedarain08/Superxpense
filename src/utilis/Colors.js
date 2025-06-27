@@ -59,5 +59,6 @@ export const Colors = {
   newWhite: '#F9F9F9',
   newButtonBack: '#28A08C',
   newLightestGreen: '#C5E5E0',
-  newLightestWhite:'rgba(255, 255, 255, 0)', // translucent white'
+  newLightestWhite: 'rgba(255, 255, 255, 0)', // translucent white'
+  cardTxt: '#EFEFEF',
 };

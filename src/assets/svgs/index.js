@@ -53,8 +53,11 @@ import Search from './search.svg';
 import Google from './goolge.svg';
 import Apple from './apple.svg';
 import Dirham from './dirham.svg';
+import DirhamWhite from './dirhamWhite.svg';
+import ReloadSvg from './reloadSvg.svg';
 
 export {
+  DirhamWhite,
   Dirham,
   Google,
   Apple,
@@ -110,4 +113,5 @@ export {
   Money,
   LeftIcon,
   Search,
+  ReloadSvg,
 };

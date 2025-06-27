@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Platform,
   StatusBar,
+  ImageBackground,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,10 +19,12 @@ import {Colors} from '../../utilis/Colors';
 import StepperHeader from '../../component/StepperHeader';
 import {FontFamily} from '../../utilis/Fonts';
 import LinkSDK from 'lean-react-native';
-import {API,leanAppToken,isSandbox} from '../../utilis/Constant';
+import {API, leanAppToken, isSandbox} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
 import {getItem, setItem} from '../../utilis/StorageActions';
 import BankModal from '../../component/BankModal';
+import StepIndicator from '../../component/StepIndicator';
+import Header from '../../component/Header';
 
 const countries = [
   {
@@ -70,15 +73,13 @@ const IssuingCountryScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   //const [bankIdentifier, setBankIdentifier] = useState('');
 
- 
-
   const Lean = useRef(null);
 
   const filteredCountries = countries.filter(country =>
     country.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const hitLeanApi = async (bankIdentifier) => {
+  const hitLeanApi = async bankIdentifier => {
     console.log('hitLeanApi', bankIdentifier);
     try {
       setLoading(true);
@@ -99,14 +100,14 @@ const IssuingCountryScreen = ({navigation}) => {
       //console.log('customerId:', r.customerId);
       setCustomerID(r.customerId);
       setLeanToken(r.accessToken);
-      connectLean(r,bankIdentifier);
+      connectLean(r, bankIdentifier);
     } catch (error) {
       setLoading(false);
       console.error('Failed to load user data or call API:', error);
     }
   };
 
-  const connectLean = (r,bankIdentifier) => {
+  const connectLean = (r, bankIdentifier) => {
     //console.log(bankIdentifier, r);
     if (Lean.current) {
       Lean.current.connect({
@@ -137,7 +138,6 @@ const IssuingCountryScreen = ({navigation}) => {
     return (
       <TouchableOpacity
         style={styles.countryItem}
-        activeOpacity={0.7}
         // onPress={() => hitLeanApi()}
         onPress={() => setModalVisible(true)}>
         <Image source={item.flag} style={styles.flag} />
@@ -150,132 +150,129 @@ const IssuingCountryScreen = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: Colors.white}}>
-      <BankModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onBankSelect={handleBankSelect}
-      />
-      {loading && (
-        <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#00B67A" />
-        </View>
-      )}
-      <StepperHeader
-        step={2}
-        totalSteps={3}
-        onBack={() => navigation.goBack()}
-        mainContainer={{
-          backgroundColor: 'white',
-          paddingTop:
-            Platform.OS === 'android' ? StatusBar.currentHeight - 15 : 0,
-        }}
-        exit={true}
-      />
-      <View style={styles.container}>
-        {/* Header */}
-
-        {/* Title */}
-        <Text style={styles.title}>Select your issuing country</Text>
-        <Text style={styles.subtitle}>
-          To link banks and most other accounts, we will securely connect you
-          with lean technologies, our linking partner.
-        </Text>
-
-        {/* Search */}
-        {/* <View style={styles.searchContainer}>
-          <Icon
-            name="search-outline"
-            size={20}
-            color="#999"
-            style={{marginRight: 8}}
-          />
-          <TextInput
-            placeholder="Search"
-            placeholderTextColor="#999"
-            value={search}
-            onChangeText={setSearch}
-            style={styles.searchInput}
-          />
-        </View> */}
-        <View style={styles.searchContainer}>
-          <Icon
-            name="search-outline"
-            size={20}
-            color="#999"
-            style={{marginRight: 8}}
-          />
-          <TextInput
-            placeholder="Search"
-            placeholderTextColor="#999"
-            value={search}
-            onChangeText={setSearch}
-            style={[styles.searchInput, {flex: 1}]}
-          />
-          {search.length > 0 && (
-            <TouchableOpacity onPress={() => setSearch('')}>
-              <Icon
-                name="close-circle"
-                size={20}
-                color={'#808086'}
-                style={{marginLeft: 8}}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* List */}
-        <FlatList
-          data={filteredCountries}
-          renderItem={renderCountry}
-          keyExtractor={item => item.name}
-          ListFooterComponent={() => (
-            <View style={styles.comingSoon}>
-              <Text style={styles.comingSoonTitle}>Coming Soon</Text>
-              <Text style={styles.comingSoonText}>
-                Stay tuned. We will be adding more countries to our database
-                soon.
-              </Text>
-            </View>
-          )}
-          showsVerticalScrollIndicator={false}
+    <ImageBackground
+      source={require('../../assets/images/greenishBackground.png')}
+      style={[styles.container, {flex: 1}]}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
+      <SafeAreaView style={{flex: 1}}>
+        <Header
+          ScreenName={''}
+          mainContainer={{paddingHorizontal: 0, marginBottom: 8}}
+          onBackPress={() => navigation.goBack()}
+          steps={true}
+          stepsCount={1}
         />
-        <LinkSDK
-          ref={Lean}
-          webViewProps={{
-            androidHardwareAccelerationDisabled: true,
-          }}
-          appToken={leanAppToken} 
-          customerId={customerID}
-          sandbox={isSandbox}
-          customization={{
-            theme_color: Colors.btnColor,
-            button_text_color: Colors.white,
-            button_border_radius: 50,
-            link_color: Colors.btnColor,
-          }}
-          callback={async response => {
-            console.log('Lean response:', response);
-            setLoading(false);
-            if (response.status !== 'SUCCESS') {
-              Alert.alert('Connection Failed', response.status);
-            } else {
-              navigation.navigate('ConnectedAccounts', {
-                bankName: response.bank.bank_identifier,
-              });
-            }
-          }}
+        <StepIndicator totalSteps={2} currentStep={1} />
+        <BankModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onBankSelect={handleBankSelect}
         />
-      </View>
-    </SafeAreaView>
+        {loading && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#00B67A" />
+          </View>
+        )}
+        {/* <StepperHeader
+          step={2}
+          totalSteps={3}
+          onBack={() => navigation.goBack()}
+          mainContainer={{
+            backgroundColor: 'white',
+            paddingTop:
+              Platform.OS === 'android' ? StatusBar.currentHeight - 15 : 0,
+          }}
+          exit={true}
+        /> */}
+        <View style={styles.container}>
+          {/* Header */}
+
+          {/* Title */}
+          <Text style={styles.title}>Select your issuing country</Text>
+          <Text style={styles.subtitle}>
+            To link banks and most other accounts, we will securely connect you
+            with lean technologies, our linking partner.
+          </Text>
+
+          {/* Search */}
+          <View style={styles.searchContainer}>
+            <Icon
+              name="search-outline"
+              size={20}
+              color="#999"
+              style={{marginRight: 8}}
+            />
+            <TextInput
+              placeholder="Search"
+              placeholderTextColor={Colors.txtColor}
+              value={search}
+              onChangeText={setSearch}
+              style={[styles.searchInput, {flex: 1}]}
+            />
+            {search.length > 0 && (
+              <TouchableOpacity onPress={() => setSearch('')}>
+                <Icon
+                  name="close"
+                  size={20}
+                  color={Colors.grayIcon}
+                  style={{marginLeft: 8}}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* List */}
+          <View style={styles.flatListStyle}>
+            <FlatList
+              data={filteredCountries}
+              renderItem={renderCountry}
+              keyExtractor={item => item.name}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+          <View style={styles.comingSoon}>
+            <Text style={styles.comingSoonTitle}>Coming Soon</Text>
+            <Text style={styles.comingSoonText}>
+              Stay tuned. We will be adding more countries to our database soon.
+            </Text>
+          </View>
+          <LinkSDK
+            ref={Lean}
+            webViewProps={{
+              androidHardwareAccelerationDisabled: true,
+            }}
+            appToken={leanAppToken}
+            customerId={customerID}
+            sandbox={isSandbox}
+            customization={{
+              theme_color: Colors.black,
+              button_text_color: Colors.white,
+              button_border_radius: 50,
+              link_color: Colors.black,
+            }}
+            callback={async response => {
+              console.log('Lean response:', response);
+              setLoading(false);
+              if (response.status !== 'SUCCESS') {
+                Alert.alert('Connection Failed', response.status);
+              } else {
+                navigation.navigate('ConnectedAccounts', {
+                  bankName: response.bank.bank_identifier,
+                });
+              }
+            }}
+          />
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: Colors.bgColor,
+    paddingHorizontal: 20,
   },
   header: {
     flexDirection: 'row',
@@ -301,41 +298,41 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.medium,
     marginBottom: 8,
     color: Colors.txtColor,
+    marginTop: 32,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: FontFamily.regular,
     color: Colors.lightTxtColor,
-    marginBottom: 16,
+    marginBottom: 24,
   },
   searchContainer: {
     flexDirection: 'row',
-    backgroundColor: Colors.darkestgray,
+    backgroundColor: 'rgba(255, 255, 255, 0.26)',
     borderRadius: 20,
     alignItems: 'center',
     paddingHorizontal: 12,
     height: 50,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   searchInput: {
     flex: 1,
     height: 40,
-    fontSize: 16,
-    color: '#000',
+    fontSize: 14,
+    color: Colors.txtColor,
   },
   countryItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 12,
-    marginBottom: 12,
   },
   flag: {
-    width: 36,
-    height: 24,
+    width: 38,
+    height: 38,
     marginRight: 15,
-    borderRadius: 4,
+    borderRadius: 50,
     resizeMode: 'cover',
   },
   countryName: {
@@ -350,15 +347,16 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   comingSoon: {
-    backgroundColor: Colors.white,
-    opacity: 0.8,
+    backgroundColor: 'rgba(245, 252, 250,0.7)',
     borderRadius: 12,
     paddingHorizontal: 36,
     paddingVertical: 34,
-    width: '80%',
+    width: '90%',
     alignSelf: 'center',
     alignItems: 'center',
     marginTop: 20,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   comingSoonTitle: {
     fontSize: 20,
@@ -374,10 +372,16 @@ const styles = StyleSheet.create({
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255,255,255,0.8)',
+    // backgroundColor: 'rgba(255,255,255,0.8)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
+  },
+  flatListStyle: {
+    backgroundColor: 'rgba(255, 255, 255, 0.26)',
+    borderRadius: 24,
+    borderColor: Colors.white,
+    borderWidth: 1,
   },
 });
 

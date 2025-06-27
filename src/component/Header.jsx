@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Colors} from '../utilis/Colors';
 import {ChevronLeft} from '../icons';
+import {FontFamily} from '../utilis/Fonts';
 
 const Header = ({
   onBackPress,
@@ -12,6 +13,8 @@ const Header = ({
   mainContainer,
   ScreenName = 'Superxpense AI',
   titleTxt,
+  steps,
+  stepsCount,
 }) => {
   return (
     <View style={[styles.container, mainContainer]}>
@@ -26,6 +29,10 @@ const Header = ({
       {dots ? (
         <TouchableOpacity style={styles.iconButton} onPress={onMenuPress}>
           <Icon name="more-vert" size={24} color="#000" />
+        </TouchableOpacity>
+      ) : steps ? (
+        <TouchableOpacity style={{}} onPress={onMenuPress}>
+          <Text style={styles.stepStyle}>Step {stepsCount} of 2</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity style={{}} onPress={onMenuPress}></TouchableOpacity>
@@ -59,6 +66,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#082c2c',
+  },
+  stepStyle: {
+    fontFamily: FontFamily.semiBold,
+    fontSize: 16,
+    color: Colors.txtColor,
   },
 });
 

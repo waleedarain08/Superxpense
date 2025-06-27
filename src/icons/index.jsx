@@ -291,3 +291,13 @@ export const BoldChevronLeft = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const PlusIcon = ({color, size, style}) => (
+  <VectorIcon
+    name="add"
+    color={color}
+    size={size}
+    type="MaterialIcons"
+    style={style}
+  />
+);

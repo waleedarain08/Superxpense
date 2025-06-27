@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
   StatusBar,
+  ImageBackground,
 } from 'react-native';
 import {LeftIcon} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
@@ -17,6 +18,7 @@ import BankCard from '../../component/BankCard';
 import {API} from '../../utilis/Constant';
 import {del, get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
+import AccountSwiper from '../../component/AccountSwiper';
 
 const ConnectedAccountsScreen = ({navigation, route}) => {
   const BankName = route.params.bankName;
@@ -47,7 +49,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     try {
       setLoading(true);
       const data = await get(`${API.bankAccounts}`, null, token);
-      
+
       setBankName(data.data[0].bankName);
       const rawBanks = data?.data || [];
 
@@ -92,6 +94,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
       accountType: account.accountType,
       BankName: bankName,
       entityId: bankID,
+      bankData: banksData,
     });
   };
 
@@ -139,48 +142,79 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    // <ScrollView style={styles.container}>
+    //   <View style={styles.header}>
+    //     <TouchableOpacity onPress={() => navigation.goBack()}>
+    //       <LeftIcon />
+    //     </TouchableOpacity>
+    //     <Text style={styles.headerTitle}>Connected Accounts</Text>
+    //     <TouchableOpacity
+    //       onPress={() => navigation.navigate('Main')}
+    //       style={styles.headerRight}>
+    //       <Text style={{color: '#fff'}}>Home</Text>
+    //     </TouchableOpacity>
+    //   </View>
+
+    //   <View style={styles.section}>
+    //     <Text style={styles.title}>Bank Connections</Text>
+    //     <Text style={styles.subtitle}>
+    //       Handle your bank connection and see transactions in one place.
+    //     </Text>
+
+    //     {banksData.length > 0
+    //       ? banksData.map((item, index) => {
+    //           // console.log('item:', item.accounts);
+    //           return (
+    //             <BankCard
+    //               key={index}
+    //               logo={{uri: item.bankIcon}}
+    //               bankID={item.bankId}
+    //               bankName={item.bankName}
+    //               totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
+    //               accounts={item.accounts}
+    //               onPress={handleAccountPress}
+    //               deletePress={() => deletePress(item)}
+    //             />
+    //           );
+    //         })
+    //       : loading && (
+    //           <View style={styles.loadingOverlay}>
+    //             <ActivityIndicator size="large" color="#00B67A" />
+    //           </View>
+    //         )}
+    //   </View>
+    // </ScrollView>
+    <ImageBackground
+      source={require('../../assets/images/greenishBackground.png')}
+      style={{flex: 1}}
+      imageStyle={{resizeMode: 'cover'}}
+      resizeMode="cover">
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <LeftIcon />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Connected Accounts</Text>
+        <Text style={{width: '20%'}}></Text>
+        <Text style={styles.nameTxt}>Connected Accounts</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Main')}
-          style={styles.headerRight}>
-          <Text style={{color: '#fff'}}>Home</Text>
+          style={{width: '20%', alignItems: 'flex-end'}}
+          onPress={() => navigation.navigate('Main')}>
+          <Text style={styles.homeTxt}>Home</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.section}>
-        <Text style={styles.title}>Bank Connections</Text>
-        <Text style={styles.subtitle}>
-          Handle your bank connection and see transactions in one place.
-        </Text>
-
-        {banksData.length > 0
-          ? banksData.map((item, index) => {
-              // console.log('item:', item.accounts);
-              return (
-                <BankCard
-                  key={index}
-                  logo={{uri: item.bankIcon}}
-                  bankID={item.bankId}
-                  bankName={item.bankName}
-                  totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
-                  accounts={item.accounts}
-                  onPress={handleAccountPress}
-                  deletePress={() => deletePress(item)}
-                />
-              );
-            })
-          : loading && (
-              <View style={styles.loadingOverlay}>
-                <ActivityIndicator size="large" color="#00B67A" />
-              </View>
-            )}
-      </View>
-    </ScrollView>
+      {banksData.length > 0 ? (
+        <View style={{overflow: 'hidden'}}>
+          <AccountSwiper
+            accounts={banksData}
+            onReconnect={handleAccountPress}
+            onDelete={deletePress}
+            onPressAccount={handleAccountPress}
+          />
+        </View>
+      ) : (
+        loading && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#00B67A" />
+          </View>
+        )
+      )}
+    </ImageBackground>
   );
 };
 
@@ -190,7 +224,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.progressBackground,
   },
   header: {
-    backgroundColor: Colors.background,
     paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight + 5,
     paddingBottom: 22,
     paddingHorizontal: 20,
@@ -233,6 +266,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  nameTxt: {
+    width: '60%',
+    textAlign: 'center',
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+    textAlign: 'center',
+  },
+  homeTxt:{
+    fontSize: 16,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+  }
 });
 
 export default ConnectedAccountsScreen;

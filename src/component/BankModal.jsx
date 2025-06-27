@@ -80,6 +80,7 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
 import {get} from '../utilis/Api';
 import {API} from '../utilis/Constant';
@@ -87,9 +88,13 @@ import {getItem} from '../utilis/StorageActions';
 import {LeftBlack} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 import {Colors} from '../utilis/Colors';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {ChevronRight} from '../icons';
+import Header from './Header';
+import StepIndicator from './StepIndicator';
 
 const BankModal = ({visible, onClose, onBankSelect}) => {
-  const [searchText, setSearchText] = useState('');
+  const [search, setSearch] = useState('');
   const [banks, setBanks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -117,7 +122,7 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
   };
 
   const filteredBanks = banks.filter(bank =>
-    bank.name?.toLowerCase().includes(searchText.toLowerCase()),
+    bank.name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   const renderBank = ({item}) => (
@@ -128,61 +133,104 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
         onClose(); // Close modal
       }}>
       <Image source={{uri: item.logo_alt}} style={styles.logo} />
-      <Text style={styles.bankName}>{item.name}</Text>
+      <Text style={[styles.bankName, {flex: 1}]}>{item.name}</Text>
+      <ChevronRight />
     </TouchableOpacity>
   );
 
   return (
     <Modal visible={visible} animationType="slide">
-      <View style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={onClose}>
-            <LeftBlack />
-          </TouchableOpacity>
-          <Text style={styles.title}>Connect Your Bank Seamlessly</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.close}> </Text>
-          </TouchableOpacity>
+      <ImageBackground
+        source={require('../assets/images/greenishBackground.png')}
+        style={[{flex: 1}]}
+        imageStyle={{resizeMode: 'cover'}}
+        resizeMode="cover">
+        <View style={styles.container}>
+          {/* Header */}
+          {/* <View style={styles.header}>
+            <TouchableOpacity onPress={onClose}>
+              <LeftBlack />
+            </TouchableOpacity>
+            <Text style={styles.title}>Connect Your Bank Seamlessly</Text>
+            <TouchableOpacity onPress={onClose}>
+              <Text style={styles.close}> </Text>
+            </TouchableOpacity>
+          </View> */}
+          <Header
+            ScreenName={''}
+            mainContainer={{paddingHorizontal: 0, marginBottom: 8}}
+            onBackPress={onClose}
+            steps={true}
+            stepsCount={2}
+          />
+          <StepIndicator totalSteps={2} currentStep={2} />
+
+          {/* Subheading */}
+          <Text style={styles.subtitle}>Select a bank</Text>
+
+          <Text style={styles.subtitle2}>
+            Please select the bank you’d like to connect to superxpense app.
+          </Text>
+
+          {/* Search Input */}
+          <View style={styles.searchContainer}>
+            {/* <TextInput
+              placeholder="Search bank..."
+              style={styles.searchInput}
+              value={searchText}
+              onChangeText={setSearchText}
+            /> */}
+            <Icon
+              name="search-outline"
+              size={20}
+              color="#999"
+              style={{marginRight: 8}}
+            />
+            <TextInput
+              placeholder="Search"
+              placeholderTextColor={Colors.txtColor}
+              value={search}
+              onChangeText={setSearch}
+              style={[styles.searchInput, {flex: 1}]}
+            />
+            {search.length > 0 && (
+              <TouchableOpacity onPress={() => setSearch('')}>
+                <Icon
+                  name="close"
+                  size={20}
+                  color={Colors.grayIcon}
+                  style={{marginLeft: 8}}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Bank List */}
+          {loading ? (
+            <ActivityIndicator
+              size="large"
+              color="#000"
+              style={{marginTop: 30}}
+            />
+          ) : (
+            <View
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.26)',
+                paddingHorizontal: 13,
+                borderWidth: 1,
+                borderColor: Colors.white,
+                borderRadius: 20,
+              }}>
+              <FlatList
+                data={filteredBanks}
+                keyExtractor={item => item.identifier}
+                renderItem={renderBank}
+                contentContainerStyle={{paddingBottom: 30}}
+              />
+            </View>
+          )}
         </View>
-
-        {/* Subheading */}
-        <Text style={styles.subtitle}>
-          Linking your bank account is quick, secure, and fully integrated
-          within the app. It unlocks the best experience, allowing you to manage
-          everything in one place - no redirects, no hassle.
-        </Text>
-
-        <Text style={styles.subtitle2}>
-          Please select the bank you’d like to connect to superexpense app.
-        </Text>
-
-        {/* Search Input */}
-        <View style={styles.searchContainer}>
-          <TextInput
-            placeholder="Search bank..."
-            style={styles.searchInput}
-            value={searchText}
-            onChangeText={setSearchText}
-          />
-        </View>
-
-        {/* Bank List */}
-        {loading ? (
-          <ActivityIndicator
-            size="large"
-            color="#000"
-            style={{marginTop: 30}}
-          />
-        ) : (
-          <FlatList
-            data={filteredBanks}
-            keyExtractor={item => item.identifier}
-            renderItem={renderBank}
-            contentContainerStyle={{paddingBottom: 30}}
-          />
-        )}
-      </View>
+      </ImageBackground>
     </Modal>
   );
 };
@@ -191,8 +239,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: '20%',
-    backgroundColor: 'white',
+    paddingTop: '10%',
     height: 'auto',
   },
   header: {
@@ -210,35 +257,47 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     textAlign: 'center',
-    color: Colors.lightTxtColor,
-    marginVertical: 18,
+    color: Colors.txtColor,
+    marginTop: 32,
+    fontFamily: FontFamily.medium,
+    fontSize: 24,
   },
   subtitle2: {
     textAlign: 'center',
-    color: Colors.black,
-    marginVertical: 18,
+    color: Colors.lightTxtColor,
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    marginTop: 8,
+    marginBottom: 24,
   },
   searchContainer: {
-    backgroundColor: '#f1f1f1',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginVertical: 10,
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255, 255, 255, 0.26)',
+    borderRadius: 20,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    height: 50,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   searchInput: {
+    flex: 1,
     height: 40,
+    fontSize: 14,
+    color: Colors.txtColor,
   },
   bankItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
-    borderColor: '#eee',
+    paddingVertical: 18,
   },
   logo: {
     width: 30,
     height: 30,
     resizeMode: 'contain',
     marginRight: 12,
+    borderRadius: 100,
   },
   bankName: {
     fontSize: 16,
