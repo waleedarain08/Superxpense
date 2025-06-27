@@ -16,7 +16,14 @@ import {BlurView} from '@react-native-community/blur';
 
 const {width} = Dimensions.get('window');
 
-const MainHeader = ({navigation, selectedTab, setSelectedTab}) => {
+const MainHeader = ({
+  navigation,
+  selectedTab,
+  setSelectedTab,
+  largestTransaction,
+  name,
+  onPress,
+}) => {
   const tabs = ['Overview', 'Spending'];
 
   return (
@@ -24,16 +31,19 @@ const MainHeader = ({navigation, selectedTab, setSelectedTab}) => {
       {/* Top Row: Avatar and Search */}
       <View style={styles.topRow}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>OS</Text>
+          <Text style={styles.avatarText}>
+            {name ? name.slice(0, 2).toUpperCase() : ''}
+          </Text>
         </View>
-        <View style={styles.searchBar}>
+        <TouchableOpacity style={styles.searchBar} onPress={onPress}>
           <Icon name="search" size={16} color={Colors.white} />
           <TextInput
             placeholder="Ask Superxpense something"
             placeholderTextColor={Colors.white}
             style={styles.searchInput}
+            editable={false}
           />
-        </View>
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.avatar, {marginLeft: 12}]}
@@ -45,7 +55,9 @@ const MainHeader = ({navigation, selectedTab, setSelectedTab}) => {
       {/* Big Impact Section */}
       <View style={styles.bigImpactContainer}>
         <Text style={styles.bigImpactText}>Big impact</Text>
-        <Text style={styles.bigImpactValue}>20000.00 AED</Text>
+        <Text style={styles.bigImpactValue}>
+          {largestTransaction ? `${largestTransaction} AED` : `0.00 AED`}
+        </Text>
         <View style={styles.savingChip}>
           <Text style={styles.savingChipText}>
             ✅ You added 5,000 AED to savings last week

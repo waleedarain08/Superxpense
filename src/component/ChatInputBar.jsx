@@ -49,7 +49,7 @@ const ChatInputBar = ({
           <ActivityIndicator size="small" color={Colors.primary} />
         ) : (
           <VectorIcon
-            name={message.trim() ? 'send' : 'mic'}
+            name={message.trim() ? 'send' : 'send'}
             type="Ionicons"
             size={20}
             color={Colors.primary}

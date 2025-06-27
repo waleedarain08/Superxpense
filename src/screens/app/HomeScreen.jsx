@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
 import SpendingSummary from '../../component/SpendingSummary';
 import StackedChart from '../../component/StackedChart';
@@ -73,6 +73,7 @@ const HomeScreen = ({navigation}) => {
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [chats, setChats] = useState([]);
   const [contractData, setContractData] = useState([]);
+  const [name, setName] = useState('');
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
@@ -277,6 +278,24 @@ const HomeScreen = ({navigation}) => {
       return () => clearTimeout(timeout);
     }, [month, year]),
   );
+
+  const fetchData = async () => {
+    const userData = await getItem('userData');
+    const token = userData?.data?.accessToken;
+
+    try {
+      const response = await get(`${API.getUserData}`, {}, token);
+      const {name} = response?.data;
+      console.log('res', response);
+      setName(name);
+    } catch (error) {
+      console.log('Error fetching user data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   // const handleSendMessage = async (file = null) => {
   //   if (!message.trim() && !file) return;
 
@@ -411,6 +430,9 @@ const HomeScreen = ({navigation}) => {
           navigation={navigation}
           selectedTab={selectedTab}
           setSelectedTab={handleSetSelectedTab}
+          largestTransaction={largestTransaction?.amount}
+          name={name}
+          onPress={() => navigation.navigate('Chat')}
         />
       </SafeAreaView>
       <View>
