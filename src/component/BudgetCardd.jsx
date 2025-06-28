@@ -142,9 +142,11 @@ const BudgetCardd = ({data = [], month}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.28)',
     borderRadius: 16,
     padding: 18,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   monthLabel: {
     fontSize: 14,

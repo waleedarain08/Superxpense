@@ -7,6 +7,7 @@ import {
   Alert,
   Platform,
   StatusBar,
+  ImageBackground,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
@@ -172,8 +173,13 @@ const BudgetsScreen = ({navigation}) => {
   );
 
   return (
-    <>
-      <View>
+    <ImageBackground
+      source={require('../../assets/images/greenishBackground.png')}
+      style={[{flex: 1}]}
+      imageStyle={{resizeMode: 'stretch'}}
+      resizeMode="cover">
+      <View style={{flex: 1}}>
+        <Text style={styles.header}>Personal Monthly Budget</Text>
         <BudgetModal
           visible={open}
           onClose={() => setOpen(false)}
@@ -181,19 +187,16 @@ const BudgetsScreen = ({navigation}) => {
           onSubmit={handleSubmit}
         />
         <View style={styles.container}>
-          <View style={styles.topRow}>
+          {/* <View style={styles.topRow}>
             <TouchableOpacity
               style={styles.saveBtn}
-              // onPress={() => navigation.navigate('AddGoals')}
             ></TouchableOpacity>
             <View style={styles.nameHeader}>
               <Text style={styles.headerTxt}>Personal Monthly Budget</Text>
-              {/* <Dropdown /> */}
             </View>
             <View style={styles.actionButtons}>
-              {/* <ThreeDots size={20} color={Colors.white} /> */}
             </View>
-          </View>
+          </View> */}
 
           {/* <View style={styles.tabRow}>
           {tabs.map(tab => (
@@ -220,18 +223,12 @@ const BudgetsScreen = ({navigation}) => {
           <ScrollView
             contentContainerStyle={styles.safeView}
             showsVerticalScrollIndicator={false}>
-            {/* <Text
-            style={{
-              marginLeft: '37%',
-              marginTop: 10,
-              color: Colors.lightblack,
-            }}>
-            Coming Soon
-          </Text> */}
-            <CalendarHeader
-              currentDate={selectedDate}
-              onDateChange={handleDateChange}
-            />
+            <View style={{marginBottom: 16}}>
+              <CalendarHeader
+                currentDate={selectedDate}
+                onDateChange={handleDateChange}
+              />
+            </View>
             <BudgetCardd data={budgetCategoryData?.data || []} month={month} />
             <View style={styles.budgetcard}>
               <Text style={styles.title}>Set up a custom budget</Text>
@@ -300,7 +297,7 @@ const BudgetsScreen = ({navigation}) => {
       )} */}
       </View>
       <FloatingChatButton navigation={navigation} />
-    </>
+    </ImageBackground>
   );
 };
 
@@ -313,7 +310,6 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   container: {
-    backgroundColor: Colors.background,
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
@@ -425,11 +421,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  headerTxt: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: FontFamily.medium,
-    marginRight: 10,
+  // headerTxt: {
+  //   color: Colors.white,
+  //   fontSize: 16,
+  //   fontFamily: FontFamily.medium,
+  //   marginRight: 10,
+  // },
+  header: {
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+    textAlign: 'center',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 60,
+    paddingBottom: 15,
   },
   budgetcard: {
     backgroundColor: Colors.white,
