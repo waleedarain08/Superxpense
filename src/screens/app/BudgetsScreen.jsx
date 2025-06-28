@@ -240,11 +240,11 @@ const BudgetsScreen = ({navigation}) => {
                 style={styles.button}
                 onPress={() => setOpen(true)}>
                 <Text style={styles.buttonText}>Add a Budget</Text>
-                <Icon name="add-circle" size={20} color="#11956D" />
+                <Icon name="add-circle" size={20} color={Colors.newButtonBack} />
               </TouchableOpacity>
             </View>
             <IncomeCard data={incomeData} type="income" />
-            <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
+            {/* <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
               <LinearGradient
                 colors={['#6CFFC2', '#FFFFFF']}
                 start={{x: 0, y: 3}}
@@ -262,7 +262,7 @@ const BudgetsScreen = ({navigation}) => {
                   <Icon name="chevron-forward" size={14} color={Colors.black} />
                 </View>
               </LinearGradient>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <AllBudgetCard data={budgetData} />
             {/* <IncomeCard data={HousingData} type="utilities" /> */}
           </ScrollView>
@@ -436,10 +436,12 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   budgetcard: {
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255,255,255,0.28)',
     borderRadius: 20,
     padding: 16,
     marginTop: 15,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   title: {
     fontSize: 18,
@@ -454,16 +456,18 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 16,
-    backgroundColor: Colors.newLightgreen, // emerald-50
+    backgroundColor: "transparent", // emerald-50
     borderRadius: 100,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     height: 45,
     width: '100%',
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   buttonText: {
-    color: '#11956D', // emerald-700
+    color: Colors.newButtonBack, // emerald-700
     fontFamily: FontFamily.medium,
     fontSize: 14,
     marginRight: 6,

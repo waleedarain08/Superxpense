@@ -45,11 +45,13 @@ const IncomeCard = ({data}) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255,255,255,0.28)',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 15,
     marginTop: 16,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   heading: {
     fontSize: 18,

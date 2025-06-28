@@ -32,11 +32,13 @@ const AllBudgetCard = ({data}) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255,255,255,0.28)',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 15,
     marginTop: 16,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   heading: {
     fontSize: 18,
@@ -48,6 +50,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 10,
   },
   iconContainer: {
     borderRadius: 20,

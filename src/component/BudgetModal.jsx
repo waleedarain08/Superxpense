@@ -8,7 +8,8 @@ import {
   TextInput,
   ScrollView,
   KeyboardAvoidingView,
-  Image
+  Image,
+  ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Flame, Gros, Home, Income, PopCorn, Soda} from '../assets/svgs';
@@ -29,7 +30,7 @@ const BudgetModal = ({visible, onClose, categories = [], onSubmit}) => {
   const [amount, setAmount] = useState('');
 
   const handleSubmit = () => {
-    if(selectedCategories.length === 0) {
+    if (selectedCategories.length === 0) {
       alert('Please select at least one category!');
       return;
     }
@@ -78,65 +79,76 @@ const BudgetModal = ({visible, onClose, categories = [], onSubmit}) => {
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <KeyboardAvoidingView
-          style={{flex: 1}}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <View style={styles.modal}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps="handled"
-              contentContainerStyle={{flexGrow: 1, paddingBottom: 40}}>
-              <View style={styles.headerRow}>
-                <TouchableOpacity onPress={reset}>
-                  <Icon name="arrow-back" size={22} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={reset}>
-                  <Icon name="close" size={22} />
-                </TouchableOpacity>
-              </View>
-
-              <Text style={styles.amount}>AED {amount || '0'}</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter amount to continue"
-                keyboardType="number-pad"
-                value={amount}
-                placeholderTextColor="#9CA3AF"
-                onChangeText={setAmount}
-              />
-              <Text style={styles.label}>Select Category</Text>
-
-              <View style={styles.card}>
-                {categories.map(item => (
-                  <TouchableOpacity
-                    key={item.id}
-                    style={styles.categoryRow}
-                    onPress={() => setSelectedCategories([item.value])}>
-                    <View
-                      style={[
-                        styles.iconCircle,
-                        {backgroundColor: item.color},
-                      ]}>
-                      <Image source={{uri: item.icon}} style={{resizeMode: 'contain', height: 16, width: 16}} />
-                    </View>
-                    <Text style={styles.categoryLabel}>{item.label}</Text>
-                    {selectedCategories.includes(item.value) && (
-                      <Icon name="checkmark-circle" color="#111827" size={20} />
-                    )}
+        <ImageBackground
+          source={require('../assets/images/greenishBackground.png')}
+          style={styles.overlay}
+          imageStyle={{resizeMode: 'stretch'}}
+          resizeMode="cover">
+          <KeyboardAvoidingView
+            style={{flex: 1}}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <View style={styles.modal}>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={{flexGrow: 1, paddingBottom: 40}}>
+                <View style={styles.headerRow}>
+                  <TouchableOpacity onPress={reset}>
+                    <Icon name="arrow-back" size={22} />
                   </TouchableOpacity>
-                ))}
-              </View>
+                  <TouchableOpacity onPress={reset}>
+                    <Icon name="close" size={22} />
+                  </TouchableOpacity>
+                </View>
 
-              
+                <Text style={styles.amount}>AED {amount || '0'}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter amount to continue"
+                  keyboardType="number-pad"
+                  value={amount}
+                  placeholderTextColor="#9CA3AF"
+                  onChangeText={setAmount}
+                />
+                <Text style={styles.label}>Select Category</Text>
+
+                <View style={styles.card}>
+                  {categories.map(item => (
+                    <TouchableOpacity
+                      key={item.id}
+                      style={styles.categoryRow}
+                      onPress={() => setSelectedCategories([item.value])}>
+                      <View
+                        style={[
+                          styles.iconCircle,
+                          {backgroundColor: item.color},
+                        ]}>
+                        <Image
+                          source={{uri: item.icon}}
+                          style={{resizeMode: 'contain', height: 16, width: 16}}
+                        />
+                      </View>
+                      <Text style={styles.categoryLabel}>{item.label}</Text>
+                      {selectedCategories.includes(item.value) && (
+                        <Icon
+                          name="checkmark-circle"
+                          color="#111827"
+                          size={20}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
                 <TouchableOpacity
                   style={styles.submitBtn}
                   onPress={handleSubmit}>
                   <Text style={styles.submitText}>Save and Submit</Text>
                 </TouchableOpacity>
-              
-            </ScrollView>
-          </View>
-        </KeyboardAvoidingView>
+              </ScrollView>
+            </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
       </View>
     </Modal>
   );
@@ -151,11 +163,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modal: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'rgba(255,255,255,0.28)',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
     marginTop: 80,
+    borderWidth: 1,
+    borderColor: Colors.white,
     //minHeight: '85%',
   },
   headerRow: {
@@ -177,10 +191,12 @@ const styles = StyleSheet.create({
     color: Colors.txtColor,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0.28)',
     borderRadius: 16,
     padding: 12,
     marginTop: 8,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   categoryRow: {
     flexDirection: 'row',
@@ -203,15 +219,17 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 20,
-    backgroundColor: Colors.newLightgreen,
+    backgroundColor: 'rgba(255,255,255,0.28)',
     padding: 12,
     borderRadius: 12,
     textAlign: 'center',
     color: Colors.black,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   submitBtn: {
     marginTop: 20,
-    backgroundColor: '#10B981',
+    backgroundColor: Colors.newButtonBack,
     paddingVertical: 14,
     borderRadius: 50,
     alignItems: 'center',

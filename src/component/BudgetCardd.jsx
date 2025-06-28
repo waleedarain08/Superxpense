@@ -177,13 +177,15 @@ const styles = StyleSheet.create({
     color: Colors.txtColor,
   },
   budgetItem: {
-    backgroundColor: Colors.lightestGray,
+    backgroundColor: 'transparent',
     borderRadius: 12,
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 8,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   icon: {
     fontSize: 20,
@@ -220,7 +222,7 @@ const styles = StyleSheet.create({
     height: 8,
     width: 8,
     borderRadius: 16,
-    backgroundColor: '#0D9488',
+    backgroundColor:Colors.newButtonBack,
   },
 });
 
