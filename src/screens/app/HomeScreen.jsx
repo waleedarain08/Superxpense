@@ -432,7 +432,6 @@ const HomeScreen = ({navigation}) => {
           setSelectedTab={handleSetSelectedTab}
           largestTransaction={largestTransaction?.amount}
           name={name}
-          onPress={() => navigation.navigate('Chat')}
         />
       </SafeAreaView>
       <View>

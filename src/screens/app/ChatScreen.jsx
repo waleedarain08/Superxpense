@@ -26,12 +26,18 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import ChatInputBar from '../../component/ChatInputBar';
 import {Stars} from '../../assets/svgs';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({navigation, route}) => {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [name, setName] = useState('');
+
+  useEffect(() => {
+    if (route.params?.message) {
+      setMessage(route.params.message);
+    }
+  }, [route.params?.message]);
 
   const predefinedMessages = [
     'Where did I spend most this week?',

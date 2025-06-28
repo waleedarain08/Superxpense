@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
 import {Notification} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
-import {BlurView} from '@react-native-community/blur';
 
 const {width} = Dimensions.get('window');
 
@@ -22,9 +21,16 @@ const MainHeader = ({
   setSelectedTab,
   largestTransaction,
   name,
-  onPress,
 }) => {
   const tabs = ['Overview', 'Spending'];
+  const [searchText, setSearchText] = useState('');
+
+  const handleSearch = () => {
+    if (searchText.trim()) {
+      navigation.navigate('Chat', {message: searchText.trim()});
+      setSearchText('');
+    }
+  };
 
   return (
     <View>
@@ -35,15 +41,20 @@ const MainHeader = ({
             {name ? name.slice(0, 2).toUpperCase() : ''}
           </Text>
         </View>
-        <TouchableOpacity style={styles.searchBar} onPress={onPress}>
-          <Icon name="search" size={16} color={Colors.white} />
+        <View style={styles.searchBar}>
+          <TouchableOpacity onPress={handleSearch}>
+            <Icon name="search" size={16} color={Colors.white} />
+          </TouchableOpacity>
           <TextInput
             placeholder="Ask Superxpense something"
             placeholderTextColor={Colors.white}
             style={styles.searchInput}
-            editable={false}
+            value={searchText}
+            onChangeText={setSearchText}
+            onSubmitEditing={handleSearch}
+            returnKeyType="search"
           />
-        </TouchableOpacity>
+        </View>
 
         <TouchableOpacity
           style={[styles.avatar, {marginLeft: 12}]}
