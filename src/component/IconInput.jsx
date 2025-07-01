@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 12,
+    color:'#6B7878',
   },
   input: {
     flex: 1,

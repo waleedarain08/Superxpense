@@ -189,7 +189,12 @@ const BankAccountCard = ({
   onReconnect,
   onPressAccount,
 }) => {
-  const hasReconnect = accounts.some(
+  // Filter only "Current Account"
+  const filteredAccounts = accounts.filter(
+    acc => acc.accountType === 'Current Account'
+  );
+
+  const hasReconnect = filteredAccounts.some(
     acc => acc.status === 'RECONNECT_REQUIRED',
   );
 
@@ -206,22 +211,9 @@ const BankAccountCard = ({
         </TouchableOpacity> */}
       </View>
 
-      {/* Sync */}
-      {/* <View style={styles.infoRow}>
-        <View>
-          <Text style={styles.label}>last synced</Text>
-          <View style={styles.syncRow}>
-            <Text style={styles.syncText}>{lastSynced}</Text>
-            <TouchableOpacity style={styles.refreshBtn} onPress={reloadPressed}>
-              <ReloadSvg width={8} height={8} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View> */}
-
       {/* Accounts List */}
       <FlatList
-        data={accounts}
+        data={filteredAccounts}
         keyExtractor={(item, index) => index.toString()}
         style={{marginTop: 12}}
         renderItem={({item}) => (
@@ -232,44 +224,38 @@ const BankAccountCard = ({
                 ? onReconnect?.(item)
                 : onPressAccount?.(item)
             }>
-            <View style={{flex: 1}}>
+            <View
+              style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+              {item.status === 'RECONNECT_REQUIRED' ? (
+                <View style={styles.reconnectIcon}>
+                  <ReloadSvg width={12} height={12} />
+                </View>
+              ) : null}
               <View
-                style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
-                {item.status === 'RECONNECT_REQUIRED' ? (
-                  <View style={styles.reconnectIcon}>
-                    <ReloadSvg width={12} height={12} />
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  flex: 1,
+                  alignItems: 'center',
+                }}>
+                <View style={{marginTop: 16}}>
+                  <Text style={styles.label}>last synced</Text>
+                  <View style={styles.syncRow}>
+                    <Text style={styles.syncText}>{lastSynced}</Text>
+                    <TouchableOpacity
+                      style={styles.refreshBtn}
+                      onPress={reloadPressed}>
+                      <ReloadSvg width={8} height={8} />
+                    </TouchableOpacity>
                   </View>
-                ) : (
-                  <></>
-                )}
-                {item.accountType === 'Current Account' && (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      flex: 1,
-                      alignItems: 'center',
-                    }}>
-                    <View style={{marginTop: 16}}>
-                      <Text style={styles.label}>last synced</Text>
-                      <View style={styles.syncRow}>
-                        <Text style={styles.syncText}>{lastSynced}</Text>
-                        <TouchableOpacity
-                          style={styles.refreshBtn}
-                          onPress={reloadPressed}>
-                          <ReloadSvg width={8} height={8} />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                    <View>
-                      <Text style={styles.accountType}>{item.accountType}</Text>
-                      <View style={styles.balanceRow}>
-                        <Dirham />
-                        <Text style={styles.amount}>{item.accountBalance}</Text>
-                      </View>
-                    </View>
+                </View>
+                <View>
+                  <Text style={styles.accountType}>{item.accountType}</Text>
+                  <View style={styles.balanceRow}>
+                    <Dirham />
+                    <Text style={styles.amount}>{item.accountBalance}</Text>
                   </View>
-                )}
+                </View>
               </View>
             </View>
           </TouchableOpacity>
@@ -355,7 +341,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   accountItem: {
-    marginBottom: 14,
+    marginBottom: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -407,7 +393,7 @@ const styles = StyleSheet.create({
   deleteText: {
     color: '#D31B1B',
     fontSize: 14,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.semiBold,
   },
 });
 

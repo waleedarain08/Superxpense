@@ -266,6 +266,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     marginBottom: 5,
+    color: Colors.newWhite,
+  },
+  subHeading: {
+    color: Colors.newWhite,
     color: "#ffffff",
   },
   subHeading: {
@@ -314,9 +318,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.white,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.bold,
     fontSize: 16,
-    fontWeight: '600',
   },
   terms: {
     fontSize: 14,

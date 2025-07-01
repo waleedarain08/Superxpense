@@ -27,15 +27,11 @@ const WelcomeScreen = ({navigation}) => {
           <ChevronLeft size={25} color={Colors.activeTabColor} />
         </TouchableOpacity>
       </View>
-      <View
-        style={[
-          styles.container,
-          {backgroundColor: '#FFFFFF4D', borderRadius: 40},
-        ]}>
+
         <View style={styles.mainContainer}>
           <View style={styles.header}>
             <Text style={styles.subtitle}>
-              Get more out of your {'\n'}money & spending.
+            Get more out of your {'\n'}money & spending
             </Text>
             <Text style={styles.welcome}>SUPERXPENSE</Text>
           </View>
@@ -63,14 +59,14 @@ const WelcomeScreen = ({navigation}) => {
               <Text style={styles.appleButtonText}>Continue with Google</Text>
             </TouchableOpacity>
             <View style={{height:20}}></View>
-            {/* <TouchableOpacity
+            <TouchableOpacity
               onPress={() => navigation.navigate('Main')}
               style={styles.guestButton}>
               <Text style={styles.guestText}>Continue as Guest</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
+
     </ImageBackground>
   );
 };
@@ -95,13 +91,13 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 18,
     color: '#1AA875',
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.bold,
     marginTop: 16,
   },
   subtitle: {
     fontSize: 32,
     color: Colors.txtColor,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.bold,
     textAlign: 'center',
   },
   cardsContainer: {
@@ -165,7 +161,7 @@ const styles = StyleSheet.create({
   guestText: {
     color: Colors.txtColor,
     fontSize: 16,
-    fontFamily: FontFamily.regular,
+    fontFamily: FontFamily.medium,
   },
   guestButton: {
     marginBottom: 25,
@@ -183,7 +179,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainContainer: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.33)',
     paddingTop: 24,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,

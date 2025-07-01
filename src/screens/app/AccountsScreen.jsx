@@ -9,8 +9,9 @@ import {
   StatusBar,
   ImageBackground,
   FlatList,
+  TextInput, // <-- Add TextInput for search bar
 } from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState, useMemo} from 'react';
 import {Colors} from '../../utilis/Colors';
 
 import {Plus} from '../../assets/svgs';
@@ -23,7 +24,7 @@ import BankCard from '../../component/BankCard';
 import {useFocusEffect} from '@react-navigation/native';
 import LinkSDK from 'lean-react-native';
 import AccountSwiper from '../../component/AccountSwiper';
-import {PlusIcon} from '../../icons';
+import {ChevronLeft, PlusIcon} from '../../icons';
 import BankAccountCard from '../../component/AccountCard';
 
 const AccountsScreen = ({navigation}) => {
@@ -32,15 +33,16 @@ const AccountsScreen = ({navigation}) => {
   const [leanToken, setLeanToken] = useState('');
   const [reconnect, setIsReconnect] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState(null);
+  const [searchText, setSearchText] = useState(''); // <-- State for search text
   const Lean = useRef(null);
 
-  const fetchAccounts = async () => {
+  const fetchAccounts = async () => {    
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
     try {
       const data = await get(`${API.bankAccounts}`, null, token);
       const rawBanks = data?.data || [];
-
+      
       setBanksData(rawBanks);
       setLastRefreshed(new Date());
     } catch (error) {
@@ -75,7 +77,9 @@ const AccountsScreen = ({navigation}) => {
     }
   };
 
-  const handleAccountPress = (account, bankID, bankName) => {
+  const handleAccountPress = (account, bankName) => {
+    console.log(account);
+    
     //console.log(customerID, leanToken, 'customerID, leanToken');
     if (account.status === 'RECONNECT_REQUIRED') {
       Alert.alert(
@@ -97,13 +101,28 @@ const AccountsScreen = ({navigation}) => {
         ],
       );
     } else {
-      navigation.navigate('BankTransaction', {
-        accountId: account.accountId,
+      console.log('Navigating to BankTransaction with data:', {
+        account,
+        bankName,
+        banksData,
+        accountId: Array.isArray(account.accounts)
+          ? (account.accounts.find(acc => acc.accountType === 'Current Account')?.accountId || null)
+          : account.accountId,
         accountBalance: account.accountBalance,
         accountType: account.accountType,
         BankName: bankName,
-        entityId: bankID,
+        entityId: account.bankId,
         bankData: banksData,
+      });
+      navigation.navigate('BankTransaction', {
+        accountId: Array.isArray(account.accounts)
+          ? (account.accounts.find(acc => acc.accountType === 'Current Account')?.accountId || null)
+          : account.accountId,
+        accountBalance: account.accountBalance,
+        accountType: account.accountType,
+        BankName: bankName,
+        entityId: account.bankId, // <-- FIXED: use account.bankId instead of account.bankID
+        bankData: account,
       });
     }
   };
@@ -117,6 +136,8 @@ const AccountsScreen = ({navigation}) => {
   };
 
   const deletePress = async item => {
+    console.log('heheee');
+
     console.log(item);
     const bankId = item.bankId;
 
@@ -155,6 +176,14 @@ const AccountsScreen = ({navigation}) => {
       {cancelable: true},
     );
   };
+
+  // Filter banksData based on searchText (case-insensitive)
+  const filteredBanksData = useMemo(() => {
+    if (!searchText.trim()) return banksData;
+    return banksData.filter(item =>
+      item.bankName?.toLowerCase().includes(searchText.trim().toLowerCase())
+    );
+  }, [banksData, searchText]);
 
   return (
     // <ImageBackground
@@ -330,17 +359,37 @@ const AccountsScreen = ({navigation}) => {
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
       <View style={styles.header}>
-        <Text style={{width: '20%'}}></Text>
+        <View
+        // style={{width: '20%'}}
+        >
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => navigation.navigate('Home')}>
+            <ChevronLeft size={25} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.nameTxt}>Accounts</Text>
         <TouchableOpacity
-          // style={{width: '10%'}}
+          // style={{width: '20%'}}
           onPress={() => navigation.navigate('IssuingCountryScreen')}>
           <View style={styles.iconStyle}>
             <PlusIcon size={20} color={Colors.newButtonBack} />
           </View>
         </TouchableOpacity>
       </View>
-      {banksData.length > 0 ? (
+      {/* Search Bar at the top */}
+      <View style={styles.searchBarContainer}>
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search by bank name"
+          placeholderTextColor={Colors.gray || '#888'}
+          value={searchText}
+          onChangeText={setSearchText}
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
+      </View>
+      {filteredBanksData.length > 0 ? (
         <View>
           {/* <AccountSwiper
             accounts={banksData}
@@ -349,7 +398,7 @@ const AccountsScreen = ({navigation}) => {
             onPressAccount={handleAccountPress}
           /> */}
           <FlatList
-            data={banksData}
+            data={filteredBanksData}
             keyExtractor={(item, index) =>
               item.bankId?.toString() || index.toString()
             }
@@ -360,9 +409,9 @@ const AccountsScreen = ({navigation}) => {
                 accountNumber="9090"
                 image={item.bankIcon}
                 accounts={item.accounts}
-                onDelete={deletePress}
+                onDelete={() => deletePress(item)}
                 reloadPressed={() => fetchAccounts()}
-                onPressAccount={handleAccountPress}
+                onPressAccount={()=>handleAccountPress(item)}
               />
             )}
             contentContainerStyle={{paddingBottom: 20}}
@@ -536,6 +585,8 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 70 : 30,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   headerTitle: {
     color: Colors.white,
@@ -562,6 +613,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 30,
   },
+  searchBarContainer: {
+    paddingHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  searchBar: {
+    backgroundColor: Colors.white,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    fontSize: 16,
+    color: Colors.black,
+    borderWidth: 1,
+    borderColor: Colors.gray || '#ccc',
+  },
   button: {
     backgroundColor: Colors.newButtonBack,
     borderRadius: 100,
@@ -579,7 +645,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   nameTxt: {
-    width: '65%',
+    // width: '60%',
     textAlign: 'center',
     fontSize: 18,
     fontFamily: FontFamily.semiBold,
@@ -591,6 +657,14 @@ const styles = StyleSheet.create({
     width: 32,
     borderRadius: 100,
     backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconButton: {
+    backgroundColor: Colors.white,
+    borderRadius: 100,
+    height: 32,
+    width: 32,
     justifyContent: 'center',
     alignItems: 'center',
   },
