@@ -182,7 +182,7 @@ const SignInScreen = ({navigation}) => {
     <ImageBackground
      source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'stretch',height: '45%'}}
+      imageStyle={{resizeMode: 'stretch',height: '46%'}}
       resizeMode="stretch">
       <SafeAreaView style={styles.safeStyle}>
         <View>

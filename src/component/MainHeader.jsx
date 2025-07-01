@@ -69,7 +69,7 @@ const MainHeader = ({
         <View style={{flexDirection: 'row', alignItems: 'center',gap:4}}>
           <DirhamWhite width={28} height={24}/>
           <Text style={styles.bigImpactValue}>
-            {largestTransaction ? `${largestTransaction} AED` : `0.00 AED`}
+            {largestTransaction ? `${largestTransaction}` : `0.00`}
           </Text>
         </View>
         <View style={styles.savingChip}>
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.extraBold,
     color: Colors.white,
     marginTop: 4,
+    marginLeft:5
   },
   savingChip: {
     marginTop: 8,

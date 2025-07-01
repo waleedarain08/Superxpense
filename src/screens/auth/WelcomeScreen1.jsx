@@ -147,12 +147,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   txtStyle: {
-    fontSize: 32,
+    fontSize: 30,
     fontFamily: FontFamily.semiBold,
     textAlign: 'center',
+    lineHeight: 34,
     color: Colors.txtColor,
     marginBottom: 40,
-    paddingHorizontal: 26,
+    paddingHorizontal: 11,
+    
   },
   dotContainer: {
     flexDirection: 'row',

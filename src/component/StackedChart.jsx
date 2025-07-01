@@ -9,7 +9,7 @@ import {BlurView} from '@react-native-community/blur';
 const StackedChart = ({chartData}) => {
   const safeChartData = Array.isArray(chartData) ? chartData : [];
 
-  const colors = [Colors.blue, Colors.graphGreen];
+  const colors = [Colors.blue, Colors.newButtonBack];
   const keys = ['expenses', 'netWorth'];
   const chartHeight = 200;
 
@@ -199,7 +199,7 @@ const StackedChart = ({chartData}) => {
 
 export const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.57)', // translucent white
+    backgroundColor: 'rgba(255, 255, 255, 0.47)', // translucent white
     borderRadius: 20,
     //marginLeft: 15,
   },
@@ -211,7 +211,7 @@ export const styles = StyleSheet.create({
     marginTop: 16,
   },
   heading: {
-    color: Colors.graphGreen,
+    color: Colors.newButtonBack,
     fontSize: 13,
     fontFamily: FontFamily.semiBold,
     fontWeight: '700',
@@ -226,6 +226,7 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: Colors.white,
+    backgroundColor: 'transparent',
   },
 });
 

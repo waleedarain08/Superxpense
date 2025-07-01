@@ -32,7 +32,7 @@ const SpendingSummary = ({data = [], month}) => {
   return (
     // <View style={styles.container}>
     <LinearGradient
-      colors={['#bae4e0', '#BDECE8']}
+      colors={['#ccf3f3', '#d0f4f4']}
       style={styles.gradientBackground}>
       <View style={styles.container}>
         {data.length > 0 ? (
@@ -100,7 +100,7 @@ export default SpendingSummary;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    backgroundColor: 'rgba(255, 255, 255, 0.67)',
     borderRadius: 20,
     width: width - 32,
     alignSelf: 'center',
@@ -196,5 +196,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1,
     borderColor: Colors.white,
+    backgroundColor:'transparent',
   },
 });

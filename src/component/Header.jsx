@@ -33,7 +33,7 @@ const Header = ({
           <Icon name="more-vert" size={24} color="#000" />
         </TouchableOpacity>
       ) : steps ? (
-        <TouchableOpacity style={{width: '20%'}} onPress={onMenuPress}>
+        <TouchableOpacity style={{ right:15}} onPress={onMenuPress}>
           <Text style={styles.stepStyle}>Step {stepsCount} of 2</Text>
         </TouchableOpacity>
       ) : (

@@ -246,7 +246,7 @@ const IssuingCountryScreen = ({navigation}) => {
             customerId={customerID}
             sandbox={isSandbox}
             customization={{
-              theme_color: Colors.black,
+              theme_color: Colors.newButtonBack,
               button_text_color: Colors.white,
               button_border_radius: 50,
               link_color: Colors.black,

@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 28,
-    FontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.semiBold,
     marginBottom: 5,
     color: Colors.newWhite,
     marginTop: 24,

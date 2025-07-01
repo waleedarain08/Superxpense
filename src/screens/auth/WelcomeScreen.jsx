@@ -60,7 +60,7 @@ const WelcomeScreen = ({navigation}) => {
             </TouchableOpacity>
             <View style={{height:20}}></View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Main')}
+             // onPress={() => navigation.navigate('Main')}
               style={styles.guestButton}>
               <Text style={styles.guestText}>Continue as Guest</Text>
             </TouchableOpacity>
