@@ -89,16 +89,18 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     }, 1000);
   }, []);
 
-  const handleAccountPress = (account, bankID, bankName) => {
+  const handleAccountPress = (account, bankName) => {
     //console.log('Account pressed:', account);
     //console.log('Bank Name:', bankName);
     navigation.navigate('BankTransaction', {
-      accountId: account.accountId,
+      accountId: Array.isArray(account.accounts)
+        ? (account.accounts.find(acc => acc.accountType === 'Current Account')?.accountId || null)
+        : account.accountId,
       accountBalance: account.accountBalance,
       accountType: account.accountType,
       BankName: bankName,
-      entityId: bankID,
-      bankData: banksData,
+      entityId: account.bankId, // <-- FIXED: use account.bankId instead of account.bankID
+      bankData: account,
     });
   };
 
@@ -234,7 +236,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
               accounts={item.accounts}
               onDelete={deletePress}
               reloadPressed={() => fetchAccounts()}
-              onPressAccount={handleAccountPress}
+              onPressAccount={()=>handleAccountPress(item)}
             />
           )}
           contentContainerStyle={{paddingBottom: 20}}
@@ -256,7 +258,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.progressBackground,
   },
   header: {
-    paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight + 5,
+    paddingTop: Platform.OS === 'ios' ? 70 : StatusBar.currentHeight + 5,
     paddingBottom: 22,
     paddingHorizontal: 20,
     flexDirection: 'row',

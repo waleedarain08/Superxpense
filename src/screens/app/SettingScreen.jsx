@@ -355,9 +355,23 @@ const SettingItem = ({title, IconComponent, screenName}) => {
         style={styles.item}
         onPress={async () => {
           //console.log('Setting item pressed:', screenName); // Add this
-          if (screenName === 'Welcome') {
-            await removeItem('userData');
-            navigation.replace('Welcome');
+          if (screenName === 'Welcome1') {
+            Alert.alert(
+              'Logout',
+              'Are you sure you want to logout?',
+              [
+                {text: 'Cancel', style: 'cancel'},
+                {
+                  text: 'Logout',
+                  style: 'destructive',
+                  onPress: async () => {
+                    await removeItem('userData');
+                    navigation.replace('Welcome1');
+                  },
+                },
+              ],
+              {cancelable: true},
+            );
           } else if (screenName === 'SyncContacts') {
             Alert.alert('Sync Contacts', 'Do you want to sync your contacts?', [
               {text: 'No', onPress: () => ''},

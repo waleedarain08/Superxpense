@@ -10,7 +10,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
-import {Notification, TiltArrow} from '../assets/svgs';
+import {DirhamWhite, Notification, TiltArrow} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 
 const {width} = Dimensions.get('window');
@@ -66,9 +66,12 @@ const MainHeader = ({
       {/* Big Impact Section */}
       <View style={styles.bigImpactContainer}>
         <Text style={styles.bigImpactText}>Big impact</Text>
-        <Text style={styles.bigImpactValue}>
-          {largestTransaction ? `${largestTransaction} AED` : `0.00 AED`}
-        </Text>
+        <View style={{flexDirection: 'row', alignItems: 'center',gap:4}}>
+          <DirhamWhite width={28} height={24}/>
+          <Text style={styles.bigImpactValue}>
+            {largestTransaction ? `${largestTransaction} AED` : `0.00 AED`}
+          </Text>
+        </View>
         <View style={styles.savingChip}>
           <TiltArrow />
           <Text style={styles.savingChipText}>

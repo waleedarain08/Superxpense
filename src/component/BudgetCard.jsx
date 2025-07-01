@@ -60,7 +60,7 @@ const BudgetCard = ({data = [], month}) => {
         {/* Progress Bar with Linear Gradient */}
         <View style={styles.progressBarBackground}>
           <LinearGradient
-            colors={['#0D9488', '#FFFFFF40']} // Gradient colors for the progress bar
+            colors={[Colors.newButtonBack, '#FFFFFF40']} // Gradient colors for the progress bar
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={[styles.progressBarFill, {width: `${percentageUsed}%`}]}
@@ -89,7 +89,7 @@ const BudgetCard = ({data = [], month}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    backgroundColor: 'rgba(255, 255, 255, 0.73)',
     borderRadius: 16,
     padding: 18,
   },
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   progressBarBackground: {
-    height: 47,
+    height: 16,
     backgroundColor: Colors.progressBackground,
     borderRadius: 12,
     overflow: 'hidden',
@@ -123,13 +123,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   budgetItem: {
-    backgroundColor: Colors.lightestGray,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 12,
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 8,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   icon: {
     fontSize: 20,

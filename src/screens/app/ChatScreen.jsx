@@ -298,7 +298,7 @@ const HomeScreen = ({navigation, route}) => {
                                 flexDirection: 'column', // Ensure icon and text are stacked vertically
                               },
                             ]}
-                            onPress={() => setMessage(item.text)}>
+                            onPress={() => handleDocumentPick()}>
                             {item.icon}
                             <Text
                               style={[

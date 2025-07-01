@@ -106,7 +106,7 @@ const BudgetCardd = ({data = [], month}) => {
       {/* Progress Bar with Linear Gradient */}
       <View style={styles.progressBarBackground}>
         <LinearGradient
-          colors={['#0D9488', '#FFFFFF40']}
+          colors={[Colors.newButtonBack, '#FFFFFF40']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={[styles.progressBarFill, {width: `${percentageUsed}%`}]}
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   progressBarBackground: {
-    height: 47,
+    height: 16,
     backgroundColor: Colors.progressBackground,
     borderRadius: 12,
     overflow: 'hidden',

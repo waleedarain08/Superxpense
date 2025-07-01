@@ -504,6 +504,7 @@ const BankTransactionScreen = ({navigation, route}) => {
             color: Colors.txtColor,
             fontSize: 18,
           }}
+          ScreenName="Bank Details"
           onBackPress={() => navigation.goBack()}
         />
         <ScrollView contentContainerStyle={{paddingHorizontal: 24}}>
