@@ -102,9 +102,9 @@ const OnBoardingScreen = ({navigation}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/newOnboardingBack.png')}
+      source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'cover'}}
+      imageStyle={{resizeMode: 'stretch'}}
       resizeMode="cover">
       <SafeAreaView style={styles.safeStyle}>
         <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   heading: {
-    fontSize: 28,
+    fontSize: 26,
     fontFamily: FontFamily.semiBold,
     marginBottom: 5,
     color: Colors.newWhite,
@@ -169,8 +169,8 @@ const styles = StyleSheet.create({
   },
   subHeading: {
     color: Colors.newWhite,
-    fontSize: 16,
-    fontFamily: FontFamily.semiBold,
+    fontSize: 14,
+    //fontFamily: FontFamily.semiBold,
     marginBottom: 24,
     marginHorizontal: 10,
   },

@@ -103,7 +103,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
     <ImageBackground
       source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'cover'}}
+      imageStyle={{resizeMode: 'cover', height:'70%'}}
       resizeMode="cover">
       <SafeAreaView style={{flex: 1}}>
         <View style={{flex: 1}}>
@@ -247,10 +247,11 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 28,
-    FontFamily: FontFamily.semiBold,
+    FontFamily: FontFamily.bold,
     marginBottom: 5,
     color: Colors.newWhite,
     marginTop: 24,
+    fontWeight:'600'
   },
   subHeading: {
     fontFamily: FontFamily.regular,
