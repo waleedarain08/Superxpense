@@ -431,7 +431,7 @@ const BankTransactionScreen = ({navigation, route}) => {
       setLoading(true);
       const userData = await getItem('userData');
       const token = userData?.data?.accessToken;
-
+      console.log(accountId, entityId, 'Fetching transactions for account');
       const data = await get(
         `${API.tansActions}`,
         {accountId, entityId, page: 1, size: 50},

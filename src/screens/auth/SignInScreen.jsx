@@ -180,10 +180,10 @@ const SignInScreen = ({navigation}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/loginBack.png')}
+     source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'cover'}}
-      resizeMode="cover">
+      imageStyle={{resizeMode: 'stretch',height: '45%'}}
+      resizeMode="stretch">
       <SafeAreaView style={styles.safeStyle}>
         <View>
           <TouchableOpacity
@@ -264,12 +264,12 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 24,
-    fontWeight: '500',
+    fontWeight: '700',
     marginBottom: 5,
-    color: Colors.txtColor,
+    color: "#ffffff",
   },
   subHeading: {
-    color: Colors.txtColor,
+    color: "#ffffff",
     fontSize: 16,
     marginBottom: 24,
   },

@@ -127,8 +127,8 @@ const SignUpScreen = ({navigation}) => {
     <ImageBackground
       source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'cover'}}
-      resizeMode="cover">
+      imageStyle={{resizeMode: 'stretch',height: '80%'}}
+      resizeMode="stretch">
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flex: 1}}>
