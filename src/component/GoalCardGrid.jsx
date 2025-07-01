@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import {Colors} from '../utilis/Colors';
-import {CheckCircle} from '../icons';
+import {Check, CheckCircle} from '../icons';
 import {FontFamily} from '../utilis/Fonts';
 import {Bolt} from '../assets/svgs';
 
@@ -22,7 +22,7 @@ const GoalCardGrid = ({data, onPress}) => {
         const isSelected = selectedIds.includes(item.id);
         return (
           <TouchableOpacity
-            style={[styles.card, {backgroundColor: Colors.lightWhite}]}
+            style={[styles.card, {backgroundColor: 'rgba(255,255,255,0.3)'}]}
             onPress={() => {
               setSelectedIds(prev =>
                 isSelected
@@ -37,7 +37,7 @@ const GoalCardGrid = ({data, onPress}) => {
             }}>
             {isSelected ? (
               <View style={styles.checkCircle}>
-                <CheckCircle color={Colors.background} size={18} />
+                <Check color={Colors.white} size={18} />
               </View>
             ) : null}
             <View
@@ -47,8 +47,8 @@ const GoalCardGrid = ({data, onPress}) => {
                 backgroundColor: 'rgba(255, 255, 255, 0)',
               }}>
               <View
-                style={[styles.iconWrapper, {backgroundColor: item.bgColor}]}>
-                <item.SvgIcon width={60} height={60} />
+                style={[styles.iconWrapper]}>
+                <item.SvgIcon width={24} height={24} />
               </View>
               <Text style={[styles.label, {color: Colors.txtColor}]}>
                 {item.label}
@@ -84,6 +84,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: Colors.white,  
   },
   iconWrapper: {
     borderRadius: 50,
@@ -92,16 +94,26 @@ const styles = StyleSheet.create({
     width: 70,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   label: {
-    fontSize: 14,
-    color: '#222',
+    fontSize: 16,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.medium,
     textAlign: 'center',
   },
   checkCircle: {
     position: 'absolute',
     top: 10,
     right: 10,
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 50,
+    height:24,
+    width:24,
+    justifyContent:'center',
+    alignItems:'center',
   },
   boltStyle: {
     flexDirection: 'row',

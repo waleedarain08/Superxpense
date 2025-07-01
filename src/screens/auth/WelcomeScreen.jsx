@@ -95,13 +95,13 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 18,
     color: '#1AA875',
-    fontFamily: FontFamily.bold,
+    fontFamily: FontFamily.semiBold,
     marginTop: 16,
   },
   subtitle: {
     fontSize: 32,
     color: Colors.txtColor,
-    fontFamily: FontFamily.bold,
+    fontFamily: FontFamily.semiBold,
     textAlign: 'center',
   },
   cardsContainer: {
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.newWhite,
     fontSize: 16,
-    fontFamily: FontFamily.bold,
+    fontFamily: FontFamily.semiBold,
   },
   appleButton: {
     flexDirection: 'row',
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainContainer: {
-    backgroundColor: Colors.lightestGreen,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     paddingTop: 24,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,

@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
     textAlign: 'center',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 60,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 80,
     paddingBottom: 15,
   },
   budgetcard: {

@@ -148,9 +148,9 @@ const styles = StyleSheet.create({
   },
   txtStyle: {
     fontSize: 32,
-    fontFamily: FontFamily.bold,
+    fontFamily: FontFamily.semiBold,
     textAlign: 'center',
-    color: Colors.black,
+    color: Colors.txtColor,
     marginBottom: 40,
     paddingHorizontal: 26,
   },
@@ -181,8 +181,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.white,
     fontSize: 16,
-    fontFamily: FontFamily.heavy,
-    fontWeight: '600',
+    fontFamily: FontFamily.semiBold,
   },
   dotMain: {
     flexDirection: 'row',

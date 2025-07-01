@@ -102,7 +102,7 @@ const OnBoardingScreen = ({navigation}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/loginBack.png')}
+      source={require('../../assets/images/newOnboardingBack.png')}
       style={[styles.container, {flex: 1}]}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
@@ -164,11 +164,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontFamily: FontFamily.semiBold,
     marginBottom: 5,
-    color: Colors.txtColor,
+    color: Colors.newWhite,
     marginHorizontal: 10,
   },
   subHeading: {
-    color: Colors.txtColor,
+    color: Colors.newWhite,
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
     marginBottom: 24,

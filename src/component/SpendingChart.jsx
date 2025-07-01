@@ -255,7 +255,7 @@ const SpendingChart = ({
   data = [],
   monthlySpending,
   lastSpending,
-  useDummy = true, // set this to true to use dummy data
+  useDummy = false, // set this to true to use dummy data
 }) => {
   // If useDummy is true, override with dummy data
   const safeData = useDummy ? dummyData : Array.isArray(data) ? data : [];
@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderColor: Colors.white,
     borderWidth: 1,
-    height: 210,
+    height: 280,
     justifyContent: 'center',
   },
   title: {
@@ -535,6 +535,7 @@ const styles = StyleSheet.create({
     color: Colors.txtColor,
     fontSize: 13,
     fontFamily: FontFamily.medium,
+    textAlign: 'center',
   },
 });
 

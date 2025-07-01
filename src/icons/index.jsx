@@ -272,6 +272,16 @@ export const CheckCircle = ({color, size, style}) => (
   />
 );
 
+export const Check = ({color, size, style}) => (
+  <VectorIcon
+    name="checkmark-outline"
+    color={color}
+    size={size}
+    type="Ionicons"
+    style={style}
+  />
+);
+
 export const ChevronLeft = ({color, size, style}) => (
   <VectorIcon
     name="chevron-left"

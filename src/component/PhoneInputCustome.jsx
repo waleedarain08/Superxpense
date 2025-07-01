@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   codeBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.lightWhite,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 12,
     // paddingHorizontal: 10,
     // paddingVertical: 8,
@@ -55,6 +55,8 @@ const styles = StyleSheet.create({
     width: 91,
     marginRight: 8,
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   flag: {
     width: 22,
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     flex: 1,
-    backgroundColor: Colors.lightWhite,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 12,
     // paddingHorizontal: 14,
     // paddingVertical: 8,
@@ -77,6 +79,8 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 16,
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   inputBoxError: {
     borderColor: 'red',

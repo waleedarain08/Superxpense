@@ -55,8 +55,14 @@ import Apple from './apple.svg';
 import Dirham from './dirham.svg';
 import DirhamWhite from './dirhamWhite.svg';
 import ReloadSvg from './reloadSvg.svg';
+import TiltArrow from './tiltArrow.svg';
+import UploadPayment from './uploadPayment.svg';
+import ViewPayment from './viewPayment.svg';
 
 export {
+  UploadPayment,
+  ViewPayment,
+  TiltArrow,
   DirhamWhite,
   Dirham,
   Google,

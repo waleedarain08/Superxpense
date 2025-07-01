@@ -44,11 +44,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   completed: {
-    backgroundColor: Colors.txtColor, // Dark color for completed
+    backgroundColor: Colors.newWhite, // Dark color for completed
   },
   incomplete: {
-    backgroundColor: Colors.lightestGreenWBlack, // Light color for incomplete
-    opacity: 0.4,
+    backgroundColor: Colors.newWhite, // Light color for incomplete
+    opacity: 0.3,
   },
   spacing: {
     marginHorizontal: 8,

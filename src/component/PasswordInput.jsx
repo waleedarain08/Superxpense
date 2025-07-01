@@ -43,11 +43,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 12,
     height: 56,
     paddingHorizontal: 16,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   errorContainer: {
     borderColor: 'red',

@@ -10,7 +10,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
-import {Notification} from '../assets/svgs';
+import {Notification, TiltArrow} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 
 const {width} = Dimensions.get('window');
@@ -70,8 +70,9 @@ const MainHeader = ({
           {largestTransaction ? `${largestTransaction} AED` : `0.00 AED`}
         </Text>
         <View style={styles.savingChip}>
+          <TiltArrow />
           <Text style={styles.savingChipText}>
-            ✅ You added 5,000 AED to savings last week
+            You added 5,000 AED to savings last week
           </Text>
         </View>
       </View>
@@ -157,6 +158,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   savingChipText: {
     fontSize: 14,

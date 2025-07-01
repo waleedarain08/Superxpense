@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 4,
+    marginTop:10,
   },
   input: {
     flex: 1,

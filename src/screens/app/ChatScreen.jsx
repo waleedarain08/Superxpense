@@ -24,7 +24,7 @@ import DocumentPicker from 'react-native-document-picker';
 import Header from '../../component/Header';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ChatInputBar from '../../component/ChatInputBar';
-import {Stars} from '../../assets/svgs';
+import {Stars, UploadPayment, ViewPayment} from '../../assets/svgs';
 
 const HomeScreen = ({navigation, route}) => {
   const [chats, setChats] = useState([]);
@@ -44,6 +44,18 @@ const HomeScreen = ({navigation, route}) => {
     'How much did I save this month?',
     'Suggest a monthly budget',
     'Compare this month to last month',
+  ];
+
+  // Array of objects with SVG and text
+  const predefinedActions = [
+    {
+      icon: <UploadPayment />,
+      text: 'Upload Payment Plan',
+    },
+    {
+      icon: <ViewPayment />,
+      text: 'View Payment Schedule',
+    },
   ];
 
   const scrollViewRef = useRef(null);
@@ -117,14 +129,14 @@ const HomeScreen = ({navigation, route}) => {
 
   const handleSendMessage = async (file = null) => {
     if (!message.trim() && !file) return;
-    
+
     console.log('handleSendMessage called with:', {
       message: message,
       file: file,
       fileType: typeof file,
-      isFileObject: file && typeof file === 'object' && file.uri
+      isFileObject: file && typeof file === 'object' && file.uri,
     });
-    
+
     try {
       setSendMessageLoading(true);
       const userData = await getItem('userData');
@@ -136,7 +148,8 @@ const HomeScreen = ({navigation, route}) => {
       setChats(prevChats => [
         ...prevChats,
         {
-          message: file && file.name ? `Uploading document: ${file.name}` : message,
+          message:
+            file && file.name ? `Uploading document: ${file.name}` : message,
           isUser: true,
           timestamp,
         },
@@ -168,18 +181,19 @@ const HomeScreen = ({navigation, route}) => {
 
       const response = await fetch(API.createChat, {
         method: 'POST',
-        headers: file && file.uri
-          ? headers
-          : {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
+        headers:
+          file && file.uri
+            ? headers
+            : {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
         body: file && file.uri ? formData : JSON.stringify({query: message}),
       });
 
       const data = await response.json();
       console.log('Response data:', data);
-      
+
       // Remove thinking and show bot reply
       setChats(prevChats => {
         const newChats = prevChats.filter(chat => !chat.isThinking);
@@ -233,6 +247,12 @@ const HomeScreen = ({navigation, route}) => {
               style={styles.scrollView}
               contentContainerStyle={{
                 flexGrow: 1,
+                backgroundColor: 'rgba(255,255,255,0.3)',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                borderWidth: 1,
+                borderColor: Colors.white,
+                borderBottomWidth: 0,
               }}
               ref={scrollViewRef}
               onContentSizeChange={() =>
@@ -255,19 +275,71 @@ const HomeScreen = ({navigation, route}) => {
                   <Text style={styles.subGreetingText}>
                     What would you like help with today?
                   </Text>
-                  <View style={styles.quickActionsContainer}>
-                    {predefinedMessages.map((item, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        style={styles.quickAction}
-                        onPress={() => setMessage(item)}>
-                        <View
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <Stars width={20} height={20} />
-                          <Text style={styles.quickActionText}>{item}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
+                  <View style={[styles.quickActionsContainer, {width: '100%'}]}>
+                    <View>
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{
+                          paddingVertical: 4,
+                          alignItems: 'center',
+                        }}>
+                        {predefinedActions.map((item, index) => (
+                          <TouchableOpacity
+                            key={`horizontal-${index}`}
+                            style={[
+                              styles.quickAction,
+                              {
+                                width: 153,
+                                height: 116,
+                                marginRight: 10,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flexDirection: 'column', // Ensure icon and text are stacked vertically
+                              },
+                            ]}
+                            onPress={() => setMessage(item.text)}>
+                            {item.icon}
+                            <Text
+                              style={[
+                                styles.quickActionText,
+                                {
+                                  marginTop: 12,
+                                  lineHeight: 24,
+                                },
+                              ]}>
+                              {item.text}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </ScrollView>
+                    </View>
+                    <Text style={styles.tryAsking}>Try Asking</Text>
+                    <View style={{alignItems: 'flex-start'}}>
+                      {predefinedMessages.map((item, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          style={[
+                            styles.quickAction,
+                            {
+                              alignSelf: 'flex-start',
+                              minWidth: 0,
+                              width: undefined,
+                              maxWidth: '100%',
+                            },
+                          ]}
+                          onPress={() => setMessage(item)}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <Stars width={20} height={20} />
+                            <Text style={styles.quickActionText}>{item}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
                   </View>
                 </View>
               ) : (
@@ -404,14 +476,19 @@ const HomeScreen = ({navigation, route}) => {
                 </TouchableOpacity>
               </View>
             </View> */}
-            <ChatInputBar
-              message={message}
-              setMessage={setMessage}
-              handleSendMessage={handleSendMessage}
-              sendMessageLoading={sendMessageLoading}
-              handleDocumentPick={handleDocumentPick}
-              // handleMicPress={handleMicPress}
-            />
+            <View
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.3)',
+              }}>
+              <ChatInputBar
+                message={message}
+                setMessage={setMessage}
+                handleSendMessage={handleSendMessage}
+                sendMessageLoading={sendMessageLoading}
+                handleDocumentPick={handleDocumentPick}
+                // handleMicPress={handleMicPress}
+              />
+            </View>
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -469,7 +546,7 @@ const styles = StyleSheet.create({
   },
   botMessage: {
     alignSelf: 'flex-start',
-    backgroundColor: Colors.lightestGreen,
+    backgroundColor: 'rgba(255,255,255,0.3)',
   },
   messageText: {
     fontFamily: FontFamily.regular,
@@ -518,37 +595,42 @@ const styles = StyleSheet.create({
   quickActionsContainer: {
     marginTop: 20,
     paddingHorizontal: 16,
+    flex: 1,
+    justifyContent: 'center',
   },
   quickAction: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
     marginBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   quickActionText: {
     fontSize: 14,
     fontFamily: FontFamily.medium,
     color: Colors.txtColor,
     marginLeft: 10,
+    textAlign: 'center',
   },
   greetingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    paddingTop: 16,
     paddingHorizontal: 16,
   },
   greetingText: {
-    fontSize: 22,
-    fontFamily: FontFamily.semiBold,
+    fontSize: 16,
+    fontFamily: FontFamily.medium,
     color: Colors.txtColor,
     textAlign: 'center',
   },
   subGreetingText: {
     fontSize: 16,
-    fontFamily: FontFamily.regular,
+    fontFamily: FontFamily.medium,
     color: Colors.txtColor,
     marginTop: 8,
     textAlign: 'center',
@@ -565,6 +647,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 2,
     elevation: 2,
+  },
+  tryAsking: {
+    paddingBottom: 16,
+    fontFamily: FontFamily.semiBold,
+    fontSize: 16,
   },
 });
 
