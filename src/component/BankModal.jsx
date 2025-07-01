@@ -163,7 +163,7 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
             steps={true}
             stepsCount={2}
           />
-          <StepIndicator totalSteps={2} currentStep={2} />
+          <StepIndicator totalSteps={2} currentStep={2} color={Colors.txtColor}/>
 
           {/* Subheading */}
           <Text style={styles.subtitle}>Select a bank</Text>

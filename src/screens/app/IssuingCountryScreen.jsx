@@ -163,7 +163,7 @@ const IssuingCountryScreen = ({navigation}) => {
           steps={true}
           stepsCount={1}
         />
-        <StepIndicator totalSteps={2} currentStep={1} />
+        <StepIndicator totalSteps={2} currentStep={1} color={Colors.txtColor}/>
         <BankModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}

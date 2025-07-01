@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   StatusBar,
   ImageBackground,
+  FlatList,
 } from 'react-native';
 import {LeftIcon} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
@@ -19,6 +20,7 @@ import {API} from '../../utilis/Constant';
 import {del, get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import AccountSwiper from '../../component/AccountSwiper';
+import BankAccountCard from '../../component/AccountCard';
 
 const ConnectedAccountsScreen = ({navigation, route}) => {
   const BankName = route.params.bankName;
@@ -27,6 +29,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
   const [bankName, setBankName] = useState('');
   const [banksData, setBanksData] = useState([]);
+  const [lastRefreshed, setLastRefreshed] = useState(null);
 
   const fetchAccounts = async () => {
     //setStateEntityId(id);
@@ -56,6 +59,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
       setBanksData(rawBanks);
 
       setAccountsData(rawBanks);
+      setLastRefreshed(new Date());
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -141,6 +145,15 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     );
   };
 
+  const formatDate = date => {
+    if (!date) return '';
+    return `${date.getDate()} ${date.toLocaleString('default', {
+      month: 'short',
+    })} ${date.getFullYear()} ${date.getHours()}:${String(
+      date.getMinutes(),
+    ).padStart(2, '0')}`;
+  };
+
   return (
     // <ScrollView style={styles.container}>
     //   <View style={styles.header}>
@@ -199,14 +212,33 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
       {banksData.length > 0 ? (
-        <View style={{overflow: 'hidden'}}>
-          <AccountSwiper
-            accounts={banksData}
-            onReconnect={handleAccountPress}
-            onDelete={deletePress}
-            onPressAccount={handleAccountPress}
-          />
-        </View>
+        // <View style={{overflow: 'hidden'}}>
+        //   <AccountSwiper
+        //     accounts={banksData}
+        //     onReconnect={handleAccountPress}
+        //     onDelete={deletePress}
+        //     onPressAccount={handleAccountPress}
+        //   />
+        // </View>
+        <FlatList
+          data={banksData}
+          keyExtractor={(item, index) =>
+            item.bankId?.toString() || index.toString()
+          }
+          renderItem={({item}) => (
+            <BankAccountCard
+              bankName={item.bankName}
+              lastSynced={formatDate(lastRefreshed)}
+              accountNumber="9090"
+              image={item.bankIcon}
+              accounts={item.accounts}
+              onDelete={deletePress}
+              reloadPressed={() => fetchAccounts()}
+              onPressAccount={handleAccountPress}
+            />
+          )}
+          contentContainerStyle={{paddingBottom: 20}}
+        />
       ) : (
         loading && (
           <View style={styles.loadingOverlay}>
@@ -274,11 +306,11 @@ const styles = StyleSheet.create({
     color: Colors.txtColor,
     textAlign: 'center',
   },
-  homeTxt:{
+  homeTxt: {
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
-  }
+  },
 });
 
 export default ConnectedAccountsScreen;

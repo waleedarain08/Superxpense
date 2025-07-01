@@ -5,11 +5,13 @@ import {Colors} from '../utilis/Colors';
 interface StepIndicatorProps {
   totalSteps: number;
   currentStep: number; // 1-based index
+  color?: string; // Optional color prop
 }
 
 const StepIndicator: React.FC<StepIndicatorProps> = ({
   totalSteps,
   currentStep,
+  color = Colors.newWhite, // Default to white
 }) => {
   return (
     <View style={styles.container}>
@@ -22,7 +24,10 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
             key={i}
             style={[
               styles.stepBar,
-              isCompleted ? styles.completed : styles.incomplete,
+              {
+                backgroundColor: color,
+                opacity: isCompleted ? 1 : 0.3,
+              },
               i !== totalSteps - 1 && styles.spacing,
             ]}
           />
@@ -42,13 +47,6 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     flex: 1,
-  },
-  completed: {
-    backgroundColor: Colors.newWhite, // Dark color for completed
-  },
-  incomplete: {
-    backgroundColor: Colors.newWhite, // Light color for incomplete
-    opacity: 0.3,
   },
   spacing: {
     marginHorizontal: 8,

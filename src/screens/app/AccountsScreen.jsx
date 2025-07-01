@@ -8,6 +8,7 @@ import {
   Platform,
   StatusBar,
   ImageBackground,
+  FlatList,
 } from 'react-native';
 import React, {useCallback, useRef, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
@@ -23,12 +24,14 @@ import {useFocusEffect} from '@react-navigation/native';
 import LinkSDK from 'lean-react-native';
 import AccountSwiper from '../../component/AccountSwiper';
 import {PlusIcon} from '../../icons';
+import BankAccountCard from '../../component/AccountCard';
 
 const AccountsScreen = ({navigation}) => {
   const [banksData, setBanksData] = useState([]);
   const [customerID, setCustomerID] = useState('');
   const [leanToken, setLeanToken] = useState('');
   const [reconnect, setIsReconnect] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState(null);
   const Lean = useRef(null);
 
   const fetchAccounts = async () => {
@@ -39,6 +42,7 @@ const AccountsScreen = ({navigation}) => {
       const rawBanks = data?.data || [];
 
       setBanksData(rawBanks);
+      setLastRefreshed(new Date());
     } catch (error) {
       console.log('Error fetching transactions:', error);
     }
@@ -102,6 +106,14 @@ const AccountsScreen = ({navigation}) => {
         bankData: banksData,
       });
     }
+  };
+  const formatDate = date => {
+    if (!date) return '';
+    return `${date.getDate()} ${date.toLocaleString('default', {
+      month: 'short',
+    })} ${date.getFullYear()} ${date.getHours()}:${String(
+      date.getMinutes(),
+    ).padStart(2, '0')}`;
   };
 
   const deletePress = async item => {
@@ -329,12 +341,31 @@ const AccountsScreen = ({navigation}) => {
         </TouchableOpacity>
       </View>
       {banksData.length > 0 ? (
-        <View style={{overflow: 'hidden'}}>
-          <AccountSwiper
+        <View>
+          {/* <AccountSwiper
             accounts={banksData}
             onReconnect={handleAccountPress}
             onDelete={deletePress}
             onPressAccount={handleAccountPress}
+          /> */}
+          <FlatList
+            data={banksData}
+            keyExtractor={(item, index) =>
+              item.bankId?.toString() || index.toString()
+            }
+            renderItem={({item}) => (
+              <BankAccountCard
+                bankName={item.bankName}
+                lastSynced={formatDate(lastRefreshed)}
+                accountNumber="9090"
+                image={item.bankIcon}
+                accounts={item.accounts}
+                onDelete={deletePress}
+                reloadPressed={() => fetchAccounts()}
+                onPressAccount={handleAccountPress}
+              />
+            )}
+            contentContainerStyle={{paddingBottom: 20}}
           />
         </View>
       ) : (
