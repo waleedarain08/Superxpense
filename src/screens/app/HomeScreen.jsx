@@ -423,8 +423,8 @@ const HomeScreen = ({navigation}) => {
     <ImageBackground
       source={require('../../assets/images/commonBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'stretch'}}
-      resizeMode="cover">
+      imageStyle={{resizeMode: 'stretch',height: '140%'}}
+      resizeMode="stretch">
       <SafeAreaView>
         <MainHeader
           navigation={navigation}
@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container: {
-    backgroundColor: Colors.background,
+    backgroundColor: "#ffffff",
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
