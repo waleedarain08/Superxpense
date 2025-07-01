@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   },
   link: {
     color: Colors.txtColor,
-    fontFamily: FontFamily.regular,
+    fontFamily: FontFamily.semiBold,
     fontSize: 14,
   },
   signIn: {

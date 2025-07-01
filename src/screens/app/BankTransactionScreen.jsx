@@ -421,6 +421,8 @@ const TransactionItem = ({item}) => (
 const BankTransactionScreen = ({navigation, route}) => {
   const {BankName, accountId, accountBalance, accountType, entityId, bankData} =
     route?.params || {};
+    console.log(accountId,entityId);
+    
 
   const [groupedTransactions, setGroupedTransactions] = useState({});
   const [loading, setLoading] = useState(false);
@@ -437,6 +439,8 @@ const BankTransactionScreen = ({navigation, route}) => {
         {accountId, entityId, page: 1, size: 50},
         token,
       );
+      console.log(data);
+      
 
       const transactions = data.data.data.transactions;
 
@@ -512,11 +516,11 @@ const BankTransactionScreen = ({navigation, route}) => {
                   borderRadius: 100,
                 }}>
                 <Image
-                  source={{uri: bankData[0].bankIcon}}
+                  source={{uri: bankData.bankIcon}}
                   style={{height: 32, width: 32, borderRadius: 20}}
                 />
               </View>
-              <Text style={styles.bankName}>{BankName || 'Bank'}</Text>
+              <Text style={styles.bankName}>{bankData?.bankName || 'Bank'}</Text>
             </View>
             <View
               style={{
@@ -536,16 +540,40 @@ const BankTransactionScreen = ({navigation, route}) => {
                 </View>
               </View>
               <View>
-                <Text style={styles.balanceLabel}>{accountType}</Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginTop: 12,
-                  }}>
-                  <Dirham />
-                  <Text style={styles.balanceAmount}>{accountBalance} AED</Text>
-                </View>
+                {Array.isArray(bankData.accounts) && bankData.accounts.length > 0 ? (
+                  (() => {
+                    const currentAccount = bankData.accounts.find(
+                      acc => acc.accountType === 'Current Account'
+                    );
+                    return currentAccount ? (
+                      <View>
+                        <Text style={styles.balanceLabel}>{currentAccount.accountType}</Text>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginTop: 12,
+                          }}>
+                          <Dirham />
+                          <Text style={styles.balanceAmount}>{currentAccount.accountBalance} AED</Text>
+                        </View>
+                      </View>
+                    ) : null;
+                  })()
+                ) : (
+                  <View>
+                    <Text style={styles.balanceLabel}>{accountType}</Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: 12,
+                      }}>
+                      <Dirham />
+                      <Text style={styles.balanceAmount}>{accountBalance} AED</Text>
+                    </View>
+                  </View>
+                )}
               </View>
             </View>
           </View>
