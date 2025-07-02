@@ -446,6 +446,7 @@ const HomeScreen = ({navigation}) => {
             <View style={{marginTop: 16}}>
               <StackedChart chartData={barData} />
             </View>
+            <BudgetCard data={budgetCategoryData?.data || []} month={month} />
             <SpendingSummary
               data={categoryData}
               month={selectedDate.format('MMM YYYY')}
@@ -472,7 +473,6 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity> */}
             {/* </TouchableOpacity>
             <ContractInstallmentsList contract={contractData || []} /> */}
-            <BudgetCard data={budgetCategoryData?.data || []} month={month} />
           </ScrollView>
         )}
         {selectedTab === 'Spending' && (

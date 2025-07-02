@@ -79,7 +79,7 @@ const WelcomeScreen1 = ({navigation}) => {
         </View>
         <TouchableOpacity
           onPress={() => flatListRef.current.scrollToEnd({animated: true})}
-          style={{zIndex: 100}}>
+          style={{zIndex: 100,right: 24}}>
           <Text style={styles.skipButtonTxt}>
             Skip
             <ChevronRight size={10} />
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   skipButtonTxt: {
     right: 0,
     left: width / 1.7 + 50,
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: FontFamily.medium,
     color: Colors.background,
   },

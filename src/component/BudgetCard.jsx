@@ -89,7 +89,7 @@ const BudgetCard = ({data = [], month}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255, 255, 255, 0.73)',
+    backgroundColor: 'rgba(255, 255, 255, 0.47)',
     borderRadius: 16,
     padding: 18,
   },
@@ -168,6 +168,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: Colors.white,
+    marginTop: 16,
+    backgroundColor: 'transparent',
   },
 });
 
