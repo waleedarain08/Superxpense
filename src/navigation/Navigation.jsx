@@ -290,42 +290,38 @@ const BottomNavigator = () => {
     //   </BottomStack.Navigator>
     // </View>
     <Tab.Navigator
-    screenOptions={{
-      tabBarActiveTintColor: Colors.newButtonBack,
-      tabBarActiveBackgroundColor: '#dcf7f4',
-      tabBarInactiveBackgroundColor: 'red',
-    }}
-    tabBar={(props) => (
-      <BottomFabBar
-      mode={'default'}
-      isRtl={true}
-      bottomBarContainerStyle={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex:100,
+      screenOptions={{
+        tabBarActiveTintColor: Colors.newButtonBack,
+        tabBarActiveBackgroundColor: '#dcf7f4',
+        tabBarInactiveBackgroundColor: 'red',
       }}
-
-        {...props}
-      />
-    )}
-    >
+      tabBar={props => (
+        <BottomFabBar
+          mode={'default'}
+          isRtl={true}
+          bottomBarContainerStyle={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 100,
+          }}
+          {...props}
+        />
+      )}>
       <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
               source={require('../assets/images/settingsBottom.png')}
               style={{
-                tintColor: focused
-                  ? Colors.white
-                  : Colors.inactiveTabColor,
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: 21,
                 width: 21,
               }}
             />
           ),
-          tabBarLabel: 'Settings',   // Focused label color
+          tabBarLabel: 'Settings', // Focused label color
           tabBarInactiveTintColor: 'gray',
         }}
         name="Settings"
@@ -337,15 +333,13 @@ const BottomNavigator = () => {
             <Image
               source={require('../assets/images/bulbBottom.png')}
               style={{
-                tintColor: focused
-                  ? Colors.white
-                  : Colors.inactiveTabColor,
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: 21,
                 width: 21,
               }}
             />
           ),
-          tabBarLabel: 'Accounts',   // Focused label color
+          tabBarLabel: 'Accounts', // Focused label color
           tabBarInactiveTintColor: 'gray',
         }}
         name="Accounts"
@@ -358,15 +352,13 @@ const BottomNavigator = () => {
             <Image
               source={require('../assets/images/chartBottom.png')}
               style={{
-                tintColor: focused
-                  ? Colors.white
-                  : Colors.inactiveTabColor,
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: 21,
                 width: 21,
               }}
             />
           ),
-          tabBarLabel: 'Budget',   // Focused label color
+          tabBarLabel: 'Budget', // Focused label color
           tabBarInactiveTintColor: 'gray',
         }}
         name="Budgets"
@@ -378,15 +370,13 @@ const BottomNavigator = () => {
             <Image
               source={require('../assets/images/homeBottom.png')}
               style={{
-                tintColor: focused
-                  ? Colors.white
-                  : Colors.inactiveTabColor,
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: 21,
                 width: 21,
               }}
             />
           ),
-          tabBarLabel: 'Home',   // Focused label color
+          tabBarLabel: 'Home', // Focused label color
           tabBarInactiveTintColor: 'gray',
         }}
         name="Home"
