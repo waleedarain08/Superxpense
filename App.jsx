@@ -4,6 +4,7 @@ import {
   notificationListener,
   requestUserPermission,
 } from './src/utilis/NotificationServices';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {PermissionsAndroid, Platform} from 'react-native';
 const App = () => {
   useEffect(() => {
