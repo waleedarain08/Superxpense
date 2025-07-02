@@ -294,6 +294,7 @@ const BottomNavigator = () => {
         tabBarActiveTintColor: Colors.newButtonBack,
         tabBarActiveBackgroundColor: '#dcf7f4',
         tabBarInactiveBackgroundColor: 'red',
+        headerShown: false,
       }}
       tabBar={props => (
         <BottomFabBar
