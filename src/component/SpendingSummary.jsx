@@ -1,3 +1,102 @@
+// import React, {useState} from 'react';
+// import {
+//   View,
+//   Text,
+//   StyleSheet,
+//   TouchableOpacity,
+//   Dimensions,
+//   Image,
+// } from 'react-native';
+// import {PieChart} from 'react-native-svg-charts';
+// import {Colors} from '../utilis/Colors';
+// import {FontFamily} from '../utilis/Fonts';
+// import LinearGradient from 'react-native-linear-gradient';
+
+// const {width} = Dimensions.get('window');
+
+// const SpendingSummary = ({data = [], month}) => {
+//   const [showAll, setShowAll] = useState(false);
+
+//   const total = data.reduce((sum, item) => sum + item.amount, 0);
+
+//   const chartData = data.map((item, index) => ({
+//     value: item.amount,
+//     svg: {fill: item.color},
+//     key: item.category || String(index),
+//   }));
+//   console.log(data);
+
+//   const visibleData = showAll ? data : data.slice(0, 3);
+//   //console.log('visibleData', visibleData);
+
+//   return (
+//     // <View style={styles.container}>
+//     <LinearGradient
+//       colors={['#ccf3f3', '#d0f4f4']}
+//       style={styles.gradientBackground}>
+//       <View style={styles.container}>
+//         {data.length > 0 ? (
+//           <View>
+//             <Text style={styles.title}>Spending Summary</Text>
+//             <Text style={styles.subtitle}>
+//               You have spent {total.toLocaleString()} AED so far this month.
+//             </Text>
+//             <View style={styles.chartContainer}>
+//               <PieChart
+//                 style={styles.pieChart}
+//                 data={chartData}
+//                 innerRadius={75}
+//                 outerRadius={90}
+//                 padAngle={0}
+//               />
+//               <View style={styles.chartCenter}>
+//                 <Text style={styles.chartCurrency}>AED</Text>
+//                 <Text style={styles.chartAmount}>{total.toLocaleString()}</Text>
+//                 <Text style={styles.chartMonth}>{month}</Text>
+//               </View>
+//             </View>
+//             {visibleData.map((item, index) => (
+//               <TouchableOpacity
+//                 key={item.category}
+//                 style={[
+//                   styles.listItem,
+//                   index !== visibleData.length - 1 && styles.listItemBorder,
+//                 ]}>
+//                 <View
+//                   style={[styles.iconCircle, {backgroundColor: item.color}]}>
+//                   <Image
+//                     source={{uri: item.icon}}
+//                     style={{height: 12, width: 12}}></Image>
+//                 </View>
+//                 <View style={{flex: 1}}>
+//                   <Text style={styles.amountText}>
+//                     {item.amount.toLocaleString()} AED
+//                   </Text>
+//                   <Text style={styles.labelText}>
+//                     {item.category.replace(/_/g, ' ')}
+//                   </Text>
+//                 </View>
+//               </TouchableOpacity>
+//             ))}
+//             {data.length > 3 && (
+//               <TouchableOpacity
+//                 style={styles.breakdownButton}
+//                 onPress={() => setShowAll(prev => !prev)}>
+//                 <Text style={styles.breakdownText}>
+//                   {showAll ? 'Show less' : 'See full breakdown'}
+//                 </Text>
+//               </TouchableOpacity>
+//             )}
+//           </View>
+//         ) : (
+//           <Text>No data available for this month</Text>
+//         )}
+//       </View>
+//     </LinearGradient>
+//   );
+// };
+
+// export default SpendingSummary;
 import React, {useState} from 'react';
 import {
   View,
@@ -7,30 +106,53 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import {PieChart} from 'react-native-svg-charts';
+import {Svg, G, Path} from 'react-native-svg';
+import * as shape from 'd3-shape';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 import LinearGradient from 'react-native-linear-gradient';
 
 const {width} = Dimensions.get('window');
 
+const DonutChart = ({data, radius = 90, innerRadius = 65, gap = 0.05}) => {
+  const pieData = shape
+    .pie()
+    .value(d => d.amount)
+    .sort(null)(data);
+
+  const arcs = pieData.map((d, i) => {
+    const arcGen = shape
+      .arc()
+      .outerRadius(radius)
+      .innerRadius(innerRadius)
+      .cornerRadius(12) // Rounded edges
+      .padAngle(gap); // Gap between segments
+
+    return {
+      path: arcGen(d),
+      color: d.data.color,
+      key: `arc-${i}`,
+    };
+  });
+
+  return (
+    <Svg width={radius * 2} height={radius * 2}>
+      <G x={radius} y={radius}>
+        {arcs.map(arc => (
+          <Path key={arc.key} d={arc.path} fill={arc.color} />
+        ))}
+      </G>
+    </Svg>
+  );
+};
+
 const SpendingSummary = ({data = [], month}) => {
   const [showAll, setShowAll] = useState(false);
 
   const total = data.reduce((sum, item) => sum + item.amount, 0);
-
-  const chartData = data.map((item, index) => ({
-    value: item.amount,
-    svg: {fill: item.color},
-    key: item.category || String(index),
-  }));
-  console.log(data);
-
   const visibleData = showAll ? data : data.slice(0, 3);
-  //console.log('visibleData', visibleData);
 
   return (
-    // <View style={styles.container}>
     <LinearGradient
       colors={['#ccf3f3', '#d0f4f4']}
       style={styles.gradientBackground}>
@@ -39,22 +161,26 @@ const SpendingSummary = ({data = [], month}) => {
           <View>
             <Text style={styles.title}>Spending Summary</Text>
             <Text style={styles.subtitle}>
-              You have spent {total.toLocaleString()} AED so far this month.
+              You have spent{' '}
+              <Text
+                style={{
+                  fontFamily: FontFamily.bold,
+                  color: Colors.newButtonBack,
+                }}>
+                {total.toLocaleString()} AED
+              </Text>{' '}
+              so far this month.
             </Text>
+
             <View style={styles.chartContainer}>
-              <PieChart
-                style={styles.pieChart}
-                data={chartData}
-                innerRadius={75}
-                outerRadius={90}
-                padAngle={0}
-              />
+              <DonutChart data={data} radius={90} innerRadius={65} gap={0.04} />
               <View style={styles.chartCenter}>
                 <Text style={styles.chartCurrency}>AED</Text>
                 <Text style={styles.chartAmount}>{total.toLocaleString()}</Text>
                 <Text style={styles.chartMonth}>{month}</Text>
               </View>
             </View>
+
             {visibleData.map((item, index) => (
               <TouchableOpacity
                 key={item.category}
@@ -66,7 +192,8 @@ const SpendingSummary = ({data = [], month}) => {
                   style={[styles.iconCircle, {backgroundColor: item.color}]}>
                   <Image
                     source={{uri: item.icon}}
-                    style={{height: 12, width: 12}}></Image>
+                    style={{height: 12, width: 12}}
+                  />
                 </View>
                 <View style={{flex: 1}}>
                   <Text style={styles.amountText}>
@@ -78,6 +205,7 @@ const SpendingSummary = ({data = [], month}) => {
                 </View>
               </TouchableOpacity>
             ))}
+
             {data.length > 3 && (
               <TouchableOpacity
                 style={styles.breakdownButton}
@@ -100,7 +228,7 @@ export default SpendingSummary;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255, 255, 255, 0.67)',
+    backgroundColor: 'rgba(255, 255, 255, 0.47)',
     borderRadius: 20,
     width: width - 32,
     alignSelf: 'center',
@@ -108,15 +236,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: FontFamily.semiBold,
-    fontSize: 14,
+    fontSize: 18,
     color: Colors.txtColor,
     marginBottom: 5,
   },
   subtitle: {
     fontSize: 16,
-    fontFamily: FontFamily.regular,
-    color: Colors.lightTxtColor,
-    marginBottom: 30,
+    fontFamily: FontFamily.medium,
+    color: Colors.grayIcon,
+    marginBottom: 16,
   },
   chartContainer: {
     justifyContent: 'center',
@@ -152,6 +280,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 16,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    marginBottom: 10,
+    padding: 12,
+    borderRadius: 10,
   },
   iconCircle: {
     width: 32,
@@ -186,8 +320,12 @@ const styles = StyleSheet.create({
     color: Colors.txtColor,
   },
   listItemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.newBorderColor,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    marginBottom: 10,
+    padding: 12,
+    borderRadius: 10,
   },
   gradientBackground: {
     flex: 1,
@@ -196,6 +334,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1,
     borderColor: Colors.white,
-    backgroundColor:'transparent',
+    backgroundColor: 'transparent',
   },
 });

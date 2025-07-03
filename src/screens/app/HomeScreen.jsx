@@ -73,6 +73,12 @@ const HomeScreen = ({navigation}) => {
   const [sendMessageLoading, setSendMessageLoading] = useState(false);
   const [chats, setChats] = useState([]);
   const [contractData, setContractData] = useState([]);
+  const [renderOverview, setRenderOverview] = useState(
+    selectedTab === 'Overview',
+  );
+  const [renderSpending, setRenderSpending] = useState(
+    selectedTab === 'Spending',
+  );
   const [name, setName] = useState('');
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
@@ -276,7 +282,7 @@ const HomeScreen = ({navigation}) => {
 
       // Cleanup timeout if screen is unfocused before timeout completes
       return () => clearTimeout(timeout);
-    }, [month, year]),
+    }, [month, year, renderOverview, renderSpending]),
   );
 
   const fetchData = async () => {
@@ -296,6 +302,24 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const SafeRender = ({children}) => {
+    try {
+      return children;
+    } catch (e) {
+      console.warn('Error rendering child:', e);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setRenderOverview(selectedTab === 'Overview');
+      setRenderSpending(selectedTab === 'Spending');
+    }, 50); // small delay to ensure safe unmount/mount cycle
+    return () => clearTimeout(timeout);
+  }, [selectedTab]);
+
   // const handleSendMessage = async (file = null) => {
   //   if (!message.trim() && !file) return;
 
@@ -423,7 +447,7 @@ const HomeScreen = ({navigation}) => {
     <ImageBackground
       source={require('../../assets/images/commonBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'stretch',height: '140%'}}
+      imageStyle={{resizeMode: 'stretch', height: '140%'}}
       resizeMode="stretch">
       <SafeAreaView>
         <MainHeader
@@ -435,7 +459,7 @@ const HomeScreen = ({navigation}) => {
         />
       </SafeAreaView>
       <View>
-        {selectedTab === 'Overview' && (
+        {renderOverview && (
           <ScrollView
             contentContainerStyle={styles.safeView}
             showsVerticalScrollIndicator={false}>
@@ -475,7 +499,7 @@ const HomeScreen = ({navigation}) => {
             <ContractInstallmentsList contract={contractData || []} /> */}
           </ScrollView>
         )}
-        {selectedTab === 'Spending' && (
+        {renderSpending && (
           <ScrollView
             contentContainerStyle={styles.safeView}
             showsVerticalScrollIndicator={false}>
@@ -548,7 +572,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container: {
-    backgroundColor: "#ffffff",
+    backgroundColor: '#ffffff',
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
