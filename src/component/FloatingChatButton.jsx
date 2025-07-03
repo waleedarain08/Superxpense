@@ -20,7 +20,7 @@ const FloatingChatButton = ({navigation}) => {
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 80,
     zIndex: 1000,
     // backgroundColor: '#000',
     // borderRadius: 30,
@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // flexDirection: 'row',
     // alignItems: 'center',
-    // elevation: 5,
-    // shadowColor: '#000',
-    // shadowOffset: {width: 0, height: 2},
-    // shadowOpacity: 0.3,
-    // shadowRadius: 3,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 1, height: 1},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   icon: {
     height: 80,

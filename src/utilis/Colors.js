@@ -13,7 +13,7 @@ export const Colors = {
   bgColor: '#F5F5F9',
   tabBarbackground: '#FDFDFD',
   activeTabColor: '#0D2D2D',
-  inactiveTabColor: '#81878766',
+  inactiveTabColor: '#1111114D',
   background: '#28a08c',
   newgreen: '#24F8B8',
   greenOpacity: '#115E5780',

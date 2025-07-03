@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
   safeView: {
     paddingHorizontal: 20,
     flexGrow: 1,
-    paddingBottom: 100,
+    paddingBottom: 120,
   },
   container: {
     paddingHorizontal: 20,

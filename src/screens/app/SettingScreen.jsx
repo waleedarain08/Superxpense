@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     // backgroundColor: Colors.bgColor,
     paddingHorizontal: 14,
-    paddingBottom: 50,
+    paddingBottom: 120,
     backgroundColor: Colors.newLightestWhite,
     borderWidth: 1,
     borderColor: Colors.white,

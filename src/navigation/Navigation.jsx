@@ -292,60 +292,52 @@ const BottomNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: Colors.newButtonBack,
-        tabBarActiveBackgroundColor: '#dcf7f4',
-        tabBarInactiveBackgroundColor: 'red',
+        tabBarActiveBackgroundColor: '#EEFFFE',
+        tabBarInactiveBackgroundColor: '#C1E3E9',
         headerShown: false,
       }}
       tabBar={props => (
         <BottomFabBar
           mode={'default'}
-          isRtl={true}
+          isRtl={false}
           bottomBarContainerStyle={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            zIndex: 100,
+            zIndex: 1,
+            shadowColor: Colors.shadowColor,
+            shadowOffset: {width: 1, height: 1},
+            shadowOpacity: 0.3,
+            shadowRadius: 5,
+            elevation: 6,
           }}
           {...props}
         />
       )}>
-      <Tab.Screen
+       <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
-              source={require('../assets/images/settingsBottom.png')}
+              source={require('../assets/images/homeBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 21,
-                width: 21,
+                height: 25,
+                width: 25,
               }}
             />
           ),
-          tabBarLabel: 'Settings', // Focused label color
+          tabBarLabel: 'Home', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 12,
+             marginTop:7
+          },
           tabBarInactiveTintColor: 'gray',
         }}
-        name="Settings"
-        component={SettingScreen}
+        name="Home"
+        component={HomeScreen}
       />
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={require('../assets/images/bulbBottom.png')}
-              style={{
-                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 21,
-                width: 21,
-              }}
-            />
-          ),
-          tabBarLabel: 'Accounts', // Focused label color
-          tabBarInactiveTintColor: 'gray',
-        }}
-        name="Accounts"
-        component={AccountsScreen}
-      />
+      
 
       <Tab.Screen
         options={{
@@ -354,34 +346,66 @@ const BottomNavigator = () => {
               source={require('../assets/images/chartBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 21,
-                width: 21,
+                height: 25,
+                width: 25,
               }}
             />
           ),
           tabBarLabel: 'Budget', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 12,
+            marginTop:7
+          },
           tabBarInactiveTintColor: 'gray',
         }}
         name="Budgets"
         component={BudgetsScreen}
       />
+
       <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
-              source={require('../assets/images/homeBottom.png')}
+              source={require('../assets/images/bulbBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 21,
-                width: 21,
+                height: 24,
+                width: 22,
               }}
             />
           ),
-          tabBarLabel: 'Home', // Focused label color
+          tabBarLabel: 'Accounts', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 12,
+             marginTop:7
+          },
           tabBarInactiveTintColor: 'gray',
         }}
-        name="Home"
-        component={HomeScreen}
+        name="Accounts"
+        component={AccountsScreen}
+      />
+    
+       <Tab.Screen
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../assets/images/settingsBottom.png')}
+              style={{
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
+                height: 24,
+                width: 24,
+              }}
+            />
+          ),
+          tabBarLabel: 'Settings', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 12,
+             marginTop:7
+          },
+          tabBarInactiveTintColor: 'gray',
+        }}
+        name="Settings"
+        component={SettingScreen}
       />
     </Tab.Navigator>
   );
@@ -393,7 +417,7 @@ const styles = StyleSheet.create({
   iconCircle: {
     width: 60,
     height: 60,
-    borderRadius: 35,
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: Platform.OS === 'ios' ? 40 : 40,
@@ -401,6 +425,6 @@ const styles = StyleSheet.create({
   activeIconCircle: {
     width: 60,
     height: 60,
-    borderRadius: 35,
+    borderRadius: 30,
   },
 });

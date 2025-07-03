@@ -544,7 +544,7 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   safeView: {
-    paddingBottom: 350,
+    paddingBottom: '420',
     flexGrow: 1,
   },
   container: {
