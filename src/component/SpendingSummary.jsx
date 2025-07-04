@@ -115,6 +115,8 @@ import LinearGradient from 'react-native-linear-gradient';
 const {width} = Dimensions.get('window');
 
 const DonutChart = ({data, radius = 90, innerRadius = 65, gap = 0.05}) => {
+  const [selectedSlice, setSelectedSlice] = useState(null);
+
   const pieData = shape
     .pie()
     .value(d => d.amount)
@@ -125,26 +127,155 @@ const DonutChart = ({data, radius = 90, innerRadius = 65, gap = 0.05}) => {
       .arc()
       .outerRadius(radius)
       .innerRadius(innerRadius)
-      .cornerRadius(12) // Rounded edges
-      .padAngle(gap); // Gap between segments
+      .cornerRadius(12)
+      .padAngle(gap);
 
     return {
       path: arcGen(d),
       color: d.data.color,
+      label: d.data.category,
+      amount: d.data.amount,
       key: `arc-${i}`,
+      index: i,
     };
   });
 
   return (
-    <Svg width={radius * 2} height={radius * 2}>
-      <G x={radius} y={radius}>
-        {arcs.map(arc => (
-          <Path key={arc.key} d={arc.path} fill={arc.color} />
-        ))}
-      </G>
-    </Svg>
+    <View
+      style={{
+        position: 'relative',
+        width: radius * 2,
+        height: radius * 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <Svg width={radius * 2} height={radius * 2}>
+        <G x={radius} y={radius}>
+          {arcs.map(arc => (
+            <Path
+              key={arc.key}
+              d={arc.path}
+              fill={arc.color}
+              onPress={() => setSelectedSlice({...arc})}
+            />
+          ))}
+        </G>
+      </Svg>
+
+      {/* Tooltip at top-right of chart */}
+      {selectedSlice && (
+        <View style={[styles.tooltipTopRight]}>
+          <Text style={styles.label}>
+            {selectedSlice.label.replace(/_/g, ' ')}
+          </Text>
+          <Text style={styles.amount}>
+            {selectedSlice.amount.toLocaleString()} AED
+          </Text>
+        </View>
+      )}
+    </View>
   );
 };
+
+// const DonutChart = ({data, radius = 90, innerRadius = 65, gap = 0.05}) => {
+//   const [selectedSlice, setSelectedSlice] = useState(null);
+
+//   const pieData = shape
+//     .pie()
+//     .value(d => d.amount)
+//     .sort(null)(data);
+
+//   const arcs = pieData.map((d, i) => {
+//     const arcGen = shape
+//       .arc()
+//       .outerRadius(radius)
+//       .innerRadius(innerRadius)
+//       .cornerRadius(12)
+//       .padAngle(gap);
+
+//     return {
+//       path: arcGen(d),
+//       color: d.data.color,
+//       label: d.data.category,
+//       amount: d.data.amount,
+//       key: `arc-${i}`,
+//       index: i,
+//     };
+//   });
+
+//   return (
+//     <View
+//       style={{
+//         position: 'relative',
+//         width: radius * 2,
+//         height: radius * 2,
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//       }}>
+//       <Svg width={radius * 2} height={radius * 2}>
+//         <G x={radius} y={radius}>
+//           {arcs.map(arc => (
+//             <Path
+//               key={arc.key}
+//               d={arc.path}
+//               fill={arc.color}
+//               onPress={() => {
+//                 setSelectedSlice(prev => {
+//                   if (prev?.index === arc.index) return null;
+//                   return {...arc}; // Force new object to trigger re-render
+//                 });
+//               }}
+//             />
+//           ))}
+//         </G>
+//       </Svg>
+
+//       {/* Tooltip in center */}
+//       {selectedSlice && (
+//         <View style={styles.tooltip}>
+//           <Text style={styles.label}>
+//             {selectedSlice.label.replace(/_/g, ' ')}
+//           </Text>
+//           <Text style={styles.amount}>
+//             {selectedSlice.amount.toLocaleString()} AED
+//           </Text>
+//         </View>
+//       )}
+//     </View>
+//   );
+// };
+
+// const DonutChart = ({data, radius = 90, innerRadius = 65, gap = 0.05}) => {
+//   const pieData = shape
+//     .pie()
+//     .value(d => d.amount)
+//     .sort(null)(data);
+
+//   const arcs = pieData.map((d, i) => {
+//     const arcGen = shape
+//       .arc()
+//       .outerRadius(radius)
+//       .innerRadius(innerRadius)
+//       .cornerRadius(12) // Rounded edges
+//       .padAngle(gap); // Gap between segments
+
+//     return {
+//       path: arcGen(d),
+//       color: d.data.color,
+//       key: `arc-${i}`,
+//     };
+//   });
+
+//   return (
+//     <Svg width={radius * 2} height={radius * 2}>
+//       <G x={radius} y={radius}>
+//         {arcs.map(arc => (
+//           <Path key={arc.key} d={arc.path} fill={arc.color} />
+//         ))}
+//       </G>
+//     </Svg>
+//   );
+// };
 
 const SpendingSummary = ({data = [], month}) => {
   const [showAll, setShowAll] = useState(false);
@@ -335,5 +466,40 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.white,
     backgroundColor: 'transparent',
+  },
+  tooltip: {
+    position: 'absolute',
+    top: '38%',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    elevation: 5,
+  },
+  label: {
+    fontSize: 13,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+  },
+  amount: {
+    fontSize: 14,
+    fontFamily: FontFamily.bold,
+    color: Colors.txtColor,
+  },
+  tooltipTopRight: {
+    position: 'absolute',
+    top: -20,
+    right: -50,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    elevation: 5,
   },
 });

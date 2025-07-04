@@ -52,7 +52,7 @@ const MainHeader = ({
             value={searchText}
             onChangeText={setSearchText}
             onSubmitEditing={handleSearch}
-            returnKeyType="search"
+            returnKeyType="done"
           />
         </View>
 
@@ -66,8 +66,8 @@ const MainHeader = ({
       {/* Big Impact Section */}
       <View style={styles.bigImpactContainer}>
         <Text style={styles.bigImpactText}>Big impact</Text>
-        <View style={{flexDirection: 'row', alignItems: 'center',gap:4}}>
-          <DirhamWhite width={28} height={24}/>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+          <DirhamWhite width={28} height={24} />
           <Text style={styles.bigImpactValue}>
             {largestTransaction ? `${largestTransaction}` : `0.00`}
           </Text>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.extraBold,
     color: Colors.white,
     marginTop: 4,
-    marginLeft:5
+    marginLeft: 5,
   },
   savingChip: {
     marginTop: 8,
