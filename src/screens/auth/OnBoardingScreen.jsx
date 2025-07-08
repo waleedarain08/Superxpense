@@ -153,6 +153,7 @@ const OnBoardingScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   safeStyle: {
     flex: 1,
+    paddingTop: Platform.OS === 'android' && 50,
   },
   container: {
     justifyContent: 'center',

@@ -20,7 +20,7 @@ import {VectorIcon} from '../../icons';
 import {get, post} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import {API} from '../../utilis/Constant';
-import DocumentPicker from 'react-native-document-picker';
+import { pick } from '@react-native-documents/picker'
 import Header from '../../component/Header';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ChatInputBar from '../../component/ChatInputBar';
@@ -111,10 +111,14 @@ const HomeScreen = ({navigation, route}) => {
   };
 
   const handleDocumentPick = async () => {
+    console.log("pickerrr");
+    
     try {
-      const file = await DocumentPicker.pickSingle({
-        type: DocumentPicker.types.allFiles,
-      });
+      // const file = await DocumentPicker.pick({
+      //   type: DocumentPicker.types.allFiles,
+      // });
+
+      const [file] = await pick()
 
       console.log('Selected file:', file); // Debug log
       await handleSendMessage(file);

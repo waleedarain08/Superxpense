@@ -58,8 +58,10 @@ import ReloadSvg from './reloadSvg.svg';
 import TiltArrow from './tiltArrow.svg';
 import UploadPayment from './uploadPayment.svg';
 import ViewPayment from './viewPayment.svg';
+import BlurSvg from './blurSvg.svg';
 
 export {
+  BlurSvg,
   UploadPayment,
   ViewPayment,
   TiltArrow,

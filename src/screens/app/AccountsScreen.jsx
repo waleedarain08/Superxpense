@@ -610,7 +610,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   header: {
-    paddingTop: Platform.OS === 'ios' ? 70 : 30,
+    paddingTop: Platform.OS === 'ios' ? 70 : 50,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

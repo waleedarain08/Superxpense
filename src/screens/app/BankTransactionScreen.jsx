@@ -390,7 +390,6 @@ import {
   StyleSheet,
   ScrollView,
   ImageBackground,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   ActivityIndicator,
@@ -404,6 +403,7 @@ import {getItem} from '../../utilis/StorageActions';
 import {get} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 import {Refresh} from '../../icons';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const TransactionItem = ({item}) => (
   <View style={styles.transactionItem}>
@@ -421,8 +421,7 @@ const TransactionItem = ({item}) => (
 const BankTransactionScreen = ({navigation, route}) => {
   const {BankName, accountId, accountBalance, accountType, entityId, bankData} =
     route?.params || {};
-    console.log(accountId,entityId);
-    
+  console.log(accountId, entityId);
 
   const [groupedTransactions, setGroupedTransactions] = useState({});
   const [loading, setLoading] = useState(false);
@@ -440,7 +439,6 @@ const BankTransactionScreen = ({navigation, route}) => {
         token,
       );
       console.log(data);
-      
 
       const transactions = data.data.data.transactions;
 
@@ -521,7 +519,9 @@ const BankTransactionScreen = ({navigation, route}) => {
                   style={{height: 32, width: 32, borderRadius: 20}}
                 />
               </View>
-              <Text style={styles.bankName}>{bankData?.bankName || 'Bank'}</Text>
+              <Text style={styles.bankName}>
+                {bankData?.bankName || 'Bank'}
+              </Text>
             </View>
             <View
               style={{
@@ -541,14 +541,17 @@ const BankTransactionScreen = ({navigation, route}) => {
                 </View>
               </View>
               <View>
-                {Array.isArray(bankData.accounts) && bankData.accounts.length > 0 ? (
+                {Array.isArray(bankData.accounts) &&
+                bankData.accounts.length > 0 ? (
                   (() => {
                     const currentAccount = bankData.accounts.find(
-                      acc => acc.accountType === 'Current Account'
+                      acc => acc.accountType === 'Current Account',
                     );
                     return currentAccount ? (
                       <View>
-                        <Text style={styles.balanceLabel}>{currentAccount.accountType}</Text>
+                        <Text style={styles.balanceLabel}>
+                          {currentAccount.accountType}
+                        </Text>
                         <View
                           style={{
                             flexDirection: 'row',
@@ -556,7 +559,9 @@ const BankTransactionScreen = ({navigation, route}) => {
                             marginTop: 12,
                           }}>
                           <Dirham />
-                          <Text style={styles.balanceAmount}>{currentAccount.accountBalance} AED</Text>
+                          <Text style={styles.balanceAmount}>
+                            {currentAccount.accountBalance} AED
+                          </Text>
                         </View>
                       </View>
                     ) : null;
@@ -571,7 +576,9 @@ const BankTransactionScreen = ({navigation, route}) => {
                         marginTop: 12,
                       }}>
                       <Dirham />
-                      <Text style={styles.balanceAmount}>{accountBalance} AED</Text>
+                      <Text style={styles.balanceAmount}>
+                        {accountBalance} AED
+                      </Text>
                     </View>
                   </View>
                 )}

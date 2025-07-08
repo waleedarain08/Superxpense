@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -53,6 +54,9 @@ const MainHeader = ({
             onChangeText={setSearchText}
             onSubmitEditing={handleSearch}
             returnKeyType="done"
+            underlineColorAndroid="transparent"
+            // Fix vertical alignment for Android
+            textAlignVertical={Platform.OS === 'android' ? 'center' : 'auto'}
           />
         </View>
 
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 10,
     flex: 1,
-    height: 32,
+    height: 36,
     marginLeft: 10,
   },
   searchInput: {
@@ -139,6 +143,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: Colors.white,
+    paddingVertical: 0, // Ensures no extra padding
+    ...(Platform.OS === 'android' ? {textAlignVertical: 'center'} : {}),
   },
   bigImpactContainer: {
     alignItems: 'center',

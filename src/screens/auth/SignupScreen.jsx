@@ -249,6 +249,7 @@ const SignUpScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
   safeStyle: {
+    paddingTop:Platform.OS === 'android' && 20,
     flex: 1,
   },
   container: {

@@ -111,6 +111,8 @@ import * as shape from 'd3-shape';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 import LinearGradient from 'react-native-linear-gradient';
+import {BlurSvg} from '../assets/svgs';
+import {ChevronRight} from '../icons';
 
 const {width} = Dimensions.get('window');
 
@@ -176,106 +178,6 @@ const DonutChart = ({data, radius = 90, innerRadius = 65, gap = 0.05}) => {
     </View>
   );
 };
-
-// const DonutChart = ({data, radius = 90, innerRadius = 65, gap = 0.05}) => {
-//   const [selectedSlice, setSelectedSlice] = useState(null);
-
-//   const pieData = shape
-//     .pie()
-//     .value(d => d.amount)
-//     .sort(null)(data);
-
-//   const arcs = pieData.map((d, i) => {
-//     const arcGen = shape
-//       .arc()
-//       .outerRadius(radius)
-//       .innerRadius(innerRadius)
-//       .cornerRadius(12)
-//       .padAngle(gap);
-
-//     return {
-//       path: arcGen(d),
-//       color: d.data.color,
-//       label: d.data.category,
-//       amount: d.data.amount,
-//       key: `arc-${i}`,
-//       index: i,
-//     };
-//   });
-
-//   return (
-//     <View
-//       style={{
-//         position: 'relative',
-//         width: radius * 2,
-//         height: radius * 2,
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//       }}>
-//       <Svg width={radius * 2} height={radius * 2}>
-//         <G x={radius} y={radius}>
-//           {arcs.map(arc => (
-//             <Path
-//               key={arc.key}
-//               d={arc.path}
-//               fill={arc.color}
-//               onPress={() => {
-//                 setSelectedSlice(prev => {
-//                   if (prev?.index === arc.index) return null;
-//                   return {...arc}; // Force new object to trigger re-render
-//                 });
-//               }}
-//             />
-//           ))}
-//         </G>
-//       </Svg>
-
-//       {/* Tooltip in center */}
-//       {selectedSlice && (
-//         <View style={styles.tooltip}>
-//           <Text style={styles.label}>
-//             {selectedSlice.label.replace(/_/g, ' ')}
-//           </Text>
-//           <Text style={styles.amount}>
-//             {selectedSlice.amount.toLocaleString()} AED
-//           </Text>
-//         </View>
-//       )}
-//     </View>
-//   );
-// };
-
-// const DonutChart = ({data, radius = 90, innerRadius = 65, gap = 0.05}) => {
-//   const pieData = shape
-//     .pie()
-//     .value(d => d.amount)
-//     .sort(null)(data);
-
-//   const arcs = pieData.map((d, i) => {
-//     const arcGen = shape
-//       .arc()
-//       .outerRadius(radius)
-//       .innerRadius(innerRadius)
-//       .cornerRadius(12) // Rounded edges
-//       .padAngle(gap); // Gap between segments
-
-//     return {
-//       path: arcGen(d),
-//       color: d.data.color,
-//       key: `arc-${i}`,
-//     };
-//   });
-
-//   return (
-//     <Svg width={radius * 2} height={radius * 2}>
-//       <G x={radius} y={radius}>
-//         {arcs.map(arc => (
-//           <Path key={arc.key} d={arc.path} fill={arc.color} />
-//         ))}
-//       </G>
-//     </Svg>
-//   );
-// };
 
 const SpendingSummary = ({data = [], month}) => {
   const [showAll, setShowAll] = useState(false);
@@ -348,7 +250,159 @@ const SpendingSummary = ({data = [], month}) => {
             )}
           </View>
         ) : (
-          <Text>No data available for this month</Text>
+          <>
+            <Text
+              style={{
+                color: Colors.txtColor,
+                fontSize: 18,
+                fontFamily: FontFamily.semiBold,
+              }}>
+              Track Your Spending in Real Time
+            </Text>
+            <Text
+              style={{
+                color: Colors.grayIcon,
+                fontFamily: FontFamily.regular,
+                fontSize: 14,
+              }}>
+              This section shows a summary of your monthly expenses, by category
+              and trend.
+            </Text>
+            <View style={{alignItems: 'center', paddingVertical: 32}}>
+              {/* Grey placeholder donut */}
+
+              <Svg width={180} height={180}>
+                <G x={90} y={90}>
+                  <Path
+                    d={shape
+                      .arc()
+                      .outerRadius(90)
+                      .innerRadius(65)
+                      .startAngle(0)
+                      .endAngle(Math.PI * 2)()}
+                    fill="#b3b3b3"
+                  />
+                </G>
+              </Svg>
+
+              <Text
+                style={{
+                  marginTop: 16,
+                  fontSize: 16,
+                  fontFamily: FontFamily.medium,
+                  color: Colors.grayIcon,
+                }}>
+                No Data yet
+              </Text>
+
+              {/* No categories yet bar */}
+              <View
+                style={{
+                  marginTop: 20,
+                  backgroundColor: 'rgba(255, 255, 255, 0.09)',
+                  borderWidth: 1,
+                  borderColor: Colors.white,
+                  padding: 12,
+                  borderRadius: 30,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  alignItems: 'center',
+                }}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View
+                    style={{
+                      height: 12,
+                      width: 12,
+                      backgroundColor: Colors.grayIcon,
+                      borderRadius: 20,
+                      marginRight: 8,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: Colors.txtColor,
+                      fontFamily: FontFamily.medium,
+                      fontSize: 14,
+                    }}>
+                    No categories yet
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    color: Colors.txtColor,
+                    fontFamily: FontFamily.medium,
+                    fontSize: 14,
+                  }}>
+                  0%
+                </Text>
+              </View>
+
+              {/* No spending activity info box */}
+              <View
+                style={{
+                  marginTop: 16,
+                  backgroundColor: 'rgba(255, 255, 255, 0.09)',
+                  borderRadius: 10,
+                  padding: 16,
+                  borderWidth: 1,
+                  borderColor: Colors.white,
+                  width: '100%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <BlurSvg />
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: FontFamily.semiBold,
+                      fontSize: 16,
+                      color: Colors.txtColor,
+                    }}>
+                    No Spending Activity Yet
+                  </Text>
+                  <View style={{flexDirection: 'row'}}>
+                    <Text
+                      style={{
+                        fontFamily: FontFamily.regular,
+                        fontSize: 14,
+                        color: Colors.grayIcon,
+                        width: '90%',
+                      }}>
+                      Your monthly spend will appear here once transactions are
+                      available.
+                    </Text>
+                    <ChevronRight />
+                  </View>
+                </View>
+              </View>
+
+              {/* Track spending button */}
+              <TouchableOpacity
+                style={{
+                  backgroundColor: Colors.newButtonBack,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingVertical: 12,
+                  borderRadius: 100,
+                  width: '100%',
+                  marginTop: 24,
+                }}
+                onPress={() => {
+                  // You can customize this for navigation
+                  console.log('Track spending pressed');
+                }}>
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontFamily: FontFamily.semiBold,
+                    fontSize: 16,
+                  }}>
+                  Track spending
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
         )}
       </View>
     </LinearGradient>

@@ -31,7 +31,7 @@ import SpendingChart from '../../component/SpendingChart';
 import FloatingChatButton from '../../component/FloatingChatButton';
 import MainHeader from '../../component/MainHeader';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import DocumentPicker from 'react-native-document-picker';
+import DocumentPicker from '@react-native-documents/picker';
 import ContractInstallmentsList from '../../component/ContractInstallmentTable';
 
 const categoryColors = [

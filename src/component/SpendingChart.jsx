@@ -231,7 +231,6 @@ import Svg, {
   LinearGradient,
   Stop,
   G,
-  // Ellipse, // No longer needed
   Filter,
   FeGaussianBlur,
 } from 'react-native-svg';
@@ -240,31 +239,32 @@ import {FontFamily} from '../utilis/Fonts';
 
 // Dummy data for testing
 const dummyData = [
-  {date: '2024-06-01', amount: 1200},
-  {date: '2024-06-05', amount: 1800},
-  {date: '2024-06-10', amount: 900},
-  {date: '2024-06-15', amount: 2200},
-  {date: '2024-06-20', amount: 1700},
-  {date: '2024-06-25', amount: 2500},
+  {date: '2024-06-01', amount: 2000},
+  {date: '2024-06-05', amount: 2000},
+  {date: '2024-06-10', amount: 2000},
+  {date: '2024-06-15', amount: 2000},
+  {date: '2024-06-20', amount: 2000},
+  {date: '2024-06-25', amount: 2000},
   {date: '2024-06-30', amount: 2000},
 ];
-const dummyMonthlySpending = 2500;
-const dummyLastSpending = 1800;
+const dummyMonthlySpending = 0;
+const dummyLastSpending = 0;
 
 const SpendingChart = ({
   data = [],
   monthlySpending,
   lastSpending,
-  useDummy = false, // set this to true to use dummy data
+  useDummy = false, // default to false, but will use dummy if no data
 }) => {
-  // If useDummy is true, override with dummy data
-  const safeData = useDummy ? dummyData : Array.isArray(data) ? data : [];
+  // Improved logic: If no data, always show dummy data
+  const shouldUseDummy = !Array.isArray(data) || data.length === 0;
+  const safeData = shouldUseDummy ? dummyData : data;
 
-  const chartMonthlySpending = useDummy
+  const chartMonthlySpending = shouldUseDummy
     ? dummyMonthlySpending
     : monthlySpending;
 
-  const chartLastSpending = useDummy ? dummyLastSpending : lastSpending;
+  const chartLastSpending = shouldUseDummy ? dummyLastSpending : lastSpending;
 
   const [chartWidth, setChartWidth] = useState(0);
 
@@ -314,35 +314,14 @@ const SpendingChart = ({
     chartWidth - tooltipWidth - 8,
   );
 
-  return safeData.length === 0 ? (
-    <View style={styles.container}>
-      <View style={{paddingHorizontal: 22, paddingTop: 20}}>
-        <Text style={styles.title}>THIS MONTH’S SPEND</Text>
-        <Text style={styles.amount}>0.00 AED</Text>
-      </View>
-
-      <View
-        style={{
-          height: 100,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{color: '#aaa', fontSize: 14}}>No data available</Text>
-      </View>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>No comparison to show</Text>
-      </View>
-    </View>
-  ) : (
+  return (
     <View>
       <View
         style={{
           height: 68,
-          width: 220,
+          width: 226,
           borderLeftWidth: 1,
           borderRightWidth: 1,
-          borderLeftWidth: 1,
           borderColor: Colors.white,
           justifyContent: 'center',
           backgroundColor: 'rgba(255, 255, 255, 0.27)',
@@ -352,7 +331,11 @@ const SpendingChart = ({
           paddingVertical: 8,
         }}>
         <Text style={styles.title}>This month’s spending</Text>
-        <Text style={styles.amount}>{chartMonthlySpending} AED spent</Text>
+        <Text style={styles.amount}>
+          {chartMonthlySpending
+            ? `${chartMonthlySpending.toLocaleString()} AED spent`
+            : `No Spending Activity yet`}
+        </Text>
       </View>
 
       <View style={styles.container} onLayout={handleLayout}>
@@ -360,10 +343,10 @@ const SpendingChart = ({
           <>
             <Svg height="100" width="100%" viewBox={`0 0 ${chartWidth} 100`}>
               <Defs>
-                {/* <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-                <Stop offset="0" stopColor="#00e6aa" stopOpacity="0.25" />
-                <Stop offset="1" stopColor="#00e6aa" stopOpacity="0.05" />
-              </LinearGradient> */}
+                <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+                  <Stop offset="0" stopColor="#00e6aa" stopOpacity="0.01" />
+                  <Stop offset="1" stopColor="#00e6aa" stopOpacity="0.01" />
+                </LinearGradient>
                 {/* Shadow filter for round shadow */}
                 <Filter
                   id="circleShadow"
@@ -421,20 +404,31 @@ const SpendingChart = ({
             {/* Tooltip */}
             <View style={[styles.tooltip, {left: clampedLeft}]}>
               <Text style={styles.tooltipText}>
-                {new Date(lastPoint.date).toLocaleDateString('en-GB', {
-                  day: '2-digit',
-                  month: 'short',
-                })}
+                {lastPoint.date
+                  ? new Date(lastPoint.date).toLocaleDateString('en-GB', {
+                      day: '2-digit',
+                      month: 'short',
+                    })
+                  : ''}
               </Text>
               <Text style={styles.tooltipSub}>
-                +{lastPoint.amount.toLocaleString()} AED
+                {lastPoint.amount && !shouldUseDummy
+                  ? `+${lastPoint.amount.toLocaleString()} AED`
+                  : '0 AED'}
               </Text>
             </View>
           </>
         )}
 
         {/* Footer */}
-        <View style={styles.footer}>
+        <View
+          style={[
+            styles.footer,
+            Platform.OS === 'android' && {
+              shadowColor: 'transparent',
+              elevation: 0,
+            },
+          ]}>
           {chartMonthlySpending > chartLastSpending ? (
             <View
               style={{
@@ -450,12 +444,20 @@ const SpendingChart = ({
                   alignItems: 'center',
                   marginRight: 4,
                   borderRadius: 20,
+                  ...(Platform.OS === 'android'
+                    ? {
+                        elevation: 4,
+                        shadowColor: '#28A08C',
+                        shadowOpacity: 0.18,
+                        shadowRadius: 6,
+                      }
+                    : {}),
                 }}
               />
               <Text style={styles.footerText}>
                 You’ve spent{' '}
                 <Text style={{fontWeight: '600'}}>
-                  ${chartMonthlySpending - chartLastSpending}
+                  {`${chartMonthlySpending - chartLastSpending}`}
                 </Text>{' '}
                 more than last month
               </Text>
@@ -464,12 +466,18 @@ const SpendingChart = ({
             <Text style={styles.footerText}>
               You’ve spent{' '}
               <Text style={{fontWeight: '600'}}>
-                ${Math.abs(chartLastSpending - chartMonthlySpending).toFixed(2)}
+                {`${Math.abs(chartLastSpending - chartMonthlySpending).toFixed(
+                  2,
+                )}`}
               </Text>{' '}
               less than last month
             </Text>
           ) : (
-            <Text style={styles.footerText}>No comparison to show</Text>
+            <Text style={styles.footerText}>
+              {shouldUseDummy
+                ? 'You’ve spent 0 AED more than last month'
+                : `No comparison to show`}
+            </Text>
           )}
         </View>
       </View>
@@ -507,7 +515,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.white,
     padding: 12,
     borderRadius: 8,
-    elevation: 3,
     alignItems: 'center',
     right: 20,
   },
@@ -530,6 +537,12 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     borderWidth: 1,
     borderColor: Colors.white,
+    ...Platform.select({
+      android: {
+        elevation: 0,
+        shadowColor: 'transparent',
+      },
+    }),
   },
   footerText: {
     color: Colors.txtColor,

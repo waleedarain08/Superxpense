@@ -257,7 +257,9 @@ const SignInScreen = ({navigation}) => {
 export default SignInScreen;
 
 const styles = StyleSheet.create({
-  safeStyle: {},
+  safeStyle: {
+    paddingTop:Platform.OS === 'android' && 20,
+  },
   container: {
     paddingVertical: 32,
     paddingHorizontal: 20,

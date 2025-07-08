@@ -103,9 +103,10 @@ const VerficationCodeScreen = ({navigation, route}) => {
     <ImageBackground
       source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'cover', height:'70%'}}
+      imageStyle={{resizeMode: 'cover', height: '70%'}}
       resizeMode="cover">
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView
+        style={{flex: 1, paddingTop: Platform.OS === 'android' && 20}}>
         <View style={{flex: 1}}>
           <TouchableOpacity
             style={styles.backStyle}
@@ -116,7 +117,7 @@ const VerficationCodeScreen = ({navigation, route}) => {
           <Text style={styles.heading}>Enter your verification code</Text>
           <Text style={styles.subHeading}>
             We just sent a verification code to your email
-            <Text style={styles.email}>{' '}{email}</Text>
+            <Text style={styles.email}> {email}</Text>
           </Text>
           <View style={styles.codeContainer}>
             {code.map((digit, index) => (
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: Colors.newWhite,
     marginTop: 24,
-    fontWeight:'600'
+    fontWeight: '600',
   },
   subHeading: {
     fontFamily: FontFamily.regular,
