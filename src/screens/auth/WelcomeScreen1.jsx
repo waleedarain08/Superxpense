@@ -7,11 +7,14 @@ import {
   View,
   FlatList,
   Dimensions,
+  Alert,
 } from 'react-native';
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
 import {ChevronRight} from '../../icons';
+import {FaceScan, GreenFaceScan} from '../../assets/svgs';
+import ReactNativeBiometrics from 'react-native-biometrics';
 
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
@@ -38,6 +41,21 @@ const WelcomeScreen1 = ({navigation}) => {
     },
   ];
 
+  // Auto-slide effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex(prevIndex => {
+        const nextIndex = prevIndex === slides.length - 1 ? 0 : prevIndex + 1;
+        // Scroll FlatList to next index
+        if (flatListRef.current) {
+          flatListRef.current.scrollToIndex({index: nextIndex, animated: true});
+        }
+        return nextIndex;
+      });
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
   const renderItem = ({item}) => {
     return (
       <View style={styles.slide}>
@@ -46,10 +64,61 @@ const WelcomeScreen1 = ({navigation}) => {
     );
   };
 
+  // Keep currentIndex in sync with manual scroll
   const handleScroll = event => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const index = Math.round(contentOffsetX / width);
     setCurrentIndex(index);
+  };
+
+  const doBiometricLogin = async () => {
+    let epochTimeSeconds = Math.round(new Date().getTime() / 1000).toString();
+    let payload = epochTimeSeconds + 'Superxpense';
+    //console.log('payload', payload);
+    const rnBiometrics = new ReactNativeBiometrics();
+    const {success, signature} = await rnBiometrics.createSignature({
+      promptMessage: 'Sign in',
+      payload,
+    });
+    //console.log('signature', signature);
+
+    if (!success) {
+      Alert.alert(
+        'Oops!',
+        'Something went wrong during authentication with Face ID. Please try again.',
+      );
+      return;
+    }
+
+    const {status, message} = await verifyFace(payload, signature);
+
+    if (status !== 'success') {
+      Alert.alert('Oops!', message);
+      return;
+    }
+  };
+
+  const biometric = async () => {    
+    const rnBiometrics = new ReactNativeBiometrics();
+    const {available} = await rnBiometrics.isSensorAvailable();
+
+    if (!available) {
+      Alert.alert(
+        'Biometrics not available',
+        'Please enable Face ID or Fingerprint in your device settings.',
+      );
+      return;
+    }
+
+    rnBiometrics.biometricKeysExist().then(resultObject => {
+      const {keysExist} = resultObject;
+
+      if (keysExist) {
+        doBiometricLogin();
+      } else {
+        Alert.alert('Please register your face ID first from settings');
+      }
+    });
   };
 
   return (
@@ -79,7 +148,7 @@ const WelcomeScreen1 = ({navigation}) => {
         </View>
         <TouchableOpacity
           onPress={() => flatListRef.current.scrollToEnd({animated: true})}
-          style={{zIndex: 100,right: 24}}>
+          style={{zIndex: 100, right: 24}}>
           <Text style={styles.skipButtonTxt}>
             Skip
             <ChevronRight size={10} />
@@ -97,22 +166,32 @@ const WelcomeScreen1 = ({navigation}) => {
           onScroll={handleScroll}
           scrollEventThrottle={16}
           keyExtractor={item => item.id}
+          getItemLayout={(_, index) => ({
+            length: width,
+            offset: width * index,
+            index,
+          })}
         />
       </View>
       <View style={styles.contentContainer}>
         <Text style={styles.txtStyle}>{slides[currentIndex].text}</Text>
         <View style={styles.buttonContainer}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TouchableOpacity
+              style={[styles.emailButton, {marginBottom: 20, width: '80%'}]}
+              onPress={() => navigation.navigate('SignIn')}>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={biometric} style={styles.biometricStyle}>
+              <GreenFaceScan />
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={[styles.emailButton, {backgroundColor: Colors.newWhite}]}
             onPress={() => navigation.navigate('Welcome')}>
             <Text style={[styles.buttonText, {color: Colors.txtColor}]}>
               Sign up
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.emailButton, {marginBottom: 20}]}
-            onPress={() => navigation.navigate('SignIn')}>
-            <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -154,7 +233,6 @@ const styles = StyleSheet.create({
     color: Colors.txtColor,
     marginBottom: 40,
     paddingHorizontal: 11,
-    
   },
   dotContainer: {
     flexDirection: 'row',
@@ -198,5 +276,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FontFamily.medium,
     color: Colors.background,
+  },
+  biometricStyle: {
+    height: 48,
+    width: 48,
+    borderRadius: 50,
+    borderColor: Colors.white,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -59,8 +59,10 @@ import TiltArrow from './tiltArrow.svg';
 import UploadPayment from './uploadPayment.svg';
 import ViewPayment from './viewPayment.svg';
 import BlurSvg from './blurSvg.svg';
+import GreenFaceScan from './greenFaceScan.svg';
 
 export {
+  GreenFaceScan,
   BlurSvg,
   UploadPayment,
   ViewPayment,

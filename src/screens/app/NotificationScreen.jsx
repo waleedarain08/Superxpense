@@ -14,6 +14,7 @@ import {Search} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import {FontFamily} from '../../utilis/Fonts';
+import {BlurView} from '@react-native-community/blur';
 
 const notifications = {
   latest: [
@@ -85,7 +86,7 @@ const NotificationScreen = ({navigation}) => {
       style={[styles.container, {flex: 1}]}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <Header
           ScreenName={'Notifications'}
@@ -104,7 +105,11 @@ const NotificationScreen = ({navigation}) => {
           />
         </View>
         {/* Filter Buttons */}
-        <View style={styles.filterContainer}>
+        <ScrollView
+          style={{marginVertical: 16}}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={[styles.filterContainer, {gap: 8}]}>
           <LinearGradient
             colors={['#bae4e0', '#BDECE8']}
             style={styles.gradientBackground}>
@@ -124,7 +129,7 @@ const NotificationScreen = ({navigation}) => {
           <TouchableOpacity style={styles.markAsRead}>
             <Text style={styles.markText}>Mark as read</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
@@ -159,20 +164,65 @@ const NotificationScreen = ({navigation}) => {
             style={styles.latestsGradientBack}>
             <View style={styles.latestBack}>
               <Text style={styles.sectionTitle}>Last Week</Text>
-              {notifications.lastWeek.map(item => (
-                <View key={item.id} style={styles.card}>
-                  <View style={styles.cardHeader}>
-                    <MaterialIcons name="credit-card" size={18} color="#666" />
-                    <Text style={styles.cardTitle}>{item.title}</Text>
-                    <Text style={styles.cardTime}>{item.date}</Text>
-                  </View>
-                  <Text style={styles.cardDescription}>{item.description}</Text>
-                </View>
-              ))}
+              {notifications.lastWeek.map((item, index) => {
+                if (index === 0) {
+                  // Show first item normally
+                  return (
+                    <View key={item.id} style={styles.card}>
+                      <View style={styles.cardHeader}>
+                        <MaterialIcons
+                          name="credit-card"
+                          size={18}
+                          color="#666"
+                        />
+                        <Text style={styles.cardTitle}>{item.title}</Text>
+                        <Text style={styles.cardTime}>{item.date}</Text>
+                      </View>
+                      <Text style={styles.cardDescription}>
+                        {item.description}
+                      </Text>
+                    </View>
+                  );
+                } else {
+                  // Blur all other items
+                  return (
+                    <View key={item.id} style={styles.card}>
+                      <View style={{position: 'relative'}}>
+                        <View style={styles.cardHeader}>
+                          <MaterialIcons
+                            name="credit-card"
+                            size={18}
+                            color="#666"
+                          />
+                          <Text style={styles.cardTitle}>{item.title}</Text>
+                          <Text style={styles.cardTime}>{item.date}</Text>
+                        </View>
+                        <Text style={styles.cardDescription}>
+                          {item.description}
+                        </Text>
+                        <View
+                          style={{
+                            ...StyleSheet.absoluteFillObject,
+                            borderRadius: 16,
+                            overflow: 'hidden',
+                          }}>
+                          {/* You may need to install @react-native-community/blur and import BlurView */}
+                          <BlurView
+                            style={{flex: 1}}
+                            blurType="light"
+                            blurAmount={10}
+                            reducedTransparencyFallbackColor="white"
+                          />
+                        </View>
+                      </View>
+                    </View>
+                  );
+                }
+              })}
             </View>
           </LinearGradient>
         </ScrollView>
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 };

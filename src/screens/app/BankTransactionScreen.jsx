@@ -404,11 +404,12 @@ import {get} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 import {Refresh} from '../../icons';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {BlurView} from '@react-native-community/blur';
 
 const TransactionItem = ({item}) => (
   <View style={styles.transactionItem}>
-    <View style={[styles.iconCircle, {backgroundColor: item.color || '#999'}]}>
-      <Icon name={item.icon || 'bank'} size={20} color="#fff" />
+    <View style={[styles.iconCircle]}>
+      <Icon name={item.icon || 'bank'} size={20} color={'black'} />
     </View>
     <View style={{flex: 1, marginHorizontal: 10}}>
       <Text style={styles.transactionName}>{item.label}</Text>
@@ -505,7 +506,10 @@ const BankTransactionScreen = ({navigation, route}) => {
           ScreenName="Bank Details"
           onBackPress={() => navigation.goBack()}
         />
-        <ScrollView contentContainerStyle={{paddingHorizontal: 24}}>
+
+        <ScrollView
+          contentContainerStyle={{paddingHorizontal: 24, paddingBottom: 100}}
+          showsVerticalScrollIndicator={false}>
           <View style={styles.bankCard}>
             <View style={styles.bankHeader}>
               <View
@@ -593,18 +597,39 @@ const BankTransactionScreen = ({navigation, route}) => {
               style={{marginTop: 24}}
             />
           ) : Object.keys(groupedTransactions).length > 0 ? (
-            Object.keys(groupedTransactions)
-              .sort((a, b) => new Date(`1 ${b}`) - new Date(`1 ${a}`))
-              .map(monthYear => (
+            (() => {
+              // Get sorted monthYear keys (descending, latest first)
+              const sortedMonthYears = Object.keys(groupedTransactions).sort(
+                (a, b) => new Date(`1 ${b}`) - new Date(`1 ${a}`),
+              );
+              const lastMonthYear = sortedMonthYears[0];
+
+              return sortedMonthYears.map(monthYear => (
                 <View style={styles.section} key={monthYear}>
                   <Text style={[styles.sectionTitle, {marginBottom: 16}]}>
                     {monthYear}
                   </Text>
-                  {groupedTransactions[monthYear].map((item, index) => (
-                    <TransactionItem key={index} item={item} />
-                  ))}
+                  {groupedTransactions[monthYear].map((item, index) => {
+                    // Only blur if this is the last month and NOT the first transaction
+                    const shouldBlur =
+                      monthYear === lastMonthYear && index !== 0;
+                    return (
+                      <View key={index} style={{position: 'relative'}}>
+                        <TransactionItem item={item} />
+                        {shouldBlur && (
+                          <BlurView
+                            style={StyleSheet.absoluteFill}
+                            blurType="light"
+                            blurAmount={10}
+                            reducedTransparencyFallbackColor="white"
+                          />
+                        )}
+                      </View>
+                    );
+                  })}
                 </View>
-              ))
+              ));
+            })()
           ) : (
             <Text style={{marginTop: 24, textAlign: 'center', color: '#fff'}}>
               No transactions found.
@@ -709,6 +734,9 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.white,
+    backgroundColor: 'rgba(255,255,255,0.32)',
   },
   transactionName: {
     fontFamily: FontFamily.medium,

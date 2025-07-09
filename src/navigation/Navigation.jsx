@@ -315,7 +315,7 @@ const BottomNavigator = () => {
           {...props}
         />
       )}>
-       <Tab.Screen
+      <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -330,14 +330,13 @@ const BottomNavigator = () => {
           tabBarLabel: 'Home', // Focused label color
           tabBarLabelStyle: {
             fontSize: 12,
-             marginTop:7
+            marginTop: 7,
           },
           tabBarInactiveTintColor: 'gray',
         }}
         name="Home"
         component={HomeScreen}
       />
-      
 
       <Tab.Screen
         options={{
@@ -354,7 +353,7 @@ const BottomNavigator = () => {
           tabBarLabel: 'Budget', // Focused label color
           tabBarLabelStyle: {
             fontSize: 12,
-            marginTop:7
+            marginTop: 7,
           },
           tabBarInactiveTintColor: 'gray',
         }}
@@ -377,15 +376,15 @@ const BottomNavigator = () => {
           tabBarLabel: 'Accounts', // Focused label color
           tabBarLabelStyle: {
             fontSize: 12,
-             marginTop:7
+            marginTop: 7,
           },
           tabBarInactiveTintColor: 'gray',
         }}
         name="Accounts"
         component={AccountsScreen}
       />
-    
-       <Tab.Screen
+
+      <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -400,7 +399,7 @@ const BottomNavigator = () => {
           tabBarLabel: 'Settings', // Focused label color
           tabBarLabelStyle: {
             fontSize: 12,
-             marginTop:7
+            marginTop: 7,
           },
           tabBarInactiveTintColor: 'gray',
         }}
