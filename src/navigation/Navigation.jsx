@@ -291,28 +291,32 @@ const BottomNavigator = () => {
     // </View>
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: Colors.newButtonBack,
-        tabBarActiveBackgroundColor: '#EEFFFE',
-        tabBarInactiveBackgroundColor: '#C1E3E9',
+       // tabBarActiveTintColor: Colors.newButtonBack,
+        tabBarActiveBackgroundColor: 'rgba(255, 255, 255, 0.92)',
+        //tabBarInactiveBackgroundColor: '#C1E3E9',
         headerShown: false,
+        tabBarButton: {
+          backgroundColor: "#00A3FF",
+        }
       }}
       tabBar={props => (
         <BottomFabBar
           mode={'default'}
           isRtl={false}
-          // focusedButtonStyle={{
-          //   height: 40,
-          //   width: 40,
-          //   borderRadius: 20,
-          //   shadowColor: '#000',
-          //   shadowOffset: {
-          //     width: 0,
-          //     height: 3,
-          //   },
-          //   shadowOpacity: 0.41,
-          //   shadowRadius: 3.11,
-          //   elevation: 8,
-          // }}
+          focusedButtonStyle={{
+            backgroundColor: Colors.newButtonBack,
+            height: 60,
+            width: 60,
+            borderRadius: 30,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.41,
+            shadowRadius: 2.11,
+            elevation: 8,
+          }}
           bottomBarContainerStyle={{
             position: 'absolute',
             bottom: 0,
@@ -320,7 +324,7 @@ const BottomNavigator = () => {
             right: 0,
             zIndex: 1,
             shadowColor: Colors.shadowColor,
-            shadowOffset: {width: 1, height: 1},
+            shadowOffset: {width: 1, height: 2},
             shadowOpacity: 0.3,
             shadowRadius: 5,
             elevation: 6,
@@ -335,8 +339,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/homeBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 20,
-                width: 20,
+                height: focused?25:20,
+                width: focused?25:20,
               }}
             />
           ),
@@ -358,8 +362,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/chartBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 20,
-                width: 20,
+                height: focused?25:20,
+                width: focused?25:20,
               }}
             />
           ),
@@ -381,8 +385,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/bulbBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 21,
-                width: 19,
+                height: focused?25:21,
+                width: focused?21:18,
               }}
             />
           ),
@@ -404,8 +408,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/settingsBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 21,
-                width: 21,
+                 height: focused?25:22,
+                width: focused?25:22,
               }}
             />
           ),
@@ -427,16 +431,16 @@ export default Navigation;
 
 const styles = StyleSheet.create({
   iconCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: Platform.OS === 'ios' ? 40 : 40,
   },
   activeIconCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });

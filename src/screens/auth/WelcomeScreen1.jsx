@@ -15,6 +15,14 @@ import {Colors} from '../../utilis/Colors';
 import {ChevronRight} from '../../icons';
 import {FaceScan, GreenFaceScan} from '../../assets/svgs';
 import ReactNativeBiometrics from 'react-native-biometrics';
+import {API} from '../../utilis/Constant';
+import {post} from '../../utilis/Api';
+import {
+  removeItem,
+  setItem,
+  setStringItem,
+  getStringItem,
+} from '../../utilis/StorageActions';
 
 const {width} = Dimensions.get('window');
 const {height} = Dimensions.get('window');
@@ -71,6 +79,45 @@ const WelcomeScreen1 = ({navigation}) => {
     const index = Math.round(contentOffsetX / width);
     setCurrentIndex(index);
   };
+
+  const verifyFace = async (payload, signature) => {
+      const userEmail = await getStringItem('userEmail');
+      //console.log('userEmail', userEmail);
+      //console.log('payload', payload);
+      //console.log('signature', signature);
+      await removeItem('userData');
+      try {
+        const data = await post(`${API.verifyFace}`, {
+          email: userEmail,
+          payload: payload,
+          signature: signature,
+        });
+        //console.log('api response', data);
+        const activeSub = data?.data?.activeSubscription;
+        const productId = activeSub?.productId || '';
+        await setStringItem('subscription', productId);
+        await setItem('userData', data);
+        //await setItem('biometricEnabled', true);
+        //console.log('data', data);
+        if (
+          data?.data?.activeSubscription !== '' ||
+          data?.data?.activeSubscription?.productId !== 'expired'
+        ) {
+          navigation.replace('Main');
+        } else {
+          navigation.replace('Subscription');
+        }
+      } catch (error) {
+        //console.log('Something went wrong!', error);
+        if (error?.error === 'Unauthorized') {
+          Alert.alert(
+            'Authentication Failed',
+            'No face ID registered. Please register your face ID first from settings.',
+          );
+        }
+        throw error;
+      }
+    };
 
   const doBiometricLogin = async () => {
     let epochTimeSeconds = Math.round(new Date().getTime() / 1000).toString();
@@ -179,7 +226,7 @@ const WelcomeScreen1 = ({navigation}) => {
         <View style={styles.buttonContainer}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <TouchableOpacity
-              style={[styles.emailButton, {marginBottom: 20, width: '80%'}]}
+              style={[styles.emailButton, {marginBottom: 20, width: '83%'}]}
               onPress={() => navigation.navigate('SignIn')}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
@@ -281,7 +328,7 @@ const styles = StyleSheet.create({
   biometricStyle: {
     height: 48,
     width: 48,
-    borderRadius: 50,
+    borderRadius: 24,
     borderColor: Colors.white,
     borderWidth: 1,
     justifyContent: 'center',

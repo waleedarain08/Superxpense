@@ -182,7 +182,7 @@ const SignInScreen = ({navigation}) => {
     <ImageBackground
      source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'stretch',height: '46%'}}
+      imageStyle={{resizeMode: 'stretch',height: '47%'}}
       resizeMode="stretch">
       <SafeAreaView style={styles.safeStyle}>
         <View>
@@ -238,16 +238,15 @@ const SignInScreen = ({navigation}) => {
               <Text style={styles.buttonText}>Login</Text>
             )}
           </TouchableOpacity>
-          <Text style={styles.orTxt}>OR</Text>
+          {/* <Text style={styles.orTxt}>OR</Text>
           <TouchableOpacity
             onPress={biometric}
             style={[styles.faceIdButton, loading && {opacity: 0.6}]}
             disabled={loading}>
             <View style={styles.innerContainer}>
               <FaceScan />
-              {/* <Text style={styles.text}>Login with Face ID</Text> */}
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </SafeAreaView>
     </ImageBackground>
