@@ -609,20 +609,54 @@ const BankTransactionScreen = ({navigation, route}) => {
                   <Text style={[styles.sectionTitle, {marginBottom: 16}]}>
                     {monthYear}
                   </Text>
-                  {groupedTransactions[monthYear].map((item, index) => {
-                    // Only blur if this is the last month and NOT the first transaction
+                  {/* {groupedTransactions[monthYear].map((item, index) => {
                     const shouldBlur =
                       monthYear === lastMonthYear && index !== 0;
                     return (
                       <View key={index} style={{position: 'relative'}}>
                         <TransactionItem item={item} />
                         {shouldBlur && (
-                          <BlurView
-                            style={StyleSheet.absoluteFill}
-                            blurType="light"
-                            blurAmount={10}
-                            reducedTransparencyFallbackColor="white"
-                          />
+                          <View
+                            style={{
+                              ...StyleSheet.absoluteFillObject,
+                              borderRadius: 16,
+                              overflow: 'hidden',
+                            }}>
+                            <BlurView
+                              style={{flex: 1}}
+                              blurType="light"
+                              blurAmount={10}
+                              reducedTransparencyFallbackColor="white"
+                            />
+                          </View>
+                        )}
+                      </View>
+                    );
+                  })} */}
+                  {groupedTransactions[monthYear].map((item, index) => {
+                    const totalTransactions =
+                      groupedTransactions[monthYear].length;
+                    const shouldBlur =
+                      monthYear === lastMonthYear &&
+                      index >= totalTransactions - 4;
+
+                    return (
+                      <View key={index} style={{position: 'relative'}}>
+                        <TransactionItem item={item} />
+                        {shouldBlur && (
+                          <View
+                            style={{
+                              ...StyleSheet.absoluteFillObject,
+                              borderRadius: 16,
+                              overflow: 'hidden',
+                            }}>
+                            <BlurView
+                              style={{flex: 1}}
+                              blurType="light"
+                              blurAmount={10}
+                              reducedTransparencyFallbackColor="white"
+                            />
+                          </View>
                         )}
                       </View>
                     );

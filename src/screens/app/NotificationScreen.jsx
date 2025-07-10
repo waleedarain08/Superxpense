@@ -165,59 +165,42 @@ const NotificationScreen = ({navigation}) => {
             <View style={styles.latestBack}>
               <Text style={styles.sectionTitle}>Last Week</Text>
               {notifications.lastWeek.map((item, index) => {
-                if (index === 0) {
-                  // Show first item normally
-                  return (
-                    <View key={item.id} style={styles.card}>
-                      <View style={styles.cardHeader}>
-                        <MaterialIcons
-                          name="credit-card"
-                          size={18}
-                          color="#666"
+                const totalItems = notifications.lastWeek.length;
+                const shouldBlur = index >= totalItems - 3; // Blur the last 3 items
+
+                return (
+                  <View
+                    key={item.id}
+                    style={[styles.card, {position: 'relative'}]}>
+                    <View style={styles.cardHeader}>
+                      <MaterialIcons
+                        name="credit-card"
+                        size={18}
+                        color="#666"
+                      />
+                      <Text style={styles.cardTitle}>{item.title}</Text>
+                      <Text style={styles.cardTime}>{item.date}</Text>
+                    </View>
+                    <Text style={styles.cardDescription}>
+                      {item.description}
+                    </Text>
+                    {shouldBlur && (
+                      <View
+                        style={{
+                          ...StyleSheet.absoluteFillObject,
+                          borderRadius: 12,
+                          overflow: 'hidden',
+                        }}>
+                        <BlurView
+                          style={{flex: 1}}
+                          blurType="light"
+                          blurAmount={15}
+                          reducedTransparencyFallbackColor="white"
                         />
-                        <Text style={styles.cardTitle}>{item.title}</Text>
-                        <Text style={styles.cardTime}>{item.date}</Text>
                       </View>
-                      <Text style={styles.cardDescription}>
-                        {item.description}
-                      </Text>
-                    </View>
-                  );
-                } else {
-                  // Blur all other items
-                  return (
-                    <View key={item.id} style={styles.card}>
-                      <View style={{position: 'relative'}}>
-                        <View style={styles.cardHeader}>
-                          <MaterialIcons
-                            name="credit-card"
-                            size={18}
-                            color="#666"
-                          />
-                          <Text style={styles.cardTitle}>{item.title}</Text>
-                          <Text style={styles.cardTime}>{item.date}</Text>
-                        </View>
-                        <Text style={styles.cardDescription}>
-                          {item.description}
-                        </Text>
-                        <View
-                          style={{
-                            ...StyleSheet.absoluteFillObject,
-                            borderRadius: 16,
-                            overflow: 'hidden',
-                          }}>
-                          {/* You may need to install @react-native-community/blur and import BlurView */}
-                          <BlurView
-                            style={{flex: 1}}
-                            blurType="light"
-                            blurAmount={10}
-                            reducedTransparencyFallbackColor="white"
-                          />
-                        </View>
-                      </View>
-                    </View>
-                  );
-                }
+                    )}
+                  </View>
+                );
               })}
             </View>
           </LinearGradient>
