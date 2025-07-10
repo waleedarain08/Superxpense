@@ -300,19 +300,19 @@ const BottomNavigator = () => {
         <BottomFabBar
           mode={'default'}
           isRtl={false}
-          focusedButtonStyle={{
-            height: 40,
-            width: 40,
-            borderRadius: 20,
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 3,
-            },
-            shadowOpacity: 0.41,
-            shadowRadius: 3.11,
-            elevation: 8,
-          }}
+          // focusedButtonStyle={{
+          //   height: 40,
+          //   width: 40,
+          //   borderRadius: 20,
+          //   shadowColor: '#000',
+          //   shadowOffset: {
+          //     width: 0,
+          //     height: 3,
+          //   },
+          //   shadowOpacity: 0.41,
+          //   shadowRadius: 3.11,
+          //   elevation: 8,
+          // }}
           bottomBarContainerStyle={{
             position: 'absolute',
             bottom: 0,
