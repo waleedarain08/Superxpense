@@ -322,14 +322,14 @@ const BottomNavigator = () => {
               source={require('../assets/images/homeBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 25,
-                width: 25,
+                height: 20,
+                width: 20,
               }}
             />
           ),
           tabBarLabel: 'Home', // Focused label color
           tabBarLabelStyle: {
-            fontSize: 12,
+            fontSize: 11,
             marginTop: 7,
           },
           tabBarInactiveTintColor: 'gray',
@@ -345,14 +345,14 @@ const BottomNavigator = () => {
               source={require('../assets/images/chartBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 25,
-                width: 25,
+                height: 20,
+                width: 20,
               }}
             />
           ),
           tabBarLabel: 'Budget', // Focused label color
           tabBarLabelStyle: {
-            fontSize: 12,
+            fontSize: 11,
             marginTop: 7,
           },
           tabBarInactiveTintColor: 'gray',
@@ -368,14 +368,14 @@ const BottomNavigator = () => {
               source={require('../assets/images/bulbBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 24,
-                width: 22,
+                height: 21,
+                width: 19,
               }}
             />
           ),
           tabBarLabel: 'Accounts', // Focused label color
           tabBarLabelStyle: {
-            fontSize: 12,
+            fontSize: 11,
             marginTop: 7,
           },
           tabBarInactiveTintColor: 'gray',
@@ -391,14 +391,14 @@ const BottomNavigator = () => {
               source={require('../assets/images/settingsBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: 24,
-                width: 24,
+                height: 21,
+                width: 21,
               }}
             />
           ),
           tabBarLabel: 'Settings', // Focused label color
           tabBarLabelStyle: {
-            fontSize: 12,
+            fontSize: 11,
             marginTop: 7,
           },
           tabBarInactiveTintColor: 'gray',
