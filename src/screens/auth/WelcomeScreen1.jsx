@@ -41,20 +41,21 @@ const WelcomeScreen1 = ({navigation}) => {
     },
   ];
 
-  // Auto-slide effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex(prevIndex => {
-        const nextIndex = prevIndex === slides.length - 1 ? 0 : prevIndex + 1;
-        // Scroll FlatList to next index
-        if (flatListRef.current) {
-          flatListRef.current.scrollToIndex({index: nextIndex, animated: true});
-        }
-        return nextIndex;
-      });
+      const nextIndex =
+        currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
+
+      if (flatListRef.current) {
+        flatListRef.current.scrollToIndex({index: nextIndex, animated: true});
+        setTimeout(() => setCurrentIndex(nextIndex), 300); // delay to match scroll animation
+      } else {
+        setCurrentIndex(nextIndex);
+      }
     }, 2000);
+
     return () => clearInterval(interval);
-  }, [slides.length]);
+  }, [currentIndex, slides.length]);
 
   const renderItem = ({item}) => {
     return (
@@ -98,7 +99,7 @@ const WelcomeScreen1 = ({navigation}) => {
     }
   };
 
-  const biometric = async () => {    
+  const biometric = async () => {
     const rnBiometrics = new ReactNativeBiometrics();
     const {available} = await rnBiometrics.isSensorAvailable();
 

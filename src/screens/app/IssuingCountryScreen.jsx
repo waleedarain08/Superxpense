@@ -50,6 +50,18 @@ const blurredCountries = [
     available: false,
   },
   {
+    name: 'Singapore',
+    currency: 'SGD (Singapore Dollar)',
+    flag: require('../../assets/images/singapore.png'),
+    available: false,
+  },
+  {
+    name: 'Netherlands',
+    currency: 'SGD (Singapore Dollar)',
+    flag: require('../../assets/images/netherland.png'),
+    available: false,
+  },
+  {
     name: 'United States of America',
     currency: 'USD (Dollar)',
     flag: require('../../assets/images/america.png'),
@@ -374,7 +386,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   comingSoon: {
-    backgroundColor: 'rgba(245, 252, 250, 0.93)',
+    backgroundColor: 'rgb(245, 252, 250)',
     borderRadius: 12,
     paddingHorizontal: 36,
     paddingVertical: 34,
@@ -382,6 +394,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     position: 'absolute',
+    top: '25%',
     marginTop: 20,
     borderWidth: 1,
     borderColor: Colors.white,
