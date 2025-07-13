@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
 import {DirhamWhite, Notification, TiltArrow} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
+import {ChevronLeft} from '../icons';
 
 const {width} = Dimensions.get('window');
 
@@ -28,11 +29,11 @@ const PortHeader = ({
       {/* Top Row: Avatar and Search */}
       <View style={styles.topRow}>
         <View style={{flex: 1}}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {name ? name.slice(0, 2).toUpperCase() : ''}
-            </Text>
-          </View>
+          <TouchableOpacity
+            style={styles.avatar}
+            onPress={() => navigation.navigate('Home')}>
+            <ChevronLeft size={24} color={Colors.white} />
+          </TouchableOpacity>
         </View>
         <Text style={styles.searchBar}>Portfolio</Text>
         <View style={styles.rightContainer}>
@@ -51,7 +52,7 @@ const PortHeader = ({
 
       {/* Big Impact Section */}
       <View style={styles.bigImpactContainer}>
-        <Text style={styles.bigImpactText}>Big impact</Text>
+        <Text style={styles.bigImpactText}>Total Investment</Text>
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
           <DirhamWhite width={28} height={24} />
           <Text style={styles.bigImpactValue}>
@@ -60,9 +61,7 @@ const PortHeader = ({
         </View>
         <View style={styles.savingChip}>
           <TiltArrow />
-          <Text style={styles.savingChipText}>
-            You added 5,000 AED to savings last week
-          </Text>
+          <Text style={styles.savingChipText}>no Data yet</Text>
         </View>
       </View>
     </View>
@@ -100,22 +99,22 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   bigImpactText: {
-    fontSize: 16,
-    fontFamily: FontFamily.semiBold,
-    color: Colors.white,
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.newWhite,
   },
   bigImpactValue: {
     fontSize: 32,
-    fontFamily: FontFamily.extraBold,
-    color: Colors.white,
+    fontFamily: FontFamily.bold,
+    color: Colors.newWhite,
     marginTop: 4,
     marginLeft: 5,
   },
   savingChip: {
     marginTop: 8,
-    backgroundColor: Colors.newGreenBackground,
+    backgroundColor: Colors.NoDataBack,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 5,
     borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -124,7 +123,7 @@ const styles = StyleSheet.create({
   savingChipText: {
     fontSize: 14,
     fontFamily: FontFamily.regular,
-    color: '#11956D',
+    color: Colors.grayIcon,
   },
   gradientBackground: {
     justifyContent: 'center',

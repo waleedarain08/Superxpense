@@ -60,8 +60,10 @@ import UploadPayment from './uploadPayment.svg';
 import ViewPayment from './viewPayment.svg';
 import BlurSvg from './blurSvg.svg';
 import GreenFaceScan from './greenFaceScan.svg';
+import UploadIcon from './uploadIcon.svg';
 
 export {
+  UploadIcon,
   GreenFaceScan,
   BlurSvg,
   UploadPayment,

@@ -40,6 +40,11 @@ import WelcomeScreen1 from '../screens/auth/WelcomeScreen1';
 import NotificationScreen from '../screens/app/NotificationScreen';
 import CustomTabBar from './CustomTabBar';
 import PropertyScreen from '../screens/app/PropertyScreen';
+import AddPropertyStepperScreen from '../screens/app/AddPropertyStepperScreen';
+import PropertyDetailsScreen from '../screens/app/PropertyDetailsScreen';
+import PaymentPlanScreen from '../screens/app/PaymentPlanScreen';
+import PaymentMethodsScreen from '../screens/app/PaymentMethodsScreen';
+import RealEstateBreakdownScreen from '../screens/app/RealEstateBreakdownScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -93,6 +98,31 @@ const Navigation = () => {
         />
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="Main" component={BottomNavigator} />
+        <Stack.Screen
+          name="AddPropertyStepper"
+          component={AddPropertyStepperScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PropertyDetails"
+          component={PropertyDetailsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PaymentPlan"
+          component={PaymentPlanScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PaymentMethods"
+          component={PaymentMethodsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="RealEstateBreakdown"
+          component={RealEstateBreakdownScreen}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
