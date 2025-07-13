@@ -16,56 +16,37 @@ import {FontFamily} from '../utilis/Fonts';
 
 const {width} = Dimensions.get('window');
 
-const MainHeader = ({
+const PortHeader = ({
   navigation,
   selectedTab,
   setSelectedTab,
   largestTransaction,
   name,
-  ShowTabs = true,
 }) => {
-  const tabs = ['Overview', 'Spending'];
-  const [searchText, setSearchText] = useState('');
-
-  const handleSearch = () => {
-    if (searchText.trim()) {
-      navigation.navigate('Chat', {message: searchText.trim()});
-      setSearchText('');
-    }
-  };
-
   return (
     <View>
       {/* Top Row: Avatar and Search */}
       <View style={styles.topRow}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>
-            {name ? name.slice(0, 2).toUpperCase() : ''}
-          </Text>
+        <View style={{flex: 1}}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>
+              {name ? name.slice(0, 2).toUpperCase() : ''}
+            </Text>
+          </View>
         </View>
-        <View style={styles.searchBar}>
-          <TouchableOpacity onPress={handleSearch}>
-            <Icon name="search" size={16} color={Colors.white} />
+        <Text style={styles.searchBar}>Portfolio</Text>
+        <View style={styles.rightContainer}>
+          <TouchableOpacity
+            style={[styles.avatar, {marginLeft: 12}]}
+            onPress={() => navigation.navigate('Notification')}>
+            <Notification />
           </TouchableOpacity>
-          <TextInput
-            placeholder="Ask Superxpense something"
-            placeholderTextColor={Colors.white}
-            style={styles.searchInput}
-            value={searchText}
-            onChangeText={setSearchText}
-            onSubmitEditing={handleSearch}
-            returnKeyType="done"
-            underlineColorAndroid="transparent"
-            // Fix vertical alignment for Android
-            textAlignVertical={Platform.OS === 'android' ? 'center' : 'auto'}
-          />
+          <TouchableOpacity
+            style={[styles.avatar]}
+            onPress={() => navigation.navigate('Notification')}>
+            <Notification />
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={[styles.avatar, {marginLeft: 12}]}
-          onPress={() => navigation.navigate('Notification')}>
-          <Notification />
-        </TouchableOpacity>
       </View>
 
       {/* Big Impact Section */}
@@ -84,28 +65,6 @@ const MainHeader = ({
           </Text>
         </View>
       </View>
-
-      {/* Tabs */}
-{  ShowTabs &&    <LinearGradient
-        colors={['#ccf3f3', '#d0f4f4']}
-        style={styles.gradientBackground}>
-        <View style={styles.tabContainer}>
-          {tabs.map(tab => {
-            const isActive = selectedTab === tab;
-            return (
-              <TouchableOpacity
-                key={tab}
-                style={[styles.tab, isActive && styles.activeTab]}
-                onPress={() => setSelectedTab(tab)}>
-                <Text
-                  style={[styles.tabText, isActive && styles.activeTabText]}>
-                  {tab}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </LinearGradient>}
     </View>
   );
 };
@@ -115,7 +74,6 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
   avatar: {
     backgroundColor: Colors.lightestBlack,
@@ -130,22 +88,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.lightestBlack,
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    flex: 1,
-    height: 36,
-    marginLeft: 10,
-  },
-  searchInput: {
-    marginLeft: 6,
-    flex: 1,
-    fontSize: 14,
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
     color: Colors.white,
-    paddingVertical: 0, // Ensures no extra padding
-    ...(Platform.OS === 'android' ? {textAlignVertical: 'center'} : {}),
+    flex: 1,
+    textAlign: 'center',
+    alignSelf: 'center',
   },
   bigImpactContainer: {
     alignItems: 'center',
@@ -213,6 +161,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: FontFamily.medium,
   },
+  rightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
 });
 
-export default MainHeader;
+export default PortHeader;

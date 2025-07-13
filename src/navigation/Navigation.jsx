@@ -39,6 +39,7 @@ import VerficationCodeScreen from '../screens/auth/VerficationCodeScreen';
 import WelcomeScreen1 from '../screens/auth/WelcomeScreen1';
 import NotificationScreen from '../screens/app/NotificationScreen';
 import CustomTabBar from './CustomTabBar';
+import PropertyScreen from '../screens/app/PropertyScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -291,13 +292,13 @@ const BottomNavigator = () => {
     // </View>
     <Tab.Navigator
       screenOptions={{
-       // tabBarActiveTintColor: Colors.newButtonBack,
+        // tabBarActiveTintColor: Colors.newButtonBack,
         tabBarActiveBackgroundColor: 'rgba(255, 255, 255, 0.92)',
         //tabBarInactiveBackgroundColor: '#C1E3E9',
         headerShown: false,
         tabBarButton: {
-          backgroundColor: "#00A3FF",
-        }
+          backgroundColor: '#00A3FF',
+        },
       }}
       tabBar={props => (
         <BottomFabBar
@@ -339,8 +340,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/homeBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused?25:20,
-                width: focused?25:20,
+                height: focused ? 25 : 20,
+                width: focused ? 25 : 20,
               }}
             />
           ),
@@ -362,8 +363,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/chartBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused?25:20,
-                width: focused?25:20,
+                height: focused ? 25 : 20,
+                width: focused ? 25 : 20,
               }}
             />
           ),
@@ -385,8 +386,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/bulbBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused?25:21,
-                width: focused?21:18,
+                height: focused ? 25 : 21,
+                width: focused ? 21 : 18,
               }}
             />
           ),
@@ -405,11 +406,57 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <Image
+              source={require('../assets/images/bulbBottom.png')}
+              style={{
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
+                height: focused ? 25 : 21,
+                width: focused ? 21 : 18,
+              }}
+            />
+          ),
+          tabBarLabel: 'Goals', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 11,
+            marginTop: 7,
+          },
+          tabBarInactiveTintColor: 'gray',
+        }}
+        name="Goals"
+        component={AddGoals}
+      />
+
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Image
               source={require('../assets/images/settingsBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                 height: focused?25:22,
-                width: focused?25:22,
+                height: focused ? 25 : 22,
+                width: focused ? 25 : 22,
+              }}
+            />
+          ),
+          tabBarLabel: 'Property', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 11,
+            marginTop: 7,
+          },
+          tabBarInactiveTintColor: 'gray',
+        }}
+        name="Property"
+        component={PropertyScreen}
+      />
+
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../assets/images/settingsBottom.png')}
+              style={{
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
+                height: focused ? 25 : 22,
+                width: focused ? 25 : 22,
               }}
             />
           ),
