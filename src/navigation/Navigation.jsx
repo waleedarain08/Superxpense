@@ -45,6 +45,8 @@ import PropertyDetailsScreen from '../screens/app/PropertyDetailsScreen';
 import PaymentPlanScreen from '../screens/app/PaymentPlanScreen';
 import PaymentMethodsScreen from '../screens/app/PaymentMethodsScreen';
 import RealEstateBreakdownScreen from '../screens/app/RealEstateBreakdownScreen';
+import NewBudgetScreen from '../screens/app/NewBudgetScreen';
+import EditBudgetScreen from '../screens/app/EditBudgetScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -121,6 +123,11 @@ const Navigation = () => {
         <Stack.Screen
           name="RealEstateBreakdown"
           component={RealEstateBreakdownScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditBudget"
+          component={EditBudgetScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
@@ -499,6 +506,29 @@ const BottomNavigator = () => {
         }}
         name="Settings"
         component={SettingScreen}
+      />
+
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../assets/images/chartBottom.png')}
+              style={{
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
+                height: focused ? 25 : 22,
+                width: focused ? 25 : 22,
+              }}
+            />
+          ),
+          tabBarLabel: 'New Budget', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 11,
+            marginTop: 7,
+          },
+          tabBarInactiveTintColor: 'gray',
+        }}
+        name="newBudget"
+        component={NewBudgetScreen}
       />
     </Tab.Navigator>
   );

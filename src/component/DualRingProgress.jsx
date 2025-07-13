@@ -1,102 +1,65 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import Svg, {Circle} from 'react-native-svg';
-import {Colors} from '../utilis/Colors';
-import {FontFamily} from '../utilis/Fonts';
 
-const CIRCLE_LENGTH = 2 * Math.PI * 80; // circumference
-const RADIUS = 70;
+const DualRingProgress = ({
+  percent = 0,
+  color = '#00C48C',
+  size = 48,
+  strokeWidth = 5,
+  backgroundColor = '#E0E0E0',
+  children,
+}) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const progress = Math.max(0, Math.min(percent, 100));
+  const strokeDashoffset = circumference * (1 - progress / 100);
 
-const DualRingProgress = () => {
   return (
-    <View style={styles.container}>
-      {/* Outer Circle Background */}
-      <Svg width={160} height={160} style={styles.svg}>
+    <View style={[styles.container, {width: size, height: size}]}> 
+      <Svg width={size} height={size}>
+        {/* Background Circle */}
         <Circle
-          cx={80}
-          cy={80}
-          r={RADIUS}
-          stroke="#9F2B68"
-          strokeWidth={10}
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={backgroundColor}
+          strokeWidth={strokeWidth}
           fill="none"
         />
+        {/* Progress Circle */}
         <Circle
-          cx={80}
-          cy={80}
-          r={RADIUS}
-          stroke="#FF6F61"
-          strokeWidth={10}
-          strokeDasharray={CIRCLE_LENGTH}
-          strokeDashoffset={CIRCLE_LENGTH * 0.25} // 75% filled
-          strokeLinecap="round"
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={color}
+          strokeWidth={strokeWidth}
           fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
           rotation="-90"
-          origin="80,80"
+          origin={`${size / 2},${size / 2}`}
         />
       </Svg>
-
-      {/* Inner Circle */}
-      <Svg width={130} height={130} style={styles.svgInner}>
-        <Circle
-          cx={65}
-          cy={65}
-          r={50}
-          stroke="#9F2B68"
-          strokeWidth={10}
-          fill="none"
-        />
-        <Circle
-          cx={65}
-          cy={65}
-          r={50}
-          stroke={Colors.greenColor}
-          strokeWidth={10}
-          strokeDasharray={2 * Math.PI * 40}
-          strokeDashoffset={2 * Math.PI * 40 * 0.25} // 75% fill
-          strokeLinecap="round"
-          fill="none"
-          rotation="-90"
-          origin="65,65"
-        />
-      </Svg>
-
-      {/* Center Text */}
-      <View style={styles.centerText}>
-        <Text style={styles.label}>Today</Text>
-        <Text style={styles.amount}>253 AED</Text>
-      </View>
+      <View style={styles.centerContent}>{children}</View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: 160,
-    height: 160,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  svg: {
+  centerContent: {
     position: 'absolute',
-  },
-  svgInner: {
-    position: 'absolute',
-    top: 15,
-    left: 15,
-  },
-  centerText: {
-    alignItems: 'center',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
     justifyContent: 'center',
-  },
-  label: {
-    fontSize: 12,
-    color: Colors.white,
-    fontFamily: FontFamily.regular,
-  },
-  amount: {
-    fontSize: 13,
-    FontFamily: FontFamily.extraBold,
-    color: Colors.greenColor,
+    alignItems: 'center',
   },
 });
 
