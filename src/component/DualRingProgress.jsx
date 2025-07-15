@@ -7,7 +7,7 @@ const DualRingProgress = ({
   color = '#00C48C',
   size = 48,
   strokeWidth = 5,
-  backgroundColor = '#E0E0E0',
+  backgroundColor = '#FFFFFF33',
   children,
 }) => {
   const radius = (size - strokeWidth) / 2;
@@ -16,7 +16,7 @@ const DualRingProgress = ({
   const strokeDashoffset = circumference * (1 - progress / 100);
 
   return (
-    <View style={[styles.container, {width: size, height: size}]}> 
+    <View style={[styles.container, {width: size, height: size}]}>
       <Svg width={size} height={size}>
         {/* Background Circle */}
         <Circle

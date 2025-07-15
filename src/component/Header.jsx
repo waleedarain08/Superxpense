@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Colors} from '../utilis/Colors';
 import {ChevronLeft} from '../icons';
 import {FontFamily} from '../utilis/Fonts';
+import {CalendarSvg, SvgDots} from '../assets/svgs';
 
 const Header = ({
   onBackPress,
@@ -15,6 +16,8 @@ const Header = ({
   titleTxt,
   steps,
   stepsCount,
+  svgDots,
+  calendar,
 }) => {
   return (
     <View style={[styles.container, mainContainer]}>
@@ -33,8 +36,20 @@ const Header = ({
           <Icon name="more-vert" size={24} color="#000" />
         </TouchableOpacity>
       ) : steps ? (
-        <TouchableOpacity style={{ right:15}} onPress={onMenuPress}>
+        <TouchableOpacity style={{right: 15}} onPress={onMenuPress}>
           <Text style={styles.stepStyle}>Step {stepsCount} of 2</Text>
+        </TouchableOpacity>
+      ) : svgDots ? (
+        <TouchableOpacity
+          style={[styles.iconButton, {left: 20}]}
+          onPress={onMenuPress}>
+          <SvgDots />
+        </TouchableOpacity>
+      ) : calendar ? (
+        <TouchableOpacity
+          style={[styles.iconButton, {left: 20}]}
+          onPress={onMenuPress}>
+          <CalendarSvg />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity style={{}} onPress={onMenuPress}></TouchableOpacity>
@@ -69,9 +84,9 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#082c2c',
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
   },
   stepStyle: {
     fontFamily: FontFamily.semiBold,

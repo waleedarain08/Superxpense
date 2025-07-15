@@ -6,15 +6,18 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import {ChevronLeft} from '../../icons';
-import { useNavigation } from '@react-navigation/native';
+import {CheckCircle, ChevronLeft} from '../../icons';
+import {useNavigation} from '@react-navigation/native';
+import Header from '../../component/Header';
+import {Bath, Bed, BlackDirham, Document, Ruler} from '../../assets/svgs';
 
 const installments = [
   {
-    date: '3rd Apr',
+    date: '3rd',
     status: 'Due in 3 days',
     statusType: 'due',
     title: 'Installment #7',
@@ -22,7 +25,7 @@ const installments = [
     action: 'Pay Now',
   },
   {
-    date: 'Overdue',
+    date: '3rd',
     status: 'Overdue',
     statusType: 'overdue',
     title: 'Installment #6',
@@ -30,7 +33,7 @@ const installments = [
     action: 'Pay Now',
   },
   {
-    date: '3rd Apr',
+    date: '3rd',
     status: 'Paid',
     statusType: 'paid',
     title: 'Installment #5',
@@ -54,9 +57,9 @@ const documents = [
 
 const PaymentPlanScreen = ({navigation: navProp, route}) => {
   const navigation = useNavigation();
-  const property = route?.params?.property || {
-    image: require('../../assets/images/cardBackground.png'),
-    price: '฿ 1,200,000',
+  const property = {
+    image: require('../../assets/images/building.png'),
+    price: '1,200,000',
     name: '1 Studio Bedroom Apartment',
     location: 'Damac Heights, Dubai Marina, Dubai',
     unit: 'Unit 124',
@@ -70,81 +73,185 @@ const PaymentPlanScreen = ({navigation: navProp, route}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.headerRow}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <ChevronLeft size={24} color={Colors.txtColor} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Payment plan</Text>
-        </View>
-        {/* Property summary */}
-        <View style={styles.propertyCard}>
-          <Image source={property.image} style={styles.propertyImage} resizeMode="cover" />
-          <View style={styles.unitBadge}><Text style={styles.unitBadgeText}>{property.unit}</Text></View>
-          <View style={styles.propertyInfo}>
-            <Text style={styles.price}>{property.price}</Text>
-            <Text style={styles.name}>{property.name}</Text>
-            <Text style={styles.location}>{property.location}</Text>
-            <View style={styles.featuresRow}>
-              <Text style={styles.feature}>{property.beds} Bed</Text>
-              <Text style={styles.feature}>{property.baths} Bath</Text>
-              <Text style={styles.feature}>{property.area}</Text>
+    <ImageBackground
+      source={require('../../assets/images/skyBack.png')}
+      style={styles.container}>
+      <View style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Header */}
+          <View style={styles.headerRow}>
+            <Header
+              ScreenName="Payment plan"
+              onBack={() => navigation.goBack()}
+            />
+          </View>
+          {/* Property summary */}
+          <View style={styles.propertyCard}>
+            <Image
+              source={property.image}
+              style={styles.propertyImage}
+              resizeMode="cover"
+            />
+            <View style={styles.unitBadge}>
+              <View style={styles.unitBadgeIcon} />
+              <Text style={styles.unitBadgeText}>{property.unit}</Text>
+            </View>
+            <View style={styles.propertyInfo}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 4,
+                  marginBottom: 12,
+                }}>
+                <BlackDirham width={16} height={16} />
+                <Text style={styles.price}>{property.price}</Text>
+              </View>
+              <Text style={styles.name}>{property.name}</Text>
+              <Text style={styles.location}>{property.location}</Text>
+              <View style={styles.featuresRow}>
+                <View style={styles.feature}>
+                  <Bed width={16} height={16} />
+                  <Text style={styles.feature}>{property.beds} Bed</Text>
+                </View>
+                <View style={styles.feature}>
+                  <Bath width={16} height={16} />
+                  <Text style={styles.feature}>{property.baths} Bath</Text>
+                </View>
+                <View style={styles.feature}>
+                  <Ruler width={16} height={16} />
+                  <Text style={styles.feature}>{property.area}</Text>
+                </View>
+              </View>
             </View>
           </View>
-        </View>
-        {/* Payment Plan */}
-        <View style={styles.sectionCard}>
-          <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionTitle}>Payment Plan</Text>
-            <TouchableOpacity><Text style={styles.seeFullPlan}>See full plan</Text></TouchableOpacity>
-          </View>
-          {installments.map((item, idx) => (
-            <View key={idx} style={[styles.installmentRow, item.statusType === 'paid' && styles.installmentPaid]}> 
-              <View style={styles.installmentDateBox}>
-                <Text style={styles.installmentDate}>{item.date}</Text>
-              </View>
-              <View style={styles.installmentInfo}>
-                <View style={styles.installmentTitleRow}>
-                  <Text style={styles.installmentTitle}>{item.title}</Text>
+          {/* Payment Plan */}
+          <View style={styles.sectionCard}>
+            <View style={styles.sectionHeaderRow}>
+              <Text style={styles.sectionTitle}>Payment Plan</Text>
+              <TouchableOpacity>
+                <Text style={styles.seeFullPlan}>See full plan</Text>
+              </TouchableOpacity>
+            </View>
+            {installments.map((item, idx) => (
+              <View
+                key={idx}
+                style={[
+                  styles.installmentRow,
+                  item.statusType === 'paid' && styles.installmentPaid,
+                ]}>
+                <View style={styles.installmentDateBox}>
+                  <Text style={styles.installmentDate}>
+                    {item.date}
+                    {'\n'}Apr
+                  </Text>
+                </View>
+                <View style={styles.installmentInfo}>
+                  {/* Status badge above title */}
                   {item.statusType === 'due' && (
-                    <View style={styles.statusDue}><Text style={styles.statusDueText}>{item.status}</Text></View>
+                    <View
+                      style={[
+                        styles.statusBadgeRow,
+                        {
+                          maxWidth: 110,
+                          alignSelf: 'flex-start',
+                          paddingHorizontal: 8,
+                        },
+                      ]}>
+                      <View
+                        style={[styles.statusDot, {backgroundColor: '#D58207'}]}
+                      />
+                      <Text
+                        style={[styles.statusDueText]}
+                        numberOfLines={1}
+                        ellipsizeMode="tail">
+                        {item.status}
+                      </Text>
+                    </View>
                   )}
                   {item.statusType === 'overdue' && (
-                    <View style={styles.statusOverdue}><Text style={styles.statusOverdueText}>{item.status}</Text></View>
+                    <View
+                      style={[
+                        styles.statusBadgeRow,
+                        {
+                          maxWidth: 110,
+                          alignSelf: 'flex-start',
+                          paddingHorizontal: 8,
+                        },
+                      ]}>
+                      <View
+                        style={[
+                          styles.statusDot,
+                          {backgroundColor: Colors.red},
+                        ]}
+                      />
+                      <Text style={styles.statusOverdueText}>
+                        {item.status}
+                      </Text>
+                    </View>
                   )}
                   {item.statusType === 'paid' && (
-                    <View style={styles.statusPaid}><Text style={styles.statusPaidText}>{item.status}</Text></View>
+                    <View
+                      style={[
+                        styles.statusBadgeRow,
+                        {
+                          maxWidth: 110,
+                          alignSelf: 'flex-start',
+                          paddingHorizontal: 8,
+                        },
+                      ]}>
+                      <View
+                        style={[
+                          styles.statusDot,
+                          {backgroundColor: Colors.newButtonBack},
+                        ]}
+                      />
+                      <Text style={styles.statusPaidText}>{item.status}</Text>
+                    </View>
                   )}
+                  <Text style={styles.installmentTitle}>{item.title}</Text>
+                  <Text style={styles.installmentAmount}>
+                    <BlackDirham />
+                    {'  '}
+                    {item.amount}
+                  </Text>
                 </View>
-                <Text style={styles.installmentAmount}>฿ {item.amount}</Text>
+                {item.statusType !== 'paid' ? (
+                  <TouchableOpacity
+                    style={styles.payNowBtn}
+                    onPress={handlePayNow}>
+                    <Text style={styles.payNowBtnText}>{item.action}</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={styles.paidBtnRow}>
+                    <View style={styles.paidBtn}>
+                      <Text style={styles.paidBtnText}>Paid</Text>
+                      {/* Checkmark icon */}
+                      <CheckCircle size={15} color={Colors.newButtonBack} />
+                    </View>
+                  </View>
+                )}
               </View>
-              {item.statusType !== 'paid' ? (
-                <TouchableOpacity style={styles.payNowBtn} onPress={handlePayNow}><Text style={styles.payNowBtnText}>{item.action}</Text></TouchableOpacity>
-              ) : (
-                <View style={styles.paidBtn}><Text style={styles.paidBtnText}>Paid</Text></View>
-              )}
-            </View>
-          ))}
-        </View>
-        {/* Uploaded Documents */}
-        <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Uploaded Documents</Text>
-          {documents.map((doc, idx) => (
-            <View key={idx} style={styles.documentRow}>
-              <View style={styles.documentIconBox}>
-                <Text style={styles.documentIcon}>{doc.type === 'pdf' ? '📄' : '🖼️'}</Text>
-              </View>
-              <View style={styles.documentInfo}>
-                <Text style={styles.documentName}>{doc.name}</Text>
+            ))}
+            <Text style={styles.sectionTitle}>Uploaded Documents</Text>
+            {documents.map((doc, idx) => (
+              <View key={idx} style={styles.documentRow}>
+                <View style={styles.documentIconBox}>
+                  <Text style={styles.documentIcon}>
+                    {doc.type === 'pdf' ? <Document /> : <Document />}
+                  </Text>
+                </View>
+                <View style={styles.documentInfo}>
+                  <Text style={styles.documentName}>{doc.name}</Text>
+                </View>
                 <Text style={styles.documentSize}>{doc.size}</Text>
               </View>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </View>
+            ))}
+          </View>
+          {/* Uploaded Documents */}
+        </ScrollView>
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -153,58 +260,37 @@ export default PaymentPlanScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eaf6fb',
   },
   headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 24,
-    paddingBottom: 8,
-    paddingHorizontal: 16,
-    backgroundColor: 'transparent',
-  },
-  backBtn: {
-    marginRight: 8,
-    padding: 4,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontFamily: FontFamily.semiBold,
-    color: Colors.txtColor,
-    flex: 1,
-    textAlign: 'center',
-    marginRight: 32,
+    paddingTop: 40,
   },
   propertyCard: {
-    backgroundColor: '#fff',
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 16,
-    margin: 16,
+    marginHorizontal: 24,
     padding: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 1,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: Colors.white,
+    marginBottom: 24,
   },
   propertyImage: {
-    width: '100%',
-    height: 110,
+    width: 130,
+    height: 130,
     borderRadius: 12,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   unitBadge: {
     position: 'absolute',
-    top: 12,
-    left: 12,
-    backgroundColor: '#fff',
-    borderRadius: 8,
+    top: 20,
+    left: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: Colors.white,
+    borderRadius: 100,
     paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderWidth: 1,
-    borderColor: Colors.orange,
+    paddingVertical: 5,
     zIndex: 2,
   },
   unitBadgeText: {
@@ -214,89 +300,95 @@ const styles = StyleSheet.create({
   },
   propertyInfo: {
     marginTop: 4,
+    marginLeft: 12,
+    width: '60%',
   },
   price: {
     fontSize: 18,
     fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
-    marginBottom: 2,
   },
   name: {
-    fontSize: 15,
-    fontFamily: FontFamily.semiBold,
+    fontSize: 16,
+    fontFamily: FontFamily.medium,
     color: Colors.txtColor,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   location: {
-    fontSize: 13,
+    fontSize: 14,
     color: Colors.grayIcon,
     fontFamily: FontFamily.regular,
     marginBottom: 8,
   },
   featuresRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 5,
   },
   feature: {
     fontSize: 13,
     color: Colors.grayIcon,
     fontFamily: FontFamily.medium,
     marginRight: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   sectionCard: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 16,
     marginHorizontal: 16,
     marginBottom: 16,
-    padding: 14,
+    padding: 16,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: Colors.white,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 15,
+    fontSize: 18,
     fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
     flex: 1,
+    marginTop: 32,
+    marginBottom: 12,
   },
   seeFullPlan: {
-    fontSize: 13,
-    color: Colors.green,
+    fontSize: 14,
+    color: Colors.grayIcon,
     fontFamily: FontFamily.medium,
   },
   installmentRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 12,
     padding: 10,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: Colors.white,
   },
   installmentPaid: {
-    borderColor: Colors.green,
-    backgroundColor: '#eafaf3',
+    // borderColor: Colors.green,
+    // backgroundColor: '#eafaf3',
   },
   installmentDateBox: {
-    width: 48,
-    height: 48,
+    width: 56,
+    height: 78,
     borderRadius: 10,
-    backgroundColor: '#f2f8fd',
+    backgroundColor: 'rgba(255,255,255,0.4)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 16,
     borderWidth: 1,
-    borderColor: '#d0e6f7',
+    borderColor: Colors.white,
   },
   installmentDate: {
-    fontSize: 13,
+    fontSize: 16,
     color: Colors.txtColor,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.regular,
     textAlign: 'center',
   },
   installmentInfo: {
@@ -308,10 +400,10 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   installmentTitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.txtColor,
-    fontFamily: FontFamily.semiBold,
-    marginRight: 8,
+    fontFamily: FontFamily.medium,
+    paddingVertical: 4,
   },
   statusDue: {
     backgroundColor: '#fff7e6',
@@ -323,9 +415,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.orange,
   },
   statusDueText: {
-    color: Colors.orange,
+    color: Colors.black,
     fontSize: 12,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.regular,
   },
   statusOverdue: {
     backgroundColor: '#ffeaea',
@@ -351,62 +443,64 @@ const styles = StyleSheet.create({
     borderColor: Colors.green,
   },
   statusPaidText: {
-    color: Colors.green,
+    color: Colors.black,
     fontSize: 12,
     fontFamily: FontFamily.medium,
   },
   installmentAmount: {
-    fontSize: 13,
-    color: Colors.grayIcon,
-    fontFamily: FontFamily.medium,
-    marginTop: 2,
+    fontSize: 14,
+    color: Colors.black,
+    fontFamily: FontFamily.regular,
   },
   payNowBtn: {
-    backgroundColor: Colors.green,
-    borderRadius: 100,
-    paddingVertical: 8,
-    paddingHorizontal: 18,
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     marginLeft: 8,
   },
   payNowBtnText: {
-    color: '#fff',
-    fontSize: 14,
+    color: Colors.newWhite,
+    fontSize: 18,
     fontFamily: FontFamily.medium,
   },
   paidBtn: {
-    backgroundColor: '#eafaf3',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 100,
     paddingVertical: 8,
     paddingHorizontal: 18,
     marginLeft: 8,
     borderWidth: 1,
-    borderColor: Colors.green,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderColor: Colors.white,
   },
   paidBtnText: {
-    color: Colors.green,
-    fontSize: 14,
+    color: Colors.newButtonBack,
+    fontSize: 16,
     fontFamily: FontFamily.medium,
   },
   documentRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255,255,255,0.4)',
     borderRadius: 10,
-    padding: 10,
+    padding: 12,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: Colors.white,
   },
   documentIconBox: {
-    width: 36,
-    height: 36,
+    width: 44,
+    height: 44,
     borderRadius: 8,
-    backgroundColor: '#f2f8fd',
+    borderColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
     borderWidth: 1,
-    borderColor: '#d0e6f7',
+    backgroundColor: 'rgba(255,255,255,0.3)',
   },
   documentIcon: {
     fontSize: 18,
@@ -415,13 +509,47 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   documentName: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.txtColor,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.medium,
   },
   documentSize: {
     fontSize: 12,
     color: Colors.grayIcon,
     fontFamily: FontFamily.regular,
   },
-}); 
+  unitBadgeIcon: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#D58207',
+    borderRadius: 100,
+  },
+  statusBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2,
+    gap: 4,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 100,
+    borderWidth: 1,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderColor: Colors.white,
+  },
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 4,
+  },
+  paidBtnRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  paidCheck: {
+    marginLeft: 6,
+    fontSize: 16,
+    color: Colors.green,
+  },
+});

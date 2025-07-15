@@ -161,6 +161,15 @@ export const ChevronRight = ({color, size, style}) => (
     style={style}
   />
 );
+export const EntoChevronRight = ({color, size, style}) => (
+  <VectorIcon
+    name="chevron-thin-left"
+    color={color}
+    size={size}
+    type="Entypo"
+    style={style}
+  />
+);
 
 export const Home = ({color, size, style}) => (
   <VectorIcon
@@ -308,6 +317,16 @@ export const PlusIcon = ({color, size, style}) => (
     color={color}
     size={size}
     type="MaterialIcons"
+    style={style}
+  />
+);
+
+export const ChevronDown = ({color, size, style}) => (
+  <VectorIcon
+    name="chevron-down"
+    color={color}
+    size={size}
+    type="Entypo"
     style={style}
   />
 );

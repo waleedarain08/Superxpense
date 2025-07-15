@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -42,88 +42,115 @@ const AccountCard = ({
   onPressAccount,
   onDelete,
 }) => {
+  const [showBlurOverlay, setShowBlurOverlay] = useState(false);
+
   const reconnectAccounts = data.accounts?.filter(
     acc => acc.status === 'RECONNECT_REQUIRED',
   );
   const hasReconnect = reconnectAccounts.length > 0;
 
+  const toggleBlurOverlay = () => {
+    setShowBlurOverlay(!showBlurOverlay);
+  };
+
   return (
-    <ImageBackground
-      source={bgImage}
-      style={styles.card}
-      imageStyle={{borderRadius: 20}}>
-      <View style={styles.bankInfo}>
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: Colors.white,
-            borderRadius: 100,
-            width: 45,
-            height: 45,
-            marginRight: 10,
-          }}>
-          <Image source={{uri: data.bankIcon}} style={styles.logo} />
+    <View style={styles.cardContainer}>
+      <ImageBackground
+        source={bgImage}
+        style={styles.card}
+        imageStyle={{borderRadius: 20}}>
+        <View style={styles.bankInfo}>
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: Colors.white,
+              borderRadius: 100,
+              width: 45,
+              height: 45,
+              marginRight: 10,
+            }}>
+            <Image source={{uri: data.bankIcon}} style={styles.logo} />
+          </View>
+          <Text style={styles.bankName}>{data.bankName}</Text>
+          <TouchableOpacity onPress={() => onDelete(data)}>
+            <Icon name="delete" size={22} color="#fff" />
+          </TouchableOpacity>
         </View>
-        <Text style={styles.bankName}>{data.bankName}</Text>
-        <TouchableOpacity onPress={() => onDelete(data)}>
-          <Icon name="delete" size={22} color="#fff" />
-        </TouchableOpacity>
-      </View>
 
-      {data.accounts.map((acc, idx) => (
-        <TouchableOpacity
-          key={idx}
-          style={styles.accountRow}
-          onPress={() =>
-            acc.status === 'RECONNECT_REQUIRED'
-              ? onReconnect(acc, data.bankId, data.bankName)
-              : onPressAccount(acc, data.bankId, data.bankName)
-          }>
-          <View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              {acc.status === 'RECONNECT_REQUIRED' ? (
-                <View
-                  style={{
-                    backgroundColor: '#E3FFF2',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: 100,
-                    height: 20,
-                    width: 20,
-                  }}>
-                  <Refresh size={17} />
-                </View>
-              ) : (
-                <Icon
-                  name={'check-circle-outline'}
-                  size={20}
-                  color={Colors.white}
-                />
-              )}
-              <Text style={styles.accountType}>{acc.accountType}</Text>
+        {data.accounts.map((acc, idx) => (
+          <TouchableOpacity
+            key={idx}
+            style={styles.accountRow}
+            onPress={() =>
+              acc.status === 'RECONNECT_REQUIRED'
+                ? onReconnect(acc, data.bankId, data.bankName)
+                : onPressAccount(acc, data.bankId, data.bankName)
+            }>
+            <View>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                {acc.status === 'RECONNECT_REQUIRED' ? (
+                  <View
+                    style={{
+                      backgroundColor: '#E3FFF2',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderRadius: 100,
+                      height: 20,
+                      width: 20,
+                    }}>
+                    <Refresh size={17} />
+                  </View>
+                ) : (
+                  <Icon
+                    name={'check-circle-outline'}
+                    size={20}
+                    color={Colors.white}
+                  />
+                )}
+                <Text style={styles.accountType}>{acc.accountType}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 8,
+                  alignItems: 'center',
+                }}>
+                <DirhamWhite />
+                <Text style={styles.amount}>{`${acc.accountBalance} AED`}</Text>
+              </View>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 8,
-                alignItems: 'center',
-              }}>
-              <DirhamWhite />
-              <Text style={styles.amount}>{`${acc.accountBalance} AED`}</Text>
+            <View>
+              <Icon name="chevron-right" size={26} color="#fff" />
             </View>
-          </View>
-          <View>
-            <Icon name="chevron-right" size={26} color="#fff" />
-          </View>
-        </TouchableOpacity>
-      ))}
+          </TouchableOpacity>
+        ))}
 
-      {hasReconnect && (
-        <Text style={styles.reconnectNote}>
-          ⚠ Reconnect required for some accounts
-        </Text>
+        {hasReconnect && (
+          <Text style={styles.reconnectNote}>
+            ⚠ Reconnect required for some accounts
+          </Text>
+        )}
+      </ImageBackground>
+      {/* Blur Overlay */}
+      {showBlurOverlay && (
+        <View style={styles.blurOverlay}>
+          <Image
+            source={require('../assets/images/blurImage.png')}
+            style={styles.blurImage}
+            resizeMode="cover"
+          />
+        </View>
       )}
-    </ImageBackground>
+
+      {/* Toggle Button */}
+      <TouchableOpacity style={styles.toggleButton} onPress={toggleBlurOverlay}>
+        <Text style={styles.toggleButtonText}>
+          {showBlurOverlay
+            ? 'Tab to hide card details'
+            : 'Tab to show card details'}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -166,7 +193,7 @@ export default function AccountSwiper({
 
 const styles = StyleSheet.create({
   container: {
-    height: 340,
+    height: 380,
     marginTop: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.24)',
     borderWidth: 1,
@@ -175,7 +202,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 14,
   },
   card: {
-    width: width * 0.85,
+    width: width * 0.75,
     height: 250,
     borderRadius: 20,
     padding: 20,
@@ -217,6 +244,38 @@ const styles = StyleSheet.create({
     color: '#ffc107',
     fontSize: 12,
     marginTop: 10,
+    fontWeight: '500',
+  },
+  cardContainer: {
+    position: 'relative',
+  },
+  blurOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    // backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 20,
+    zIndex: 1,
+  },
+  blurImage: {
+    width: '83%',
+    height: '80%',
+    borderRadius: 20,
+    marginTop: 50,
+  },
+  toggleButton: {
+    position: 'absolute',
+    top: 280,
+    right: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+  },
+  toggleButtonText: {
+    fontSize: 13,
+    color: '#AFAFAF',
     fontWeight: '500',
   },
 });

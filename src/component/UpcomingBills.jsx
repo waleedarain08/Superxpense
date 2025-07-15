@@ -10,6 +10,7 @@ import {
 import {PieChart} from 'react-native-svg-charts';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
+import {BlankCalendar} from '../assets/svgs';
 
 const billsData = [
   {
@@ -33,12 +34,12 @@ const billsData = [
     name: 'Disney Plus',
     amount: 250,
     date: '01',
-    month: 'May',
+    month: 'Apr',
     logo: require('../assets/images/disney.png'),
   },
 ];
 
-const UpcomingBills = ({navigation}) => {
+const UpcomingBills = ({navigation, categoryData}) => {
   const pieData = [
     {
       value: 1400,
@@ -69,38 +70,57 @@ const UpcomingBills = ({navigation}) => {
     <View style={styles.container}>
       <Text style={styles.header}>Upcoming Bills</Text>
 
-      <View style={styles.chartContainer}>
-        <View style={styles.labelRow}>
-          <Text style={styles.labelText}>
-            1400 AED <Text style={styles.subLabel}>Left to pay</Text>
+      {categoryData.length > 0 ? (
+        <>
+          <View style={{alignItems: 'center', height: 100, width: '100%'}}>
+            <Image
+              source={require('../assets/images/pieChart.png')}
+              style={{width: '60%', height: 120, resizeMode: 'contain'}}
+            />
+          </View>
+          <View style={{alignItems: 'center', height: 100, width: '100%'}}>
+            <Image
+              source={require('../assets/images/paid.png')}
+              style={{width: '50%', height: 100, resizeMode: 'contain'}}
+            />
+          </View>
+          <FlatList
+            data={billsData}
+            renderItem={renderItem}
+            keyExtractor={item => item.id}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+          />
+        </>
+      ) : (
+        <View>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: FontFamily.medium,
+              color: Colors.lightTxtColor,
+              marginBottom: 16,
+            }}>
+            No upcoming bills
           </Text>
+          <View
+            style={{
+              height: 210,
+              borderWidth: 1,
+              borderRadius: 20,
+              borderColor: Colors.white,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <BlankCalendar />
+          </View>
         </View>
-        <PieChart
-          style={{height: 94, width: 94}}
-          data={pieData}
-          innerRadius={35}
-          outerRadius={45}
-          padAngle={0}
-        />
-
-        <View style={[styles.labelRow2]}>
-          <Text style={styles.labelText}>
-            1000 AED <Text style={styles.subLabel}>Left to pay</Text>
-          </Text>
-        </View>
-      </View>
-
-      <FlatList
-        data={billsData}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+      )}
 
       <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('Bills')}>
-        <Text style={styles.buttonText}>See all upcoming bills</Text>
+        style={styles.button}>
+        <Text style={styles.buttonText}>
+          {categoryData.length > 0 ? 'See all upcoming bills' : 'Add a bill'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -108,10 +128,11 @@ const UpcomingBills = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    borderWidth: 1,
+    borderColor: Colors.white,
     borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 15,
+    padding: 16,
     marginTop: 15,
   },
   header: {
@@ -123,6 +144,7 @@ const styles = StyleSheet.create({
   chartContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     justifyContent: 'space-between',
     marginBottom: 24,
   },
@@ -159,7 +181,12 @@ const styles = StyleSheet.create({
   billItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.13)',
+    borderWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 20,
+    padding: 12,
+    marginTop: 15,
   },
   logo: {
     width: 40,
@@ -182,6 +209,11 @@ const styles = StyleSheet.create({
     Color: Colors.txtColor,
     fontFamily: FontFamily.medium,
     width: '10%',
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    padding: 6,
   },
   month: {
     fontSize: 12,
@@ -194,16 +226,16 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 26,
-    backgroundColor: Colors.lightestGray,
-    height: 36,
+    backgroundColor: Colors.newButtonBack,
+    paddingVertical: 12,
     justifyContent: 'center',
     borderRadius: 100,
     alignItems: 'center',
   },
   buttonText: {
-    fontSize: 14,
-    fontFamily: FontFamily.regular,
-    color: Colors.txtColor,
+    fontSize: 16,
+    fontFamily: FontFamily.medium,
+    color: Colors.white,
   },
 });
 

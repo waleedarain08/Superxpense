@@ -11,7 +11,14 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
-import {DirhamWhite, Notification, TiltArrow} from '../assets/svgs';
+import {
+  DirhamWhite,
+  GrayArrow,
+  GreenArrow,
+  Notification,
+  SearchIcon,
+  TiltArrow,
+} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 import {ChevronLeft} from '../icons';
 
@@ -23,6 +30,8 @@ const PortHeader = ({
   setSelectedTab,
   largestTransaction,
   name,
+  isSearchSelected,
+  setIsSearchSelected,
 }) => {
   return (
     <View>
@@ -31,16 +40,20 @@ const PortHeader = ({
         <View style={{flex: 1}}>
           <TouchableOpacity
             style={styles.avatar}
-            onPress={() => navigation.navigate('Home')}>
+            onPress={() => navigation.navigate('Main')}>
             <ChevronLeft size={24} color={Colors.white} />
           </TouchableOpacity>
         </View>
         <Text style={styles.searchBar}>Portfolio</Text>
         <View style={styles.rightContainer}>
           <TouchableOpacity
-            style={[styles.avatar, {marginLeft: 12}]}
-            onPress={() => navigation.navigate('Notification')}>
-            <Notification />
+            style={[
+              styles.avatar,
+              {marginLeft: 12},
+              isSearchSelected && {backgroundColor: Colors.txtColor},
+            ]}
+            onPress={() => setIsSearchSelected(!isSearchSelected)}>
+            <SearchIcon />
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.avatar]}
@@ -53,15 +66,45 @@ const PortHeader = ({
       {/* Big Impact Section */}
       <View style={styles.bigImpactContainer}>
         <Text style={styles.bigImpactText}>Total Investment</Text>
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 4,
+            marginBottom: 8,
+          }}>
           <DirhamWhite width={28} height={24} />
           <Text style={styles.bigImpactValue}>
             {largestTransaction ? `${largestTransaction}` : `0.00`}
           </Text>
         </View>
-        <View style={styles.savingChip}>
-          <TiltArrow />
-          <Text style={styles.savingChipText}>no Data yet</Text>
+        <View
+          style={[
+            styles.savingChip,
+            {backgroundColor: Colors.newLightestGreen},
+          ]}>
+          {isSearchSelected ? (
+            <GreenArrow width={8} height={8} />
+          ) : (
+            <GrayArrow />
+          )}
+          {isSearchSelected && (
+            <Text style={styles.investmentChipText}>
+              Total Investment Up 5,000 (1%){'   '}
+              <View
+                style={{
+                  width: 8,
+                  height: 8,
+                  backgroundColor: Colors.newButtonBack,
+                  borderRadius: 100,
+                }}
+              />{' '}
+              Today
+            </Text>
+          )}
+          {!isSearchSelected && (
+            <Text style={styles.savingChipText}>no Data yet</Text>
+          )}
         </View>
       </View>
     </View>
@@ -102,6 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: FontFamily.regular,
     color: Colors.newWhite,
+    marginBottom: 8,
   },
   bigImpactValue: {
     fontSize: 32,
@@ -166,6 +210,11 @@ const styles = StyleSheet.create({
     gap: 8,
     flex: 1,
     justifyContent: 'flex-end',
+  },
+  investmentChipText: {
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.newButtonBack,
   },
 });
 

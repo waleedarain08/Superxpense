@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import SplashScreen from '../screens/auth/SplashScreen';
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import BudgetsScreen from '../screens/app/BudgetsScreen';
-import BillsScreen from '../screens/app/BillsNPayments';
+import BillsScreen from '../screens/app/BillsScreen';
 import AccountsScreen from '../screens/app/AccountsScreen';
 import HomeScreen from '../screens/app/HomeScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
@@ -47,10 +47,24 @@ import PaymentMethodsScreen from '../screens/app/PaymentMethodsScreen';
 import RealEstateBreakdownScreen from '../screens/app/RealEstateBreakdownScreen';
 import NewBudgetScreen from '../screens/app/NewBudgetScreen';
 import EditBudgetScreen from '../screens/app/EditBudgetScreen';
+import ShowBillsDate from '../screens/app/ShowBillsDate';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
 const Tab = createBottomTabNavigator();
+
+// Wrapper component to redirect to Home with Account tab selected
+const AccountsRedirect = ({navigation}) => {
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      navigation.navigate('Home', {initialTab: 'Account'});
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  return null; // This component doesn't render anything
+};
 
 const Navigation = () => {
   return (
@@ -128,6 +142,21 @@ const Navigation = () => {
         <Stack.Screen
           name="EditBudget"
           component={EditBudgetScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ShowBillsDate"
+          component={ShowBillsDate}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Property"
+          component={PropertyScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
@@ -393,7 +422,7 @@ const BottomNavigator = () => {
         component={HomeScreen}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -414,9 +443,55 @@ const BottomNavigator = () => {
         }}
         name="Budgets"
         component={BudgetsScreen}
+      /> */}
+
+      <Tab.Screen
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../assets/images/chartBottom.png')}
+              style={{
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
+                height: focused ? 25 : 22,
+                width: focused ? 25 : 22,
+              }}
+            />
+          ),
+          tabBarLabel: 'Budget', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 11,
+            marginTop: 7,
+          },
+          tabBarInactiveTintColor: 'gray',
+        }}
+        name="newBudget"
+        component={NewBudgetScreen}
       />
 
       <Tab.Screen
+        options={{
+          tabBarIcon: ({focused}) => (
+            <Image
+              source={require('../assets/images/billsTabs.png')}
+              style={{
+                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
+                height: focused ? 25 : 20,
+                width: focused ? 25 : 20,
+              }}
+            />
+          ),
+          tabBarLabel: 'Bills', // Focused label color
+          tabBarLabelStyle: {
+            fontSize: 11,
+            marginTop: 7,
+          },
+          tabBarInactiveTintColor: 'gray',
+        }}
+        name="Bills"
+        component={BillsScreen}
+      />
+
+      {/* <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -436,14 +511,14 @@ const BottomNavigator = () => {
           tabBarInactiveTintColor: 'gray',
         }}
         name="Accounts"
-        component={AccountsScreen}
-      />
+        component={AccountsRedirect}
+      /> */}
 
       <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
-              source={require('../assets/images/bulbBottom.png')}
+              source={require('../assets/images/goals.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: focused ? 25 : 21,
@@ -462,7 +537,7 @@ const BottomNavigator = () => {
         component={AddGoals}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -483,9 +558,9 @@ const BottomNavigator = () => {
         }}
         name="Property"
         component={PropertyScreen}
-      />
+      /> */}
 
-      <Tab.Screen
+      {/* <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -506,30 +581,7 @@ const BottomNavigator = () => {
         }}
         name="Settings"
         component={SettingScreen}
-      />
-
-      <Tab.Screen
-        options={{
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={require('../assets/images/chartBottom.png')}
-              style={{
-                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused ? 25 : 22,
-                width: focused ? 25 : 22,
-              }}
-            />
-          ),
-          tabBarLabel: 'New Budget', // Focused label color
-          tabBarLabelStyle: {
-            fontSize: 11,
-            marginTop: 7,
-          },
-          tabBarInactiveTintColor: 'gray',
-        }}
-        name="newBudget"
-        component={NewBudgetScreen}
-      />
+      /> */}
     </Tab.Navigator>
   );
 };

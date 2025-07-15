@@ -11,38 +11,43 @@ import {useNavigation} from '@react-navigation/native';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 import Header from './Header';
-import {ChevronLeft} from '../icons';
+import {ArrowRight, ChevronLeft, PlusIcon} from '../icons';
 // Replace with your actual icons/images
-import {UploadIcon} from '../assets/svgs';
+import {
+  BlackDirham,
+  BlackSearchIcon,
+  Completed,
+  ReloadYellow,
+  SearchIcon,
+  UploadIcon,
+} from '../assets/svgs';
 
 const properties = [
   {
     id: 1,
     status: 'Ongoing Payment',
     statusColor: Colors.orange,
-    image: require('../assets/images/cardBackground.png'), // Replace with your image
-    price: '฿ 1,200,000',
+    image: require('../assets/images/bathroom.png'), // Replace with your image
+    price: '1,200,000',
     name: '2 Bedroom Apartment',
     location: 'Damac Heights, Dubai Marina, Dubai',
-    brand: require('../assets/images/america.png'), // Replace with your logo
+    brand: require('../assets/images/damac.png'), // Replace with your logo
     brandName: 'Damac',
     statusMsg: 'Payment due in 3 days',
     action: 'Pay Now',
-    actionColor: Colors.green,
   },
   {
     id: 2,
     status: 'Payment Completed',
     statusColor: Colors.green,
-    image: require('../assets/images/cardBackground.png'), // Replace with your image
-    price: '฿ 1,200,000',
+    image: require('../assets/images/kitchen.png'), // Replace with your image
+    price: '1,200,000',
     name: '2 Bedroom Apartment',
     location: 'Marriot Marina, Dubai',
-    brand: require('../assets/images/america.png'), // Replace with your logo
+    brand: require('../assets/images/marriot.png'), // Replace with your logo
     brandName: 'Marriot',
     statusMsg: '',
     action: '',
-    actionColor: Colors.grayIcon,
   },
 ];
 
@@ -61,18 +66,18 @@ const StepThree = ({onBack, onContinue}) => {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.headerRow}>
-        <TouchableOpacity onPress={onBack}>
-          <ChevronLeft size={24} color={Colors.txtColor} />
-        </TouchableOpacity>
+        <View style={{flex: 0.25}}>
+          <TouchableOpacity onPress={onBack} style={styles.headerIconBtn}>
+            <ChevronLeft size={24} color={Colors.txtColor} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.headerTitle}>Properties</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity style={styles.headerIconBtn}>
-            {/* Replace with your search icon */}
-            <UploadIcon />
+            <BlackSearchIcon />
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerIconBtn}>
-            {/* Replace with your add icon */}
-            <UploadIcon />
+            <PlusIcon size={20} color={Colors.newButtonBack} />
           </TouchableOpacity>
         </View>
       </View>
@@ -83,14 +88,13 @@ const StepThree = ({onBack, onContinue}) => {
             style={styles.card}
             onPress={() => handleCardPress(item)}>
             {/* Status badge */}
-            <View
-              style={[
-                styles.statusBadge,
-                {backgroundColor: '#fff', borderColor: item.statusColor},
-              ]}>
-              <Text style={[styles.statusText, {color: item.statusColor}]}>
-                {item.status}
-              </Text>
+            <View style={[styles.statusBadge, {backgroundColor: Colors.white}]}>
+              {item.status === 'Ongoing Payment' ? (
+                <ReloadYellow />
+              ) : (
+                <Completed />
+              )}
+              <Text style={[styles.statusText]}>{item.status}</Text>
             </View>
             {/* Property image */}
             <Image
@@ -100,7 +104,10 @@ const StepThree = ({onBack, onContinue}) => {
             />
             {/* Price, brand */}
             <View style={styles.cardRow}>
-              <Text style={styles.price}>{item.price}</Text>
+              <View style={styles.priceBox}>
+                <BlackDirham width={18} height={18} />
+                <Text style={styles.price}>{item.price}</Text>
+              </View>
               <View style={styles.brandRow}>
                 <Image source={item.brand} style={styles.brandLogo} />
                 <Text style={styles.brandName}>{item.brandName}</Text>
@@ -118,6 +125,7 @@ const StepThree = ({onBack, onContinue}) => {
                     style={styles.actionBtn}
                     onPress={() => handlePayNow(item)}>
                     <Text style={styles.actionBtnText}>{item.action}</Text>
+                    <ArrowRight size={16} color={Colors.newWhite} />
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity style={styles.actionBtn}>
@@ -138,7 +146,6 @@ export default StepThree;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
     backgroundColor: 'transparent',
   },
   headerRow: {
@@ -146,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 16,
-    marginTop: 8,
+    height: 30,
   },
   headerTitle: {
     fontSize: 18,
@@ -166,35 +173,36 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: 18,
-    padding: 12,
-    marginBottom: 18,
+    backgroundColor: 'rgba(255,255,255,0.4)',
+    borderRadius: 20,
+    marginBottom: 24,
     borderWidth: 1,
     borderColor: Colors.white,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 1,
   },
   statusBadge: {
     position: 'absolute',
-    top: 12,
-    left: 12,
+    top: 16,
+    left: 16,
     zIndex: 2,
     borderRadius: 8,
-    borderWidth: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+    flexDirection: 'row',
+    padding: 8,
+    gap: 4,
   },
   statusText: {
     fontSize: 12,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
   },
   cardImage: {
     width: '100%',
-    height: 120,
-    borderRadius: 12,
+    height: 230,
+    borderRadius: 20,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
     marginBottom: 12,
   },
   cardRow: {
@@ -202,6 +210,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 4,
+    paddingHorizontal: 12,
   },
   price: {
     fontSize: 18,
@@ -220,46 +229,54 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   brandName: {
-    fontSize: 13,
+    fontSize: 12,
     color: Colors.txtColor,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.regular,
   },
   cardName: {
-    fontSize: 15,
-    fontFamily: FontFamily.semiBold,
+    fontSize: 16,
+    fontFamily: FontFamily.medium,
     color: Colors.txtColor,
-    marginBottom: 2,
+    marginTop: 16,
+    marginBottom: 5,
+    paddingHorizontal: 12,
   },
   cardLocation: {
-    fontSize: 13,
+    fontSize: 14,
     color: Colors.grayIcon,
     fontFamily: FontFamily.regular,
-    marginBottom: 8,
+    marginBottom: 12,
+    paddingHorizontal: 12,
   },
   cardFooterRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 8,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(255,255,255,0.4)',
+    marginHorizontal: 12,
+    marginBottom: 12,
     borderRadius: 8,
     padding: 8,
     borderWidth: 1,
     borderColor: Colors.white,
   },
   statusMsg: {
-    color: Colors.orange,
-    fontSize: 13,
+    color: '#D58207',
+    fontSize: 14,
     fontFamily: FontFamily.medium,
   },
   actionBtn: {
-    backgroundColor: Colors.green,
-    borderRadius: 100,
-    paddingHorizontal: 18,
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 5,
+    paddingHorizontal: 16,
     paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   actionBtnText: {
-    color: '#fff',
+    color: Colors.newWhite,
     fontSize: 14,
     fontFamily: FontFamily.medium,
   },
@@ -277,5 +294,18 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontFamily: FontFamily.medium,
+  },
+  headerIconBtn: {
+    backgroundColor: Colors.white,
+    borderRadius: 100,
+    height: 32,
+    width: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  priceBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
 });

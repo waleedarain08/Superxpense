@@ -24,7 +24,7 @@ const MainHeader = ({
   name,
   ShowTabs = true,
 }) => {
-  const tabs = ['Overview', 'Spending'];
+  const tabs = ['Account', 'Overview', 'Spending'];
   const [searchText, setSearchText] = useState('');
 
   const handleSearch = () => {
@@ -38,11 +38,13 @@ const MainHeader = ({
     <View>
       {/* Top Row: Avatar and Search */}
       <View style={styles.topRow}>
-        <View style={styles.avatar}>
+        <TouchableOpacity
+          style={styles.avatar}
+          onPress={() => navigation.navigate('Settings')}>
           <Text style={styles.avatarText}>
             {name ? name.slice(0, 2).toUpperCase() : ''}
           </Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.searchBar}>
           <TouchableOpacity onPress={handleSearch}>
             <Icon name="search" size={16} color={Colors.white} />
@@ -86,26 +88,26 @@ const MainHeader = ({
       </View>
 
       {/* Tabs */}
-{  ShowTabs &&    <LinearGradient
-        colors={['#ccf3f3', '#d0f4f4']}
-        style={styles.gradientBackground}>
-        <View style={styles.tabContainer}>
-          {tabs.map(tab => {
-            const isActive = selectedTab === tab;
-            return (
-              <TouchableOpacity
-                key={tab}
-                style={[styles.tab, isActive && styles.activeTab]}
-                onPress={() => setSelectedTab(tab)}>
-                <Text
-                  style={[styles.tabText, isActive && styles.activeTabText]}>
-                  {tab}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+      {ShowTabs && (
+        <View style={styles.gradientBackground}>
+          <View style={styles.tabContainer}>
+            {tabs.map(tab => {
+              const isActive = selectedTab === tab;
+              return (
+                <TouchableOpacity
+                  key={tab}
+                  style={[styles.tab, isActive && styles.activeTab]}
+                  onPress={() => setSelectedTab(tab)}>
+                  <Text
+                    style={[styles.tabText, isActive && styles.activeTabText]}>
+                    {tab}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </View>
-      </LinearGradient>}
+      )}
     </View>
   );
 };
@@ -180,6 +182,7 @@ const styles = StyleSheet.create({
   },
   gradientBackground: {
     justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.27)',
     alignItems: 'center',
     marginTop: 32,
     borderRadius: 50,

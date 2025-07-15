@@ -12,7 +12,10 @@ import {
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-// import Slider from 'react-native-slider';
+import Header from '../../component/Header';
+import {Amount, ShoppingGreen} from '../../assets/svgs';
+import {PlusIcon} from '../../icons';
+import Slider from '@react-native-community/slider';
 
 const {width} = Dimensions.get('window');
 
@@ -95,23 +98,40 @@ const EditBudgetScreen = ({navigation}) => {
   const CategoryBudgetCard = ({category}) => (
     <View style={styles.categoryCard}>
       <View style={styles.categoryHeader}>
-        <View style={[styles.categoryIcon, {backgroundColor: category.color}]}>
-          <Icon name={category.icon} size={18} color="white" />
+        <View style={[styles.categoryIcon]}>
+          {/* <Icon name={category.icon} size={18} color="white" />˝ */}
+          <ShoppingGreen />
         </View>
         <Text style={styles.categoryName}>{category.name}</Text>
       </View>
-      <Text style={styles.categoryAmount}>
-        {category.value.toLocaleString()}
-      </Text>
+      <View
+        style={{
+          backgroundColor: 'rgba(255,255,255,0.4)',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: 40,
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: Colors.white,
+        }}>
+        <Text style={styles.categoryAmount}>
+          {category.value.toLocaleString()}
+        </Text>
+      </View>
       <View style={styles.sliderContainer}>
-        {/* <Slider
+        <Slider
+          style={styles.slider}
           minimumValue={0}
           maximumValue={category.maxValue}
           value={category.value}
-          onValueChange={(value) => handleCategoryBudgetChange(category.id, Math.round(value))}
-          minimumTrackTintColor={category.color}
-          maximumTrackTintColor="#E0E0E0"
-        /> */}
+          onValueChange={value =>
+            handleCategoryBudgetChange(category.id, Math.round(value))
+          }
+          minimumTrackTintColor={Colors.newButtonBack}
+          maximumTrackTintColor="rgba(255,255,255,0.3)"
+          thumbStyle={styles.sliderThumb}
+          trackStyle={styles.sliderTrack}
+        />
       </View>
     </View>
   );
@@ -120,56 +140,56 @@ const EditBudgetScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}>
-            <Icon name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Edit Budget</Text>
-          <View style={styles.headerSpacer} />
-        </View>
+        <Header
+          ScreenName="Edit Budget"
+          onBackPress={() => navigation.goBack()}
+        />
+        <View
+          style={{
+            backgroundColor: 'rgba(255,255,255,0.3)',
+            borderWidth: 1,
+            borderColor: Colors.white,
+            borderRadius: 20,
+            // padding: 16,
+            // margin: 16,
+          }}>
+          {/* Subtitle */}
+          <Text style={styles.subtitle}>Limit your spending</Text>
 
-        {/* Subtitle */}
-        <Text style={styles.subtitle}>Limit your spending</Text>
-
-        {/* Budget Amount Section */}
-        <View style={styles.budgetAmountCard}>
-          <View style={styles.budgetAmountHeader}>
-            <View style={styles.budgetIconContainer}>
-              <Icon name="account-balance-wallet" size={20} color="#4ECDC4" />
-            </View>
-            <Text style={styles.budgetAmountLabel}>Budget Amount</Text>
-            <Text style={styles.currencyLabel}>AED</Text>
+          {/* Budget Amount Section */}
+          <View style={styles.inputRow}>
+            <Amount style={{marginRight: 8}} />
+            <TextInput
+              style={styles.input}
+              placeholder="Budget Amount"
+              value={budgetAmount}
+              onChangeText={setBudgetAmount}
+              placeholderTextColor={Colors.grayIcon}
+              keyboardType="numeric"
+            />
+            <Text style={styles.inputSuffix}>AED</Text>
           </View>
-          <TextInput
-            style={styles.budgetAmountInput}
-            value={budgetAmount}
-            onChangeText={setBudgetAmount}
-            placeholder="0"
-            keyboardType="numeric"
-          />
-        </View>
 
-        {/* Expenses Label */}
-        <View style={styles.expensesHeader}>
-          <Text style={styles.expensesLabel}>Expenses</Text>
-          <TouchableOpacity style={styles.addButton}>
-            <Icon name="add" size={20} color="#FF6B9D" />
+          {/* Expenses Label */}
+          <View style={styles.expensesHeader}>
+            <Text style={styles.expensesLabel}>Expenses</Text>
+            <TouchableOpacity style={styles.addButton}>
+              <PlusIcon color={Colors.newButtonBack} size={14} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Categories Grid */}
+          <View style={styles.categoriesGrid}>
+            {budgetCategories.map(category => (
+              <CategoryBudgetCard key={category.id} category={category} />
+            ))}
+          </View>
+
+          {/* Update Button */}
+          <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+            <Text style={styles.updateButtonText}>Update</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Categories Grid */}
-        <View style={styles.categoriesGrid}>
-          {budgetCategories.map(category => (
-            <CategoryBudgetCard key={category.id} category={category} />
-          ))}
-        </View>
-
-        {/* Update Button */}
-        <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
-          <Text style={styles.updateButtonText}>Update</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -201,10 +221,11 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    fontFamily: FontFamily.regular || 'System',
-    color: '#666',
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
     textAlign: 'center',
-    marginBottom: 30,
+    marginBottom: 24,
+    marginTop: 16,
   },
   budgetAmountCard: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -251,12 +272,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   expensesLabel: {
-    fontSize: 16,
-    fontFamily: FontFamily.medium || 'System',
-    color: '#333',
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    color: Colors.grayIcon,
   },
   addButton: {
-    padding: 5,
+    height: 24,
+    width: 24,
+    backgroundColor: Colors.white,
+    borderRadius: 1000,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   categoriesGrid: {
     flexDirection: 'row',
@@ -288,19 +314,19 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 14,
-    fontFamily: FontFamily.medium || 'System',
-    color: '#333',
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
     flex: 1,
   },
   categoryAmount: {
-    fontSize: 18,
-    fontFamily: FontFamily.bold || 'System',
-    color: '#4ECDC4',
-    marginBottom: 15,
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    color: Colors.newButtonBack,
     textAlign: 'center',
   },
   sliderContainer: {
     marginTop: 10,
+    paddingHorizontal: 4,
   },
   slider: {
     width: '100%',
@@ -309,31 +335,58 @@ const styles = StyleSheet.create({
   sliderTrack: {
     height: 4,
     borderRadius: 2,
+    backgroundColor: '#28A08C1A',
   },
   sliderThumb: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 4,
+    width: 28,
+    height: 28,
+    borderRadius: 10,
+    backgroundColor: '#28A08C1A',
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   updateButton: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: Colors.newButtonBack,
     marginHorizontal: 20,
-    paddingVertical: 16,
-    borderRadius: 12,
+    paddingVertical: 14,
+    borderRadius: 100,
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 30,
   },
   updateButtonText: {
     fontSize: 16,
-    fontFamily: FontFamily.bold || 'System',
-    color: 'white',
+    fontFamily: FontFamily.semiBold,
+    color: Colors.newWhite,
+  },
+  // Missing styles that were causing the crash
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    marginBottom: 24,
+    paddingHorizontal: 12,
+    height: 56,
+    marginHorizontal: 20,
+  },
+  input: {
+    flex: 1,
+    fontSize: 15,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.regular,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+  },
+  inputSuffix: {
+    fontSize: 14,
+    color: Colors.grayIcon,
+    fontFamily: FontFamily.medium,
+    marginLeft: 6,
   },
 });
 

@@ -21,6 +21,7 @@ import AssetsBreakdown from '../../component/AssetsBreakdown';
 const PropertyScreen = ({navigation}) => {
   const [showStepper, setShowStepper] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [isSearchSelected, setIsSearchSelected] = useState(false);
 
   // Step components now receive onBack and onContinue props
   const Step1 = props => <Stepone {...props} />;
@@ -86,26 +87,33 @@ const PropertyScreen = ({navigation}) => {
         <SafeAreaView style={{flex: 1, marginBottom: 10}}>
           <PortHeader
             navigation={navigation}
-            largestTransaction={'100'}
+            largestTransaction={isSearchSelected ? '200,000.00' : '0.00'}
             name={'sadas'}
+            isSearchSelected={isSearchSelected}
+            setIsSearchSelected={setIsSearchSelected}
           />
-          <View style={{marginTop: 24}}>
-            <NoAssetDataCard />
-          </View>
-          <View style={{marginTop: 28}}>
-            <Text style={styles.title}>No Properties Added Yet</Text>
-            <Text style={styles.description}>
-              Track your real estate, assets, mortgages, and payment plans all
-              in one place.
-            </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => setShowStepper(true)}>
-              <Text style={styles.buttonText}>Add Property</Text>
-              <ChevronRight size={12} color={Colors.newWhite} />
-            </TouchableOpacity>
-          </View>
-          <AssetsBreakdown />
+          {isSearchSelected ? (
+            <AssetsBreakdown />
+          ) : (
+            <>
+              <View style={{marginTop: 24}}>
+                <NoAssetDataCard />
+              </View>
+              <View style={{marginTop: 28}}>
+                <Text style={styles.title}>No Properties Added Yet</Text>
+                <Text style={styles.description}>
+                  Track your real estate, assets, mortgages, and payment plans
+                  all in one place.
+                </Text>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => setShowStepper(true)}>
+                  <Text style={styles.buttonText}>Add Property</Text>
+                  <ChevronRight size={12} color={Colors.newWhite} />
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </SafeAreaView>
       </ScrollView>
     </ImageBackground>

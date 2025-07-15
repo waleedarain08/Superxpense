@@ -264,6 +264,7 @@ const SpendingSummary = ({data = [], month}) => {
                 color: Colors.grayIcon,
                 fontFamily: FontFamily.regular,
                 fontSize: 14,
+                marginTop: 8,
               }}>
               This section shows a summary of your monthly expenses, by category
               and trend.
@@ -280,7 +281,7 @@ const SpendingSummary = ({data = [], month}) => {
                       .innerRadius(65)
                       .startAngle(0)
                       .endAngle(Math.PI * 2)()}
-                    fill="#b3b3b3"
+                    fill="rgba(255, 255, 255, 0.5)"
                   />
                 </G>
               </Svg>

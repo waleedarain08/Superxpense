@@ -62,4 +62,5 @@ export const Colors = {
   newLightestWhite: 'rgba(255, 255, 255, 0)', // translucent white'
   cardTxt: '#EFEFEF',
   NoDataBack: '#EAEAEA',
+  newGreen: '#1AA875',
 };

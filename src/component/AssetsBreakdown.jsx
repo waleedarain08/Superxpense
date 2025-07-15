@@ -1,70 +1,111 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Colors } from '../utilis/Colors';
-import { FontFamily } from '../utilis/Fonts';
-import { ChevronRight } from '../icons';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {Colors} from '../utilis/Colors';
+import {FontFamily} from '../utilis/Fonts';
+import {ChevronDown, ChevronRight} from '../icons';
+import {useNavigation} from '@react-navigation/native';
+import {BlackDirham, CryptoIcon, GreenArrow} from '../assets/svgs';
 
 const assets = [
   {
     id: 1,
     name: 'Cryptocurrency',
     icon: require('../assets/images/cardBackground.png'), // Replace with your icon
-    value: '฿ 500,000',
-    change: '-6000 (-1.2%)',
+    value: '500,000',
+    change: '+6000 (-1.2%)',
     changeType: 'down',
-    changeColor: Colors.red,
+    changeColor: Colors.newButtonBack,
   },
   {
     id: 2,
     name: 'Stocks',
     icon: require('../assets/images/cardBackground.png'),
-    value: '฿ 2,000,000',
+    value: '2,000,000',
     change: '+35,000 (+1.75%)',
     changeType: 'up',
-    changeColor: Colors.green,
+    changeColor: Colors.newButtonBack,
   },
   {
     id: 3,
     name: 'Cash',
     icon: require('../assets/images/cardBackground.png'),
-    value: '฿ 1,000,000',
+    value: '1,000,000',
     change: 'Fixed Assets',
     changeType: 'fixed',
-    changeColor: Colors.grayIcon,
+    changeColor: Colors.txtColor,
   },
   {
     id: 4,
     name: 'Real Estate',
     icon: require('../assets/images/cardBackground.png'),
-    value: '฿ 5,000,000',
+    value: '5,000,000',
     change: '+55,000 (+1%)',
     changeType: 'up',
-    changeColor: Colors.green,
+    changeColor: Colors.newButtonBack,
   },
   {
     id: 5,
     name: 'Commodities',
     icon: require('../assets/images/cardBackground.png'),
-    value: '฿ 1,500,000',
+    value: '1,500,000',
     change: '+10,500 (+0.7%)',
     changeType: 'up',
-    changeColor: Colors.green,
+    changeColor: Colors.newButtonBack,
   },
 ];
 
 const AssetsBreakdown = () => {
   const navigation = useNavigation();
+  const [selectedFilter, setSelectedFilter] = useState('Today');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const filterOptions = ['Today', 'This Week', 'This Month'];
+
+  const handleFilterSelect = option => {
+    setSelectedFilter(option);
+    setIsDropdownOpen(false);
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Assets Breakdown</Text>
         <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.filterBtn}>
-            <Text style={styles.filterBtnText}>Today</Text>
-            <ChevronRight size={14} color={Colors.txtColor} />
-          </TouchableOpacity>
+          <View style={styles.dropdownContainer}>
+            <TouchableOpacity
+              style={styles.filterBtn}
+              onPress={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <Text style={styles.filterBtnText}>{selectedFilter}</Text>
+              <ChevronDown
+                size={20}
+                color={Colors.txtColor}
+                style={isDropdownOpen ? styles.chevronRotated : {}}
+              />
+            </TouchableOpacity>
+            {isDropdownOpen && (
+              <View style={styles.dropdownList}>
+                {filterOptions.map((option, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.dropdownItem,
+                      option === selectedFilter && styles.selectedDropdownItem,
+                    ]}
+                    onPress={() => handleFilterSelect(option)}>
+                    <Text
+                      style={[
+                        styles.dropdownItemText,
+                        option === selectedFilter &&
+                          styles.selectedDropdownItemText,
+                      ]}>
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
           <TouchableOpacity style={styles.addBtn}>
             <Text style={styles.addBtnPlus}>+</Text>
           </TouchableOpacity>
@@ -77,30 +118,55 @@ const AssetsBreakdown = () => {
             <TouchableOpacity
               key={asset.id}
               style={styles.assetRow}
-              onPress={() => navigation.navigate('RealEstateBreakdown', { asset })}
-              activeOpacity={0.8}
-            >
+              onPress={() =>
+                navigation.navigate('RealEstateBreakdown', {asset})
+              }>
               <View style={styles.assetIconBox}>
-                <Image source={asset.icon} style={styles.assetIcon} />
+                <CryptoIcon />
               </View>
               <View style={styles.assetInfo}>
                 <Text style={styles.assetName}>{asset.name}</Text>
-                <Text style={[styles.assetChange, { color: asset.changeColor }]}>{asset.change}</Text>
+                <View style={styles.assetChangeBoxMain}>
+                  <View style={styles.assetChangeBox}>
+                    <GreenArrow />
+                  </View>
+                  <Text
+                    style={[styles.assetChange, {color: asset.changeColor}]}>
+                    {asset.change}
+                  </Text>
+                </View>
               </View>
-              <Text style={styles.assetValue}>{asset.value}</Text>
+              <View style={styles.assetValueBox}>
+                <BlackDirham />
+                <Text style={styles.assetValue}>{asset.value}</Text>
+                <ChevronRight size={10} />
+              </View>
             </TouchableOpacity>
           );
         }
         return (
           <View key={asset.id} style={styles.assetRow}>
             <View style={styles.assetIconBox}>
-              <Image source={asset.icon} style={styles.assetIcon} />
+              <CryptoIcon />
             </View>
             <View style={styles.assetInfo}>
               <Text style={styles.assetName}>{asset.name}</Text>
-              <Text style={[styles.assetChange, { color: asset.changeColor }]}>{asset.change}</Text>
+              <View style={styles.assetChangeBoxMain}>
+                {asset.name !== 'Cash' && (
+                  <View style={styles.assetChangeBox}>
+                    <GreenArrow />
+                  </View>
+                )}
+                <Text style={[styles.assetChange, {color: asset.changeColor}]}>
+                  {asset.change}
+                </Text>
+              </View>
             </View>
-            <Text style={styles.assetValue}>{asset.value}</Text>
+            <View style={styles.assetValueBox}>
+              <BlackDirham />
+              <Text style={styles.assetValue}>{asset.value}</Text>
+              <ChevronRight size={10} />
+            </View>
           </View>
         );
       })}
@@ -112,13 +178,8 @@ export default AssetsBreakdown;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: 18,
     marginHorizontal: 16,
     marginTop: 24,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
   },
   headerRow: {
     flexDirection: 'row',
@@ -126,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
     flex: 1,
@@ -139,50 +200,91 @@ const styles = StyleSheet.create({
   filterBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eaf6fb',
+    borderWidth: 1,
+    borderColor: Colors.white,
     borderRadius: 100,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    marginRight: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginRight: 12,
   },
   filterBtnText: {
-    fontSize: 13,
+    fontSize: 14,
     color: Colors.txtColor,
     fontFamily: FontFamily.medium,
     marginRight: 4,
   },
   addBtn: {
-    backgroundColor: Colors.green,
+    backgroundColor: Colors.white,
     borderRadius: 100,
-    width: 32,
-    height: 32,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
   addBtnPlus: {
-    color: '#fff',
-    fontSize: 22,
-    fontFamily: FontFamily.semiBold,
-    marginTop: -2,
+    fontSize: 20,
+    color: Colors.newButtonBack,
   },
+  dropdownContainer: {
+    position: 'relative',
+  },
+  dropdownList: {
+    position: 'absolute',
+    top: 40,
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.white,
+    borderRadius: 8,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1000,
+    minWidth: 120,
+  },
+  dropdownItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
+  selectedDropdownItem: {
+    backgroundColor: '#e0f7fa', // A slightly different shade for selected
+  },
+  dropdownItemText: {
+    fontSize: 13,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.medium,
+  },
+  selectedDropdownItemText: {
+    color: Colors.newButtonBack,
+  },
+  chevronRotated: {
+    transform: [{rotate: '180deg'}],
+  },
+
   assetRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f6fcfd',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: Colors.white,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 20,
+    marginBottom: 12,
   },
   assetIconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-    backgroundColor: '#eaf6fb',
+    width: 44,
+    height: 44,
+    borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    borderWidth: 1,
+    borderColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 14,
   },
   assetIcon: {
     width: 24,
@@ -193,19 +295,37 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   assetName: {
-    fontSize: 15,
+    fontSize: 16,
     color: Colors.txtColor,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.medium,
   },
   assetChange: {
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: FontFamily.medium,
-    marginTop: 2,
+    marginTop: 4,
+    color: Colors.txtColor,
   },
   assetValue: {
-    fontSize: 15,
+    fontSize: 14,
     color: Colors.txtColor,
-    fontFamily: FontFamily.semiBold,
-    marginLeft: 8,
+    fontFamily: FontFamily.medium,
   },
-}); 
+  assetValueBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  assetChangeBox: {
+    width: 12,
+    height: 12,
+    borderRadius: 50,
+    backgroundColor: '#28A08C1A',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  assetChangeBoxMain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+});

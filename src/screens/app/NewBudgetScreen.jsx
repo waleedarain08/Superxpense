@@ -10,6 +10,8 @@ import {
   TextInput,
   FlatList,
   Modal,
+  ImageBackground,
+  Image,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
@@ -19,6 +21,17 @@ import StepIndicator from '../../component/StepIndicator';
 import StepperHeader from '../../component/StepperHeader';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
+import {
+  Amount,
+  Bill,
+  EditIcon,
+  MoneyBag,
+  Shopping,
+  ShoppingGreen,
+} from '../../assets/svgs';
+import {ChevronRight, EntoChevronRight, PlusIcon} from '../../icons';
+import Header from '../../component/Header';
+import Slider from '@react-native-community/slider';
 // import Slider from 'react-native-slider';
 
 const {width} = Dimensions.get('window');
@@ -48,7 +61,7 @@ const NewBudgetScreen = ({navigation}) => {
       icon: 'shopping-bag',
       spent: 5000,
       budget: 10000,
-      color: '#FF6B9D',
+      color: '#FFC3DF',
     },
     {
       id: 2,
@@ -56,7 +69,7 @@ const NewBudgetScreen = ({navigation}) => {
       icon: 'restaurant',
       spent: 5000,
       budget: 10000,
-      color: '#FF8C42',
+      color: '#FFCE98',
     },
     {
       id: 3,
@@ -64,7 +77,7 @@ const NewBudgetScreen = ({navigation}) => {
       icon: 'flash-on',
       spent: 5000,
       budget: 10000,
-      color: '#8B5CF6',
+      color: '#CA97FF',
     },
     {
       id: 4,
@@ -72,7 +85,7 @@ const NewBudgetScreen = ({navigation}) => {
       icon: 'movie',
       spent: 5000,
       budget: 10000,
-      color: '#6366F1',
+      color: '#9DD2FF',
     },
     {
       id: 5,
@@ -80,15 +93,7 @@ const NewBudgetScreen = ({navigation}) => {
       icon: 'local-grocery-store',
       spent: 5000,
       budget: 10000,
-      color: '#06B6D4',
-    },
-    {
-      id: 6,
-      name: 'Miscellaneous',
-      icon: 'category',
-      spent: 5000,
-      budget: 10000,
-      color: '#F59E0B',
+      color: '#FFA8A8',
     },
   ];
 
@@ -203,9 +208,10 @@ const NewBudgetScreen = ({navigation}) => {
     <View style={styles.stepContainer}>
       <View style={styles.step1Content}>
         <View style={styles.imageContainer}>
-          <View style={styles.dummyImage}>
-            <Icon name="assessment" size={60} color="#4ECDC4" />
-          </View>
+          <Image
+            source={require('../../assets/images/budgetImage.png')}
+            style={styles.image}
+          />
         </View>
         <Text style={styles.step1Label}>Budget</Text>
         <Text style={styles.step1Title}>
@@ -220,8 +226,29 @@ const NewBudgetScreen = ({navigation}) => {
 
   // Step 2: Budget Setup with Calendar
   const Step2 = () => {
+    const [selectedStartDate, setSelectedStartDate] = useState(null);
+    const [selectedEndDate, setSelectedEndDate] = useState(null);
+    const [weekRange, setWeekRange] = useState({
+      startDate: null,
+      endDate: null,
+    });
+
     const onDateChange = (date, type) => {
-      setSelectedDate(date);
+      // Calculate 7 days starting from the selected date
+      const selectedMoment = moment(date);
+      const startDate = selectedMoment.clone();
+      const endDate = selectedMoment.clone().add(6, 'days'); // 7 days total (selected day + 6 more)
+
+      setSelectedStartDate(startDate.toDate());
+      setSelectedEndDate(endDate.toDate());
+      setWeekRange({
+        startDate: startDate.format('YYYY-MM-DD'),
+        endDate: endDate.format('YYYY-MM-DD'),
+      });
+    };
+
+    const onMonthChange = date => {
+      setCurrentMonth(moment(date));
     };
 
     const navigateMonth = direction => {
@@ -229,99 +256,217 @@ const NewBudgetScreen = ({navigation}) => {
       setCurrentMonth(newMonth);
     };
 
+    const customDayHeaderStylesCallback = () => {
+      return {
+        textStyle: {
+          color: '#888',
+          fontSize: 13,
+          fontFamily: FontFamily.medium,
+          fontWeight: '500',
+          textTransform: 'uppercase',
+          letterSpacing: 0.5,
+        },
+      };
+    };
+
+    // Helper to determine if a date is the start or end of the selected week
+    const isStartOfWeek = date => {
+      if (!selectedStartDate) return false;
+      return moment(date).isSame(moment(selectedStartDate), 'day');
+    };
+    const isEndOfWeek = date => {
+      if (!selectedEndDate) return false;
+      return moment(date).isSame(moment(selectedEndDate), 'day');
+    };
+
+    const customDatesStylesCallback = date => {
+      if (!selectedStartDate || !selectedEndDate) {
+        // Handle today styling when no week is selected
+        const isToday = moment(date).isSame(moment(), 'day');
+        if (isToday) {
+          return {
+            textStyle: {
+              color: Colors.newButtonBack,
+              fontFamily: FontFamily.bold,
+              fontWeight: 'bold',
+            },
+          };
+        }
+        return {};
+      }
+
+      const momentDate = moment(date);
+      const startMoment = moment(selectedStartDate);
+      const endMoment = moment(selectedEndDate);
+
+      const isInSelectedWeek = momentDate.isBetween(
+        startMoment,
+        endMoment,
+        'day',
+        '[]',
+      );
+
+      if (isInSelectedWeek) {
+        // To ensure borderRadius works, use overflow: 'hidden' and set backgroundColor on the container
+        let style = {
+          backgroundColor: 'rgba(255,255,255,0.3)',
+          width: 44,
+          height: 44,
+          borderRadius: 22,
+          overflow: 'hidden',
+          alignItems: 'center',
+          justifyContent: 'center',
+        };
+
+        // Make start and end of week more visually distinct (optional)
+        if (isStartOfWeek(date) || isEndOfWeek(date)) {
+          style = {
+            ...style,
+            borderWidth: 1,
+            borderColor: Colors.white,
+          };
+        }
+
+        return {
+          containerStyle: style,
+          textStyle: {
+            color: Colors.txtColor,
+            fontFamily: FontFamily.regular,
+            fontSize: 20,
+          },
+        };
+      }
+
+      // Handle today styling when it's not in selected week
+      const isToday = momentDate.isSame(moment(), 'day');
+      if (isToday) {
+        return {
+          textStyle: {
+            color: Colors.newButtonBack,
+            fontFamily: FontFamily.regular,
+            fontSize: 20,
+          },
+        };
+      }
+
+      return {};
+    };
+
     return (
       <View style={styles.step2Container}>
         {/* Header */}
         <View style={styles.step2Header}>
-          <TouchableOpacity style={styles.backButton} onPress={handlePrevStep}>
-            <Icon name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.step2Title}>Create Budget</Text>
-          <View style={{width: 24}} />
-        </View>
-
-        <Text style={styles.step2Subtitle}>Set your monthly budget</Text>
-
-        {/* Budget Amount Section */}
-        <View style={styles.budgetAmountSection}>
-          <View style={styles.budgetAmountHeader}>
-            <View style={styles.budgetAmountIconContainer}>
-              <Icon name="account-balance-wallet" size={20} color="#4ECDC4" />
-            </View>
-            <Text style={styles.budgetAmountLabel}>Budget Amount</Text>
-          </View>
-          <TouchableOpacity style={styles.addButton2}>
-            <Text style={styles.addButtonText}>ADD</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Calendar Container */}
-        <View style={styles.calendarContainer}>
-          {/* Custom Calendar Header */}
-          <View style={styles.customCalendarHeader}>
-            <TouchableOpacity
-              style={styles.calendarArrowButton}
-              onPress={() => navigateMonth(-1)}>
-              <Icon name="chevron-left" size={20} color="#4ECDC4" />
-            </TouchableOpacity>
-
-            <Text style={styles.calendarMonthText}>
-              {currentMonth.format('MMMM YYYY')}
-            </Text>
-
-            <TouchableOpacity
-              style={styles.calendarArrowButton}
-              onPress={() => navigateMonth(1)}>
-              <Icon name="chevron-right" size={20} color="#4ECDC4" />
-            </TouchableOpacity>
-          </View>
-
-          <CalendarPicker
-            startFromMonday={true}
-            allowRangeSelection={false}
-            selectedDayColor="#4ECDC4"
-            selectedDayTextColor="#FFFFFF"
-            scaleFactor={375}
-            textStyle={{
-              fontFamily: FontFamily.medium || 'System',
-              color: '#333',
-              fontSize: 16,
-            }}
-            onDateChange={onDateChange}
-            customDayHeaderStyles={() => ({
-              textStyle: {
-                color: '#666',
-                fontSize: 12,
-                fontFamily: FontFamily.medium || 'System',
-                fontWeight: '500',
-              },
-            })}
-            hideArrows={true}
-            hideExtraDays={true}
-            disableMonthChange={true}
-            initialDate={currentMonth.toDate()}
-            dayLabelsWrapper={{
-              borderTopWidth: 0,
-              borderBottomWidth: 0,
-              paddingBottom: 10,
-            }}
-            monthTitleStyle={{display: 'none'}}
-            yearTitleStyle={{display: 'none'}}
-            todayBackgroundColor="transparent"
-            todayTextStyle={{
-              color: '#4ECDC4',
-              fontFamily: FontFamily.bold || 'System',
-            }}
-            selectedStartDate={selectedDate}
-            width={320}
-            height={280}
+          <Header
+            ScreenName="Create Budget"
+            onBackPress={handlePrevStep}
+            mainContainer={styles.step2Header}
           />
         </View>
+        <View style={styles.stepFiveContainer}>
+          {/* Calendar Header */}
+          <View style={styles.stepFiveHeader}>
+            <Text style={styles.stepFiveHeaderTitle}>
+              Set your monthly budget
+            </Text>
+            <View style={styles.inputRow}>
+              <Amount style={{marginRight: 8}} />
+              <TextInput
+                style={styles.input}
+                placeholder="Budget Amount"
+                placeholderTextColor={Colors.grayIcon}
+                keyboardType="numeric"
+              />
+              <Text style={styles.inputSuffix}>AED</Text>
+            </View>
+          </View>
+          <Text style={styles.stepFiveHeaderDate}>Start date - End date</Text>
+          <View style={styles.stepFiveCalendarContainer}>
+            <View style={styles.calendarHeader}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={styles.monthText}>
+                  {currentMonth.format('MMMM YYYY')}
+                </Text>
+                <ChevronRight
+                  size={14}
+                  color={Colors.background}
+                  style={{marginLeft: 4}}
+                />
+              </View>
+              <View
+                style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
+                <TouchableOpacity
+                  style={styles.monthArrowButton}
+                  onPress={() => navigateMonth(-1)}>
+                  <EntoChevronRight size={20} color={Colors.background} />
+                </TouchableOpacity>
 
-        {/* Next Button */}
-        <TouchableOpacity style={styles.nextButton} onPress={handleNextStep}>
-          <Text style={styles.nextButtonText}>Next</Text>
-        </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.monthArrowButton}
+                  onPress={() => navigateMonth(1)}>
+                  <ChevronRight size={20} color={Colors.background} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Calendar */}
+            <View style={styles.calendarWrapper}>
+              <CalendarPicker
+                startFromMonday={true}
+                allowRangeSelection={false}
+                selectedDayColor={Colors.newButtonBack}
+                selectedDayTextColor={Colors.white}
+                // selectedDayTextColor={Colors.txtColor}
+                scaleFactor={400}
+                textStyle={{
+                  fontFamily: FontFamily.regular,
+                  color: Colors.txtColor,
+                  fontSize: 20,
+                }}
+                onDateChange={onDateChange}
+                onMonthChange={onMonthChange}
+                customDayHeaderStyles={customDayHeaderStylesCallback}
+                customDatesStyles={customDatesStylesCallback}
+                hideArrows={true}
+                hideExtraDays={false}
+                disableMonthChange={true}
+                initialDate={currentMonth.toDate()}
+                dayLabelsWrapper={{
+                  borderTopWidth: 0,
+                  borderBottomWidth: 0,
+                }}
+                dayShape="circle"
+                dayContainerStyle={{
+                  backgroundColor: 'transparent',
+                  borderRadius: 22,
+                  height: 44,
+                  width: 44,
+                  overflow: 'hidden',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                previousTitle=""
+                nextTitle=""
+                previousTitleStyle={{display: 'none'}}
+                monthTitleStyle={{display: 'none'}}
+                yearTitleStyle={{display: 'none'}}
+                todayBackgroundColor="transparent"
+                todayTextStyle={{
+                  color: Colors.txtColor,
+                  fontFamily: FontFamily.regular,
+                }}
+                minDate={moment()}
+                width={400}
+                height={400}
+              />
+            </View>
+          </View>
+          {/* Create Goal Button */}
+          <TouchableOpacity
+            style={styles.createGoalButton}
+            onPress={handleNextStep}>
+            <Text style={styles.createGoalButtonText}>Next</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -405,78 +550,88 @@ const NewBudgetScreen = ({navigation}) => {
     return (
       <View style={styles.step3Container}>
         {/* Header */}
-        <View style={styles.step3Header}>
-          <TouchableOpacity style={styles.backButton} onPress={handlePrevStep}>
-            <Icon name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.step3Title}>Create Budget</Text>
-          <View style={{width: 24}} />
-        </View>
+        <Header
+          ScreenName="Create Budget"
+          onBackPress={handlePrevStep}
+          mainContainer={styles.step3Header}
+        />
+        {/* </View> */}
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(255,255,255,0.3)',
+            borderWidth: 1,
+            borderColor: Colors.white,
+            borderRadius: 20,
+            marginHorizontal: 16,
+            marginTop: 20,
+            // padding: 16,
+            paddingTop: 16,
+          }}>
+          <Text style={styles.step3Subtitle}>
+            Set your monthly spending and expenses
+          </Text>
 
-        <Text style={styles.step3Subtitle}>Set your monthly spending</Text>
-
-        <ScrollView
-          style={styles.step3Content}
-          showsVerticalScrollIndicator={false}>
-          {/* Income Sources Section */}
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Income Sources</Text>
-            {incomeItems.map((item, index) => (
-              <View key={item.key} style={styles.inputRow}>
-                <View style={styles.inputRowLeft}>
-                  <View style={styles.inputIcon}>
-                    <Icon name={item.icon} size={20} color="#4ECDC4" />
+          <ScrollView
+            style={styles.step3Content}
+            showsVerticalScrollIndicator={false}>
+            {/* Income Sources Section */}
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Income Sources</Text>
+              {incomeItems.map((item, index) => (
+                <View
+                  key={item.key}
+                  style={[styles.inputRow, {marginBottom: 0}]}>
+                  <View style={styles.inputRowLeft}>
+                    <Bill style={{marginRight: 8}} />
                   </View>
-                  <Text style={styles.inputLabel}>{item.label}</Text>
+                  <TextInput
+                    style={styles.aedInput}
+                    placeholder="AED"
+                    value={item.value}
+                    onChangeText={item.onChangeText}
+                    keyboardType="numeric"
+                    placeholderTextColor="#999"
+                  />
                 </View>
-                <TextInput
-                  style={styles.aedInput}
-                  placeholder="AED"
-                  value={item.value}
-                  onChangeText={item.onChangeText}
-                  keyboardType="numeric"
-                  placeholderTextColor="#999"
-                />
-              </View>
-            ))}
-          </View>
-
-          {/* Expenses Section */}
-          <View style={styles.sectionContainer}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Expenses</Text>
-              <TouchableOpacity
-                style={styles.addButton2}
-                onPress={handleAddExpense}>
-                <Text style={styles.addButtonText}>ADD</Text>
-              </TouchableOpacity>
+              ))}
             </View>
-            {expenseItems.map((item, index) => (
-              <View key={item.key} style={styles.inputRow}>
-                <View style={styles.inputRowLeft}>
-                  <View style={styles.inputIcon}>
-                    <Icon name={item.icon} size={20} color="#4ECDC4" />
-                  </View>
-                  <Text style={styles.inputLabel}>{item.label}</Text>
-                </View>
-                <TextInput
-                  style={styles.aedInput}
-                  placeholder="AED"
-                  value={item.value}
-                  onChangeText={item.onChangeText}
-                  keyboardType="numeric"
-                  placeholderTextColor="#999"
-                />
-              </View>
-            ))}
-          </View>
-          <TouchableOpacity
-            style={[styles.nextButton]}
-            onPress={handleNextStep}>
-            <Text style={styles.nextButtonText}>Next</Text>
-          </TouchableOpacity>
-        </ScrollView>
 
+            {/* Expenses Section */}
+            <View style={styles.sectionContainer}>
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Expenses</Text>
+                <TouchableOpacity
+                  style={styles.addButton2}
+                  onPress={handleAddExpense}>
+                  <PlusIcon color={Colors.newButtonBack} size={14} />
+                </TouchableOpacity>
+              </View>
+              {expenseItems.map((item, index) => (
+                <View
+                  key={item.key}
+                  style={[styles.inputRow, {marginTop: 20, marginBottom: 0}]}>
+                  <View style={styles.inputRowLeft}>
+                    <Bill style={{marginRight: 8}} />
+                  </View>
+                  <TextInput
+                    style={styles.aedInput}
+                    placeholder="AED"
+                    value={item.value}
+                    onChangeText={item.onChangeText}
+                    keyboardType="numeric"
+                    placeholderTextColor="#999"
+                  />
+                </View>
+              ))}
+            </View>
+            <TouchableOpacity
+              style={[styles.nextButton]}
+              onPress={handleNextStep}>
+              <Text style={styles.nextButtonText}>Next</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
         {/* Next Button */}
       </View>
     );
@@ -554,28 +709,39 @@ const NewBudgetScreen = ({navigation}) => {
     const CategoryBudgetCard = ({category}) => (
       <View style={styles.categoryCard}>
         <View style={styles.categoryHeader}>
-          <View
-            style={[styles.categoryIcon, {backgroundColor: category.color}]}>
-            <Icon name={category.icon} size={18} color="white" />
+          <View style={[styles.categoryIcon]}>
+            <ShoppingGreen />
           </View>
           <Text style={styles.categoryName}>{category.name}</Text>
         </View>
-        <Text style={styles.categoryAmount}>
-          {category.value.toLocaleString()}
-        </Text>
-        {/* Slider */}
+        <View
+          style={{
+            backgroundColor: 'rgba(255,255,255,0.4)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 40,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: Colors.white,
+          }}>
+          <Text style={styles.categoryAmount}>
+            {category.value.toLocaleString()}
+          </Text>
+        </View>
         <View style={styles.sliderContainer}>
-          {/* <Slider
+          <Slider
+            style={styles.slider}
             minimumValue={0}
             maximumValue={category.maxValue}
             value={category.value}
-            onValueChange={(value) => handleCategoryBudgetChange(category.id, Math.round(value))}
-            minimumTrackTintColor={category.color}
-            maximumTrackTintColor="#E0E0E0"
-            thumbStyle={[styles.sliderThumb, {borderColor: category.color}]}
+            onValueChange={value =>
+              handleCategoryBudgetChange(category.id, Math.round(value))
+            }
+            minimumTrackTintColor={Colors.newButtonBack}
+            maximumTrackTintColor="rgba(255,255,255,0.3)"
+            thumbStyle={styles.sliderThumb}
             trackStyle={styles.sliderTrack}
-            style={styles.slider}
-          /> */}
+          />
         </View>
       </View>
     );
@@ -583,32 +749,45 @@ const NewBudgetScreen = ({navigation}) => {
     return (
       <View style={styles.step4Container}>
         {/* Header */}
-        <View style={styles.step4Header}>
+        {/* <View style={styles.step4Header}>
           <TouchableOpacity style={styles.backButton} onPress={handlePrevStep}>
             <Icon name="arrow-back" size={24} color="#333" />
           </TouchableOpacity>
           <Text style={styles.step4Title}>Create Budget</Text>
           <View style={{width: 24}} />
+        </View> */}
+        <Header
+          ScreenName="Create Budget"
+          onBackPress={handlePrevStep}
+          mainContainer={styles.step4Header}
+        />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(255,255,255,0.3)',
+            borderWidth: 1,
+            borderColor: Colors.white,
+            borderRadius: 20,
+            marginTop: 20,
+          }}>
+          <Text style={styles.step4Subtitle}>Limit your spending</Text>
+
+          <ScrollView
+            style={styles.step4Content}
+            showsVerticalScrollIndicator={false}>
+            {/* Categories Grid */}
+            <View style={styles.categoriesGrid}>
+              {budgetCategories.map(category => (
+                <CategoryBudgetCard key={category.id} category={category} />
+              ))}
+            </View>
+            <TouchableOpacity
+              style={styles.nextButton}
+              onPress={handleFinishBudget}>
+              <Text style={styles.nextButtonText}>Next</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
-
-        <Text style={styles.step4Subtitle}>Limit your spending</Text>
-
-        <ScrollView
-          style={styles.step4Content}
-          showsVerticalScrollIndicator={false}>
-          {/* Categories Grid */}
-          <View style={styles.categoriesGrid}>
-            {budgetCategories.map(category => (
-              <CategoryBudgetCard key={category.id} category={category} />
-            ))}
-          </View>
-          <TouchableOpacity
-            style={styles.nextButton}
-            onPress={handleFinishBudget}>
-            <Text style={styles.nextButtonText}>Next</Text>
-          </TouchableOpacity>
-        </ScrollView>
-
         {/* Next Button */}
       </View>
     );
@@ -618,9 +797,9 @@ const NewBudgetScreen = ({navigation}) => {
     budgetData,
     totalBudget,
     availableBalance,
-    size = 240,
+    size = 270,
   }) => {
-    const strokeWidth = 12;
+    const strokeWidth = 6;
     const radius = (size - strokeWidth) / 2;
     const halfCircumference = radius * Math.PI; // Half circle circumference
 
@@ -669,9 +848,22 @@ const NewBudgetScreen = ({navigation}) => {
         </Svg>
         <View style={styles.progressContent}>
           <Text style={styles.availableText}>Available balance</Text>
-          <Text style={styles.balanceAmount}>
-            {availableBalance.toLocaleString()}/{totalBudget.toLocaleString()}
-          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.balanceAmount}>
+              {availableBalance.toLocaleString()} AE
+            </Text>
+            <Text
+              style={[
+                styles.balanceAmount,
+                {
+                  fontSize: 24,
+                  fontFamily: FontFamily.medium,
+                  color: Colors.grayIcon,
+                },
+              ]}>
+              / {totalBudget.toLocaleString()}
+            </Text>
+          </View>
           <Text style={styles.currency}>AED</Text>
         </View>
       </View>
@@ -682,10 +874,10 @@ const NewBudgetScreen = ({navigation}) => {
     const progressWidth = (item.spent / item.budget) * 100;
 
     return (
-      <View style={[styles.budgetCard, {backgroundColor: `${item.color}15`}]}>
+      <View style={[styles.budgetCard]}>
         <View style={styles.cardHeader}>
-          <View style={[styles.iconContainer, {backgroundColor: item.color}]}>
-            <Icon name={item.icon} size={20} color="white" />
+          <View style={[styles.iconContainer]}>
+            <Shopping />
           </View>
           <Text style={styles.categoryName}>{item.name}</Text>
         </View>
@@ -693,14 +885,14 @@ const NewBudgetScreen = ({navigation}) => {
         <Text style={styles.budgetText}>
           out of {item.budget.toLocaleString()} AED
         </Text>
-        <View style={styles.progressBar}>
+        {/* <View style={styles.progressBar}>
           <View
             style={[
               styles.progressFill,
               {width: `${progressWidth}%`, backgroundColor: item.color},
             ]}
           />
-        </View>
+        </View> */}
       </View>
     );
   };
@@ -738,14 +930,23 @@ const NewBudgetScreen = ({navigation}) => {
           <TouchableOpacity
             style={styles.iconSelector}
             onPress={handlePickIcon}>
-            <View style={styles.selectedIconContainer}>
-              <Icon name={selectedIcon} size={24} color="#4ECDC4" />
+            <View
+              style={{
+                width: 56,
+                height: 56,
+                backgroundColor: '#28A08C1A',
+                borderRadius: 1000,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 16,
+              }}>
+              <ShoppingGreen size={24} color={Colors.newButtonBack} />
             </View>
             <Text style={styles.iconSelectorText}>Choose Category Icon</Text>
           </TouchableOpacity>
 
           {/* Category Name Input */}
-          <View style={styles.modalInputContainer}>
+          {/* <View style={styles.modalInputContainer}>
             <View style={styles.modalInputLeft}>
               <Icon name={selectedIcon} size={20} color="#4ECDC4" />
               <TextInput
@@ -759,6 +960,16 @@ const NewBudgetScreen = ({navigation}) => {
               />
             </View>
             <Text style={styles.modalInputCurrency}>AED</Text>
+          </View> */}
+          <View style={styles.inputRow}>
+            <Amount style={{marginRight: 8}} />
+            <TextInput
+              style={styles.input}
+              placeholder="Category Name"
+              placeholderTextColor={Colors.grayIcon}
+              keyboardType="numeric"
+            />
+            <Text style={styles.inputSuffix}>AED</Text>
           </View>
 
           {/* Action Buttons */}
@@ -791,7 +1002,17 @@ const NewBudgetScreen = ({navigation}) => {
           <View style={styles.modalHandle} />
 
           {/* Modal Header */}
-          <Text style={styles.modalTitle}>Pick an Icon</Text>
+          <Text
+            style={[
+              styles.modalTitle,
+              {
+                color: Colors.txtColor,
+                fontSize: 16,
+                fontFamily: FontFamily.medium,
+              },
+            ]}>
+            Pick an Icon
+          </Text>
 
           {/* Icons Grid */}
           <View style={styles.iconsGrid}>
@@ -803,7 +1024,7 @@ const NewBudgetScreen = ({navigation}) => {
                   selectedIcon === iconName && styles.selectedIconItem,
                 ]}
                 onPress={() => handleSelectIcon(iconName)}>
-                <Icon name={iconName} size={24} color="#4ECDC4" />
+                <Icon name={iconName} size={24} color={Colors.newButtonBack} />
               </TouchableOpacity>
             ))}
           </View>
@@ -842,34 +1063,33 @@ const NewBudgetScreen = ({navigation}) => {
 
   if (showStepper) {
     return (
-      <SafeAreaView style={styles.container}>
-        {currentStep !== 2 && currentStep !== 3 && currentStep !== 4 && (
-          <StepperHeader
-            step={currentStep}
-            totalSteps={4}
-            onBack={handlePrevStep}
-            mainContainer={styles.stepperHeaderContainer}
-          />
-        )}
-        <View style={styles.stepperIndicatorContainer}>
-          <StepIndicator
-            totalSteps={4}
-            currentStep={currentStep}
-            color="#4ECDC4"
-          />
-        </View>
+      <ImageBackground
+        source={require('../../assets/images/greenishBackground.png')}
+        style={{flex: 1}}>
         {renderStep()}
 
         {/* Modals */}
         <AddExpenseModal />
         <PickIconModal />
-      </SafeAreaView>
+      </ImageBackground>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+    <ImageBackground
+      source={require('../../assets/images/greenishBackground.png')}
+      style={{flex: 1}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          flex: 1,
+          backgroundColor: 'rgba(255,255,255,0.5)',
+          borderWidth: 1,
+          borderColor: Colors.white,
+          borderRadius: 18,
+          marginTop: 60,
+          paddingHorizontal: 14,
+        }}>
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
@@ -877,11 +1097,11 @@ const NewBudgetScreen = ({navigation}) => {
             <TouchableOpacity
               style={styles.settingsIcon}
               onPress={() => navigation.navigate('EditBudget')}>
-              <Icon name="settings" size={20} color="#666" />
+              <EditIcon />
             </TouchableOpacity>
           </View>
           <TouchableOpacity style={styles.addButton} onPress={handleAddBudget}>
-            <Icon name="add" size={24} color="#4ECDC4" />
+            <PlusIcon size={16} color={Colors.newButtonBack} />
           </TouchableOpacity>
         </View>
 
@@ -895,16 +1115,11 @@ const NewBudgetScreen = ({navigation}) => {
             totalBudget={totalBudget}
             availableBalance={availableBalance}
           />
+          {/* Status Message */}
+          <View style={styles.statusMessage}>
+            <Text style={styles.statusText}>Keep it, you’re on track 👌🏻</Text>
+          </View>
         </View>
-
-        {/* Status Message */}
-        <View style={styles.statusMessage}>
-          <Icon name="thumb-up" size={16} color="#4ECDC4" />
-          <Text style={styles.statusText}>Keep it, you're on track</Text>
-        </View>
-
-        {/* Legend */}
-        <CircularLegend budgetData={budgetData} />
 
         {/* Budget Categories Grid */}
         <View style={styles.categoriesGrid}>
@@ -917,21 +1132,20 @@ const NewBudgetScreen = ({navigation}) => {
       {/* Modals */}
       <AddExpenseModal />
       <PickIconModal />
-    </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E0F2F1',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: 10,
+    paddingTop: 16,
     paddingBottom: 10,
   },
   headerLeft: {
@@ -939,36 +1153,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 20,
-    fontFamily: FontFamily.bold || 'System',
-    color: '#333',
-    marginRight: 10,
+    fontSize: 28,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.black,
+    marginRight: 12,
   },
   settingsIcon: {
-    padding: 5,
-  },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'white',
+    height: 32,
+    width: 32,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: Colors.white,
+    borderRadius: 1000,
+    marginLeft: 10,
+  },
+  addButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 1000,
+    backgroundColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   subtitle: {
-    fontSize: 14,
-    fontFamily: FontFamily.regular || 'System',
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 30,
+    fontSize: 16,
+    fontFamily: FontFamily.regular,
+    color: '#000000CC',
+    paddingHorizontal: 10,
+    marginBottom: 12,
   },
   progressSection: {
-    alignItems: 'center',
+    // alignItems: 'center',
     marginBottom: 30,
     marginTop: 10,
   },
@@ -983,33 +1198,37 @@ const styles = StyleSheet.create({
   progressContent: {
     position: 'absolute',
     alignItems: 'center',
-    bottom: 10,
+    bottom: 50,
     left: 0,
     right: 0,
   },
   availableText: {
-    fontSize: 14,
-    fontFamily: FontFamily.regular || 'System',
-    color: '#666',
-    marginBottom: 8,
+    fontSize: 16,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
+    marginBottom: 12,
   },
   balanceAmount: {
     fontSize: 28,
-    fontFamily: FontFamily.bold || 'System',
-    color: '#333',
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
     letterSpacing: -0.5,
   },
   currency: {
-    fontSize: 16,
-    fontFamily: FontFamily.medium || 'System',
-    color: '#666',
+    fontSize: 24,
+    fontFamily: FontFamily.medium,
+    color: Colors.grayIcon,
     marginTop: 4,
   },
   statusMessage: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
-    marginBottom: 30,
+    alignItems: 'center',
+    backgroundColor: Colors.white,
+    width: 200,
+    height: 32,
+    borderRadius: 1000,
   },
   statusText: {
     fontSize: 14,
@@ -1028,11 +1247,10 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -1042,22 +1260,25 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 8,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   categoryName: {
-    fontSize: 14,
-    fontFamily: FontFamily.medium || 'System',
-    color: '#333',
+    fontSize: 16,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
     flex: 1,
   },
   amount: {
     fontSize: 16,
-    fontFamily: FontFamily.bold || 'System',
-    color: '#333',
-    marginBottom: 4,
+    fontFamily: FontFamily.medium,
+    color: Colors.newButtonBack,
+    marginBottom: 8,
   },
   budgetText: {
     fontSize: 12,
@@ -1109,9 +1330,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0F2F1',
   },
   stepContainer: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#E0F2F1',
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderWidth: 1,
+    borderColor: Colors.white,
+    borderRadius: 20,
+    height: '80%',
+    marginTop: 60,
   },
   // Step 1 specific styles
   step1Content: {
@@ -1121,56 +1345,36 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   imageContainer: {
-    marginBottom: 40,
-  },
-  dummyImage: {
-    width: 200,
-    height: 150,
-    backgroundColor: '#B2DFDB',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    marginBottom: 24,
   },
   step1Label: {
-    fontSize: 16,
-    fontFamily: FontFamily.medium || 'System',
-    color: '#4ECDC4',
-    marginBottom: 16,
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.background,
+    marginBottom: 8,
     textAlign: 'center',
   },
   step1Title: {
-    fontSize: 24,
-    fontFamily: FontFamily.bold || 'System',
-    color: '#333',
+    fontSize: 32,
+    fontFamily: FontFamily.bold,
+    color: Colors.black,
     textAlign: 'center',
     lineHeight: 32,
-    paddingHorizontal: 20,
+    paddingHorizontal: 45,
+    marginBottom: 24,
   },
   setBudgetButton: {
-    backgroundColor: '#4ECDC4',
-    paddingVertical: 16,
+    backgroundColor: Colors.newButtonBack,
+    paddingVertical: 14,
     paddingHorizontal: 40,
-    position: 'absolute',
-    bottom: 90,
-    left: 0,
-    right: 0,
     borderRadius: 25,
     marginHorizontal: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    marginBottom: 15,
   },
   setBudgetButtonText: {
-    color: 'white',
+    color: Colors.newWhite,
     fontSize: 16,
-    fontFamily: FontFamily.bold || 'System',
+    fontFamily: FontFamily.semiBold,
     textAlign: 'center',
   },
   // Step 2 specific styles
@@ -1179,12 +1383,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0F2F1',
   },
   step2Header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: '#E0F2F1',
+    paddingTop: 30,
   },
   backButton: {
     padding: 8,
@@ -1227,10 +1426,12 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   addButton2: {
-    backgroundColor: '#4ECDC4',
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 20,
+    height: 24,
+    width: 24,
+    backgroundColor: Colors.white,
+    borderRadius: 1000,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   addButtonText: {
     color: 'white',
@@ -1268,22 +1469,17 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   nextButton: {
-    backgroundColor: '#4ECDC4',
-    paddingVertical: 16,
+    backgroundColor: Colors.newButtonBack,
+    paddingVertical: 14,
     borderRadius: 25,
     // marginHorizontal: 20,
     marginBottom: 20,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   nextButtonText: {
-    color: 'white',
+    color: Colors.newWhite,
     fontSize: 16,
-    fontFamily: FontFamily.bold || 'System',
+    fontFamily: FontFamily.semiBold,
   },
   // Step 3 specific styles
   step3Container: {
@@ -1291,12 +1487,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0F2F1',
   },
   step3Header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: '#E0F2F1',
+    marginTop: 50,
   },
   step3Title: {
     fontSize: 18,
@@ -1305,8 +1496,8 @@ const styles = StyleSheet.create({
   },
   step3Subtitle: {
     fontSize: 14,
-    fontFamily: FontFamily.regular || 'System',
-    color: '#666',
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -1321,22 +1512,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
   },
   inputRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: 'white',
-    paddingVertical: 15,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    marginBottom: 24,
     paddingHorizontal: 16,
-    borderRadius: 12,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    height: 56,
+    marginTop: 24,
   },
   inputRowLeft: {
     flexDirection: 'row',
@@ -1371,12 +1558,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E0F2F1',
   },
   step4Header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
+    marginTop: 50,
   },
   step4Title: {
     fontSize: 18,
@@ -1385,10 +1567,11 @@ const styles = StyleSheet.create({
   },
   step4Subtitle: {
     fontSize: 14,
-    fontFamily: FontFamily.regular || 'System',
-    color: '#666',
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
     textAlign: 'center',
-    marginBottom: 30,
+    marginBottom: 24,
+    marginTop: 16,
   },
   step4Content: {
     flex: 1,
@@ -1410,19 +1593,19 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 14,
-    fontFamily: FontFamily.medium || 'System',
-    color: '#333',
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
     flex: 1,
   },
   categoryAmount: {
-    fontSize: 18,
-    fontFamily: FontFamily.bold || 'System',
-    color: '#4ECDC4',
-    marginBottom: 15,
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    color: Colors.newButtonBack,
     textAlign: 'center',
   },
   sliderContainer: {
     marginTop: 10,
+    paddingHorizontal: 4,
   },
   slider: {
     width: '100%',
@@ -1431,18 +1614,20 @@ const styles = StyleSheet.create({
   sliderTrack: {
     height: 4,
     borderRadius: 2,
+    backgroundColor: '#28A08C1A',
   },
   sliderThumb: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: 'white',
-    borderWidth: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 4,
+    width: 28,
+    height: 28,
+    borderRadius: 10,
+    backgroundColor: '#28A08C1A',
+    borderWidth: 1,
+    borderColor: Colors.white,
+  },
+  image: {
+    width: 350,
+    height: 350,
+    resizeMode: 'contain',
   },
   // General step styles
   stepTitle: {
@@ -1454,29 +1639,31 @@ const styles = StyleSheet.create({
   },
   stepSubtitle: {
     fontSize: 16,
-    fontFamily: FontFamily.regular || 'System',
+    fontFamily: FontFamily.regular,
     color: '#666',
     textAlign: 'center',
     marginBottom: 30,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontFamily: FontFamily.bold || 'System',
-    color: '#333',
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    color: Colors.grayIcon,
   },
   input: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
-    fontFamily: FontFamily.regular || 'System',
-    color: '#333',
-    marginBottom: 30,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    flex: 1,
+    fontSize: 15,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.regular,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+  },
+  inputSuffix: {
+    fontSize: 14,
+    color: Colors.grayIcon,
+    fontFamily: FontFamily.medium,
+    marginLeft: 6,
   },
   continueButton: {
     backgroundColor: '#4ECDC4',
@@ -1628,26 +1815,24 @@ const styles = StyleSheet.create({
     minHeight: 400,
   },
   modalHandle: {
-    width: 40,
-    height: 4,
-    backgroundColor: '#4ECDC4',
-    borderRadius: 2,
+    width: 55,
+    height: 7,
+    backgroundColor: Colors.background,
+    borderRadius: 100,
     alignSelf: 'center',
     marginBottom: 20,
   },
   modalTitle: {
-    fontSize: 22,
-    fontFamily: FontFamily.bold || 'System',
-    color: '#333',
-    textAlign: 'center',
+    fontSize: 32,
+    fontFamily: FontFamily.bold,
+    color: Colors.txtColor,
     marginBottom: 8,
   },
   modalSubtitle: {
-    fontSize: 14,
-    fontFamily: FontFamily.regular || 'System',
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 30,
+    fontSize: 16,
+    fontFamily: FontFamily.regular,
+    color: Colors.grayIcon,
+    marginBottom: 24,
   },
   iconSelector: {
     alignItems: 'center',
@@ -1663,9 +1848,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   iconSelectorText: {
-    fontSize: 14,
-    fontFamily: FontFamily.medium || 'System',
-    color: '#666',
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
   },
   modalInputContainer: {
     flexDirection: 'row',
@@ -1699,30 +1884,29 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   saveButton: {
-    backgroundColor: '#4ECDC4',
+    backgroundColor: Colors.newButtonBack,
     paddingVertical: 16,
-    borderRadius: 25,
+    borderRadius: 1000,
     alignItems: 'center',
     marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   saveButtonText: {
-    color: 'white',
+    color: Colors.white,
     fontSize: 16,
-    fontFamily: FontFamily.bold || 'System',
+    fontFamily: FontFamily.semiBold,
   },
   cancelButton: {
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 14,
+    backgroundColor: Colors.white,
+    borderRadius: 1000,
+    alignItems: 'center',
+    marginBottom: 15,
   },
   cancelButtonText: {
-    color: '#666',
+    color: Colors.txtColor,
     fontSize: 16,
-    fontFamily: FontFamily.medium || 'System',
+    fontFamily: FontFamily.regular,
   },
   iconsGrid: {
     flexDirection: 'row',
@@ -1732,19 +1916,101 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   iconItem: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#F0F9FF',
+    width: (width - 60) / 5, // 6 icons per row with padding
+    height: 48,
+    marginRight: 2,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.4)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    marginBottom: 28,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   selectedIconItem: {
     borderColor: '#4ECDC4',
     backgroundColor: '#B2DFDB',
+  },
+  stepFiveContainer: {
+    paddingHorizontal: 16,
+    padding: 16,
+    paddingBottom: 40,
+    marginHorizontal: 16,
+    marginTop: 30,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 18,
+    height: 700,
+    borderWidth: 1,
+    borderColor: Colors.white,
+  },
+  calendarHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 16,
+    marginTop: 10,
+  },
+  stepFiveHeaderTitle: {
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  stepFiveHeaderSubtitle: {
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  stepFiveHeaderDate: {
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
+    marginBottom: 20,
+    opacity: 0.7,
+  },
+  stepFiveCalendarContainer: {
+    // flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 18,
+    borderWidth: 1,
+    paddingTop: 10,
+    borderColor: Colors.white,
+  },
+  calendarWrapper: {
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    marginBottom: 26,
+  },
+  monthArrowButton: {
+    // padding: 8,
+  },
+  monthArrowText: {
+    fontSize: 24,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.semiBold,
+  },
+  monthText: {
+    fontSize: 17,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+  },
+  createGoalButton: {
+    backgroundColor: Colors.newButtonBack,
+    paddingVertical: 16,
+    borderRadius: 100,
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 120,
+  },
+  createGoalButtonText: {
+    color: Colors.white,
+    fontSize: 16,
+    fontFamily: FontFamily.semiBold,
   },
 });
 

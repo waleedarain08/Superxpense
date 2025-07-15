@@ -9,7 +9,7 @@ import {
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 import Header from './Header';
-import {UploadIcon} from '../assets/svgs';
+import {Document, Image, UploadIcon} from '../assets/svgs';
 // import { DocumentIcon, ImageIcon } from '../assets/svgs'; // Remove these for now
 
 const files = [
@@ -17,13 +17,13 @@ const files = [
     name: 'contract_plan.pdf',
     type: 'PDF',
     size: '492 kb',
-    icon: <UploadIcon />,
+    icon: <Document width={24} height={24} />,
   },
   {
     name: 'land_deed.jpg',
     type: 'Jpg',
     size: '1.2 mb',
-    icon: <UploadIcon />,
+    icon: <Image width={24} height={24} />,
   },
 ];
 
@@ -50,7 +50,7 @@ const StepTwo = ({onBack, onContinue}) => {
               <View style={styles.fileInfo}>
                 <Text style={styles.fileName}>{file.name}</Text>
                 <Text style={styles.fileMeta}>
-                  {file.type}   · {file.size}
+                  {file.type} · {file.size}
                 </Text>
               </View>
             </View>

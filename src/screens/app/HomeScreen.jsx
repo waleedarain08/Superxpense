@@ -1,6 +1,8 @@
 import {
   ActivityIndicator,
   Alert,
+  Dimensions,
+  Image,
   ImageBackground,
   Platform,
   ScrollView,
@@ -10,17 +12,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useRef, useMemo} from 'react';
 import {Colors} from '../../utilis/Colors';
 import SpendingSummary from '../../component/SpendingSummary';
 import StackedChart from '../../component/StackedChart';
 import BudgetCard from '../../component/BudgetCard';
-import {Plus, Stars} from '../../assets/svgs';
+import {
+  Home,
+  House,
+  Houses,
+  Plus,
+  Stars,
+  Dirham,
+  Bank,
+  GreenBank,
+} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import {API} from '../../utilis/Constant';
-import {get} from '../../utilis/Api';
+import {API, leanAppToken, isSandbox} from '../../utilis/Constant';
+import {get, del} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import BankCard from '../../component/BankCard';
 import {useFocusEffect} from '@react-navigation/native';
@@ -33,7 +44,12 @@ import MainHeader from '../../component/MainHeader';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import DocumentPicker from '@react-native-documents/picker';
 import ContractInstallmentsList from '../../component/ContractInstallmentTable';
+import LinkSDK from 'lean-react-native';
+import AccountSwiper from '../../component/AccountSwiper';
+import {ChevronLeft, PlusIcon} from '../../icons';
+import UpcomingBills from '../../component/UpcomingBills';
 
+const {width} = Dimensions.get('window');
 const categoryColors = [
   '#F17192', // lightRed
   '#717EF1', // purple
@@ -50,9 +66,9 @@ const categoryColors = [
   '#24F8B8',
 ];
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({navigation, route}) => {
   const [selectedTab, setSelectedTab] = useState('Overview');
-  const tabs = ['Overview', 'Spending'];
+  const tabs = ['Account', 'Overview', 'Spending'];
   const [accountsData, setAccountsData] = useState([]);
   const [banksData, setBanksData] = useState([]);
   const [stateEntityId, setStateEntityId] = useState(null);
@@ -79,7 +95,80 @@ const HomeScreen = ({navigation}) => {
   const [renderSpending, setRenderSpending] = useState(
     selectedTab === 'Spending',
   );
+  const [renderAccount, setRenderAccount] = useState(selectedTab === 'Account');
   const [name, setName] = useState('');
+
+  // Account-related state
+  const [customerID, setCustomerID] = useState('');
+  const [leanToken, setLeanToken] = useState('');
+  const [reconnect, setIsReconnect] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState(null);
+  const Lean = useRef(null);
+
+  // Handle initial tab selection from navigation
+  useEffect(() => {
+    if (route.params?.initialTab) {
+      setSelectedTab(route.params.initialTab);
+    }
+  }, [route.params?.initialTab]);
+
+  // PropertyTrackingCard Component
+  const PropertyTrackingCard = () => (
+    <View style={styles.propertyCard}>
+      <View style={styles.propertyCardHeader}>
+        <View style={styles.propertyIcon}>
+          <Houses width={24} height={24} />
+        </View>
+        <Text style={styles.propertyTitle}>Track Your Properties</Text>
+      </View>
+      <Text style={styles.propertySubtitle}>
+        Manage mortgages, payment plans, and real estate in one place.
+      </Text>
+      <TouchableOpacity
+        style={styles.propertyButton}
+        onPress={() => navigation.navigate('Property')}>
+        <Text style={styles.propertyButtonText}>View Properties</Text>
+        <Icon name="chevron-forward" size={16} color={Colors.white} />
+      </TouchableOpacity>
+    </View>
+  );
+
+  // CurrentMonthStatusCard Component
+  const CurrentMonthStatusCard = () => (
+    <View style={styles.currentMonthCard}>
+      <View style={styles.currentMonthHeader}>
+        <Text style={styles.currentMonthTitle}>Current Month Status</Text>
+        <View style={styles.currentMonthAmount}>
+          <Dirham width={20} height={20} />
+          <Text style={styles.amountText}>0.00</Text>
+        </View>
+      </View>
+
+      <View style={styles.currentMonthChartArea}>
+        {/* <View style={styles.circularPlaceholder}>
+          <View style={styles.innerCircle} />
+        </View> */}
+        <Image
+          source={require('../../assets/images/CircleUnfilled.png')}
+          style={{
+            resizeMode: 'contain',
+            width: 100,
+            height: 100,
+            marginBottom: 16,
+          }}
+        />
+        <Text style={styles.noDataText}>No Data yet</Text>
+      </View>
+
+      <TouchableOpacity
+        style={styles.linkAccountButton}
+        onPress={() => navigation.navigate('IssuingCountryScreen')}>
+        <Text style={styles.linkAccountButtonText}>Link bank account</Text>
+        <Icon name="chevron-forward" size={16} color={Colors.white} />
+      </TouchableOpacity>
+    </View>
+  );
+
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
     setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
@@ -93,10 +182,12 @@ const HomeScreen = ({navigation}) => {
     try {
       setLoading(true);
       const data = await get(`${API.bankAccounts}`, null, token);
-      setBankName(data.data[0].bankName);
+      setBankName(data.data[0]?.bankName || '');
       const rawBanks = data?.data || [];
 
       setBanksData(rawBanks);
+      setLastRefreshed(new Date());
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log('Error fetching transactions:', error);
@@ -106,17 +197,142 @@ const HomeScreen = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       fetchAccounts();
+      hitLeanApi();
     }, []),
   );
 
   const handleAccountPress = (account, bankID, bankName) => {
+    // Find the full bank data object
+    const bankData = banksData.find(bank => bank.bankId === bankID);
+
     navigation.navigate('BankTransaction', {
       accountId: account.accountId,
       accountBalance: account.accountBalance,
       accountType: account.accountType,
       BankName: bankName,
       entityId: bankID,
+      bankData: bankData, // Add the missing bankData parameter
     });
+  };
+
+  // Account-specific functions
+  const hitLeanApi = async () => {
+    try {
+      const userData = await getItem('userData');
+      if (!userData || !userData.data?.accessToken || !userData.data?.id) {
+        console.error('Invalid user data');
+        return;
+      }
+
+      const token = userData.data?.accessToken;
+      const userId = userData.data.id;
+
+      const data = await get(`${API.leanCustomer}`, {userId: userId}, token);
+      const r = data.data;
+      setCustomerID(r.customerId);
+      setLeanToken(r.accessToken);
+    } catch (error) {
+      console.error('Failed to load user data or call API:', error);
+    }
+  };
+
+  const handleAccountPressForAccounts = (account, bankName) => {
+    console.log(account);
+
+    if (account.status === 'RECONNECT_REQUIRED') {
+      Alert.alert(
+        'Reconnect Required',
+        'This account needs to be reconnected before you can view transactions.',
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {
+            text: 'Reconnect Now',
+            onPress: () => {
+              Lean.current.reconnect({
+                app_token: leanAppToken,
+                reconnect_id: account.reconnectId,
+                access_token: leanToken,
+              });
+            },
+          },
+        ],
+      );
+    } else {
+      console.log('Navigating to BankTransaction with data:', {
+        account,
+        bankName,
+        banksData,
+        accountId: Array.isArray(account.accounts)
+          ? account.accounts.find(acc => acc.accountType === 'Current Account')
+              ?.accountId || null
+          : account.accountId,
+        accountBalance: account.accountBalance,
+        accountType: account.accountType,
+        BankName: bankName,
+        entityId: account.bankId,
+        bankData: account, // This should be the full bank object
+      });
+      navigation.navigate('BankTransaction', {
+        accountId: Array.isArray(account.accounts)
+          ? account.accounts.find(acc => acc.accountType === 'Current Account')
+              ?.accountId || null
+          : account.accountId,
+        accountBalance: account.accountBalance,
+        accountType: account.accountType,
+        BankName: bankName,
+        entityId: account.bankId,
+        bankData: account, // This should be the full bank object
+      });
+    }
+  };
+
+  const formatDate = date => {
+    if (!date) return '';
+    return `${date.getDate()} ${date.toLocaleString('default', {
+      month: 'short',
+    })} ${date.getFullYear()} ${date.getHours()}:${String(
+      date.getMinutes(),
+    ).padStart(2, '0')}`;
+  };
+
+  const deletePress = async item => {
+    console.log('heheee');
+    console.log(item);
+    const bankId = item.bankId;
+
+    const userData = await getItem('userData');
+    const token = userData.data?.accessToken;
+
+    Alert.alert(
+      'Delete Bank',
+      'Are you sure you want to delete this bank account?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            try {
+              const data = await del(
+                `${API.deleteAccount}`,
+                {entityId: bankId},
+                token,
+              );
+
+              console.log('Deleted successfully:', data);
+              Alert.alert('Success', 'Bank account deleted successfully');
+              fetchAccounts();
+            } catch (error) {
+              console.error('Delete failed:', error);
+              Alert.alert('Error', 'Failed to delete bank account');
+            }
+          },
+        },
+      ],
+      {cancelable: true},
+    );
   };
 
   const fetchMonthlyExpense = async () => {
@@ -282,7 +498,7 @@ const HomeScreen = ({navigation}) => {
 
       // Cleanup timeout if screen is unfocused before timeout completes
       return () => clearTimeout(timeout);
-    }, [month, year, renderOverview, renderSpending]),
+    }, [month, year, renderOverview, renderSpending, renderAccount]),
   );
 
   const fetchData = async () => {
@@ -316,6 +532,7 @@ const HomeScreen = ({navigation}) => {
     const timeout = setTimeout(() => {
       setRenderOverview(selectedTab === 'Overview');
       setRenderSpending(selectedTab === 'Spending');
+      setRenderAccount(selectedTab === 'Account');
     }, 50); // small delay to ensure safe unmount/mount cycle
     return () => clearTimeout(timeout);
   }, [selectedTab]);
@@ -460,6 +677,33 @@ const HomeScreen = ({navigation}) => {
           />
         </SafeAreaView>
         <View>
+          {renderSpending && (
+            <ScrollView
+              contentContainerStyle={styles.safeView}
+              showsVerticalScrollIndicator={false}>
+              <CalendarHeader
+                currentDate={selectedDate}
+                onDateChange={handleDateChange}
+              />
+              <View style={{marginTop: 16}}>
+                <SpendingChart
+                  data={lineChartData}
+                  monthlySpending={monthlySpending}
+                  lastSpending={lastSpending}
+                />
+              </View>
+              <LargestPurchaseCard
+                largestAmount={largestTransaction?.amount || 0}
+                date={selectedDate.format('MMMM YYYY')}
+                category={largestTransaction?.category || ''}
+              />
+              <SpendingSummary
+                data={categoryData}
+                month={selectedDate.format('MMM YYYY')}
+              />
+              <UpcomingBills categoryData={categoryData} />
+            </ScrollView>
+          )}
           {renderOverview && (
             <ScrollView
               contentContainerStyle={styles.safeView}
@@ -498,33 +742,105 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity> */}
               {/* </TouchableOpacity>
             <ContractInstallmentsList contract={contractData || []} /> */}
+              <UpcomingBills categoryData={categoryData} />
             </ScrollView>
           )}
-          {renderSpending && (
-            <ScrollView
-              contentContainerStyle={styles.safeView}
-              showsVerticalScrollIndicator={false}>
-              <CalendarHeader
-                currentDate={selectedDate}
-                onDateChange={handleDateChange}
-              />
-              <View style={{marginTop: 16}}>
-                <SpendingChart
-                  data={lineChartData}
-                  monthlySpending={monthlySpending}
-                  lastSpending={lastSpending}
-                />
+          {renderAccount && (
+            <>
+              <ScrollView
+                showsVerticalScrollIndicator={false}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: 16,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontFamily: FontFamily.regular,
+                      color: Colors.txtColor,
+                    }}>
+                    Bank Account
+                  </Text>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <TouchableOpacity
+                      style={{
+                        marginRight: 10,
+                        backgroundColor: Colors.white,
+                        height: 32,
+                        width: 32,
+                        borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      onPress={() =>
+                        navigation.navigate('IssuingCountryScreen')
+                      }>
+                      <PlusIcon size={20} color={Colors.newButtonBack} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        marginRight: 10,
+                        backgroundColor: Colors.white,
+                        height: 32,
+                        width: 32,
+                        borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      onPress={() =>
+                        navigation.navigate('IssuingCountryScreen')
+                      }>
+                      <GreenBank />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <>
+                  {banksData.length > 0 ? (
+                    <View>
+                      <AccountSwiper
+                        accounts={banksData}
+                        onReconnect={handleAccountPress}
+                        onDelete={deletePress}
+                        onPressAccount={handleAccountPress}
+                      />
+                    </View>
+                  ) : (
+                    <View style={{alignItems: 'center'}}>
+                      <Image
+                        source={require('../../assets/images/emptyWallet.png')}
+                        style={{
+                          height: 300,
+                          width: '100%',
+                          marginLeft: 10,
+                          resizeMode: 'contain',
+                        }}
+                      />
+                    </View>
+                  )}
+                  {banksData.length > 0 ? (
+                    <View style={{marginTop: 20, width: '100%'}}>
+                      <Image
+                        source={require('../../assets/images/currentMonth.png')}
+                        style={{
+                          height: 200,
+                          width: '97%',
+                          marginLeft: 10,
+                        }}
+                        resizeMode="stretch"
+                      />
+                    </View>
+                  ) : (
+                    <CurrentMonthStatusCard />
+                  )}
+                </>
+              </ScrollView>
+              <View style={{paddingBottom: '200'}}>
+                <PropertyTrackingCard />
               </View>
-              <LargestPurchaseCard
-                largestAmount={largestTransaction?.amount || 0}
-                date={selectedDate.format('MMMM YYYY')}
-                category={largestTransaction?.category || ''}
-              />
-              <SpendingSummary
-                data={categoryData}
-                month={selectedDate.format('MMM YYYY')}
-              />
-            </ScrollView>
+            </>
           )}
           {selectedTab === 'All Account' &&
             (banksData.length > 0 ? (
@@ -562,6 +878,31 @@ const HomeScreen = ({navigation}) => {
         </View>
       </ScrollView>
       <FloatingChatButton navigation={navigation} />
+      <LinkSDK
+        ref={Lean}
+        webViewProps={{
+          androidHardwareAccelerationDisabled: true,
+        }}
+        customerId={customerID}
+        appToken={leanAppToken}
+        sandbox={isSandbox}
+        customization={{
+          theme_color: Colors.btnColor,
+          button_text_color: Colors.white,
+          button_border_radius: 50,
+          link_color: Colors.btnColor,
+        }}
+        callback={async response => {
+          console.log('response:', response);
+          if (response.status !== 'SUCCESS') {
+            Alert.alert('Connection Failed', response.status);
+          } else {
+            console.log('response:', response);
+            setIsReconnect(false);
+            fetchAccounts();
+          }
+        }}
+      />
     </ImageBackground>
   );
 };
@@ -762,5 +1103,133 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginBottom: 15,
+  },
+  propertyCard: {
+    backgroundColor: '#E8F5F3',
+    borderRadius: 20,
+    marginTop: 15,
+    marginBottom: 15,
+    marginHorizontal: 20,
+    padding: 20,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: Colors.white,
+  },
+  propertyCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  propertyIcon: {
+    marginRight: 4,
+  },
+  propertyTitle: {
+    fontSize: 13,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+  },
+  propertySubtitle: {
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.grayIcon,
+    marginBottom: 16,
+    lineHeight: 20,
+    marginLeft: 30,
+  },
+  propertyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 100,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    width: '100%',
+  },
+  propertyButtonText: {
+    color: Colors.white,
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    marginRight: 5,
+  },
+  currentMonthCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 20,
+    marginTop: 15,
+    marginBottom: 15,
+    marginHorizontal: 20,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: Colors.white,
+    minHeight: 200,
+  },
+  currentMonthHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 20,
+  },
+  currentMonthTitle: {
+    fontSize: 16,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+  },
+  currentMonthAmount: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  amountText: {
+    fontSize: 20,
+    fontFamily: FontFamily.bold,
+    color: Colors.newButtonBack,
+  },
+  currentMonthChartArea: {
+    alignItems: 'center',
+    marginBottom: 25,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  circularPlaceholder: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  innerCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  noDataText: {
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
+  },
+  linkAccountButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 100,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    width: '100%',
+  },
+  linkAccountButtonText: {
+    color: Colors.white,
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    marginRight: 5,
   },
 });

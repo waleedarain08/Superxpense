@@ -519,7 +519,7 @@ const BankTransactionScreen = ({navigation, route}) => {
                   borderRadius: 100,
                 }}>
                 <Image
-                  source={{uri: bankData.bankIcon}}
+                  source={{uri: bankData?.bankIcon}}
                   style={{height: 32, width: 32, borderRadius: 20}}
                 />
               </View>

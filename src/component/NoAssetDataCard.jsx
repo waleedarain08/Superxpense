@@ -2,40 +2,51 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
-import {Personal, Dirham} from '../assets/svgs';
+import {Personal, Dirham, House, GreenArrow, BlackDirham} from '../assets/svgs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {BlurView} from '@react-native-community/blur';
 
 const NoAssetDataCard = ({
   title = 'No Asset Data Available',
-  mainValue = '₫ 0.00',
-  subValue = '₫ 0.00',
+  mainValue = '0.00',
+  subValue = '0.00',
   onPress,
 }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.leftSection}>
         <View style={styles.iconCircle}>
-          <Personal width={32} height={32} />
+          <BlurView
+            style={[
+              StyleSheet.absoluteFill,
+              {zIndex: 500, borderRadius: 22, overflow: 'hidden'},
+            ]}
+            blurType="light"
+            blurAmount={1}
+            reducedTransparencyFallbackColor="white"
+            blurRadius={10}
+          />
+          <House />
         </View>
         <View style={{marginLeft: 10}}>
           <Text style={styles.title}>{title}</Text>
           <View style={styles.subRow}>
-            <Dirham width={16} height={16} />
+            <GreenArrow />
+            <Dirham width={12} height={10} style={{marginLeft: 8}} />
             <Text style={styles.subValue}>{subValue}</Text>
           </View>
         </View>
       </View>
       <View style={styles.rightSection}>
         <View style={styles.valueRow}>
-          <Dirham width={18} height={18} />
+          <BlackDirham width={12} height={10} />
           <Text style={styles.mainValue}>{mainValue}</Text>
         </View>
         <Icon
           name="chevron-forward"
-          size={22}
-          color={Colors.grayIcon}
-          style={{marginLeft: 6}}
+          size={15}
+          color={Colors.txtColor}
+          style={{marginLeft: 4}}
         />
       </View>
     </TouchableOpacity>
@@ -78,13 +89,14 @@ const styles = StyleSheet.create({
   subRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 2,
+    marginTop: 4,
   },
   subValue: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: FontFamily.medium,
-    color: Colors.greenTxt,
-    marginLeft: 4,
+    color: Colors.newButtonBack,
+    marginLeft: 2,
+    alignSelf: 'flex-end',
   },
   rightSection: {
     flexDirection: 'row',
@@ -96,8 +108,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainValue: {
-    fontSize: 16,
-    fontFamily: FontFamily.semiBold,
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
     color: Colors.txtColor,
     marginLeft: 4,
   },

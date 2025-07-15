@@ -10,103 +10,108 @@ import {
   ImageBackground,
   Modal,
   ActivityIndicator,
+  Animated,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import {ChevronLeft, ChevronRight} from '../../icons';
+import {
+  ChevronLeft,
+  ChevronRight,
+  EntoChevronRight,
+  PlusIcon,
+} from '../../icons';
 import DualRingProgress from '../../component/DualRingProgress';
 import LinearGradient from 'react-native-linear-gradient';
-import {Goal, Car, PopCorn, Heart, Bulb, Plus, Credit} from '../../assets/svgs';
+import {
+  Goal,
+  Car,
+  PopCorn,
+  Heart,
+  Bulb,
+  Plus,
+  Credit,
+  Houses,
+  Cars,
+  Rings,
+  DotsSvg,
+  Emergency,
+  Birthday,
+  GoalSvg,
+  Amount,
+  SaveCard,
+  BlubIcon,
+  DirhamWhite,
+} from '../../assets/svgs';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
 
 const goals = [
   {
     id: 1,
-    icon: '🏠',
+    icon: <Houses width={40} height={40} />,
     title: 'Buy House',
     subtitle: 'Own a new property!',
     percent: 50,
     min: '50,000 AED',
     max: '100,000 AED',
-    color: '#7563FF',
+    color: Colors.newButtonBack,
   },
   {
     id: 2,
-    icon: '🚗',
+    icon: <Cars width={40} height={40} />,
     title: 'Get New Car',
     subtitle: 'Buy your dream car',
     percent: 100,
     min: '100,000 AED',
     max: '100,000 AED',
-    color: '#3C00FF',
+    color: Colors.newButtonBack,
   },
   {
     id: 3,
-    icon: '💍',
+    icon: <Rings width={40} height={40} />,
     title: 'Weeding',
     subtitle: 'Celebrate your wedding',
     percent: 66,
     min: '66,000 AED',
     max: '100,000 AED',
-    color: '#00C48C',
-  },
-  {
-    id: 4,
-    icon: '💰',
-    title: 'Emergency fund',
-    subtitle: 'Save for rainy days',
-    percent: 20,
-    min: '20,000 AED',
-    max: '100,000 AED',
-    color: '#FFB800',
-  },
-  {
-    id: 5,
-    icon: '🎂',
-    title: 'Birthday',
-    subtitle: 'Enjoy a special day',
-    percent: 10,
-    min: '10,000 AED',
-    max: '100,000 AED',
-    color: '#FF647C',
+    color: Colors.newButtonBack,
   },
 ];
 
 const goalTypes = [
   {
     key: 'house',
-    icon: <Goal width={32} height={32} />,
+    icon: <Houses width={48} height={48} />,
     title: 'Buy house',
     subtitle: 'Own another property',
   },
   {
     key: 'car',
-    icon: <Car width={32} height={32} />,
+    icon: <Cars width={48} height={48} />,
     title: 'Get New Car',
     subtitle: 'Buy your dream car',
   },
   {
     key: 'birthday',
-    icon: <PopCorn width={32} height={32} />,
+    icon: <Birthday width={48} height={48} />,
     title: 'Birthday',
     subtitle: 'Enjoy a special day',
   },
   {
     key: 'wedding',
-    icon: <Heart width={32} height={32} />,
+    icon: <Rings width={48} height={48} />,
     title: 'Weeding',
     subtitle: 'Celebrate your wedding',
   },
   {
     key: 'emergency',
-    icon: <Bulb width={32} height={32} />,
+    icon: <Emergency width={48} height={48} />,
     title: 'Emergency',
     subtitle: 'Save for rainy days',
   },
   {
     key: 'more',
-    icon: <Plus width={32} height={32} />,
+    icon: <DotsSvg width={48} height={48} />,
     title: 'More',
     subtitle: 'Save for your dreams',
   },
@@ -119,6 +124,7 @@ const mockAccounts = [
     type: 'Current Account',
     logo: require('../../assets/images/dubaiBank.png'),
     color: '#F36B6B',
+    bg: require('../../assets/images/redCard.png'),
   },
   {
     id: 'adib',
@@ -126,19 +132,20 @@ const mockAccounts = [
     type: 'Current Account',
     logo: require('../../assets/images/dubaiIslamic.png'),
     color: '#7B7BFF',
+    bg: require('../../assets/images/purpleCard.png'),
   },
 ];
 
 const DotsProgressBar = ({percent, color}) => {
   // 20 dots, fill based on percent
-  const totalDots = 20;
+  const totalDots = 36;
   const filledDots = Math.round((percent / 100) * totalDots);
   // Define four colors for the four segments
   const segmentColors = [
-    '#FF647C', // 0-25%
-    '#FFB800', // 26-50%
-    '#00C48C', // 51-75%
-    '#7563FF', // 76-100%
+    '#FF8A8A', // 0-25%
+    '#FFB07C', // 26-50%
+    '#4ECE77', // 51-75%
+    '#28A08C', // 76-100%
   ];
   return (
     <View style={styles.dotsBarRow}>
@@ -172,9 +179,8 @@ const GoalCard = ({icon, title, subtitle, percent, min, max, color}) => (
       <DualRingProgress
         percent={percent}
         color={color}
-        size={44}
-        strokeWidth={5}
-        backgroundColor={'#E0E0E0'}>
+        size={80}
+        strokeWidth={5}>
         <Text style={styles.cardIcon}>{icon}</Text>
       </DualRingProgress>
       <View style={{flex: 1, marginLeft: 10}}>
@@ -191,32 +197,39 @@ const GoalCard = ({icon, title, subtitle, percent, min, max, color}) => (
   </View>
 );
 
-const StepTwoGoalType = ({selected, onSelect, onNext}) => (
-  <View style={styles.stepTwoContainer}>
-    <Text style={styles.stepTwoTitle}>Create a goal</Text>
-    <Text style={styles.stepTwoSubtitle}>What are you saving for?</Text>
-    <View style={styles.goalTypeGrid}>
-      {goalTypes.map(type => (
-        <TouchableOpacity
-          key={type.key}
-          style={[
-            styles.goalTypeCard,
-            selected === type.key && styles.goalTypeCardSelected,
-          ]}
-          onPress={() => onSelect(type.key)}
-          activeOpacity={0.8}>
-          {type.icon}
-          <Text style={styles.goalTypeCardTitle}>{type.title}</Text>
-          <Text style={styles.goalTypeCardSubtitle}>{type.subtitle}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+const StepTwoGoalType = ({selected, onSelect, onNext, onBack}) => (
+  <View>
     <TouchableOpacity
-      style={[styles.stepTwoNextBtn, !selected && {opacity: 0.5}]}
-      onPress={onNext}
-      disabled={!selected}>
-      <Text style={styles.stepTwoNextBtnText}>Next</Text>
+      style={[styles.backBtn, {height: 32, width: 32, marginBottom: 24}]}
+      onPress={onBack}>
+      <ChevronLeft size={24} color={Colors.txtColor} />
     </TouchableOpacity>
+    <View style={[styles.stepTwoContainer, {padding: 16}]}>
+      <Text style={styles.stepTwoTitle}>Create a goal</Text>
+      <Text style={styles.stepTwoSubtitle}>What are you saving for?</Text>
+      <View style={styles.goalTypeGrid}>
+        {goalTypes.map(type => (
+          <TouchableOpacity
+            key={type.key}
+            style={[
+              styles.goalTypeCard,
+              selected === type.key && styles.goalTypeCardSelected,
+            ]}
+            onPress={() => onSelect(type.key)}
+            activeOpacity={0.8}>
+            {type.icon}
+            <Text style={styles.goalTypeCardTitle}>{type.title}</Text>
+            <Text style={styles.goalTypeCardSubtitle}>{type.subtitle}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <TouchableOpacity
+        style={[styles.stepTwoNextBtn, !selected && {opacity: 0.5}]}
+        onPress={onNext}
+        disabled={!selected}>
+        <Text style={styles.stepTwoNextBtnText}>Next</Text>
+      </TouchableOpacity>
+    </View>
   </View>
 );
 
@@ -238,7 +251,7 @@ const StepThreeGoalDetails = ({
     </Text>
     <View style={styles.stepThreeFormBox}>
       <View style={styles.inputRow}>
-        <Credit width={22} height={22} style={{marginRight: 8}} />
+        <GoalSvg style={{marginRight: 8}} />
         <TextInput
           style={styles.input}
           placeholder="Goal Name"
@@ -248,7 +261,7 @@ const StepThreeGoalDetails = ({
         />
       </View>
       <View style={styles.inputRow}>
-        <Credit width={22} height={22} style={{marginRight: 8}} />
+        <Amount style={{marginRight: 8}} />
         <TextInput
           style={styles.input}
           placeholder="Goal Amount"
@@ -260,7 +273,7 @@ const StepThreeGoalDetails = ({
         <Text style={styles.inputSuffix}>AED</Text>
       </View>
       <View style={styles.inputRow}>
-        <Credit width={22} height={22} style={{marginRight: 8}} />
+        <SaveCard style={{marginRight: 8}} />
         <TextInput
           style={styles.input}
           placeholder="Saved so far"
@@ -271,42 +284,40 @@ const StepThreeGoalDetails = ({
         />
       </View>
     </View>
-    <Text style={styles.sourceAccountLabel}>
-      Source Account <Text style={styles.viewAccounts}>View accounts</Text>
-    </Text>
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+        width: '100%',
+      }}>
+      <Text style={styles.sourceAccountLabel}>Source Account</Text>
+      <Text style={styles.viewAccounts}>View accounts</Text>
+    </View>
     <View style={styles.accountList}>
       {mockAccounts.map(acc => (
         <TouchableOpacity
           key={acc.id}
-          style={[
-            styles.accountCard,
-            selectedAccount === acc.id && {
-              borderColor: acc.color,
-              backgroundColor: acc.color + '22',
-            },
-          ]}
-          onPress={() => setSelectedAccount(acc.id)}
-          activeOpacity={0.8}>
-          <Image source={acc.logo} style={styles.accountLogo} />
-          <View style={{flex: 1}}>
-            <Text style={[styles.accountName, {color: acc.color}]}>
-              {acc.name}
-            </Text>
-            <Text style={styles.accountType}>{acc.type}</Text>
-          </View>
-          <View
-            style={[
-              styles.radioOuter,
-              selectedAccount === acc.id && {borderColor: acc.color},
-            ]}>
-            {selectedAccount === acc.id && (
-              <View style={[styles.radioInner, {backgroundColor: acc.color}]} />
-            )}
-          </View>
+          onPress={() => setSelectedAccount(acc.id)}>
+          <ImageBackground
+            source={acc.bg}
+            style={styles.accountCard}
+            imageStyle={styles.accountCardImage}>
+            <Image source={acc.logo} style={styles.accountLogo} />
+            <View style={{flex: 1}}>
+              <Text style={[styles.accountName]}>{acc.name}</Text>
+              <Text style={styles.accountType}>{acc.type}</Text>
+            </View>
+            <View style={styles.radioOuter}>
+              {selectedAccount === acc.id && <View style={styles.radioInner} />}
+            </View>
+          </ImageBackground>
         </TouchableOpacity>
       ))}
     </View>
     <View style={styles.accountHintRow}>
+      <BlubIcon />
       <Text style={styles.accountHintText}>
         You can always switch account later from settings
       </Text>
@@ -314,10 +325,11 @@ const StepThreeGoalDetails = ({
     <TouchableOpacity
       style={[
         styles.stepTwoNextBtn,
-        !(goalName && goalAmount && selectedAccount) && {opacity: 0.5},
+        {
+          marginTop: 50,
+        },
       ]}
-      onPress={onNext}
-      disabled={!(goalName && goalAmount && selectedAccount)}>
+      onPress={onNext}>
       <Text style={styles.stepTwoNextBtnText}>Next</Text>
     </TouchableOpacity>
   </View>
@@ -327,84 +339,104 @@ const StepFourSelectSourceAccount = ({
   selectedSource,
   setSelectedSource,
   onNext,
+  onBack,
 }) => (
-  <View style={styles.stepFourContainer}>
-    <Text style={styles.stepFourTitle}>Select Source Account</Text>
-    <Text style={styles.stepFourSubtitle}>
-      select the bank you will use to save from
-    </Text>
-    <View style={styles.sourceAccountList}>
-      {mockAccounts.map(acc => (
-        <ImageBackground
-          key={acc.id}
-          source={require('../../assets/images/cardBackground.png')}
-          style={[
-            styles.sourceAccountCard,
-            selectedSource === acc.id && {borderColor: acc.color},
-          ]}
-          imageStyle={styles.sourceAccountCardImage}>
-          <View style={styles.sourceAccountCardContent}>
-            <Image source={acc.logo} style={styles.sourceAccountLogo} />
-            <View style={{flex: 1}}>
-              <Text style={[styles.sourceAccountName, {color: acc.color}]}>
-                {acc.name}
-              </Text>
-              <View style={styles.sourceAccountTypeRow}>
-                <Text style={styles.sourceAccountType}>Current Account</Text>
-                <Text style={styles.sourceAccountBalance}>฿ 35,000.00</Text>
-              </View>
-              <View style={styles.sourceAccountTypeRow}>
-                <Text style={styles.sourceAccountType}>Savings Account</Text>
-                <Text style={styles.sourceAccountBalance}>฿ 35,000.00</Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              style={[
-                styles.radioOuter,
-                selectedSource === acc.id && {borderColor: acc.color},
-              ]}
-              onPress={() => setSelectedSource(acc.id)}
-              activeOpacity={0.8}>
-              {selectedSource === acc.id && (
-                <View
-                  style={[styles.radioInner, {backgroundColor: acc.color}]}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-      ))}
-    </View>
+  <View>
     <TouchableOpacity
-      style={[styles.selectAccountBtn, !selectedSource && {opacity: 0.5}]}
-      onPress={onNext}
-      disabled={!selectedSource}>
-      <Text style={styles.selectAccountBtnText}>Select Account</Text>
+      style={[styles.backBtn, {height: 32, width: 32, marginBottom: 24}]}
+      onPress={onBack}>
+      <ChevronLeft size={24} color={Colors.txtColor} />
     </TouchableOpacity>
+    <View style={styles.stepFourContainer}>
+      <Text style={styles.stepFourTitle}>Select Source Account</Text>
+      <Text style={styles.stepFourSubtitle}>
+        select the bank you will use to save from
+      </Text>
+      <View style={styles.sourceAccountList}>
+        {mockAccounts.map(acc => (
+          <ImageBackground
+            key={acc.id}
+            source={acc.bg}
+            style={styles.sourceAccountCard}
+            imageStyle={styles.sourceAccountCardImage}>
+            <View style={styles.sourceAccountCardHeader}>
+              <Image source={acc.logo} style={styles.sourceAccountLogo} />
+              <Text style={styles.sourceAccountName}>{acc.name}</Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.sourceAccountTypeContainer}
+              onPress={() => setSelectedSource(`${acc.id}-current`)}>
+              <View style={styles.sourceAccountTypeInfo}>
+                <Text style={styles.sourceAccountType}>Current Account</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <DirhamWhite
+                    height={12}
+                    width={14}
+                    style={{marginRight: 4}}
+                  />
+                  <Text style={styles.sourceAccountBalance}>35,000.00</Text>
+                </View>
+              </View>
+              <View style={styles.radioOuter}>
+                {selectedSource === `${acc.id}-current` && (
+                  <View style={styles.radioInner} />
+                )}
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.sourceAccountTypeContainer}
+              onPress={() => setSelectedSource(`${acc.id}-savings`)}>
+              <View style={styles.sourceAccountTypeInfo}>
+                <Text style={styles.sourceAccountType}>Savings Account</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <DirhamWhite
+                    height={12}
+                    width={14}
+                    style={{marginRight: 4}}
+                  />
+                  <Text style={styles.sourceAccountBalance}>35,000.00</Text>
+                </View>
+              </View>
+              <View style={styles.radioOuter}>
+                {selectedSource === `${acc.id}-savings` && (
+                  <View style={styles.radioInner} />
+                )}
+              </View>
+            </TouchableOpacity>
+          </ImageBackground>
+        ))}
+      </View>
+      <TouchableOpacity style={styles.selectAccountBtn} onPress={onNext}>
+        <Text style={styles.selectAccountBtnText}>Select Account</Text>
+      </TouchableOpacity>
+    </View>
   </View>
 );
 
-const StepFiveGoalCalendar = ({weekRange, setWeekRange, onCreateGoal}) => {
+const StepFiveGoalCalendar = ({
+  weekRange,
+  setWeekRange,
+  onCreateGoal,
+  onBack,
+}) => {
   const [currentMonth, setCurrentMonth] = useState(moment());
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
 
   const onDateChange = (date, type) => {
-    if (type === 'END_DATE') {
-      setSelectedEndDate(date);
-    } else {
-      // When start date is selected, automatically calculate end date (7 days later)
-      const startDate = moment(date);
-      const endDate = startDate.clone().add(6, 'days');
+    // Calculate 7 days starting from the selected date
+    const selectedMoment = moment(date);
+    const startDate = selectedMoment.clone();
+    const endDate = selectedMoment.clone().add(6, 'days'); // 7 days total (selected day + 6 more)
 
-      setSelectedStartDate(date);
-      setSelectedEndDate(endDate);
-
-      setWeekRange({
-        startDate: startDate.format('YYYY-MM-DD'),
-        endDate: endDate.format('YYYY-MM-DD'),
-      });
-    }
+    setSelectedStartDate(startDate.toDate());
+    setSelectedEndDate(endDate.toDate());
+    setWeekRange({
+      startDate: startDate.format('YYYY-MM-DD'),
+      endDate: endDate.format('YYYY-MM-DD'),
+    });
   };
 
   const onMonthChange = date => {
@@ -416,137 +448,205 @@ const StepFiveGoalCalendar = ({weekRange, setWeekRange, onCreateGoal}) => {
     setCurrentMonth(newMonth);
   };
 
-  const formatDateRange = () => {
-    if (selectedStartDate && selectedEndDate) {
-      const start = moment(selectedStartDate).format('MMM DD');
-      const end = moment(selectedEndDate).format('MMM DD, YYYY');
-      return `${start} - ${end}`;
-    }
-    return 'Select a week';
-  };
-
   const customDayHeaderStylesCallback = () => {
     return {
       textStyle: {
-        color: '#666',
-        fontSize: 12,
-        fontFamily: 'Gilroy-Medium',
+        color: '#888',
+        fontSize: 13,
+        fontFamily: FontFamily.medium,
         fontWeight: '500',
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
       },
     };
   };
 
-  const customDatesStylesCallback = date => {
-    const momentDate = moment(date);
-    const isSelected =
-      selectedStartDate &&
-      selectedEndDate &&
-      momentDate.isBetween(selectedStartDate, selectedEndDate, 'day', '[]');
+  // Helper to determine if a date is the start or end of the selected week
+  const isStartOfWeek = date => {
+    if (!selectedStartDate) return false;
+    return moment(date).isSame(moment(selectedStartDate), 'day');
+  };
+  const isEndOfWeek = date => {
+    if (!selectedEndDate) return false;
+    return moment(date).isSame(moment(selectedEndDate), 'day');
+  };
 
-    if (isSelected) {
+  const customDatesStylesCallback = date => {
+    if (!selectedStartDate || !selectedEndDate) {
+      // Handle today styling when no week is selected
+      const isToday = moment(date).isSame(moment(), 'day');
+      if (isToday) {
+        return {
+          textStyle: {
+            color: Colors.newButtonBack,
+            fontFamily: FontFamily.bold,
+            fontWeight: 'bold',
+          },
+        };
+      }
+      return {};
+    }
+
+    const momentDate = moment(date);
+    const startMoment = moment(selectedStartDate);
+    const endMoment = moment(selectedEndDate);
+
+    const isInSelectedWeek = momentDate.isBetween(
+      startMoment,
+      endMoment,
+      'day',
+      '[]',
+    );
+
+    if (isInSelectedWeek) {
+      // To ensure borderRadius works, use overflow: 'hidden' and set backgroundColor on the container
+      let style = {
+        backgroundColor: 'rgba(255,255,255,0.3)',
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        overflow: 'hidden',
+        alignItems: 'center',
+        justifyContent: 'center',
+      };
+
+      // Make start and end of week more visually distinct (optional)
+      if (isStartOfWeek(date) || isEndOfWeek(date)) {
+        style = {
+          ...style,
+          borderWidth: 1,
+          borderColor: Colors.white,
+        };
+      }
+
       return {
-        style: {
-          backgroundColor: '#00C48C',
-          borderRadius: 8,
-        },
+        containerStyle: style,
         textStyle: {
-          color: '#fff',
-          fontFamily: 'Gilroy-Bold',
-          fontWeight: 'bold',
+          color: Colors.txtColor,
+          fontFamily: FontFamily.regular,
+          fontSize: 20,
         },
       };
     }
+
+    // Handle today styling when it's not in selected week
+    const isToday = momentDate.isSame(moment(), 'day');
+    if (isToday) {
+      return {
+        textStyle: {
+          color: Colors.newButtonBack,
+          fontFamily: FontFamily.regular,
+          fontSize: 20,
+        },
+      };
+    }
+
     return {};
   };
 
   return (
-    <LinearGradient
-      colors={['#A8E6CF', '#E8F5E8', '#F0F8F0']}
-      style={styles.stepFiveContainer}>
-      {/* Header */}
-      <View style={styles.stepFiveHeader}>
-        <Text style={styles.stepFiveTitle}>Create a goal</Text>
-        <Text style={styles.stepFiveSubtitle}>
-          how long do you want to save?
-        </Text>
-        <Text style={styles.stepFiveDateLabel}>Start date - End date</Text>
-      </View>
-
-      {/* Calendar Container */}
-      <View style={styles.calendarContainer}>
-        {/* Custom Calendar Header */}
-        <View style={styles.customCalendarHeader}>
-          <TouchableOpacity
-            style={styles.calendarArrowButton}
-            onPress={() => navigateMonth(-1)}>
-            <Text style={styles.calendarArrowText}>‹</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.calendarMonthText}>
-            {currentMonth.format('MMMM YYYY')}
-          </Text>
-
-          <TouchableOpacity
-            style={styles.calendarArrowButton}
-            onPress={() => navigateMonth(1)}>
-            <Text style={styles.calendarArrowText}>›</Text>
-          </TouchableOpacity>
-        </View>
-
-        <CalendarPicker
-          startFromMonday={false}
-          allowRangeSelection={false}
-          selectedDayColor="#00C48C"
-          selectedDayTextColor="#FFFFFF"
-          scaleFactor={375}
-          textStyle={{
-            fontFamily: 'Gilroy-Medium',
-            color: '#333',
-            fontSize: 16,
-          }}
-          onDateChange={onDateChange}
-          onMonthChange={onMonthChange}
-          customDayHeaderStyles={customDayHeaderStylesCallback}
-          customDatesStyles={customDatesStylesCallback}
-          hideArrows={true}
-          hideExtraDays={true}
-          disableMonthChange={true}
-          initialDate={currentMonth.toDate()}
-          dayLabelsWrapper={{
-            borderTopWidth: 0,
-            borderBottomWidth: 0,
-            paddingBottom: 10,
-          }}
-          previousTitle=""
-          nextTitle=""
-          previousTitleStyle={{display: 'none'}}
-          // nextTitleStyle={{ display: 'none' }}
-          monthTitleStyle={{display: 'none'}}
-          yearTitleStyle={{display: 'none'}}
-          todayBackgroundColor="transparent"
-          todayTextStyle={{
-            color: '#00C48C',
-            fontFamily: 'Gilroy-Bold',
-          }}
-          selectedStartDate={selectedStartDate}
-          selectedEndDate={selectedEndDate}
-          minDate={moment()}
-          width={320}
-          height={250}
-        />
-      </View>
-
-      {/* Create Goal Button */}
+    <View style={{flex: 1}}>
       <TouchableOpacity
-        style={[
-          styles.createGoalButton,
-          !selectedStartDate && styles.createGoalButtonDisabled,
-        ]}
-        onPress={onCreateGoal}
-        disabled={!selectedStartDate}>
-        <Text style={styles.createGoalButtonText}>Create Goal</Text>
+        style={[styles.backBtn, {height: 32, width: 32, marginBottom: 24}]}
+        onPress={onBack}>
+        <ChevronLeft size={24} color={Colors.txtColor} />
       </TouchableOpacity>
-    </LinearGradient>
+      <View style={styles.stepFiveContainer}>
+        {/* Calendar Header */}
+        <View style={styles.stepFiveHeader}>
+          <Text style={styles.stepFiveHeaderTitle}>Create a goal</Text>
+          <Text style={styles.stepFiveHeaderSubtitle}>
+            how long do you want to save?
+          </Text>
+          <Text style={styles.stepFiveHeaderDate}>Start date - End date</Text>
+        </View>
+        <View style={styles.stepFiveCalendarContainer}>
+          <View style={styles.calendarHeader}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={styles.monthText}>
+                {currentMonth.format('MMMM YYYY')}
+              </Text>
+              <ChevronRight
+                size={14}
+                color={Colors.background}
+                style={{marginLeft: 4}}
+              />
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 20}}>
+              <TouchableOpacity
+                style={styles.monthArrowButton}
+                onPress={() => navigateMonth(-1)}>
+                <EntoChevronRight size={20} color={Colors.background} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.monthArrowButton}
+                onPress={() => navigateMonth(1)}>
+                <ChevronRight size={20} color={Colors.background} />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Calendar */}
+          <View style={styles.calendarWrapper}>
+            <CalendarPicker
+              startFromMonday={true}
+              allowRangeSelection={false}
+              selectedDayColor={Colors.newButtonBack}
+              selectedDayTextColor={Colors.white}
+              // selectedDayTextColor={Colors.txtColor}
+              scaleFactor={400}
+              textStyle={{
+                fontFamily: FontFamily.regular,
+                color: Colors.txtColor,
+                fontSize: 20,
+              }}
+              onDateChange={onDateChange}
+              onMonthChange={onMonthChange}
+              customDayHeaderStyles={customDayHeaderStylesCallback}
+              customDatesStyles={customDatesStylesCallback}
+              hideArrows={true}
+              hideExtraDays={false}
+              disableMonthChange={true}
+              initialDate={currentMonth.toDate()}
+              dayLabelsWrapper={{
+                borderTopWidth: 0,
+                borderBottomWidth: 0,
+              }}
+              dayShape="circle"
+              dayContainerStyle={{
+                backgroundColor: 'transparent',
+                borderRadius: 22,
+                height: 44,
+                width: 44,
+                overflow: 'hidden',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              previousTitle=""
+              nextTitle=""
+              previousTitleStyle={{display: 'none'}}
+              monthTitleStyle={{display: 'none'}}
+              yearTitleStyle={{display: 'none'}}
+              todayBackgroundColor="transparent"
+              todayTextStyle={{
+                color: Colors.txtColor,
+                fontFamily: FontFamily.regular,
+              }}
+              minDate={moment()}
+              width={400}
+              height={400}
+            />
+          </View>
+        </View>
+        {/* Create Goal Button */}
+        <TouchableOpacity
+          style={styles.createGoalButton}
+          onPress={onCreateGoal}>
+          <Text style={styles.createGoalButtonText}>Create Goal</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -555,14 +655,14 @@ const StepOneCard = ({onStart}) => (
     <View style={styles.stepOneImageWrapper}>
       {/* Replace with your actual image asset */}
       <Image
-        source={require('../../assets/images/moneyBagImage.png')}
+        source={require('../../assets/images/GoalScreen.png')}
         style={styles.stepOneImage}
         resizeMode="contain"
       />
     </View>
     <Text style={styles.stepOneLabel}>Saving & goals</Text>
     <Text style={styles.stepOneTitle}>
-      Save for tomorrow,{'\n'}without sacrificing today
+      Save for tomorrow, without sacrificing today
     </Text>
     <TouchableOpacity style={styles.stepOneBtn} onPress={onStart}>
       <Text style={styles.stepOneBtnText}>Start Saving</Text>
@@ -601,12 +701,53 @@ const AddGoals = ({navigation}) => {
     }, 3000);
   };
 
+  // Simple Circular Loader Component
+  const CustomLoader = () => {
+    const [rotateAnim] = useState(new Animated.Value(0));
+
+    React.useEffect(() => {
+      const rotateAnimation = Animated.loop(
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      );
+
+      rotateAnimation.start();
+
+      return () => {
+        rotateAnimation.stop();
+      };
+    }, []);
+
+    const spin = rotateAnim.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'],
+    });
+
+    return (
+      <Animated.View
+        style={[
+          styles.simpleLoader,
+          {
+            transform: [{rotate: spin}],
+          },
+        ]}
+      />
+    );
+  };
+
   // Loading Modal Component
   const LoadingModal = () => (
     <Modal visible={showLoadingModal} transparent={true} animationType="fade">
-      <LinearGradient
-        colors={['#A8E6CF', '#E8F5E8', '#F0F8F0']}
-        style={styles.loadingModalContainer}>
+      <ImageBackground
+        source={require('../../assets/images/greenishBackground.png')}
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
         <View style={styles.loadingContent}>
           <Text style={styles.loadingTitle}>Creating your goal</Text>
           <Text style={styles.loadingSubtitle}>
@@ -614,10 +755,10 @@ const AddGoals = ({navigation}) => {
           </Text>
 
           <View style={styles.loadingSpinnerContainer}>
-            <ActivityIndicator size="large" color="#00C48C" />
+            <CustomLoader />
           </View>
         </View>
-      </LinearGradient>
+      </ImageBackground>
     </Modal>
   );
 
@@ -629,6 +770,7 @@ const AddGoals = ({navigation}) => {
       selected={selectedGoalType}
       onSelect={setSelectedGoalType}
       onNext={() => setStep(2)}
+      onBack={() => setStep(0)}
     />,
     <StepThreeGoalDetails
       key={2}
@@ -647,74 +789,70 @@ const AddGoals = ({navigation}) => {
       selectedSource={selectedSourceAccount}
       setSelectedSource={setSelectedSourceAccount}
       onNext={() => setStep(4)}
+      onBack={() => setStep(2)}
     />,
     <StepFiveGoalCalendar
       key={4}
       weekRange={weekRange}
       setWeekRange={setWeekRange}
       onCreateGoal={handleCreateGoal}
+      onBack={() => setStep(3)}
     />,
   ];
 
   if (showStepper) {
     return (
-      <View style={styles.container}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity onPress={handleBack} style={styles.backBtn}>
-            <ChevronLeft size={24} color={Colors.txtColor} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Add Goal</Text>
-          <View style={{width: 32}} />
-        </View>
+      <ImageBackground
+        source={require('../../assets/images/greenishBackground.png')}
+        style={{flex: 1}}>
         <View style={styles.stepperBody}>{stepContents[step]}</View>
-        <View style={styles.stepperFooter}>
-          <TouchableOpacity
-            style={[styles.stepperBtn, step === 0 && {opacity: 0.5}]}
-            onPress={handleBack}
-            disabled={step === 0}>
-            <Text style={styles.stepperBtnText}>Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.stepperBtn} onPress={handleNext}>
-            <Text style={styles.stepperBtnText}>
-              {step === 4 ? 'Finish' : 'Next'}
-            </Text>
-          </TouchableOpacity>
-        </View>
         <LoadingModal />
-      </View>
+      </ImageBackground>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backBtn}>
-          <ChevronLeft size={24} color={Colors.txtColor} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Goals</Text>
-        <TouchableOpacity
-          style={styles.addBtn}
-          onPress={() => {
-            setShowStepper(true);
-            setStep(0);
-          }}>
-          <Text style={styles.addBtnPlus}>+</Text>
-        </TouchableOpacity>
+    <ImageBackground
+      source={require('../../assets/images/greenishBackground.png')}
+      style={{flex: 1}}>
+      <View style={styles.container}>
+        <View style={styles.headerRow}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backBtn}>
+            <ChevronLeft
+              size={24}
+              color={Colors.txtColor}
+              style={{marginLeft: 16}}
+            />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}></Text>
+          <TouchableOpacity
+            style={styles.addBtn}
+            onPress={() => {
+              setShowStepper(true);
+              setStep(0);
+            }}>
+            <PlusIcon size={18} color={Colors.newButtonBack} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerText}>My Goals</Text>
+          <Text style={styles.subtitle}>
+            Track your goals and see how far you’ve come
+          </Text>
+
+          <ScrollView
+            contentContainerStyle={styles.scrollView}
+            showsVerticalScrollIndicator={false}>
+            {goals.map(goal => (
+              <GoalCard key={goal.id} {...goal} />
+            ))}
+          </ScrollView>
+          <LoadingModal />
+        </View>
       </View>
-      <Text style={styles.subtitle}>
-        Track your goals and see how far you’ve come
-      </Text>
-      <ScrollView
-        contentContainerStyle={styles.scrollView}
-        showsVerticalScrollIndicator={false}>
-        {goals.map(goal => (
-          <GoalCard key={goal.id} {...goal} />
-        ))}
-      </ScrollView>
-      <LoadingModal />
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -723,7 +861,6 @@ export default AddGoals;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eaf6fb',
   },
   headerRow: {
     flexDirection: 'row',
@@ -748,7 +885,7 @@ const styles = StyleSheet.create({
     marginRight: 32,
   },
   addBtn: {
-    backgroundColor: Colors.green,
+    backgroundColor: Colors.white,
     borderRadius: 100,
     width: 32,
     height: 32,
@@ -763,7 +900,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: Colors.grayIcon,
+    color: '#0D2D2D99',
     fontFamily: FontFamily.regular,
     textAlign: 'center',
     marginBottom: 12,
@@ -773,32 +910,35 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   card: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 10,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: Colors.white,
   },
   cardHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 4,
   },
-  cardIcon: {
-    fontSize: 28,
-    marginRight: 10,
-  },
+  cardIcon: {},
   cardTitle: {
     fontSize: 16,
-    fontFamily: FontFamily.semiBold,
+    fontFamily: FontFamily.medium,
     color: Colors.txtColor,
-    flex: 1,
+    marginBottom: 8,
   },
   cardPercent: {
-    fontSize: 15,
-    color: Colors.green,
+    fontSize: 18,
+    color: Colors.newButtonBack,
     fontFamily: FontFamily.semiBold,
+  },
+  stepFiveHeaderDate: {
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.grayIcon,
+    marginBottom: 16,
   },
   cardSubtitle: {
     fontSize: 13,
@@ -823,14 +963,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardMin: {
-    fontSize: 12,
-    color: Colors.grayIcon,
+    fontSize: 14,
+    color: Colors.newButtonBack,
     fontFamily: FontFamily.medium,
+    marginTop: 19,
   },
   cardMax: {
-    fontSize: 12,
+    fontSize: 14,
     color: Colors.grayIcon,
-    fontFamily: FontFamily.medium,
+    fontFamily: FontFamily.regular,
+    marginTop: 19,
+    marginBottom: 16,
   },
   dotsBarRow: {
     flexDirection: 'row',
@@ -840,10 +983,10 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   dot: {
-    width: 7,
-    height: 7,
+    width: 4,
+    height: 12,
     borderRadius: 4,
-    marginHorizontal: 1,
+    marginHorizontal: 2,
   },
   stepContent: {
     flex: 1,
@@ -858,9 +1001,10 @@ const styles = StyleSheet.create({
   },
   stepperBody: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
     paddingHorizontal: 24,
+    paddingTop: 60,
   },
   stepperFooter: {
     flexDirection: 'row',
@@ -871,89 +1015,85 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
   },
   stepperBtn: {
-    backgroundColor: Colors.green,
+    backgroundColor: Colors.white,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 28,
   },
   stepperBtnText: {
-    color: '#fff',
+    color: Colors.txtColor,
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
   },
   stepOneCard: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#b6e0e6',
-    padding: 24,
+    borderColor: Colors.white,
     alignItems: 'center',
-    margin: 24,
-    marginTop: 40,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    shadowOffset: {width: 0, height: 2},
+    width: '100%',
+    height: 650,
+    justifyContent: 'center',
+    marginTop: 60,
   },
   stepOneImageWrapper: {
-    width: 120,
-    height: 120,
+    width: 360,
+    height: 360,
     marginBottom: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },
   stepOneImage: {
-    width: 110,
-    height: 110,
+    width: 360,
+    height: 360,
   },
   stepOneLabel: {
-    color: '#00C48C',
-    fontSize: 14,
-    fontFamily: FontFamily.medium,
+    color: Colors.newGreen,
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
     marginBottom: 8,
   },
   stepOneTitle: {
     color: Colors.txtColor,
-    fontSize: 20,
-    fontFamily: FontFamily.semiBold,
+    fontSize: 32,
+    fontFamily: FontFamily.bold,
     textAlign: 'center',
+    paddingHorizontal: 24,
     marginBottom: 24,
   },
   stepOneBtn: {
-    backgroundColor: Colors.green,
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    marginTop: 8,
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 100,
+    width: '90%',
+    paddingVertical: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   stepOneBtnText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
   },
   stepTwoContainer: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#b6e0e6',
-    padding: 18,
-    margin: 18,
-    marginTop: 30,
+    borderColor: Colors.white,
     alignItems: 'center',
+    height: 650,
   },
   stepTwoTitle: {
-    fontSize: 20,
-    fontFamily: FontFamily.semiBold,
+    fontSize: 24,
+    fontFamily: FontFamily.medium,
     color: Colors.txtColor,
-    marginBottom: 4,
-    marginTop: 8,
+    marginBottom: 8,
     textAlign: 'center',
   },
   stepTwoSubtitle: {
     fontSize: 14,
-    color: Colors.grayIcon,
+    color: Colors.txtColor,
     fontFamily: FontFamily.regular,
-    marginBottom: 18,
+    marginBottom: 12,
     textAlign: 'center',
   },
   goalTypeGrid: {
@@ -965,38 +1105,37 @@ const styles = StyleSheet.create({
   },
   goalTypeCard: {
     width: '47%',
-    backgroundColor: '#eaf6fb',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#b6e0e6',
+    borderColor: Colors.white,
     alignItems: 'center',
-    paddingVertical: 18,
-    marginBottom: 12,
+    paddingVertical: 24,
+    marginBottom: 16,
   },
   goalTypeCardSelected: {
     borderColor: Colors.green,
     backgroundColor: '#d2f5e7',
   },
   goalTypeCardTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
-    marginTop: 8,
-    marginBottom: 2,
+    marginTop: 15,
+    marginBottom: 4,
     textAlign: 'center',
   },
   goalTypeCardSubtitle: {
     fontSize: 12,
-    color: Colors.grayIcon,
+    color: Colors.txtColor,
     fontFamily: FontFamily.regular,
     textAlign: 'center',
   },
   stepTwoNextBtn: {
-    backgroundColor: Colors.green,
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    marginTop: 8,
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 100,
+    paddingVertical: 14,
+    marginTop: 14,
     width: '100%',
     alignItems: 'center',
   },
@@ -1006,13 +1145,13 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.semiBold,
   },
   stepThreeContainer: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#b6e0e6',
-    padding: 18,
-    margin: 18,
-    marginTop: 30,
+    borderColor: Colors.white,
+    padding: 16,
+    marginTop: 60,
+    height: 650,
     alignItems: 'center',
   },
   stepThreeFormBox: {
@@ -1023,13 +1162,13 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#eaf6fb',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#b6e0e6',
-    marginBottom: 12,
+    borderColor: Colors.white,
+    marginBottom: 24,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    height: 56,
   },
   input: {
     flex: 1,
@@ -1048,18 +1187,14 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   sourceAccountLabel: {
-    fontSize: 15,
-    color: Colors.txtColor,
-    fontFamily: FontFamily.semiBold,
-    marginBottom: 6,
-    marginTop: 2,
-    alignSelf: 'flex-start',
+    fontSize: 16,
+    color: Colors.grayIcon,
+    fontFamily: FontFamily.medium,
   },
   viewAccounts: {
-    color: Colors.green,
-    fontSize: 13,
+    color: Colors.newButtonBack,
+    fontSize: 14,
     fontFamily: FontFamily.medium,
-    marginLeft: 8,
   },
   accountList: {
     width: '100%',
@@ -1068,12 +1203,15 @@ const styles = StyleSheet.create({
   accountCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#b6e0e6',
-    backgroundColor: '#eaf6fb',
-    padding: 12,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     marginBottom: 10,
+    overflow: 'hidden',
+  },
+  accountCardImage: {
+    borderRadius: 12,
+    resizeMode: 'cover',
   },
   accountLogo: {
     width: 38,
@@ -1082,21 +1220,23 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   accountName: {
-    fontSize: 15,
-    fontFamily: FontFamily.semiBold,
-    marginBottom: 2,
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
+    marginBottom: 8,
+    color: Colors.cardTxt,
   },
   accountType: {
-    fontSize: 13,
-    color: Colors.grayIcon,
-    fontFamily: FontFamily.regular,
+    fontSize: 14,
+    color: Colors.cardTxt,
+    fontFamily: FontFamily.medium,
   },
   radioOuter: {
-    width: 22,
-    height: 22,
+    width: 24,
+    height: 24,
     borderRadius: 11,
     borderWidth: 2,
-    borderColor: '#b6e0e6',
+    borderColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 10,
@@ -1105,44 +1245,43 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
+    backgroundColor: Colors.white,
   },
   accountHintRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
-    marginTop: 2,
     width: '100%',
+    paddingHorizontal: 25,
   },
   accountHintText: {
-    color: Colors.green,
-    fontSize: 13,
+    color: Colors.grayIcon,
+    fontSize: 12,
     fontFamily: FontFamily.regular,
-    marginLeft: 4,
+    marginLeft: 8,
   },
   stepFourContainer: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#b6e0e6',
-    width: '90%',
-    padding: 18,
-    margin: 18,
+    borderColor: Colors.white,
+    width: '100%',
+    padding: 16,
     marginTop: 30,
     alignItems: 'center',
   },
   stepFourTitle: {
-    fontSize: 20,
-    fontFamily: FontFamily.semiBold,
+    fontSize: 24,
+    fontFamily: FontFamily.medium,
     color: Colors.txtColor,
-    marginBottom: 4,
-    marginTop: 8,
+    marginBottom: 8,
     textAlign: 'center',
   },
   stepFourSubtitle: {
     fontSize: 14,
-    color: Colors.grayIcon,
+    color: Colors.txtColor,
     fontFamily: FontFamily.regular,
-    marginBottom: 18,
+    marginBottom: 16,
     textAlign: 'center',
   },
   sourceAccountList: {
@@ -1150,23 +1289,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sourceAccountCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
     borderRadius: 16,
-    borderWidth: 2,
-    borderColor: '#e0e0e0',
     marginBottom: 16,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 24,
     overflow: 'hidden',
   },
   sourceAccountCardImage: {
     borderRadius: 16,
     resizeMode: 'cover',
   },
-  sourceAccountCardContent: {
+  sourceAccountCardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
+    marginBottom: 16,
   },
   sourceAccountLogo: {
     width: 38,
@@ -1175,125 +1311,114 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   sourceAccountName: {
-    fontSize: 15,
-    fontFamily: FontFamily.semiBold,
-    marginBottom: 2,
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.cardTxt,
   },
-  sourceAccountTypeRow: {
+  sourceAccountTypeContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 2,
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  sourceAccountTypeInfo: {
+    flex: 1,
   },
   sourceAccountType: {
-    fontSize: 13,
-    color: Colors.grayIcon,
+    fontSize: 14,
+    color: Colors.cardTxt,
     fontFamily: FontFamily.regular,
+    marginBottom: 10,
   },
   sourceAccountBalance: {
-    fontSize: 13,
-    color: Colors.txtColor,
+    fontSize: 16,
+    color: Colors.progressBackground,
     fontFamily: FontFamily.semiBold,
   },
   selectAccountBtn: {
-    backgroundColor: Colors.green,
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    marginTop: 16,
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 1000,
+    paddingVertical: 16,
+    marginTop: 21,
     width: '100%',
     alignItems: 'center',
   },
   selectAccountBtnText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 16,
     fontFamily: FontFamily.semiBold,
   },
   stepFiveContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingHorizontal: 16,
+    padding: 16,
     paddingBottom: 40,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 18,
+    height: 700,
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
-  stepFiveHeader: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  stepFiveTitle: {
-    fontSize: 24,
-    fontFamily: 'Gilroy-Bold',
-    color: '#000',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  stepFiveSubtitle: {
-    fontSize: 16,
-    fontFamily: 'Gilroy-Medium',
-    color: '#666',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  stepFiveDateLabel: {
-    fontSize: 14,
-    fontFamily: 'Gilroy-Medium',
-    color: '#666',
-    textAlign: 'center',
-  },
-  calendarContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    marginHorizontal: 10,
-    marginBottom: 40,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-    alignItems: 'center',
-  },
-  customCalendarHeader: {
+  calendarHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    paddingHorizontal: 20,
-    marginBottom: 15,
+    paddingHorizontal: 16,
+    marginTop: 10,
   },
-  calendarArrowButton: {
-    padding: 8,
+  stepFiveHeaderTitle: {
+    fontSize: 24,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  calendarArrowText: {
-    fontSize: 20,
-    color: '#6B46C1',
-    fontFamily: 'Gilroy-Bold',
+  stepFiveHeaderSubtitle: {
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
+    marginBottom: 16,
+    textAlign: 'center',
   },
-  calendarMonthText: {
-    fontSize: 18,
-    fontFamily: 'Gilroy-Bold',
-    color: '#000',
+  stepFiveCalendarContainer: {
+    // flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 18,
+    borderWidth: 1,
+    paddingTop: 10,
+    borderColor: Colors.white,
+  },
+  calendarWrapper: {
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    marginBottom: 26,
+  },
+  monthArrowButton: {
+    // padding: 8,
+  },
+  monthArrowText: {
+    fontSize: 24,
+    color: Colors.txtColor,
+    fontFamily: FontFamily.semiBold,
+  },
+  monthText: {
+    fontSize: 17,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
   },
   createGoalButton: {
-    backgroundColor: '#00C48C',
+    backgroundColor: Colors.newButtonBack,
     paddingVertical: 16,
-    borderRadius: 30,
+    borderRadius: 100,
     alignItems: 'center',
-    marginHorizontal: 20,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  createGoalButtonDisabled: {
-    backgroundColor: '#ccc',
+    width: '100%',
+    marginTop: 180,
   },
   createGoalButtonText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 16,
-    fontFamily: 'Gilroy-Bold',
-    fontWeight: 'bold',
+    fontFamily: FontFamily.semiBold,
   },
   loadingModalContainer: {
     flex: 1,
@@ -1303,22 +1428,56 @@ const styles = StyleSheet.create({
   loadingContent: {
     alignItems: 'center',
     paddingHorizontal: 40,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: Colors.white,
+    flex: 0.8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loadingTitle: {
     fontSize: 24,
-    fontFamily: 'Gilroy-Bold',
-    color: '#000',
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   loadingSubtitle: {
-    fontSize: 16,
-    fontFamily: 'Gilroy-Medium',
-    color: '#666',
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
+    color: Colors.txtColor,
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 24,
   },
   loadingSpinnerContainer: {
     marginTop: 20,
+  },
+  headerText: {
+    fontSize: 24,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  headerTextContainer: {
+    paddingHorizontal: 5,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 20,
+    marginBottom: 16,
+    marginTop: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.white,
+  },
+  // Simple Loader Styles
+  simpleLoader: {
+    width: 124,
+    height: 124,
+    borderRadius: 10000,
+    borderWidth: 9,
+    borderColor: 'rgba(255,255,255,0.3)',
+    borderTopColor: Colors.newButtonBack,
+    borderRightColor: Colors.newButtonBack,
   },
 });
