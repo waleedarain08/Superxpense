@@ -72,9 +72,9 @@ const SubscriptionScreen = ({navigation}) => {
           sku: selectedProduct.productId,
         });
         const receipt = purchase.transactionReceipt;
-        //console.log('Purchase receipt:', receipt);
-        //console.log('subscriptionId:', selectedProduct.productId);
-        //console.log('Token:', token);
+        console.log('Purchase receipt:', receipt);
+        console.log('subscriptionId:', selectedProduct.productId);
+        console.log('Token:', token);
         setLoading(true);
         const response = await post(
           `${API.billingSubscription}`,

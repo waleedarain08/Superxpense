@@ -26,6 +26,8 @@ const SplashScreen = ({navigation}) => {
     const timer = setTimeout(async () => {
       const userData = await getItem('userData');
       const subscription = await getStringItem('subscription');
+      console.log('userData', userData);
+      console.log('subscription', subscription);
 
       if (!userData) {
         navigation.replace('Welcome1');
