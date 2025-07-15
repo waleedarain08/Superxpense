@@ -91,7 +91,13 @@ const Navigation = () => {
           component={VerficationCodeScreen}
         />
         <Stack.Screen name="Notification" component={NotificationScreen} />
-        <Stack.Screen name="Main" component={BottomNavigator} />
+        <Stack.Screen
+          name="Main"
+          component={BottomNavigator}
+          options={{
+            gestureEnabled: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -291,13 +297,13 @@ const BottomNavigator = () => {
     // </View>
     <Tab.Navigator
       screenOptions={{
-       // tabBarActiveTintColor: Colors.newButtonBack,
+        // tabBarActiveTintColor: Colors.newButtonBack,
         tabBarActiveBackgroundColor: 'rgba(255, 255, 255, 0.92)',
         //tabBarInactiveBackgroundColor: '#C1E3E9',
         headerShown: false,
         tabBarButton: {
-          backgroundColor: "#00A3FF",
-        }
+          backgroundColor: '#00A3FF',
+        },
       }}
       tabBar={props => (
         <BottomFabBar
@@ -339,8 +345,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/homeBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused?25:20,
-                width: focused?25:20,
+                height: focused ? 25 : 20,
+                width: focused ? 25 : 20,
               }}
             />
           ),
@@ -362,8 +368,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/chartBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused?25:20,
-                width: focused?25:20,
+                height: focused ? 25 : 20,
+                width: focused ? 25 : 20,
               }}
             />
           ),
@@ -385,8 +391,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/bulbBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused?25:21,
-                width: focused?21:18,
+                height: focused ? 25 : 21,
+                width: focused ? 21 : 18,
               }}
             />
           ),
@@ -408,8 +414,8 @@ const BottomNavigator = () => {
               source={require('../assets/images/settingsBottom.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                 height: focused?25:22,
-                width: focused?25:22,
+                height: focused ? 25 : 22,
+                width: focused ? 25 : 22,
               }}
             />
           ),
