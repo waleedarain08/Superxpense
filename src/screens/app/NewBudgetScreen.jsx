@@ -865,7 +865,7 @@ const NewBudgetScreen = ({navigation}) => {
           <Text style={styles.availableText}>Available balance</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text style={styles.balanceAmount}>
-              {availableBalance.toLocaleString()} AE
+              {availableBalance.toLocaleString()}
             </Text>
             <Text
               style={[
