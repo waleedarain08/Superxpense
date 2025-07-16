@@ -501,7 +501,7 @@ const StepFiveGoalCalendar = ({
     if (isInSelectedWeek) {
       // To ensure borderRadius works, use overflow: 'hidden' and set backgroundColor on the container
       let style = {
-        backgroundColor: 'rgba(255,255,255,0.3)',
+        backgroundColor: Colors.newButtonBack,
         width: 44,
         height: 44,
         borderRadius: 22,
@@ -545,7 +545,12 @@ const StepFiveGoalCalendar = ({
   };
 
   return (
-    <View style={{flex: 1}}>
+    <ScrollView
+      style={{flex: 1}}
+      contentContainerStyle={{
+        paddingBottom: 200,
+      }}
+      showsVerticalScrollIndicator={false}>
       <TouchableOpacity
         style={[styles.backBtn, {height: 32, width: 32, marginBottom: 24}]}
         onPress={onBack}>
@@ -634,7 +639,7 @@ const StepFiveGoalCalendar = ({
                 fontFamily: FontFamily.regular,
               }}
               minDate={moment()}
-              width={400}
+              width={350}
               height={400}
             />
           </View>
@@ -646,7 +651,7 @@ const StepFiveGoalCalendar = ({
           <Text style={styles.createGoalButtonText}>Create Goal</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

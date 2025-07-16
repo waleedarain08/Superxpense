@@ -110,7 +110,20 @@ const BillsScreen = ({navigation}) => {
     <ImageBackground
       source={require('../../assets/images/greenishBackground.png')}
       style={styles.container}>
-      <View style={styles.introContent}>
+      <ScrollView
+        // style={styles.introContent}
+        contentContainerStyle={{
+          paddingBottom: 200,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 100,
+          width: '90%',
+          borderRadius: 20,
+          alignSelf: 'center',
+          borderWidth: 1,
+          borderColor: Colors.white,
+        }}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.illustrationContainer}>
           <Image
             source={require('../../assets/images/BillsMain.png')}
@@ -131,7 +144,7 @@ const BillsScreen = ({navigation}) => {
           onPress={() => setShowIntro(false)}>
           <Text style={styles.startButtonText}>Start Saving</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 

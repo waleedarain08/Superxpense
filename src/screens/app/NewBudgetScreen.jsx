@@ -309,7 +309,7 @@ const NewBudgetScreen = ({navigation}) => {
       if (isInSelectedWeek) {
         // To ensure borderRadius works, use overflow: 'hidden' and set backgroundColor on the container
         let style = {
-          backgroundColor: 'rgba(255,255,255,0.3)',
+          backgroundColor: Colors.newButtonBack,
           width: 44,
           height: 44,
           borderRadius: 22,
@@ -353,7 +353,12 @@ const NewBudgetScreen = ({navigation}) => {
     };
 
     return (
-      <View style={styles.step2Container}>
+      <ScrollView
+        style={styles.step2Container}
+        contentContainerStyle={{
+          paddingBottom: 200,
+        }}
+        showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.step2Header}>
           <Header
@@ -455,7 +460,7 @@ const NewBudgetScreen = ({navigation}) => {
                   fontFamily: FontFamily.regular,
                 }}
                 minDate={moment()}
-                width={400}
+                width={350}
                 height={400}
               />
             </View>
@@ -467,7 +472,7 @@ const NewBudgetScreen = ({navigation}) => {
             <Text style={styles.createGoalButtonText}>Next</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     );
   };
 
@@ -548,7 +553,12 @@ const NewBudgetScreen = ({navigation}) => {
     ];
 
     return (
-      <View style={styles.step3Container}>
+      <ScrollView
+        style={styles.step3Container}
+        contentContainerStyle={{
+          paddingBottom: 200,
+        }}
+        showsVerticalScrollIndicator={false}>
         {/* Header */}
         <Header
           ScreenName="Create Budget"
@@ -633,7 +643,7 @@ const NewBudgetScreen = ({navigation}) => {
           </ScrollView>
         </View>
         {/* Next Button */}
-      </View>
+      </ScrollView>
     );
   };
 
@@ -747,7 +757,12 @@ const NewBudgetScreen = ({navigation}) => {
     );
 
     return (
-      <View style={styles.step4Container}>
+      <ScrollView
+        style={styles.step4Container}
+        contentContainerStyle={{
+          paddingBottom: 200,
+        }}
+        showsVerticalScrollIndicator={false}>
         {/* Header */}
         {/* <View style={styles.step4Header}>
           <TouchableOpacity style={styles.backButton} onPress={handlePrevStep}>
@@ -789,7 +804,7 @@ const NewBudgetScreen = ({navigation}) => {
           </ScrollView>
         </View>
         {/* Next Button */}
-      </View>
+      </ScrollView>
     );
   };
 
@@ -1081,6 +1096,9 @@ const NewBudgetScreen = ({navigation}) => {
       style={{flex: 1}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: 200,
+        }}
         style={{
           flex: 1,
           backgroundColor: 'rgba(255,255,255,0.5)',
@@ -1380,7 +1398,6 @@ const styles = StyleSheet.create({
   // Step 2 specific styles
   step2Container: {
     flex: 1,
-    backgroundColor: '#E0F2F1',
   },
   step2Header: {
     paddingTop: 30,
@@ -1484,7 +1501,6 @@ const styles = StyleSheet.create({
   // Step 3 specific styles
   step3Container: {
     flex: 1,
-    backgroundColor: '#E0F2F1',
   },
   step3Header: {
     marginTop: 50,
@@ -1555,7 +1571,6 @@ const styles = StyleSheet.create({
   // Step 4 specific styles (from EditBudgetScreen)
   step4Container: {
     flex: 1,
-    backgroundColor: '#E0F2F1',
   },
   step4Header: {
     marginTop: 50,

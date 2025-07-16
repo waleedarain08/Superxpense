@@ -10,6 +10,7 @@ import {
   Platform,
   StatusBar,
   ImageBackground,
+  Image,
 } from 'react-native';
 import PhoneInput from 'react-native-phone-input';
 import {Colors} from '../../utilis/Colors';
@@ -109,6 +110,26 @@ const EditProfileScreen = ({navigation}) => {
             style={styles.input}
             placeholder="Firstname"
           /> */}
+          <View
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.5)',
+              borderRadius: 16,
+              marginBottom: 24,
+              borderWidth: 1,
+              borderColor: Colors.white,
+              height: 189,
+            }}>
+            <Image
+              source={require('../../assets/images/profileImage.png')}
+              style={{
+                height: 189,
+                width: '100%',
+                borderRadius: 16,
+                marginBottom: 24,
+              }}
+            />
+          </View>
+
           <IconInput
             svgIcon={<Email />}
             placeholder="Email Address"
@@ -197,7 +218,7 @@ const styles = StyleSheet.create({
   header: {
     // paddingTop: 80,
     paddingTop: Platform.OS === 'ios' ? 60 : StatusBar.currentHeight + 5,
-    paddingBottom: '20%',
+    // paddingBottom: '20%',
     paddingHorizontal: 20,
   },
   backArrow: {
@@ -231,7 +252,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
   },
   form: {
-    marginTop: 16,
     paddingHorizontal: 20,
     flex: 1,
   },

@@ -17,14 +17,22 @@ import {FontFamily} from '../../utilis/Fonts';
 import {
   Bulb,
   Crown,
+  FAQSvg,
   Flag,
   Globe,
+  GreenNotification,
   Help,
   NotiBlue,
   Personal,
+  Pirvacy,
   Shield,
 } from '../../assets/svgs';
-import {BoldChevronLeft, ChevronRight, DeleteIcon} from '../../icons';
+import {
+  BoldChevronLeft,
+  ChevronLeft,
+  ChevronRight,
+  DeleteIcon,
+} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
 import {
   getItem,
@@ -48,6 +56,22 @@ const SettingScreen = ({navigation}) => {
       imageStyle={{resizeMode: 'stretch'}}
       resizeMode="cover">
       <View style={{flex: 1}}>
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 69,
+            left: 20,
+            backgroundColor: Colors.white,
+            width: 32,
+            height: 32,
+            borderRadius: 16,
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 100,
+          }}
+          onPress={() => navigation.goBack()}>
+          <ChevronLeft size={24} color={Colors.txtColor} />
+        </TouchableOpacity>
         <Text style={styles.header}>Settings</Text>
         <ScrollView contentContainerStyle={[styles.container]}>
           {/* Account Section */}
@@ -79,14 +103,22 @@ const SettingScreen = ({navigation}) => {
               screenName="GmailIntegration"
               IconComponent={<Bulb />}
             />
+            <SettingItem
+              title="Alert & Notifications"
+              IconComponent={<GreenNotification />}
+              screenName="AlertNotification"
+            />
           </View>
 
           {/* Security Section */}
-          {/* <Text style={styles.sectionTitle}>Security</Text>
-        <View style={styles.card}>
-          <SettingItem title="Privacy Policy" IconComponent={<Globe />} />
-          <SettingItem title="App Passcode" IconComponent={<Shield />} />
-        </View> */}
+          <Text style={styles.sectionTitle}>Support</Text>
+          <View style={styles.card}>
+            <SettingItem
+              title="Privacy & Policy"
+              IconComponent={<Pirvacy />}
+              screenName="PrivacyPolicy"
+            />
+          </View>
 
           {/* Support Section */}
           <Text style={styles.sectionTitle}>Support</Text>
@@ -96,7 +128,11 @@ const SettingScreen = ({navigation}) => {
               IconComponent={<Flag />}
               screenName="Help"
             />
-            {/* <SettingItem title="Privacy Policy" IconComponent={<Bulb />} /> */}
+            <SettingItem
+              title="FAQs"
+              IconComponent={<FAQSvg />}
+              screenName="FAQs"
+            />
             {/* <SettingItem title="FAQs" IconComponent={<Flag />} /> */}
           </View>
 

@@ -701,7 +701,10 @@ const HomeScreen = ({navigation, route}) => {
                 data={categoryData}
                 month={selectedDate.format('MMM YYYY')}
               />
-              <UpcomingBills categoryData={categoryData} />
+              <UpcomingBills
+                categoryData={categoryData}
+                navigation={navigation}
+              />
             </ScrollView>
           )}
           {renderOverview && (
@@ -712,9 +715,9 @@ const HomeScreen = ({navigation, route}) => {
                 currentDate={selectedDate}
                 onDateChange={handleDateChange}
               />
-              <View style={{marginTop: 16}}>
+              {/* <View style={{marginTop: 16}}>
                 <StackedChart chartData={barData} />
-              </View>
+              </View> */}
               <BudgetCard data={budgetCategoryData?.data || []} month={month} />
               <SpendingSummary
                 data={categoryData}
@@ -742,13 +745,15 @@ const HomeScreen = ({navigation, route}) => {
             </TouchableOpacity> */}
               {/* </TouchableOpacity>
             <ContractInstallmentsList contract={contractData || []} /> */}
-              <UpcomingBills categoryData={categoryData} />
+              <UpcomingBills
+                categoryData={categoryData}
+                navigation={navigation}
+              />
             </ScrollView>
           )}
           {renderAccount && (
             <>
-              <ScrollView
-                showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -775,9 +780,7 @@ const HomeScreen = ({navigation, route}) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}
-                      onPress={() =>
-                        navigation.navigate('IssuingCountryScreen')
-                      }>
+                      onPress={() => navigation.navigate('Accounts')}>
                       <PlusIcon size={20} color={Colors.newButtonBack} />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -821,15 +824,21 @@ const HomeScreen = ({navigation, route}) => {
                     </View>
                   )}
                   {banksData.length > 0 ? (
-                    <View style={{marginTop: 20, width: '100%'}}>
+                    <View
+                      style={{
+                        marginTop: 20,
+                        width: '100%',
+                        height: 170,
+                        justifyContent: 'center',
+                      }}>
                       <Image
                         source={require('../../assets/images/currentMonth.png')}
                         style={{
                           height: 200,
-                          width: '97%',
-                          marginLeft: 10,
+                          width: '103%',
+                          // marginLeft: 10,
                         }}
-                        resizeMode="stretch"
+                        resizeMode="contain"
                       />
                     </View>
                   ) : (
@@ -1109,7 +1118,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: 15,
     marginBottom: 15,
-    marginHorizontal: 20,
     padding: 20,
     flexDirection: 'column',
     alignItems: 'flex-start',

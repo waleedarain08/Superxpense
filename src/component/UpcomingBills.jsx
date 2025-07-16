@@ -116,8 +116,9 @@ const UpcomingBills = ({navigation, categoryData}) => {
         </View>
       )}
 
-      <TouchableOpacity
-        style={styles.button}>
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={() => navigation.navigate('Bills')}>
         <Text style={styles.buttonText}>
           {categoryData.length > 0 ? 'See all upcoming bills' : 'Add a bill'}
         </Text>
@@ -213,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,
-    padding: 6,
+    padding: 5,
   },
   month: {
     fontSize: 12,

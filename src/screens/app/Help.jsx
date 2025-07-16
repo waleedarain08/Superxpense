@@ -9,10 +9,12 @@ import {
   Platform,
   StatusBar,
   ImageBackground,
+  Clipboard,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Colors} from '../../utilis/Colors';
-import {LeftBlack} from '../../assets/svgs';
+import {Copy, LeftBlack, Mail, Phone} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Header from '../../component/Header';
 
@@ -29,6 +31,16 @@ const HelpScreen = ({navigation}) => {
     Linking.openURL('https://maps.google.com/?q=123+Main+Street,+City,+Dubai');
   };
 
+  const copyEmail = () => {
+    Clipboard.setString('info@superxpense.com');
+    Alert.alert('Copied!', 'Email address copied to clipboard');
+  };
+
+  const copyPhone = () => {
+    Clipboard.setString('+971 50 171 0513');
+    Alert.alert('Copied!', 'Phone number copied to clipboard');
+  };
+
   return (
     <ImageBackground
       source={require('../../assets/images/greenishBackground.png')}
@@ -38,27 +50,66 @@ const HelpScreen = ({navigation}) => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Header
-            ScreenName={'Help'}
+            ScreenName={'Help & Support'}
             mainContainer={{paddingHorizontal: 0, marginBottom: 8}}
             onBackPress={() => navigation.goBack()}
           />
         </View>
         <View
-          style={{flex: 0.6, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={styles.title}>Reach out to us</Text>
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(255,255,255,0.3)',
+            borderRadius: 16,
+            padding: 12,
+            marginBottom: 24,
+            borderWidth: 1,
+            marginHorizontal: 12,
+            borderColor: Colors.white,
+          }}>
+          <Text style={styles.title}>Contact Us:</Text>
 
           <View style={styles.infoCard}>
-            <Icon name="email" size={24} color="#007aff" style={styles.icon} />
+            <View
+              style={{
+                height: 32,
+                width: 32,
+                borderRadius: 1000,
+                borderWidth: 1,
+                borderColor: Colors.white,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 8,
+              }}>
+              <Mail />
+            </View>
             <Text style={styles.infoText} onPress={handleEmail}>
               info@superxpense.com
             </Text>
+            <TouchableOpacity onPress={copyEmail}>
+              <Copy />
+            </TouchableOpacity>
           </View>
 
           <View style={styles.infoCard}>
-            <Icon name="phone" size={24} color="#34c759" style={styles.icon} />
+            <View
+              style={{
+                height: 32,
+                width: 32,
+                borderRadius: 1000,
+                borderWidth: 1,
+                borderColor: Colors.white,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 8,
+              }}>
+              <Phone />
+            </View>
             <Text style={styles.infoText} onPress={handlePhone}>
               +971 50 171 0513
             </Text>
+            <TouchableOpacity onPress={copyPhone}>
+              <Copy />
+            </TouchableOpacity>
           </View>
 
           {/* <View style={styles.infoCard}>
@@ -72,10 +123,6 @@ const HelpScreen = ({navigation}) => {
             123 Main Street, City, Dubai
           </Text>
         </View> */}
-
-          <Text style={styles.note}>
-            We're here to help! Reach out via any method above.
-          </Text>
         </View>
       </View>
     </ImageBackground>
@@ -88,7 +135,7 @@ const styles = StyleSheet.create({
   },
   header: {
     // paddingTop: 80,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 5 : 80,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 5 : 60,
     paddingBottom: 8,
     borderBottomColor: Colors.newBorderColor,
     paddingHorizontal: 20,
@@ -104,24 +151,20 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 600,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
     marginBottom: 30,
   },
   infoCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-    padding: 20,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     borderRadius: 8,
+    padding: 12,
     marginBottom: 15,
-    width: '90%',
-    shadowColor: '#aeaeae',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: Colors.white,
   },
   icon: {
     marginRight: 15,
@@ -129,6 +172,7 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 16,
     color: '#333',
+    flex: 1,
   },
   note: {
     marginTop: 30,

@@ -98,8 +98,24 @@ import SvgDots from './svgDots.svg';
 import CalendarSvg from './calendar.svg';
 import BlankCalendar from './blankCalender.svg';
 import GreenBank from './greenBank.svg';
+import Mail from './mail.svg';
+import Phone from './phone.svg';
+import Copy from './copy.svg';
+import Subscription from './subscription.svg';
+import Diamond from './diamond.svg';
+import GreenNotification from './greenNotification.svg';
+import Pirvacy from './privacy.svg';
+import FAQSvg from './faqs.svg';
 
 export {
+  FAQSvg,
+  Pirvacy,
+  GreenNotification,
+  Diamond,
+  Subscription,
+  Copy,
+  Mail,
+  Phone,
   GreenBank,
   BlankCalendar,
   CalendarSvg,

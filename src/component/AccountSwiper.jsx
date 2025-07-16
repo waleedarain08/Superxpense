@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.white,
     borderRadius: 20,
-    marginHorizontal: 14,
+    marginHorizontal: 8,
   },
   card: {
     width: width * 0.75,

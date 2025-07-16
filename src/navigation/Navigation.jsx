@@ -48,6 +48,9 @@ import RealEstateBreakdownScreen from '../screens/app/RealEstateBreakdownScreen'
 import NewBudgetScreen from '../screens/app/NewBudgetScreen';
 import EditBudgetScreen from '../screens/app/EditBudgetScreen';
 import ShowBillsDate from '../screens/app/ShowBillsDate';
+import AlertNotificationScreen from '../screens/app/AlertNotificationScreen';
+import FAQsScreen from '../screens/app/FAQsScreen';
+import PrivacyPolicyScreen from '../screens/app/PrivacyPolicyScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomStack = createBottomTabNavigator();
@@ -157,6 +160,26 @@ const Navigation = () => {
         <Stack.Screen
           name="Settings"
           component={SettingScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Accounts"
+          component={AccountsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AlertNotification"
+          component={AlertNotificationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="FAQs"
+          component={FAQsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PrivacyPolicy"
+          component={PrivacyPolicyScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
@@ -518,7 +541,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <Image
-              source={require('../assets/images/goals.png')}
+              source={require('../assets/images/goal.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: focused ? 25 : 21,

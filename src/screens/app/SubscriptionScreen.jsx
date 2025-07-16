@@ -9,6 +9,8 @@ import {
   Alert,
   Platform,
   Linking,
+  Switch,
+  ActivityIndicator,
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
@@ -16,10 +18,17 @@ import SubscriptionModal from '../../component/SubscriptionModal';
 import * as RNIap from 'react-native-iap';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
+import {getItem, setStringItem} from '../../utilis/StorageActions';
 import {
-  getItem,
-  setStringItem
-} from '../../utilis/StorageActions';
+  LeftBlack,
+  Dirham,
+  Completed,
+  Crown,
+  Subscription,
+  BlubIcon,
+} from '../../assets/svgs';
+import Header from '../../component/Header';
+import {CheckCircle} from '../../icons';
 
 const SubscriptionScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,6 +36,7 @@ const SubscriptionScreen = ({navigation}) => {
   const [selectedProduct, setSelectedProduct] = useState({});
   const productIds = ['yearly', 'monthly']; // replace with your real product id(s)
   const [loading, setLoading] = useState(false);
+  const [isYearly, setIsYearly] = useState(true);
 
   useEffect(() => {
     const initIAP = async () => {
@@ -37,6 +47,11 @@ const SubscriptionScreen = ({navigation}) => {
           //const items = [{productId: 'yearly', title: 'Yearly Subscription', description: 'Premium access for a year at discounted price', localizedPrice: 'AED 119.99', subscriptionPeriodUnitIOS: 'year'}, {productId: 'monthly', title: 'Monthly Subscription', description: 'Allow access to premium features for a month', localizedPrice: 'AED 14.99', subscriptionPeriodUnitIOS: 'month'}];
           //console.log('subscriptions:', items);
           setProducts(items);
+          // Set initial selected product to yearly
+          const yearlyProduct = items.find(item => item.productId === 'yearly');
+          if (yearlyProduct) {
+            setSelectedProduct(yearlyProduct);
+          }
         } else if (Platform.OS === 'android') {
           //android here
         }
@@ -52,6 +67,16 @@ const SubscriptionScreen = ({navigation}) => {
     };
   }, []);
 
+  const handleToggle = () => {
+    setIsYearly(!isYearly);
+    const newPlan = products.find(
+      plan => plan.productId === (isYearly ? 'monthly' : 'yearly'),
+    );
+    if (newPlan) {
+      setSelectedProduct(newPlan);
+    }
+  };
+
   const buyProduct = async () => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
@@ -65,8 +90,7 @@ const SubscriptionScreen = ({navigation}) => {
       return;
     }
 
-    if(Platform.OS === 'ios') {
-    
+    if (Platform.OS === 'ios') {
       try {
         const purchase = await RNIap.requestPurchase({
           sku: selectedProduct.productId,
@@ -94,7 +118,6 @@ const SubscriptionScreen = ({navigation}) => {
           'Purchase Successful',
           'Your subscription has been successfully activated.',
         );
-        setModalVisible(false);
         navigation.navigate('Main');
       } catch (err) {
         console.warn('Purchase failed:', err);
@@ -102,13 +125,13 @@ const SubscriptionScreen = ({navigation}) => {
           Alert.alert('Purchase failed:', err);
         }
       }
-  }
+    }
   };
 
   const FeatureItem = ({text}) => (
     <View style={styles.featureRow}>
-      <View style={styles.circle}>
-        <Text style={styles.check}>✓</Text>
+      <View style={styles.checkIcon}>
+        <CheckCircle size={16} color={Colors.newButtonBack} />
       </View>
       <Text style={styles.featureText}>{text}</Text>
     </View>
@@ -116,210 +139,311 @@ const SubscriptionScreen = ({navigation}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/backGroundImage.png')}
-      resizeMode="cover"
-      style={styles.background}>
-      <SubscriptionModal
-        visible={modalVisible}
-        products={products}
-        onBuyProduct={() => buyProduct()}
-        onClose={() => setModalVisible(false)}
-        onSelectProduct={product => setSelectedProduct(product)}
-        loading={loading}
-      />
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => navigation.goBack()}>
-        <Text style={styles.closeText}>×</Text>
-      </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.proText}>SUPEREXPENSE PRO</Text>
-        <Text style={styles.title}>
-          Choose your plan to proceed with Subscription
-        </Text>
+      source={require('../../assets/images/greenishBackground.png')}
+      style={styles.container}
+      imageStyle={{resizeMode: 'cover'}}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <Header
+          ScreenName="Subscription"
+          mainContainer={{
+            marginTop: 40,
+          }}
+          onBackPress={() => navigation.goBack()}
+        />
 
-        <View style={styles.badgesContainer}>
-          {/* <Text style={styles.badge}>30 days free</Text>
-          <Text style={styles.badge}>Save up to 56%</Text> */}
-        </View>
+        {/* Main Content */}
+        <View style={styles.content}>
+          {/* Icon */}
+          <Subscription />
 
-        <View style={styles.features}>
-          <FeatureItem text="Connect your bank" />
-          <FeatureItem text="Understand your spending" />
-          <FeatureItem text="Share and collaborate on budgets" />
-          <FeatureItem text="Easy-to-use budgets" />
-          <FeatureItem text="Ai-assisted chatbot" />
-        </View>
-
-        <View style={styles.priceContainer}>
-         {products.map(product => (
-          //console.log('Product:', product),
-          <Text key={product.productId} style={styles.priceText}>
-          {product.title} - {product.localizedPrice} / {product.subscriptionPeriodUnitIOS || 'period'}
+          {/* Title */}
+          <Text style={styles.title}>
+            Unlock More with{'\n'}Superxpense Pro
           </Text>
-        ))}
+          <Text style={styles.subtitle}>
+            Get access to advanced features, AI insights, priority support, and
+            more
+          </Text>
+
+          {/* Toggle */}
+          <View style={styles.toggleContainer}>
+            <Text style={[styles.toggleText, !isYearly && styles.activeToggle]}>
+              Monthly
+            </Text>
+            <Switch
+              value={isYearly}
+              onValueChange={handleToggle}
+              trackColor={{false: '#E0E0E0', true: 'rgba(255,255,255,0.8)'}}
+              thumbColor={Colors.white}
+            />
+            <Text style={[styles.toggleText, isYearly && styles.activeToggle]}>
+              Yearly
+            </Text>
+          </View>
+
+          {/* Pricing */}
+          <View
+            style={{
+              width: '100%',
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: Colors.white,
+              padding: 16,
+            }}>
+            <View style={styles.pricingContainer}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Dirham width={22} height={19} />
+                <Text style={styles.price}> 49.00</Text>
+              </View>
+              {isYearly && (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={[styles.saveBadge, {marginRight: 8}]}>
+                    <Text style={styles.saveText}>Save 10%</Text>
+                  </View>
+                  <View style={styles.saveBadge}>
+                    <Text style={styles.trialText}>7 days trial</Text>
+                  </View>
+                </View>
+              )}
+            </View>
+
+            <Text style={styles.billingText}>
+              {isYearly ? '499.00 billed annually' : '49.00 billed monthly'}
+            </Text>
+            <Text style={styles.description}>
+              Built for users who want full control of their finances
+            </Text>
+          </View>
+
+          {/* Features */}
+          <View style={styles.featuresContainer}>
+            <FeatureItem text="Connect your bank" />
+            <FeatureItem text="Understand your spending" />
+            <FeatureItem text="Share & collaborate on budgets" />
+            <FeatureItem text="Easy-to-use budgeting" />
+            <FeatureItem text="AI-assisted chatbot" />
+          </View>
+
+          {/* Did you know section */}
+          <View style={styles.infoSection}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 5,
+              }}>
+              <BlubIcon style={{marginRight: 8}} />
+              <Text style={styles.infoTitle}>Did you know?</Text>
+            </View>
+            <Text style={styles.infoText}>
+              Premium users are 2x more likely to hit their savings goals in
+              less time.
+            </Text>
+          </View>
+
+          {/* Upgrade Button */}
+          <TouchableOpacity style={styles.upgradeButton} onPress={buyProduct}>
+            {loading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <View style={styles.buttonContent}>
+                <Text style={styles.upgradeButtonText}>Upgrade to Pro</Text>
+                <Crown />
+              </View>
+            )}
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>Choose Plan</Text>
-        </TouchableOpacity>
-
-        <View style={{ marginTop: 10, alignItems: 'center' }}>
-        <Text style={{ color: '#fff', fontSize: 12, textAlign: 'center', marginBottom: 5 }}>
-          Payment will be charged to your Apple ID account at confirmation of purchase. 
-          Your subscription automatically renews unless auto-renew is turned off at least 
-          24-hours before the end of the current period. You can manage or cancel your 
-          subscription in your App Store account settings at any time.
-        </Text>
-
-      <Text style={{ color: '#fff', fontSize: 12 ,marginBottom: 10, textAlign: 'center'}}>
-        By subscribing, you agree to our{' '}
-        <Text
-          style={{ textDecorationLine: 'underline', color: '#1AAA76' }}
-          onPress={() => {
-            // Replace with your hosted URL
-            Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/terms.html');
-          }}
-        >
-          Terms of Use
-        </Text>{' '}
-        and{' '}
-        <Text
-          style={{ textDecorationLine: 'underline', color: '#1AAA76' }}
-          onPress={() => {
-            // Replace with your hosted URL
-            Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/privacy.html');
-          }}
-        >
-          Privacy Policy
-        </Text>.
-    </Text>
-  </View>
-
       </ScrollView>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flex: 1,
   },
-  container: {
-    padding: 21,
-    marginTop: '30%',
-    flexGrow: 1,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 60,
+    paddingBottom: 20,
   },
-  proText: {
-    color: Colors.newgreen,
-    fontSize: 16,
-    fontFamily: FontFamily.medium,
-    marginBottom: 8,
+  backButton: {
+    padding: 10,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.txtColor,
+  },
+  placeholder: {
+    width: 40,
+  },
+  content: {
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  iconContainer: {
+    marginBottom: 20,
+  },
+  iconBackground: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderWidth: 1,
+    borderColor: Colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
-    color: Colors.white,
-    fontSize: 32,
-    fontFamily: FontFamily.semiBold,
-    marginBottom: 12,
+    fontSize: 28,
+    fontFamily: FontFamily.bold,
+    color: Colors.newButtonBack,
+    textAlign: 'center',
+    marginVertical: 8,
   },
-  badgesContainer: {
+  subtitle: {
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    color: Colors.grayIcon,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  toggleContainer: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 60,
+    alignItems: 'center',
+    borderRadius: 25,
+    marginBottom: 32,
   },
-  badge: {
-    backgroundColor: '#FFFFFF33',
-    color: Colors.white,
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-    borderRadius: 10,
+  toggleText: {
+    fontSize: 14,
+    fontFamily: FontFamily.medium,
+    color: Colors.grayIcon,
+    paddingHorizontal: 15,
+  },
+  activeToggle: {
+    color: Colors.newButtonBack,
+    fontFamily: FontFamily.medium,
+  },
+  pricingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+    justifyContent: 'space-between',
+  },
+  price: {
+    fontSize: 28,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.newButtonBack,
+  },
+  saveBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: Colors.white,
+  },
+  saveText: {
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.grayIcon,
+  },
+  trialText: {
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.grayIcon,
+  },
+  billingText: {
     fontSize: 14,
     fontFamily: FontFamily.regular,
+    color: Colors.newButtonBack,
+    marginBottom: 5,
+    marginLeft: 25,
+    marginBottom: 8,
   },
-  features: {
-    marginBottom: 20,
-    flex: 1,
-  },
-  feature: {
-    color: '#fff',
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  priceContainer: {
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  priceText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: FontFamily.semiBold,
-    marginBottom: 4,
-  },
-  subText: {
-    color: Colors.opacityWhite,
-    fontSize: 16,
+  description: {
+    fontSize: 13,
     fontFamily: FontFamily.regular,
+    color: Colors.grayIcon,
   },
-  button: {
-    backgroundColor: '#1AAA76',
-    paddingVertical: 16,
-    borderRadius: 30,
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  buttonText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: FontFamily.medium,
-  },
-  seeAllText: {
-    color: Colors.white,
-    fontSize: 16,
-    fontFamily: FontFamily.medium,
-    textAlign: 'center',
-    marginBottom: 20,
+  featuresContainer: {
+    width: '100%',
+    marginBottom: 30,
+    marginTop: 24,
   },
   featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 32,
-  },
-  circle: {
-    width: 16,
-    height: 16,
+    marginBottom: 15,
     borderRadius: 12,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 10,
+  },
+  checkIcon: {
+    marginRight: 15,
   },
   featureText: {
-    fontSize: 18,
-    color: Colors.white,
+    fontSize: 16,
     fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+    flex: 1,
   },
-  check: {
-    color: Colors.txtColor, // deep teal green
-    fontSize: 10,
-    fontWeight: 'bold',
+  infoSection: {
+    width: '100%',
+    borderRadius: 12,
+    marginBottom: 42,
   },
-  closeButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)', // semi-transparent light background
-    borderRadius: 20, // circular button (half of width/height)
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
+  infoTitle: {
+    fontSize: 13,
+    fontFamily: FontFamily.medium,
+    color: Colors.txtColor,
+  },
+  infoText: {
+    fontSize: 12,
+    fontFamily: FontFamily.regular,
+    color: Colors.grayIcon,
+    marginLeft: 25,
+  },
+  upgradeButton: {
+    backgroundColor: Colors.newButtonBack,
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    width: '100%',
     alignItems: 'center',
-    top: '10%',
-    left: '85%',
-    zIndex: 100,
+    marginBottom: 20,
   },
-  closeText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  upgradeButtonText: {
+    fontSize: 16,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.white,
+    marginRight: 10,
+  },
+  termsContainer: {
+    width: '100%',
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  },
+  termsText: {
+    fontSize: 12,
+    fontFamily: FontFamily.medium,
+    color: Colors.lightTxtColor,
+    textAlign: 'center',
+    marginBottom: 10,
+    lineHeight: 16,
+  },
+  linkText: {
+    color: Colors.newButtonBack,
+    textDecorationLine: 'underline',
+    fontFamily: FontFamily.semiBold,
   },
 });
 

@@ -330,3 +330,13 @@ export const ChevronDown = ({color, size, style}) => (
     style={style}
   />
 );
+
+export const ChevronUp = ({color, size, style}) => (
+  <VectorIcon
+    name="chevron-up"
+    color={color}
+    size={size}
+    type="Entypo"
+    style={style}
+  />
+);

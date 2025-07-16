@@ -367,7 +367,7 @@ const AccountsScreen = ({navigation}) => {
         >
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={() => navigation.navigate('Home')}>
+            onPress={() => navigation.navigate('Main')}>
             <ChevronLeft size={25} />
           </TouchableOpacity>
         </View>
