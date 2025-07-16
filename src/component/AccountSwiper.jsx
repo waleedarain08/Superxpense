@@ -42,7 +42,7 @@ const AccountCard = ({
   onPressAccount,
   onDelete,
 }) => {
-  const [showBlurOverlay, setShowBlurOverlay] = useState(false);
+  const [showBlurOverlay, setShowBlurOverlay] = useState(true);
 
   const reconnectAccounts = data.accounts?.filter(
     acc => acc.status === 'RECONNECT_REQUIRED',
@@ -145,9 +145,9 @@ const AccountCard = ({
       {/* Toggle Button */}
       <TouchableOpacity style={styles.toggleButton} onPress={toggleBlurOverlay}>
         <Text style={styles.toggleButtonText}>
-          {showBlurOverlay
-            ? 'Tab to hide card details'
-            : 'Tab to show card details'}
+          {!showBlurOverlay
+            ? 'Tap to hide card details'
+            : 'Tap to show card details'}
         </Text>
       </TouchableOpacity>
     </View>

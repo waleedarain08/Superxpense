@@ -382,7 +382,7 @@ const BottomNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         // tabBarActiveTintColor: Colors.newButtonBack,
-        tabBarActiveBackgroundColor: 'rgba(255, 255, 255, 0.92)',
+        tabBarActiveBackgroundColor: 'rgba(255, 255, 255, 0.85)',
         //tabBarInactiveBackgroundColor: '#C1E3E9',
         headerShown: false,
         tabBarButton: {
@@ -545,7 +545,7 @@ const BottomNavigator = () => {
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: focused ? 25 : 21,
-                width: focused ? 21 : 18,
+                width: focused ? 25 : 21,
               }}
             />
           ),
