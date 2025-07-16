@@ -541,7 +541,7 @@ const BottomNavigator = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <Image
-              source={require('../assets/images/goal.png')}
+              source={require('../assets/images/Goal.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: focused ? 25 : 21,

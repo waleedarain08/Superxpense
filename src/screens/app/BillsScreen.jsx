@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,206 @@ import {FontFamily} from '../../utilis/Fonts';
 import Header from '../../component/Header';
 
 const {width} = Dimensions.get('window');
+
+// Subscription Modal Component - Extracted and memoized to prevent re-creation
+const SubscriptionModal = memo(({
+  selectedBill,
+  subscriptionModalVisible,
+  setSubscriptionModalVisible,
+  selectedPlan,
+  setSelectedPlan,
+  isYearly,
+  setIsYearly
+}) => {
+  if (!selectedBill) return null;
+
+  const plans = [
+    {
+      name: 'Basic plan- current',
+      price: '13.00',
+      period: 'month',
+      description: 'Per year',
+    },
+    {
+      name: 'Premium plan',
+      price: '19.50',
+      period: 'month',
+      description: 'Per year',
+    },
+  ];
+
+  const advancedPlan = {
+    name: 'Advanced',
+    price: '30.00',
+    period: 'month',
+    description: 'Per year',
+  };
+
+  return (
+    <Modal
+      key="subscription-modal"
+      animationType="slide"
+      transparent={true}
+      visible={subscriptionModalVisible}
+      onRequestClose={() => setSubscriptionModalVisible(false)}>
+      <View style={styles.modalOverlay}>
+        <View style={styles.subscriptionModalContent}>
+          {/* Green indicator bar */}
+          <View style={styles.indicatorBar} />
+
+          {/* Header */}
+          <Text style={styles.subscriptionModalTitle}>Manage bill</Text>
+          <Text style={styles.subscriptionModalSubtitle}>
+            Manage and track your bills due date
+          </Text>
+
+          {/* Bill Info with Yearly Toggle */}
+          <View style={styles.subscriptionBillInfo}>
+            <View style={styles.subscriptionBillLeft}>
+              <Image
+                source={selectedBill.logo}
+                style={styles.subscriptionBillLogo}
+              />
+              <View style={styles.subscriptionBillDetails}>
+                <Text style={styles.subscriptionBillTitle}>
+                  {selectedBill.title}
+                </Text>
+                <Text style={styles.subscriptionBillDescription}>
+                  Basic plan - Due in 8 days
+                </Text>
+              </View>
+            </View>
+            <View style={styles.subscriptionBillRight}>
+              <Text style={styles.subscriptionBillPrice}>AED 32/ month</Text>
+              <View style={styles.yearlyToggleContainer}>
+                <Text style={styles.yearlyLabel}>Yearly</Text>
+                <Switch
+                  value={isYearly}
+                  onValueChange={value => {
+                    setIsYearly(value);
+                  }}
+                  thumbColor={isYearly ? Colors.white : '#f4f3f4'}
+                  trackColor={{false: '#767577', true: Colors.newButtonBack}}
+                  style={styles.yearlySwitch}
+                />
+              </View>
+            </View>
+          </View>
+
+          {/* Plans */}
+          <ScrollView
+            style={styles.plansContainer}
+            showsVerticalScrollIndicator={false}>
+            {plans.map((plan, index) => {
+              const isSelected = selectedPlan === plan.name;
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.planOption,
+                    isSelected && styles.selectedPlanOption,
+                  ]}
+                  onPress={e => {
+                    e.stopPropagation();
+                    setSelectedPlan(plan.name);
+                  }}>
+                  <Text
+                    style={[
+                      styles.planOptionName,
+                      isSelected && styles.selectedPlanOptionText,
+                    ]}>
+                    {plan.name}
+                  </Text>
+                  <View style={styles.planOptionPricing}>
+                    <Text
+                      style={[
+                        styles.planOptionPrice,
+                        isSelected && styles.selectedPlanOptionText,
+                      ]}>
+                      AED {plan.price}/{plan.period}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.planOptionDescription,
+                        isSelected && styles.selectedPlanOptionText,
+                      ]}>
+                      {plan.description}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+
+            {/* Advanced Section */}
+            <Text style={styles.advancedSectionTitle}>Advanced</Text>
+            <TouchableOpacity 
+              style={[
+                styles.planOption,
+                selectedPlan === advancedPlan.name &&
+                  styles.selectedPlanOption,
+              ]}
+              onPress={e => {
+                e.stopPropagation();
+                setSelectedPlan(advancedPlan.name);
+              }}>
+              <Text 
+                style={[
+                  styles.planOptionName,
+                  selectedPlan === advancedPlan.name &&
+                    styles.selectedPlanOptionText,
+                ]}>
+                {advancedPlan.name}
+              </Text>
+              <View style={styles.planOptionPricing}>
+                <Text 
+                  style={[
+                    styles.planOptionPrice,
+                    selectedPlan === advancedPlan.name &&
+                      styles.selectedPlanOptionText,
+                  ]}>
+                  AED {advancedPlan.price}/{advancedPlan.period}
+                </Text>
+                <Text 
+                  style={[
+                    styles.planOptionDescription,
+                    selectedPlan === advancedPlan.name &&
+                      styles.selectedPlanOptionText,
+                  ]}>
+                  {advancedPlan.description}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
+
+          {/* Action Buttons */}
+          <TouchableOpacity 
+            style={styles.subscriptionUpgradeButton}
+            onPress={() => setSubscriptionModalVisible(false)}>
+            <Text style={styles.subscriptionUpgradeButtonText}>
+              Upgrade Subscription
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.subscriptionCancelButton}
+            onPress={() => setSubscriptionModalVisible(false)}>
+            <Text style={styles.subscriptionCancelButtonText}>
+              Cancel Subscription
+            </Text>
+          </TouchableOpacity>
+
+          {/* Footer */}
+          <Text style={styles.subscriptionFooter}>
+            If you cancel this subscription, your service will end on 4th
+            March 2026
+          </Text>
+        </View>
+      </View>
+    </Modal>
+  );
+});
+
+SubscriptionModal.displayName = 'SubscriptionModal';
 
 const BillsScreen = ({navigation}) => {
   const [showIntro, setShowIntro] = useState(true);
@@ -302,166 +502,21 @@ const BillsScreen = ({navigation}) => {
     );
   };
 
-  // Subscription Modal Component
-  const SubscriptionModal = () => {
-    if (!selectedBill) return null;
-
-    const plans = [
-      {
-        name: 'Basic plan- current',
-        price: '13.00',
-        period: 'month',
-        description: 'Per year',
-        isSelected: true,
-      },
-      {
-        name: 'Premium plan',
-        price: '19.50',
-        period: 'month',
-        description: 'Per year',
-        isSelected: false,
-      },
-    ];
-
-    const advancedPlan = {
-      name: 'Advanced',
-      price: '30.00',
-      period: 'month',
-      description: 'Per year',
-    };
-
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={subscriptionModalVisible}
-        onRequestClose={() => setSubscriptionModalVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.subscriptionModalContent}>
-            {/* Green indicator bar */}
-            <View style={styles.indicatorBar} />
-
-            {/* Header */}
-            <Text style={styles.subscriptionModalTitle}>Manage bill</Text>
-            <Text style={styles.subscriptionModalSubtitle}>
-              Manage and track your bills due date
-            </Text>
-
-            {/* Bill Info with Yearly Toggle */}
-            <View style={styles.subscriptionBillInfo}>
-              <View style={styles.subscriptionBillLeft}>
-                <Image
-                  source={selectedBill.logo}
-                  style={styles.subscriptionBillLogo}
-                />
-                <View style={styles.subscriptionBillDetails}>
-                  <Text style={styles.subscriptionBillTitle}>
-                    {selectedBill.title}
-                  </Text>
-                  <Text style={styles.subscriptionBillDescription}>
-                    Basic plan - Due in 8 days
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.subscriptionBillRight}>
-                <Text style={styles.subscriptionBillPrice}>AED 32/ month</Text>
-                <View style={styles.yearlyToggleContainer}>
-                  <Text style={styles.yearlyLabel}>Yearly</Text>
-                  <Switch
-                    value={isYearly}
-                    onValueChange={setIsYearly}
-                    thumbColor={isYearly ? Colors.newButtonBack : '#f4f3f4'}
-                    trackColor={{false: '#767577', true: Colors.newButtonBack}}
-                    style={styles.yearlySwitch}
-                  />
-                </View>
-              </View>
-            </View>
-
-            {/* Plans */}
-            <ScrollView
-              style={styles.plansContainer}
-              showsVerticalScrollIndicator={false}>
-              {plans.map((plan, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.planOption,
-                    plan.isSelected && styles.selectedPlanOption,
-                  ]}
-                  onPress={() => setSelectedPlan(plan.name)}>
-                  <Text
-                    style={[
-                      styles.planOptionName,
-                      plan.isSelected && styles.selectedPlanOptionText,
-                    ]}>
-                    {plan.name}
-                  </Text>
-                  <View style={styles.planOptionPricing}>
-                    <Text
-                      style={[
-                        styles.planOptionPrice,
-                        plan.isSelected && styles.selectedPlanOptionText,
-                      ]}>
-                      AED {plan.price}/{plan.period}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.planOptionDescription,
-                        plan.isSelected && styles.selectedPlanOptionText,
-                      ]}>
-                      {plan.description}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-
-              {/* Advanced Section */}
-              <Text style={styles.advancedSectionTitle}>Advanced</Text>
-              <TouchableOpacity style={styles.planOption}>
-                <Text style={styles.planOptionName}>{advancedPlan.name}</Text>
-                <View style={styles.planOptionPricing}>
-                  <Text style={styles.planOptionPrice}>
-                    AED {advancedPlan.price}/{advancedPlan.period}
-                  </Text>
-                  <Text style={styles.planOptionDescription}>
-                    {advancedPlan.description}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </ScrollView>
-
-            {/* Action Buttons */}
-            <TouchableOpacity style={styles.subscriptionUpgradeButton}>
-              <Text style={styles.subscriptionUpgradeButtonText}>
-                Upgrade Subscription
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.subscriptionCancelButton}
-              onPress={() => setSubscriptionModalVisible(false)}>
-              <Text style={styles.subscriptionCancelButtonText}>
-                Cancel Subscription
-              </Text>
-            </TouchableOpacity>
-
-            {/* Footer */}
-            <Text style={styles.subscriptionFooter}>
-              If you cancel this subscription, your service will end on 4th
-              March 2026
-            </Text>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
+  
 
   return (
     <>
       {showIntro ? <IntroScreen /> : <BillsDataScreen />}
       <ManageBillModal />
-      <SubscriptionModal />
+      <SubscriptionModal
+        selectedBill={selectedBill}
+        subscriptionModalVisible={subscriptionModalVisible}
+        setSubscriptionModalVisible={setSubscriptionModalVisible}
+        selectedPlan={selectedPlan}
+        setSelectedPlan={setSelectedPlan}
+        isYearly={isYearly}
+        setIsYearly={setIsYearly}
+      />
     </>
   );
 };

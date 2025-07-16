@@ -190,7 +190,7 @@ const ShowBillsDate = ({navigation}) => {
                   color: Colors.txtColor,
                   fontFamily: FontFamily.regular,
                 }}
-                width={400}
+                width={350}
                 height={400}
               />
             </View>

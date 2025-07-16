@@ -138,7 +138,7 @@ const mockAccounts = [
 
 const DotsProgressBar = ({percent, color}) => {
   // 20 dots, fill based on percent
-  const totalDots = 36;
+  const totalDots = 32;
   const filledDots = Math.round((percent / 100) * totalDots);
   // Define four colors for the four segments
   const segmentColors = [
@@ -243,96 +243,113 @@ const StepThreeGoalDetails = ({
   selectedAccount,
   setSelectedAccount,
   onNext,
+  onBack,
 }) => (
-  <View style={styles.stepThreeContainer}>
-    <Text style={styles.stepTwoTitle}>Create a goal</Text>
-    <Text style={styles.stepTwoSubtitle}>
-      Create a new goal to achieve your dreams
-    </Text>
-    <View style={styles.stepThreeFormBox}>
-      <View style={styles.inputRow}>
-        <GoalSvg style={{marginRight: 8}} />
-        <TextInput
-          style={styles.input}
-          placeholder="Goal Name"
-          value={goalName}
-          onChangeText={setGoalName}
-          placeholderTextColor={Colors.grayIcon}
-        />
-      </View>
-      <View style={styles.inputRow}>
-        <Amount style={{marginRight: 8}} />
-        <TextInput
-          style={styles.input}
-          placeholder="Goal Amount"
-          value={goalAmount}
-          onChangeText={setGoalAmount}
-          placeholderTextColor={Colors.grayIcon}
-          keyboardType="numeric"
-        />
-        <Text style={styles.inputSuffix}>AED</Text>
-      </View>
-      <View style={styles.inputRow}>
-        <SaveCard style={{marginRight: 8}} />
-        <TextInput
-          style={styles.input}
-          placeholder="Saved so far"
-          value={savedSoFar}
-          onChangeText={setSavedSoFar}
-          placeholderTextColor={Colors.grayIcon}
-          keyboardType="numeric"
-        />
-      </View>
-    </View>
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 12,
-        width: '100%',
-      }}>
-      <Text style={styles.sourceAccountLabel}>Source Account</Text>
-      <Text style={styles.viewAccounts}>View accounts</Text>
-    </View>
-    <View style={styles.accountList}>
-      {mockAccounts.map(acc => (
-        <TouchableOpacity
-          key={acc.id}
-          onPress={() => setSelectedAccount(acc.id)}>
-          <ImageBackground
-            source={acc.bg}
-            style={styles.accountCard}
-            imageStyle={styles.accountCardImage}>
-            <Image source={acc.logo} style={styles.accountLogo} />
-            <View style={{flex: 1}}>
-              <Text style={[styles.accountName]}>{acc.name}</Text>
-              <Text style={styles.accountType}>{acc.type}</Text>
-            </View>
-            <View style={styles.radioOuter}>
-              {selectedAccount === acc.id && <View style={styles.radioInner} />}
-            </View>
-          </ImageBackground>
-        </TouchableOpacity>
-      ))}
-    </View>
-    <View style={styles.accountHintRow}>
-      <BlubIcon />
-      <Text style={styles.accountHintText}>
-        You can always switch account later from settings
-      </Text>
-    </View>
+  <>
     <TouchableOpacity
-      style={[
-        styles.stepTwoNextBtn,
-        {
-          marginTop: 50,
-        },
-      ]}
-      onPress={onNext}>
-      <Text style={styles.stepTwoNextBtnText}>Next</Text>
+      style={{
+        height: 32,
+        width: 32,
+        borderRadius: 1000,
+        backgroundColor: 'rgba(255,255,255,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+      onPress={onBack}>
+      <ChevronLeft size={24} color={Colors.txtColor} />
     </TouchableOpacity>
-  </View>
+    <View style={styles.stepThreeContainer}>
+      <Text style={styles.stepTwoTitle}>Create a goal</Text>
+      <Text style={styles.stepTwoSubtitle}>
+        Create a new goal to achieve your dreams
+      </Text>
+      <View style={styles.stepThreeFormBox}>
+        <View style={styles.inputRow}>
+          <GoalSvg style={{marginRight: 8}} />
+          <TextInput
+            style={styles.input}
+            placeholder="Goal Name"
+            value={goalName}
+            onChangeText={setGoalName}
+            placeholderTextColor={Colors.grayIcon}
+          />
+        </View>
+        <View style={styles.inputRow}>
+          <Amount style={{marginRight: 8}} />
+          <TextInput
+            style={styles.input}
+            placeholder="Goal Amount"
+            value={goalAmount}
+            onChangeText={setGoalAmount}
+            placeholderTextColor={Colors.grayIcon}
+            keyboardType="numeric"
+          />
+          <Text style={styles.inputSuffix}>AED</Text>
+        </View>
+        <View style={styles.inputRow}>
+          <SaveCard style={{marginRight: 8}} />
+          <TextInput
+            style={styles.input}
+            placeholder="Saved so far"
+            value={savedSoFar}
+            onChangeText={setSavedSoFar}
+            placeholderTextColor={Colors.grayIcon}
+            keyboardType="numeric"
+          />
+        </View>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 12,
+          width: '100%',
+        }}>
+        <Text style={styles.sourceAccountLabel}>Source Account</Text>
+        <Text style={styles.viewAccounts}>View accounts</Text>
+      </View>
+      <View style={styles.accountList}>
+        {mockAccounts.map(acc => (
+          <TouchableOpacity
+            key={acc.id}
+            onPress={() => setSelectedAccount(acc.id)}>
+            <ImageBackground
+              source={acc.bg}
+              style={styles.accountCard}
+              imageStyle={styles.accountCardImage}>
+              <Image source={acc.logo} style={styles.accountLogo} />
+              <View style={{flex: 1}}>
+                <Text style={[styles.accountName]}>{acc.name}</Text>
+                <Text style={styles.accountType}>{acc.type}</Text>
+              </View>
+              <View style={styles.radioOuter}>
+                {selectedAccount === acc.id && (
+                  <View style={styles.radioInner} />
+                )}
+              </View>
+            </ImageBackground>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={styles.accountHintRow}>
+        <BlubIcon />
+        <Text style={styles.accountHintText}>
+          You can always switch account later from settings
+        </Text>
+      </View>
+      <TouchableOpacity
+        style={[
+          styles.stepTwoNextBtn,
+          {
+            marginTop: 30,
+          },
+        ]}
+        onPress={onNext}>
+        <Text style={styles.stepTwoNextBtnText}>Next</Text>
+      </TouchableOpacity>
+    </View>
+  </>
 );
 
 const StepFourSelectSourceAccount = ({
@@ -788,6 +805,7 @@ const AddGoals = ({navigation}) => {
       selectedAccount={selectedAccount}
       setSelectedAccount={setSelectedAccount}
       onNext={() => setStep(3)}
+      onBack={() => setStep(1)}
     />,
     <StepFourSelectSourceAccount
       key={3}
@@ -820,7 +838,10 @@ const AddGoals = ({navigation}) => {
     <ImageBackground
       source={require('../../assets/images/greenishBackground.png')}
       style={{flex: 1}}>
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{paddingBottom: 200}}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -856,7 +877,7 @@ const AddGoals = ({navigation}) => {
           </ScrollView>
           <LoadingModal />
         </View>
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 };
@@ -878,7 +899,7 @@ const styles = StyleSheet.create({
   backBtn: {
     marginRight: 8,
     padding: 4,
-    borderRadius: 20,
+    borderRadius: 1000,
     backgroundColor: 'rgba(255,255,255,0.7)',
   },
   headerTitle: {
@@ -1140,7 +1161,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.newButtonBack,
     borderRadius: 100,
     paddingVertical: 14,
-    marginTop: 14,
+    // marginTop: 14,
     width: '100%',
     alignItems: 'center',
   },
@@ -1155,7 +1176,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.white,
     padding: 16,
-    marginTop: 60,
+    marginTop: 24,
     height: 650,
     alignItems: 'center',
   },
