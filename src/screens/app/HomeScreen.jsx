@@ -780,7 +780,7 @@ const HomeScreen = ({navigation, route}) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}
-                      onPress={() => navigation.navigate('Accounts')}>
+                      onPress={() => navigation.navigate('IssuingCountryScreen')}>
                       <PlusIcon size={20} color={Colors.newButtonBack} />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -794,7 +794,7 @@ const HomeScreen = ({navigation, route}) => {
                         alignItems: 'center',
                       }}
                       onPress={() =>
-                        navigation.navigate('IssuingCountryScreen')
+                        navigation.navigate('Accounts')
                       }>
                       <GreenBank />
                     </TouchableOpacity>
