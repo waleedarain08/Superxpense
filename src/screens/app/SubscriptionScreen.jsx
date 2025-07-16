@@ -81,14 +81,14 @@ const SubscriptionScreen = ({navigation}) => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
     //console.log('Token:', token);
-    const selectedProducts = Object.keys(selectedProduct).length;
-    if (selectedProducts === 0) {
-      Alert.alert(
-        'Choose subscription plan',
-        'You must select a subscription plan before proceeding.',
-      );
-      return;
-    }
+    // const selectedProducts = Object.keys(selectedProduct).length;
+    // if (selectedProducts === 0) {
+    //   Alert.alert(
+    //     'Choose subscription plan',
+    //     'You must select a subscription plan before proceeding.',
+    //   );
+    //   return;
+    // }
 
     if (Platform.OS === 'ios') {
       try {
@@ -105,7 +105,7 @@ const SubscriptionScreen = ({navigation}) => {
           {
             platform: 'apple',
             receipt: receipt,
-            subscriptionId: selectedProduct.productId,
+            subscriptionId: isYearly?'yearly':'monthly'
           },
           token,
         );
@@ -142,6 +142,14 @@ const SubscriptionScreen = ({navigation}) => {
       source={require('../../assets/images/greenishBackground.png')}
       style={styles.container}
       imageStyle={{resizeMode: 'cover'}}>
+        <SubscriptionModal
+        visible={modalVisible}
+        products={products}
+        onBuyProduct={() => buyProduct()}
+        onClose={() => setModalVisible(false)}
+        onSelectProduct={product => setSelectedProduct(product)}
+        loading={loading}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <Header
@@ -195,7 +203,7 @@ const SubscriptionScreen = ({navigation}) => {
             <View style={styles.pricingContainer}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Dirham width={22} height={19} />
-                <Text style={styles.price}> 49.00</Text>
+                <Text style={styles.price}> {isYearly?119.99:14.99}</Text>
               </View>
               {isYearly && (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -203,14 +211,14 @@ const SubscriptionScreen = ({navigation}) => {
                     <Text style={styles.saveText}>Save 10%</Text>
                   </View>
                   <View style={styles.saveBadge}>
-                    <Text style={styles.trialText}>7 days trial</Text>
+                    <Text style={styles.trialText}>30 days trial</Text>
                   </View>
                 </View>
               )}
             </View>
 
             <Text style={styles.billingText}>
-              {isYearly ? '499.00 billed annually' : '49.00 billed monthly'}
+              {isYearly ? `119.99 billed annually` : `14.99 billed monthly`}
             </Text>
             <Text style={styles.description}>
               Built for users who want full control of their finances
@@ -244,7 +252,8 @@ const SubscriptionScreen = ({navigation}) => {
           </View>
 
           {/* Upgrade Button */}
-          <TouchableOpacity style={styles.upgradeButton} onPress={buyProduct}>
+          <TouchableOpacity style={styles.upgradeButton} 
+          onPress={buyProduct}>
             {loading ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
@@ -254,6 +263,37 @@ const SubscriptionScreen = ({navigation}) => {
               </View>
             )}
           </TouchableOpacity>
+          <View style={{ marginTop: 5, alignItems: 'center', marginBottom:20 }}>
+        <Text style={{ color: '#000', fontSize: 10, textAlign: 'center', marginBottom: 5 }}>
+          Payment will be charged to your Apple ID account at confirmation of purchase. 
+          Your subscription automatically renews unless auto-renew is turned off at least 
+          24-hours before the end of the current period. You can manage or cancel your 
+          subscription in your App Store account settings at any time.
+        </Text>
+
+      <Text style={{ color: '#000', fontSize: 10 ,marginBottom: 10, textAlign: 'center'}}>
+        By subscribing, you agree to our{' '}
+        <Text
+          style={{ textDecorationLine: 'underline', color: Colors.newButtonBack }}
+          onPress={() => {
+            // Replace with your hosted URL
+            Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/terms.html');
+          }}
+        >
+          Terms of Use
+        </Text>{' '}
+        and{' '}
+        <Text
+          style={{ textDecorationLine: 'underline', color: Colors.newButtonBack }}
+          onPress={() => {
+            // Replace with your hosted URL
+            Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/privacy.html');
+          }}
+        >
+          Privacy Policy
+        </Text>.
+        </Text>
+        </View>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -340,6 +380,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontFamily: FontFamily.semiBold,
     color: Colors.newButtonBack,
+    letterSpacing: 0.8,
   },
   saveBadge: {
     backgroundColor: 'rgba(255,255,255,0.2)',
@@ -366,6 +407,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginLeft: 25,
     marginBottom: 8,
+    letterSpacing: 0.8,
   },
   description: {
     fontSize: 13,
