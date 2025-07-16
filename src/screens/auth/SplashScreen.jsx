@@ -30,7 +30,7 @@ const SplashScreen = ({navigation}) => {
       if (!userData) {
         navigation.replace('Welcome1');
       } else if (!subscription) {
-        navigation.replace('Subscription');
+        navigation.replace('Welcome1');
       } else {
         navigation.replace('Main');
       }
