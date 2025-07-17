@@ -130,7 +130,7 @@ const PropertyDetailsScreen = ({navigation, route}) => {
                 Amount Remaining
               </Text>
             </View>
-            <TouchableOpacity style={styles.paymentPlanBtn}>
+            <TouchableOpacity style={styles.paymentPlanBtn} onPress={()=> {    navigation.navigate('PaymentPlan', {property})}}>
               <Text style={styles.paymentPlanBtnText}>View payment plan</Text>
             </TouchableOpacity>
           </View>
@@ -222,7 +222,7 @@ const PropertyDetailsScreen = ({navigation, route}) => {
               </View>
             </View>
           </View>
-          <TouchableOpacity style={styles.payNowBtn}>
+          <TouchableOpacity style={styles.payNowBtn} onPress={()=> {    navigation.navigate('PaymentMethods', {property});}}>
             <Text style={styles.payNowBtnText}>Pay Now</Text>
             <ArrowRight size={16} color={Colors.newWhite} />
           </TouchableOpacity>
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 60,
     left: 16,
-    zIndex: 2,
+    zIndex: 1000,
     backgroundColor: Colors.white,
     borderRadius: 20,
     padding: 4,

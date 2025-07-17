@@ -82,7 +82,7 @@ const PaymentPlanScreen = ({navigation: navProp, route}) => {
           <View style={styles.headerRow}>
             <Header
               ScreenName="Payment plan"
-              onBack={() => navigation.goBack()}
+              onBackPress={() => navigation.goBack()}
             />
           </View>
           {/* Property summary */}

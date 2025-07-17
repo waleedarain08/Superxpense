@@ -84,7 +84,7 @@ const PaymentMethodsScreen = ({navigation}) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Header */}
           <View style={styles.headerRow}>
-            <Header ScreenName="Payment Methods" />
+            <Header ScreenName="Payment Methods" onBackPress={()=>navigation.goBack()} />
           </View>
 
           {/* Card */}
