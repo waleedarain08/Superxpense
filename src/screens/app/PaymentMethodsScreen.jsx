@@ -7,12 +7,11 @@ import {
   Image,
   ScrollView,
   Modal,
-  ActivityIndicator,
   ImageBackground,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import {CheckCircle, ChevronLeft} from '../../icons';
+import {CheckCircle} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../component/Header';
 import {AppleSvg, Card, Bank} from '../../assets/svgs';
@@ -82,12 +81,10 @@ const PaymentMethodsScreen = ({navigation}) => {
       style={{flex: 1}}>
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Header */}
           <View style={styles.headerRow}>
             <Header ScreenName="Payment Methods" onBackPress={()=>navigation.goBack()} />
           </View>
 
-          {/* Card */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>How do you want to pay?</Text>
             <Text style={styles.cardSubtitle}>
@@ -135,7 +132,6 @@ const PaymentMethodsScreen = ({navigation}) => {
           </View>
         </ScrollView>
 
-        {/* Payment Processing Modal */}
         <Modal visible={showProcessing} transparent animationType="fade">
           <ImageBackground
             source={require('../../assets/images/greenishBackground.png')}
@@ -162,7 +158,6 @@ const PaymentMethodsScreen = ({navigation}) => {
             </View>
           </ImageBackground>
         </Modal>
-        {/* Payment Success Modal */}
         <Modal visible={showSuccess} transparent animationType="fade">
           <ImageBackground
             source={require('../../assets/images/greenishBackground.png')}
@@ -342,8 +337,7 @@ const styles = StyleSheet.create({
   },
   modalIconCircle: {
     width: 99,
-    height: 99,
-    // borderRadius: 32,
+    height: 99, 
     backgroundColor: 'rgba(255,255,255,0.3)',
     alignItems: 'center',
     justifyContent: 'center',

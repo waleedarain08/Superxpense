@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import {CheckCircle, ChevronLeft} from '../../icons';
+import {CheckCircle} from '../../icons';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../../component/Header';
 import {Bath, Bed, BlackDirham, Document, Ruler} from '../../assets/svgs';
@@ -78,14 +78,12 @@ const PaymentPlanScreen = ({navigation: navProp, route}) => {
       style={styles.container}>
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Header */}
           <View style={styles.headerRow}>
             <Header
               ScreenName="Payment plan"
               onBackPress={() => navigation.goBack()}
             />
           </View>
-          {/* Property summary */}
           <View style={styles.propertyCard}>
             <Image
               source={property.image}
@@ -125,7 +123,6 @@ const PaymentPlanScreen = ({navigation: navProp, route}) => {
               </View>
             </View>
           </View>
-          {/* Payment Plan */}
           <View style={styles.sectionCard}>
             <View style={styles.sectionHeaderRow}>
               <Text style={styles.sectionTitle}>Payment Plan</Text>
@@ -147,7 +144,6 @@ const PaymentPlanScreen = ({navigation: navProp, route}) => {
                   </Text>
                 </View>
                 <View style={styles.installmentInfo}>
-                  {/* Status badge above title */}
                   {item.statusType === 'due' && (
                     <View
                       style={[
@@ -226,7 +222,6 @@ const PaymentPlanScreen = ({navigation: navProp, route}) => {
                   <View style={styles.paidBtnRow}>
                     <View style={styles.paidBtn}>
                       <Text style={styles.paidBtnText}>Paid</Text>
-                      {/* Checkmark icon */}
                       <CheckCircle size={15} color={Colors.newButtonBack} />
                     </View>
                   </View>
@@ -248,7 +243,6 @@ const PaymentPlanScreen = ({navigation: navProp, route}) => {
               </View>
             ))}
           </View>
-          {/* Uploaded Documents */}
         </ScrollView>
       </View>
     </ImageBackground>
@@ -371,8 +365,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.white,
   },
   installmentPaid: {
-    // borderColor: Colors.green,
-    // backgroundColor: '#eafaf3',
   },
   installmentDateBox: {
     width: 56,

@@ -3,36 +3,21 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   Dimensions,
   TextInput,
-  FlatList,
   Modal,
   ImageBackground,
   Image,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {Circle, Svg} from 'react-native-svg';
-import StepIndicator from '../../component/StepIndicator';
-import StepperHeader from '../../component/StepperHeader';
 import CalendarPicker from 'react-native-calendar-picker';
 import moment from 'moment';
-import {
-  Amount,
-  Bill,
-  EditIcon,
-  MoneyBag,
-  Shopping,
-  ShoppingGreen,
-} from '../../assets/svgs';
-import {ChevronRight, EntoChevronRight, PlusIcon} from '../../icons';
+import {Amount, Bill, EditIcon} from '../../assets/svgs';
+import {ChevronRight, EntoChevronRight} from '../../icons';
 import Header from '../../component/Header';
-import Slider from '@react-native-community/slider';
-// import Slider from 'react-native-slider';
 
 const {width} = Dimensions.get('window');
 
@@ -764,13 +749,6 @@ const NewBudgetScreen = ({navigation}) => {
         }}
         showsVerticalScrollIndicator={false}>
         {/* Header */}
-        {/* <View style={styles.step4Header}>
-          <TouchableOpacity style={styles.backButton} onPress={handlePrevStep}>
-            <Icon name="arrow-back" size={24} color="#333" />
-          </TouchableOpacity>
-          <Text style={styles.step4Title}>Create Budget</Text>
-          <View style={{width: 24}} />
-        </View> */}
         <Header
           ScreenName="Create Budget"
           onBackPress={handlePrevStep}
@@ -803,7 +781,6 @@ const NewBudgetScreen = ({navigation}) => {
             </TouchableOpacity>
           </ScrollView>
         </View>
-        {/* Next Button */}
       </ScrollView>
     );
   };
@@ -816,11 +793,10 @@ const NewBudgetScreen = ({navigation}) => {
   }) => {
     const strokeWidth = 6;
     const radius = (size - strokeWidth) / 2;
-    const halfCircumference = radius * Math.PI; // Half circle circumference
+    const halfCircumference = radius * Math.PI;
 
-    // Calculate segments for each budget category (distributed across semicircle)
     const totalSpent = budgetData.reduce((sum, item) => sum + item.spent, 0);
-    const gapSize = 12; // Increased gap between segments
+    const gapSize = 12;
     const totalGaps = budgetData.length * gapSize;
     const availableCircumference = halfCircumference - totalGaps;
 
@@ -900,32 +876,10 @@ const NewBudgetScreen = ({navigation}) => {
         <Text style={styles.budgetText}>
           out of {item.budget.toLocaleString()} AED
         </Text>
-        {/* <View style={styles.progressBar}>
-          <View
-            style={[
-              styles.progressFill,
-              {width: `${progressWidth}%`, backgroundColor: item.color},
-            ]}
-          />
-        </View> */}
       </View>
     );
   };
 
-  const CircularLegend = ({budgetData}) => {
-    return (
-      <View style={styles.legendContainer}>
-        {budgetData.map((item, index) => (
-          <View key={item.id} style={styles.legendItem}>
-            <View style={[styles.legendColor, {backgroundColor: item.color}]} />
-            <Text style={styles.legendText}>{item.name}</Text>
-          </View>
-        ))}
-      </View>
-    );
-  };
-
-  // Add Expense Modal Component
   const AddExpenseModal = () => (
     <Modal
       animationType="slide"
@@ -934,14 +888,11 @@ const NewBudgetScreen = ({navigation}) => {
       onRequestClose={handleCloseAddExpenseModal}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-          {/* Modal Handle */}
           <View style={styles.modalHandle} />
 
-          {/* Modal Header */}
           <Text style={styles.modalTitle}>Add Expenses</Text>
           <Text style={styles.modalSubtitle}>Create new spending category</Text>
 
-          {/* Icon Selection */}
           <TouchableOpacity
             style={styles.iconSelector}
             onPress={handlePickIcon}>
@@ -960,22 +911,6 @@ const NewBudgetScreen = ({navigation}) => {
             <Text style={styles.iconSelectorText}>Choose Category Icon</Text>
           </TouchableOpacity>
 
-          {/* Category Name Input */}
-          {/* <View style={styles.modalInputContainer}>
-            <View style={styles.modalInputLeft}>
-              <Icon name={selectedIcon} size={20} color="#4ECDC4" />
-              <TextInput
-                style={styles.modalInput}
-                placeholder="Category Name"
-                value={newExpenseCategory.name}
-                onChangeText={text =>
-                  setNewExpenseCategory(prev => ({...prev, name: text}))
-                }
-                placeholderTextColor="#999"
-              />
-            </View>
-            <Text style={styles.modalInputCurrency}>AED</Text>
-          </View> */}
           <View style={styles.inputRow}>
             <Amount style={{marginRight: 8}} />
             <TextInput
@@ -1004,7 +939,6 @@ const NewBudgetScreen = ({navigation}) => {
     </Modal>
   );
 
-  // Pick Icon Modal Component
   const PickIconModal = () => (
     <Modal
       animationType="slide"
@@ -1013,10 +947,8 @@ const NewBudgetScreen = ({navigation}) => {
       onRequestClose={handleCancelIconPicker}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-          {/* Modal Handle */}
           <View style={styles.modalHandle} />
 
-          {/* Modal Header */}
           <Text
             style={[
               styles.modalTitle,
@@ -1029,7 +961,6 @@ const NewBudgetScreen = ({navigation}) => {
             Pick an Icon
           </Text>
 
-          {/* Icons Grid */}
           <View style={styles.iconsGrid}>
             {availableIcons.map((iconName, index) => (
               <TouchableOpacity
@@ -1044,7 +975,6 @@ const NewBudgetScreen = ({navigation}) => {
             ))}
           </View>
 
-          {/* Action Buttons */}
           <TouchableOpacity
             style={styles.saveButton}
             onPress={handleCancelIconPicker}>
@@ -1108,7 +1038,6 @@ const NewBudgetScreen = ({navigation}) => {
           marginTop: 60,
           paddingHorizontal: 14,
         }}>
-        {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <Text style={styles.headerTitle}>June's Budget</Text>
@@ -1123,23 +1052,19 @@ const NewBudgetScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
 
-        {/* Subtitle */}
         <Text style={styles.subtitle}>Track your budget and expenses</Text>
 
-        {/* Circular Progress */}
         <View style={styles.progressSection}>
           <CircularProgress
             budgetData={budgetData}
             totalBudget={totalBudget}
             availableBalance={availableBalance}
           />
-          {/* Status Message */}
           <View style={styles.statusMessage}>
             <Text style={styles.statusText}>Keep it, you’re on track 👌🏻</Text>
           </View>
         </View>
 
-        {/* Budget Categories Grid */}
         <View style={styles.categoriesGrid}>
           {budgetData.map((item, index) => (
             <BudgetCard key={item.id} item={item} />
@@ -1147,7 +1072,6 @@ const NewBudgetScreen = ({navigation}) => {
         </View>
       </ScrollView>
 
-      {/* Modals */}
       <AddExpenseModal />
       <PickIconModal />
     </ImageBackground>
@@ -1201,7 +1125,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   progressSection: {
-    // alignItems: 'center',
     marginBottom: 30,
     marginTop: 10,
   },

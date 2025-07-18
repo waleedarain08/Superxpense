@@ -17,7 +17,7 @@ const SubscriptionModal = ({
     console.log('Selected plan:', plan);
     const newSelectedPlan = selectedPlan === plan ? null : plan;
     setSelectedPlan(newSelectedPlan);
-    onSelectProduct(newSelectedPlan); // Pass selected plan to parent
+    onSelectProduct(newSelectedPlan);
   };
 
   return (
@@ -27,7 +27,6 @@ const SubscriptionModal = ({
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
-          {/* <View style={styles.handle} /> */}
           <View style={styles.plansRow}>
             {products.map((plan, index) => (
               <TouchableOpacity
@@ -141,7 +140,6 @@ const styles = StyleSheet.create({
   },
   planDesc: {
     fontSize: 9,
-    //fontWeight: 'bold',
     marginVertical: 4,
     color: '#000',
     textAlign: 'center',

@@ -23,7 +23,6 @@ const PropertyScreen = ({navigation}) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSearchSelected, setIsSearchSelected] = useState(false);
 
-  // Step components now receive onBack and onContinue props
   const Step1 = props => <Stepone {...props} />;
   const Step2 = props => <StepTwo {...props} />;
   const Step3 = props => <StepThree {...props} />;
@@ -31,7 +30,6 @@ const PropertyScreen = ({navigation}) => {
   const steps = [Step1, Step2, Step3];
   const StepComponent = steps[currentStep];
 
-  // Navigation logic for stepper
   const handleNextStep = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);

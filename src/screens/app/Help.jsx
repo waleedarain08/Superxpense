@@ -5,16 +5,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Linking,
-  ScrollView,
   Platform,
   StatusBar,
   ImageBackground,
   Clipboard,
   Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Colors} from '../../utilis/Colors';
-import {Copy, LeftBlack, Mail, Phone} from '../../assets/svgs';
+import {Copy, Mail, Phone} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Header from '../../component/Header';
 
@@ -111,18 +109,6 @@ const HelpScreen = ({navigation}) => {
               <Copy />
             </TouchableOpacity>
           </View>
-
-          {/* <View style={styles.infoCard}>
-          <Icon
-            name="location-on"
-            size={24}
-            color="#ff3b30"
-            style={styles.icon}
-          />
-          <Text style={styles.infoText} onPress={handleAddress}>
-            123 Main Street, City, Dubai
-          </Text>
-        </View> */}
         </View>
       </View>
     </ImageBackground>
@@ -134,7 +120,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    // paddingTop: 80,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 5 : 60,
     paddingBottom: 8,
     borderBottomColor: Colors.newBorderColor,
@@ -192,7 +177,6 @@ const styles = StyleSheet.create({
   accountText: {
     color: Colors.white,
     fontSize: 16,
-    //fontFamily: FontFamily.medium,
     marginRight: 7,
   },
 });

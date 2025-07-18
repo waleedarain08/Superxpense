@@ -22,7 +22,7 @@ import {FontFamily} from '../../utilis/Fonts';
 import LinkSDK from 'lean-react-native';
 import {API, leanAppToken, isSandbox} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
-import {getItem, setItem} from '../../utilis/StorageActions';
+import {getItem} from '../../utilis/StorageActions';
 import BankModal from '../../component/BankModal';
 import StepIndicator from '../../component/StepIndicator';
 import Header from '../../component/Header';
@@ -31,7 +31,7 @@ const countries = [
   {
     name: 'United Arab Emirates',
     currency: 'AED (Dirham)',
-    flag: require('../../assets/images/Dubai.png'), // Add correct paths
+    flag: require('../../assets/images/Dubai.png'),
     available: true,
   },
   {
@@ -101,7 +101,7 @@ const IssuingCountryScreen = ({navigation}) => {
       const userData = await getItem('userData');
       if (!userData || !userData.data?.accessToken || !userData.data?.id) {
         console.error('Invalid user data');
-        setLoading(false); //
+        setLoading(false);
         return;
       }
 
@@ -111,8 +111,6 @@ const IssuingCountryScreen = ({navigation}) => {
 
       const data = await get(`${API.leanCustomer}`, {userId: userId}, token);
       const r = data.data;
-      //console.log('leantoken:', r.accessToken);
-      //console.log('customerId:', r.customerId);
       setCustomerID(r.customerId);
       setLeanToken(r.accessToken);
       connectLean(r, bankIdentifier);
@@ -123,7 +121,6 @@ const IssuingCountryScreen = ({navigation}) => {
   };
 
   const connectLean = (r, bankIdentifier) => {
-    //console.log(bankIdentifier, r);
     if (Lean.current) {
       Lean.current.connect({
         customer_id: r.customerId,
@@ -142,8 +139,6 @@ const IssuingCountryScreen = ({navigation}) => {
   };
 
   const handleBankSelect = bank => {
-    //setBankIdentifier(bank.identifier);
-    //console.log('bankIdentifier', bankIdentifier);
     hitLeanApi(bank.identifier);
   };
 
@@ -153,7 +148,6 @@ const IssuingCountryScreen = ({navigation}) => {
     return (
       <TouchableOpacity
         style={styles.countryItem}
-        // onPress={() => hitLeanApi()}
         onPress={() => setModalVisible(true)}>
         <Image source={item.flag} style={styles.flag} />
         <View>
@@ -195,16 +189,12 @@ const IssuingCountryScreen = ({navigation}) => {
             </View>
           )}
           <View style={styles.container}>
-            {/* Header */}
-
-            {/* Title */}
             <Text style={styles.title}>Select your issuing country</Text>
             <Text style={styles.subtitle}>
               To link banks and most other accounts, we will securely connect
               you with lean technologies, our linking partner.
             </Text>
 
-            {/* Search */}
             <View style={styles.searchContainer}>
               <Icon
                 name="search-outline"
@@ -231,7 +221,6 @@ const IssuingCountryScreen = ({navigation}) => {
               )}
             </View>
 
-            {/* List */}
             <View style={styles.flatListStyle}>
               <FlatList
                 data={filteredCountries}
@@ -240,12 +229,6 @@ const IssuingCountryScreen = ({navigation}) => {
                 showsVerticalScrollIndicator={false}
               />
             </View>
-            {/* <View style={styles.comingSoon}>
-            <Text style={styles.comingSoonTitle}>Coming Soon</Text>
-            <Text style={styles.comingSoonText}>
-              Stay tuned. We will be adding more countries to our database soon.
-            </Text>
-          </View> */}
             <View style={styles.blurredContainer}>
               {blurredCountries.map((item, index) => (
                 <View style={styles.countryItem} key={index}>
@@ -266,7 +249,6 @@ const IssuingCountryScreen = ({navigation}) => {
                 </View>
               ))}
 
-              {/* Coming Soon Box */}
               <View style={styles.comingSoon}>
                 <Text style={styles.comingSoonTitle}>Coming Soon</Text>
                 <Text style={styles.comingSoonText}>
@@ -413,7 +395,6 @@ const styles = StyleSheet.create({
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
-    // backgroundColor: 'rgba(255,255,255,0.8)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
@@ -435,7 +416,7 @@ const styles = StyleSheet.create({
   },
   countryName: {
     fontSize: 16,
-    fontFamily: FontFamily.semiBold, // Fix here
+    fontFamily: FontFamily.semiBold,
     color: Colors.txtColor,
   },
 });

@@ -17,14 +17,12 @@ const cards = [
     id: 1,
     bankName: 'Abu Dhabi Islamic Bank',
     backgroundColor: ['#A18CD1', '#FBC2EB'],
-    // logo: require('./assets/adib.png'), // Replace with actual image path
     logo: '',
   },
   {
     id: 2,
     bankName: 'First Abu Dhabi Bank',
     backgroundColor: ['#F43B47', '#453A94'],
-    // logo: require('./assets/fab.png'), // Replace with actual image path
     logo: '',
   },
 ];
@@ -32,7 +30,7 @@ const cards = [
 const BankCard = ({ bank, showBalance, onToggleBalance }) => {
   return (
     <View style={styles.cardContainer}>
-      <View style={[styles.card, { backgroundColor: '#fff' }]}> {/* background container */}
+      <View style={[styles.card, { backgroundColor: '#fff' }]}>
         <View style={styles.layerCard(bank.backgroundColor)}>
           <Image source={bank.logo} style={styles.logo} />
           <Text style={styles.bankName}>{bank.bankName}</Text>
@@ -67,10 +65,8 @@ const BankCardsSwiper = () => {
   const [swipedStack, setSwipedStack] = useState([]);
   const swiperRef = useRef(null);
 
-  // Only allow swipe if more than 1 card left
   const canSwipe = cards.length - cardIndex > 1;
 
-  // Toggle show/hide for a specific card
   const handleToggleBalance = (idx) => {
     setShowBalanceArr((prev) => {
       const updated = [...prev];
@@ -79,13 +75,11 @@ const BankCardsSwiper = () => {
     });
   };
 
-  // Handle swipe forward
   const handleSwiped = (i) => {
     setSwipedStack((prev) => [...prev, i]);
     setCardIndex(i + 1);
   };
 
-  // Handle undo swipe
   const handleUndo = () => {
     if (swiperRef.current && swipedStack.length > 0) {
       swiperRef.current.swipeBack();
@@ -130,7 +124,6 @@ const BankCardsSwiper = () => {
         onSwipedAll={() => setCardIndex(cards.length - 1)}
         overlayLabels={{}}
       />
-      {/* Undo swipe button */}
       {swipedStack.length > 0 && (
         <TouchableOpacity
           style={styles.undoButton}

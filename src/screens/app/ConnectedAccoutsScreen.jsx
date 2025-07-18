@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   Platform,
   Alert,
@@ -12,14 +11,11 @@ import {
   ImageBackground,
   FlatList,
 } from 'react-native';
-import {LeftIcon} from '../../assets/svgs';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import BankCard from '../../component/BankCard';
 import {API} from '../../utilis/Constant';
 import {del, get} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
-import AccountSwiper from '../../component/AccountSwiper';
 import BankAccountCard from '../../component/AccountCard';
 
 const ConnectedAccountsScreen = ({navigation, route}) => {
@@ -32,23 +28,9 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   const [lastRefreshed, setLastRefreshed] = useState(null);
 
   const fetchAccounts = async () => {
-    //setStateEntityId(id);
     const userData = await getItem('userData');
     const token = userData.data?.accessToken;
     console.log('token:', token);
-    // try {
-    //   setLoading(true);
-    //   const data = await get(
-    //     `${API.leanAccounts}`,
-    //     {entityId: id, page: 0, size: 100},
-    //     token,
-    //   );
-    //   const rawAccounts = data?.data?.data?.accounts || [];
-    //   const formattedAccounts = rawAccounts.map(acc => ({
-    //     id: acc.account_id, // <-- Add this line
-    //     type: acc.nickname || acc.account_sub_type || 'Unknown',
-    //     balance: '15,000.00 AED', // Placeholder — replace with actual balance if available
-    //   }));
     try {
       setLoading(true);
       const data = await get(`${API.bankAccounts}`, null, token);
@@ -67,22 +49,6 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
     }
   };
 
-  // const leanConnection = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const userData = await getItem('userData');
-  //     const token = userData.data?.accessToken;
-  //     const data = await get(`${API.leanConnection}`, null, token);
-  //     const r = data.data;
-  //     const id = r[0].id;
-  //     fetchTransactions(id);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     setLoading(false);
-  //     Alert.alert('Failed to load user data', error);
-  //   }
-  // };
-
   useEffect(() => {
     setTimeout(() => {
       fetchAccounts();
@@ -90,8 +56,6 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   }, []);
 
   const handleAccountPress = (account, bankName) => {
-    //console.log('Account pressed:', account);
-    //console.log('Bank Name:', bankName);
     navigation.navigate('BankTransaction', {
       accountId: Array.isArray(account.accounts)
         ? (account.accounts.find(acc => acc.accountType === 'Current Account')?.accountId || null)
@@ -99,7 +63,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
       accountBalance: account.accountBalance,
       accountType: account.accountType,
       BankName: bankName,
-      entityId: account.bankId, // <-- FIXED: use account.bankId instead of account.bankID
+      entityId: account.bankId, 
       bankData: account,
     });
   };
@@ -132,9 +96,7 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
               );
 
               console.log('Deleted successfully:', data);
-              // fetchAccounts();
               setBanksData([]);
-              // Optionally trigger state update or show toast
               Alert.alert('Success', 'Bank account deleted successfully');
             } catch (error) {
               console.error('Delete failed:', error);
@@ -157,48 +119,6 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
   };
 
   return (
-    // <ScrollView style={styles.container}>
-    //   <View style={styles.header}>
-    //     <TouchableOpacity onPress={() => navigation.goBack()}>
-    //       <LeftIcon />
-    //     </TouchableOpacity>
-    //     <Text style={styles.headerTitle}>Connected Accounts</Text>
-    //     <TouchableOpacity
-    //       onPress={() => navigation.navigate('Main')}
-    //       style={styles.headerRight}>
-    //       <Text style={{color: '#fff'}}>Home</Text>
-    //     </TouchableOpacity>
-    //   </View>
-
-    //   <View style={styles.section}>
-    //     <Text style={styles.title}>Bank Connections</Text>
-    //     <Text style={styles.subtitle}>
-    //       Handle your bank connection and see transactions in one place.
-    //     </Text>
-
-    //     {banksData.length > 0
-    //       ? banksData.map((item, index) => {
-    //           // console.log('item:', item.accounts);
-    //           return (
-    //             <BankCard
-    //               key={index}
-    //               logo={{uri: item.bankIcon}}
-    //               bankID={item.bankId}
-    //               bankName={item.bankName}
-    //               totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
-    //               accounts={item.accounts}
-    //               onPress={handleAccountPress}
-    //               deletePress={() => deletePress(item)}
-    //             />
-    //           );
-    //         })
-    //       : loading && (
-    //           <View style={styles.loadingOverlay}>
-    //             <ActivityIndicator size="large" color="#00B67A" />
-    //           </View>
-    //         )}
-    //   </View>
-    // </ScrollView>
     <ImageBackground
       source={require('../../assets/images/greenishBackground.png')}
       style={{flex: 1}}
@@ -214,14 +134,6 @@ const ConnectedAccountsScreen = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
       {banksData.length > 0 ? (
-        // <View style={{overflow: 'hidden'}}>
-        //   <AccountSwiper
-        //     accounts={banksData}
-        //     onReconnect={handleAccountPress}
-        //     onDelete={deletePress}
-        //     onPressAccount={handleAccountPress}
-        //   />
-        // </View>
         <FlatList
           data={banksData}
           keyExtractor={(item, index) =>

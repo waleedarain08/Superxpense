@@ -2,7 +2,6 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../utilis/Colors';
 import {Wallet} from '../assets/svgs';
-import {ChevronRight} from '../icons';
 import {FontFamily} from '../utilis/Fonts';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -12,12 +11,7 @@ const LargestPurchaseCard = ({largestAmount, date, category}) => {
       colors={['#bae4e0', '#BDECE8']}
       style={styles.gradientBackground}>
       <View style={styles.container}>
-        {/* <View style={styles.container}> */}
         <Text style={styles.title}>Largest purchase</Text>
-        {/*  <Text style={styles.subtitle}>
-        You can tap on a transaction to ignore it from your budget or spendings
-            </Text> */}
-
         <TouchableOpacity style={styles.card} activeOpacity={0.7}>
           <View style={styles.iconWrapper}>
             <Wallet />
@@ -30,7 +24,6 @@ const LargestPurchaseCard = ({largestAmount, date, category}) => {
             <Text style={styles.amount}>
               AED <Text style={{color: Colors.txtColor}}>{largestAmount}</Text>
             </Text>
-            {/* <ChevronRight /> */}
           </View>
         </TouchableOpacity>
       </View>

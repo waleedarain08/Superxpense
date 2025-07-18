@@ -66,7 +66,6 @@ const SignUpScreen = ({navigation}) => {
       isValid = false;
       setPasswordError(true);
     }
-    // Confirm password match validation
     if (confirmPassword !== password) {
       errors.confirmPassword = 'Passwords do not match';
       isValid = false;
@@ -78,12 +77,6 @@ const SignUpScreen = ({navigation}) => {
       isValid = false;
       setNameError(true);
     }
-
-    // if (phoneNumber.length < 7 || phoneNumber.length > 10) {
-    //   errors.phoneNumber = 'Mobile number must be between 7 and 10 digits';
-    //   isValid = false;
-    //   setMobileNumberError(true);
-    // }
 
     setError(errors);
     return isValid;

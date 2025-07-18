@@ -13,7 +13,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
 import {ChevronRight} from '../../icons';
-import {FaceScan, GreenFaceScan} from '../../assets/svgs';
+import {GreenFaceScan} from '../../assets/svgs';
 import ReactNativeBiometrics from 'react-native-biometrics';
 import {API} from '../../utilis/Constant';
 import {post} from '../../utilis/Api';
@@ -56,7 +56,7 @@ const WelcomeScreen1 = ({navigation}) => {
 
       if (flatListRef.current) {
         flatListRef.current.scrollToIndex({index: nextIndex, animated: true});
-        setTimeout(() => setCurrentIndex(nextIndex), 300); // delay to match scroll animation
+        setTimeout(() => setCurrentIndex(nextIndex), 300);
       } else {
         setCurrentIndex(nextIndex);
       }
@@ -73,7 +73,6 @@ const WelcomeScreen1 = ({navigation}) => {
     );
   };
 
-  // Keep currentIndex in sync with manual scroll
   const handleScroll = event => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const index = Math.round(contentOffsetX / width);
@@ -82,9 +81,6 @@ const WelcomeScreen1 = ({navigation}) => {
 
   const verifyFace = async (payload, signature) => {
       const userEmail = await getStringItem('userEmail');
-      //console.log('userEmail', userEmail);
-      //console.log('payload', payload);
-      //console.log('signature', signature);
       await removeItem('userData');
       try {
         const data = await post(`${API.verifyFace}`, {
@@ -92,13 +88,10 @@ const WelcomeScreen1 = ({navigation}) => {
           payload: payload,
           signature: signature,
         });
-        //console.log('api response', data);
         const activeSub = data?.data?.activeSubscription;
         const productId = activeSub?.productId || '';
         await setStringItem('subscription', productId);
         await setItem('userData', data);
-        //await setItem('biometricEnabled', true);
-        //console.log('data', data);
         if (
           data?.data?.activeSubscription !== '' ||
           data?.data?.activeSubscription?.productId !== 'expired'
@@ -108,7 +101,6 @@ const WelcomeScreen1 = ({navigation}) => {
           navigation.replace('Subscription');
         }
       } catch (error) {
-        //console.log('Something went wrong!', error);
         if (error?.error === 'Unauthorized') {
           Alert.alert(
             'Authentication Failed',
@@ -122,13 +114,11 @@ const WelcomeScreen1 = ({navigation}) => {
   const doBiometricLogin = async () => {
     let epochTimeSeconds = Math.round(new Date().getTime() / 1000).toString();
     let payload = epochTimeSeconds + 'Superxpense';
-    //console.log('payload', payload);
     const rnBiometrics = new ReactNativeBiometrics();
     const {success, signature} = await rnBiometrics.createSignature({
       promptMessage: 'Sign in',
       payload,
     });
-    //console.log('signature', signature);
 
     if (!success) {
       Alert.alert(
@@ -182,7 +172,6 @@ const WelcomeScreen1 = ({navigation}) => {
               key={index}
               style={[
                 styles.dot,
-
                 {
                   backgroundColor:
                     index === currentIndex

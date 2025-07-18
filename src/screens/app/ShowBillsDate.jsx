@@ -119,7 +119,6 @@ const ShowBillsDate = ({navigation}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollContainer}>
-        {/* Header */}
         <Header
           ScreenName="Bills"
           mainContainer={styles.headerContainer}
@@ -127,7 +126,6 @@ const ShowBillsDate = ({navigation}) => {
           onBackPress={() => navigation.goBack()}
         />
         <View style={styles.contentContainer}>
-          {/* Calendar Header */}
           <View style={styles.calendarHeaderContainer}>
             <View style={styles.calendarHeader}>
               <TouchableOpacity
@@ -144,8 +142,6 @@ const ShowBillsDate = ({navigation}) => {
                 <ChevronRight size={12} color={Colors.txtColor} />
               </TouchableOpacity>
             </View>
-
-            {/* Calendar */}
             <View style={styles.calendarWrapper}>
               <CalendarPicker
                 startFromMonday={true}
@@ -195,8 +191,7 @@ const ShowBillsDate = ({navigation}) => {
               />
             </View>
           </View>
-        </View>{' '}
-        {/* Bills List */}
+        </View>
         <View style={styles.billsContainer}>
           {billsData.map(bill => (
             <BillItem key={bill.id} bill={bill} />

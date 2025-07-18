@@ -32,12 +32,10 @@ const StackedChart = ({chartData}) => {
   );
 
   return (
-    // <View style={styles.mainContainer}>
     <LinearGradient
       colors={['#ccf3f3', '#d0f4f4']}
       style={styles.gradientBackground}>
       <View style={styles.mainContainer}>
-        {/* Header */}
         <View style={styles.headerContainer}>
           <View>
             <Text style={styles.heading}>NET WORTH</Text>
@@ -55,7 +53,6 @@ const StackedChart = ({chartData}) => {
 
         {safeChartData.length > 0 ? (
           <View style={{flexDirection: 'row'}}>
-            {/* Y Axis */}
             <YAxis
               data={[0, 10000, 20000, 30000, 40000]}
               contentInset={{top: 10, bottom: 10}}
@@ -70,7 +67,6 @@ const StackedChart = ({chartData}) => {
               }}
             />
 
-            {/* Chart */}
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View
                 style={{
@@ -78,7 +74,6 @@ const StackedChart = ({chartData}) => {
                   marginLeft: '10%',
                   marginBottom: 10,
                 }}>
-                {/* Grid Lines */}
                 <View
                   style={{
                     position: 'absolute',
@@ -86,7 +81,7 @@ const StackedChart = ({chartData}) => {
                     width: 56 * safeChartData.length,
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    zIndex: -1, // Ensure grid is behind
+                    zIndex: -1,
                   }}>
                   {[0, 1, 2, 3, 4].map((_, i) => (
                     <View
@@ -101,59 +96,19 @@ const StackedChart = ({chartData}) => {
                     />
                   ))}
                 </View>
-
-                {/* Bars & Labels */}
-                {/* <View
-                style={{
-                  width: 60 * safeChartData.length,
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  transform: [{scaleX: -1}],
-                  paddingBottom: 25, // Add space for labels
-                }}>
-                <StackedBarChart
-                  style={{
-                    height: chartHeight,
-                    width: 60 * safeChartData.length,
-                  }}
-                  keys={keys}
-                  colors={colors}
-                  data={visualData}
-                  showGrid={false}
-                  contentInset={{top: 10, bottom: 10}}
-                  numberOfTicks={5}
-                />
-                {[...safeChartData].reverse().map((item, index) => (
-                  <Text
-                    key={index}
-                    style={{
-                      position: 'absolute',
-                      right: index * 57,
-                      bottom: 0,
-                      fontSize: 12,
-                      color: Colors.txtColor,
-                      fontFamily: FontFamily.medium,
-                      width: 60,
-                      textAlign: 'center',
-                      transform: [{scaleX: -1}],
-                    }}>
-                    {item?.label || ''}
-                  </Text>
-                ))}
-              </View> */}
                 <View
                   style={{
                     width: 60 * safeChartData.length,
                     alignItems: 'center',
                     flexDirection: 'row',
-                    paddingBottom: 25, // Add space for labels
-                    position: 'relative', // Ensure absolute positioning works correctly
+                    paddingBottom: 25,
+                    position: 'relative',
                   }}>
                   <StackedBarChart
                     style={{
                       height: chartHeight,
                       width: 60 * safeChartData.length,
-                      transform: [{scaleX: -1}], // ✅ Flip only the chart
+                      transform: [{scaleX: -1}],
                     }}
                     keys={keys}
                     colors={colors}
@@ -167,7 +122,7 @@ const StackedChart = ({chartData}) => {
                       key={index}
                       style={{
                         position: 'absolute',
-                        left: index * 59, // ✅ Use `left` instead of `right` when not flipping container
+                        left: index * 59,
                         bottom: 0,
                         fontSize: 12,
                         color: Colors.txtColor,
@@ -199,9 +154,8 @@ const StackedChart = ({chartData}) => {
 
 export const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.47)', // translucent white
+    backgroundColor: 'rgba(255, 255, 255, 0.47)',
     borderRadius: 20,
-    //marginLeft: 15,
   },
   headerContainer: {
     flexDirection: 'row',

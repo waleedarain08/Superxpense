@@ -11,10 +11,8 @@ import {
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {Colors} from '../../utilis/Colors';
-import {Stars} from '../../assets/svgs';
 import {FontFamily} from '../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/Ionicons';
-import LinearGradient from 'react-native-linear-gradient';
 import IncomeCard from '../../component/IncomeCard';
 import BudgetCardd from '../../component/BudgetCardd';
 import BudgetModal from '../../component/BudgetModal';
@@ -28,7 +26,6 @@ import moment from 'moment';
 import FloatingChatButton from '../../component/FloatingChatButton';
 
 const BudgetsScreen = ({navigation}) => {
-  const [selectedTab, setSelectedTab] = useState('Plan');
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [budgetData, setBudgetData] = useState(null);
@@ -63,15 +60,15 @@ const BudgetsScreen = ({navigation}) => {
         `${API.addBudget}`,
         {
           amount,
-          categories, // ✅ include categories array
+          categories,
         },
         token,
       );
       if (response.statusCode === 201) {
         Alert.alert('Budget added successfully!');
-        fetchCategories(); // Refresh the categories after adding a new budget
-        fetchBudgetByCategory(); // Refresh the budget by category after adding a new budget
-        showBudget(); // Refresh the budget list after adding a new budget
+        fetchCategories();
+        fetchBudgetByCategory();
+        showBudget();
       }
       // Handle success response
     } catch (error) {
@@ -89,7 +86,7 @@ const BudgetsScreen = ({navigation}) => {
         {month: month, year: year},
         token,
       );
-      setBudgetCategoryData(response); // or response?.data if needed
+      setBudgetCategoryData(response);
     } catch (error) {
       console.log('Error fetching Budget By Category Data:', error);
     }
@@ -106,7 +103,7 @@ const BudgetsScreen = ({navigation}) => {
           id: item.id,
           title: item.category.name,
           amount: item.amount,
-          icon: item.category.icon, // You can add an icon based on item.category.code
+          icon: item.category.icon,
         })),
       );
     } catch (error) {
@@ -141,20 +138,19 @@ const BudgetsScreen = ({navigation}) => {
       id: item.id.toString(),
       label: item.name,
       value: item.code,
-      color: defaultColors[index % defaultColors.length], // Pick a color from predefined list
-      icon: item.icon, // or assign custom icons based on `item.code`
+      color: defaultColors[index % defaultColors.length],
+      icon: item.icon,
     }));
     setCategories(mappedCategories);
   };
 
   const handleSubmit = ({amount, categories}) => {
-    // Call your submit API here
     addBudget(amount, categories);
   };
 
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
-    setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
+    setMonth(newDate.month() + 1);
     setYear(newDate.year());
   };
 
@@ -187,39 +183,6 @@ const BudgetsScreen = ({navigation}) => {
           onSubmit={handleSubmit}
         />
         <View style={styles.container}>
-          {/* <View style={styles.topRow}>
-            <TouchableOpacity
-              style={styles.saveBtn}
-            ></TouchableOpacity>
-            <View style={styles.nameHeader}>
-              <Text style={styles.headerTxt}>Personal Monthly Budget</Text>
-            </View>
-            <View style={styles.actionButtons}>
-            </View>
-          </View> */}
-
-          {/* <View style={styles.tabRow}>
-          {tabs.map(tab => (
-            <TouchableOpacity
-              key={tab}
-              style={[
-                styles.tabButton,
-                selectedTab === tab && styles.activeTabButton,
-              ]}
-              onPress={() => setSelectedTab(tab)}>
-              <Text
-                style={[
-                  styles.tabText,
-                  selectedTab === tab && styles.activeTabText,
-                ]}>
-                {tab}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View> */}
-        </View>
-
-        {selectedTab === 'Plan' && (
           <ScrollView
             contentContainerStyle={styles.safeView}
             showsVerticalScrollIndicator={false}>
@@ -240,61 +203,17 @@ const BudgetsScreen = ({navigation}) => {
                 style={styles.button}
                 onPress={() => setOpen(true)}>
                 <Text style={styles.buttonText}>Add a Budget</Text>
-                <Icon name="add-circle" size={20} color={Colors.newButtonBack} />
+                <Icon
+                  name="add-circle"
+                  size={20}
+                  color={Colors.newButtonBack}
+                />
               </TouchableOpacity>
             </View>
             <IncomeCard data={incomeData} type="income" />
-            {/* <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-              <LinearGradient
-                colors={['#6CFFC2', '#FFFFFF']}
-                start={{x: 0, y: 3}}
-                end={{x: 1, y: 1}}
-                style={styles.superCard}>
-                <View style={styles.superCardHeader}>
-                  <Text style={styles.recentLabel}>Superxpense AI</Text>
-                  <Stars />
-                </View>
-                <Text style={styles.recentLabel2}>
-                  Ask me anything about your personal finance, spending and many
-                  more.
-                </Text>
-                <View style={{alignItems: 'flex-end', marginRight: 20}}>
-                  <Icon name="chevron-forward" size={14} color={Colors.black} />
-                </View>
-              </LinearGradient>
-            </TouchableOpacity> */}
             <AllBudgetCard data={budgetData} />
-            {/* <IncomeCard data={HousingData} type="utilities" /> */}
           </ScrollView>
-        )}
-        {/* {selectedTab === 'Remaining' && (
-        <ScrollView
-          style={styles.safeView}
-          showsVerticalScrollIndicator={false}>
-          <Text
-            style={{
-              marginLeft: '37%',
-              marginTop: 10,
-              color: Colors.lightblack,
-            }}>
-            Coming Soon
-          </Text>
-        </ScrollView>
-      )}
-      {selectedTab === 'Insights' && (
-        <ScrollView
-          style={styles.safeView}
-          showsVerticalScrollIndicator={false}>
-          <Text
-            style={{
-              marginLeft: '37%',
-              marginTop: 10,
-              color: Colors.lightblack,
-            }}>
-            Coming Soon
-          </Text>
-        </ScrollView>
-      )} */}
+        </View>
       </View>
       <FloatingChatButton navigation={navigation} />
     </ImageBackground>
@@ -421,12 +340,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  // headerTxt: {
-  //   color: Colors.white,
-  //   fontSize: 16,
-  //   fontFamily: FontFamily.medium,
-  //   marginRight: 10,
-  // },
   header: {
     fontSize: 18,
     fontFamily: FontFamily.semiBold,
@@ -446,17 +359,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontFamily: FontFamily.semiBold,
-    color: Colors.txtColor, // neutral-900
+    color: Colors.txtColor,
   },
   description: {
     marginTop: 8,
-    color: Colors.lightTxtColor, // gray-600
+    color: Colors.lightTxtColor,
     fontSize: 14,
     fontFamily: FontFamily.regular,
   },
   button: {
     marginTop: 16,
-    backgroundColor: "transparent", // emerald-50
+    backgroundColor: 'transparent',
     borderRadius: 100,
     flexDirection: 'row',
     alignItems: 'center',
@@ -467,13 +380,12 @@ const styles = StyleSheet.create({
     borderColor: Colors.white,
   },
   buttonText: {
-    color: Colors.newButtonBack, // emerald-700
+    color: Colors.newButtonBack,
     fontFamily: FontFamily.medium,
     fontSize: 14,
     marginRight: 6,
   },
   saveBtn: {
-    // backgroundColor: '#11956D',
     paddingHorizontal: 11,
     paddingVertical: 4,
     borderRadius: 20,

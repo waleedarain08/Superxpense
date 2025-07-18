@@ -1,74 +1,3 @@
-// import React, {useState} from 'react';
-// import {
-//   Modal,
-//   View,
-//   Text,
-//   TextInput,
-//   FlatList,
-//   TouchableOpacity,
-//   Image,
-//   StyleSheet,
-// } from 'react-native';
-
-// const banks = [
-//   {name: 'Mashreq Bank', logo: ''},
-//   {name: 'First Abu Dhabi Bank', logo: ''},
-//   {name: 'ADCB', logo: ''},
-//   {name: 'Rakbank', logo: ''},
-//   {name: 'Emirates NBD', logo: ''},
-// ];
-
-// const BankModal = ({visible, onClose}) => {
-//   const [searchText, setSearchText] = useState('');
-
-//   const filteredBanks = banks.filter(bank =>
-//     bank.name.toLowerCase().includes(searchText.toLowerCase()),
-//   );
-
-//   return (
-//     <Modal visible={visible} animationType="slide">
-//       <View style={styles.container}>
-//         {/* Header */}
-//         <View style={styles.header}>
-//           <TouchableOpacity onPress={onClose}>
-//             <Text style={styles.backArrow}>←</Text>
-//           </TouchableOpacity>
-//           <Text style={styles.title}>Select a bank</Text>
-//           <TouchableOpacity onPress={onClose}>
-//             <Text style={styles.close}>✕</Text>
-//           </TouchableOpacity>
-//         </View>
-
-//         {/* Subheading */}
-//         <Text style={styles.subtitle}>
-//           Please select the bank you’d like to connect to superexpense app.
-//         </Text>
-
-//         {/* Search Input */}
-//         <View style={styles.searchContainer}>
-//           <TextInput
-//             placeholder="Search"
-//             value={searchText}
-//             onChangeText={setSearchText}
-//             style={styles.searchInput}
-//           />
-//         </View>
-
-//         {/* Bank List */}
-//         <FlatList
-//           data={filteredBanks}
-//           keyExtractor={item => item.name}
-//           renderItem={({item}) => (
-//             <TouchableOpacity style={styles.bankItem}>
-//               <Image source={item.logo} style={styles.logo} />
-//               <Text style={styles.bankName}>{item.name}</Text>
-//             </TouchableOpacity>
-//           )}
-//         />
-//       </View>
-//     </Modal>
-//   );
-// };
 import React, {useState, useEffect} from 'react';
 import {
   Modal,
@@ -98,7 +27,6 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
   const [banks, setBanks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch data from API
   useEffect(() => {
     if (visible) {
       fetchBankData();
@@ -129,8 +57,8 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
     <TouchableOpacity
       style={styles.bankItem}
       onPress={() => {
-        onBankSelect(item); // Log to main screen
-        onClose(); // Close modal
+        onBankSelect(item);
+        onClose();
       }}>
       <Image source={{uri: item.logo_alt}} style={styles.logo} />
       <Text style={[styles.bankName, {flex: 1}]}>{item.name}</Text>
@@ -146,16 +74,6 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
         imageStyle={{resizeMode: 'cover'}}
         resizeMode="cover">
         <View style={styles.container}>
-          {/* Header */}
-          {/* <View style={styles.header}>
-            <TouchableOpacity onPress={onClose}>
-              <LeftBlack />
-            </TouchableOpacity>
-            <Text style={styles.title}>Connect Your Bank Seamlessly</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Text style={styles.close}> </Text>
-            </TouchableOpacity>
-          </View> */}
           <Header
             ScreenName={''}
             mainContainer={{paddingHorizontal: 0, marginBottom: 8}}
@@ -165,14 +83,12 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
           />
           <StepIndicator totalSteps={2} currentStep={2} color={Colors.txtColor}/>
 
-          {/* Subheading */}
           <Text style={styles.subtitle}>Select a bank</Text>
 
           <Text style={styles.subtitle2}>
             Please select the bank you’d like to connect to superxpense app.
           </Text>
 
-          {/* Search Input */}
           <View style={styles.searchContainer}>
             {/* <TextInput
               placeholder="Search bank..."
@@ -205,7 +121,6 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
             )}
           </View>
 
-          {/* Bank List */}
           {loading ? (
             <ActivityIndicator
               size="large"

@@ -87,13 +87,11 @@ const NotificationScreen = ({navigation}) => {
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
         <Header
           ScreenName={'Notifications'}
           mainContainer={{paddingHorizontal: 0, marginBottom: 8}}
           onBackPress={() => navigation.goBack()}
         />
-        {/* Search */}
         <View style={styles.searchContainer}>
           <View style={{marginRight: 10}}>
             <Search />
@@ -104,7 +102,6 @@ const NotificationScreen = ({navigation}) => {
             style={styles.searchInput}
           />
         </View>
-        {/* Filter Buttons */}
         <ScrollView
           style={{marginVertical: 16}}
           horizontal
@@ -133,7 +130,6 @@ const NotificationScreen = ({navigation}) => {
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
-          {/* Latest */}
           <LinearGradient
             colors={['#bae4e0', '#BDECE8']}
             style={styles.latestsGradientBack}>
@@ -158,7 +154,6 @@ const NotificationScreen = ({navigation}) => {
             </View>
           </LinearGradient>
 
-          {/* Last Week */}
           <LinearGradient
             colors={['#bae4e0', '#BDECE8']}
             style={styles.latestsGradientBack}>
@@ -166,7 +161,7 @@ const NotificationScreen = ({navigation}) => {
               <Text style={styles.sectionTitle}>Last Week</Text>
               {notifications.lastWeek.map((item, index) => {
                 const totalItems = notifications.lastWeek.length;
-                const shouldBlur = index >= totalItems - 3; // Blur the last 3 items
+                const shouldBlur = index >= totalItems - 3;
 
                 return (
                   <View
@@ -286,7 +281,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   card: {
-    backgroundColor: 'rgba(232, 249, 249, 0.97)', // very light aqua-blue background
+    backgroundColor: 'rgba(232, 249, 249, 0.97)',
     borderRadius: 12,
     padding: 14,
     marginVertical: 6,
@@ -322,7 +317,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   tabContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.6)', // translucent white
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
     paddingVertical: 6,
     paddingHorizontal: 14,
     borderRadius: 16,
@@ -333,7 +328,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   latestBack: {
-    backgroundColor: 'rgba(255, 255, 255, 0.55)', // translucent white
+    backgroundColor: 'rgba(255, 255, 255, 0.55)',
     padding: 16,
   },
   count: {

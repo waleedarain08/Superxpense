@@ -14,7 +14,6 @@ import {ArrowRight, ChevronLeft} from '../../icons';
 import {BlackDirham, Dirham} from '../../assets/svgs';
 
 const PropertyDetailsScreen = ({navigation, route}) => {
-  // For now, use hardcoded data or get from route.params
   const property = route?.params?.property || {
     image: require('../../assets/images/cardBackground.png'),
     price: '฿ 1,200,000',
@@ -42,7 +41,6 @@ const PropertyDetailsScreen = ({navigation, route}) => {
       source={require('../../assets/images/greenishBackground.png')}
       resizeMode="cover"
       style={styles.container}>
-      {/* Header and Image */}
       <View style={styles.imageContainer}>
         <Image
           source={property.image}
@@ -67,13 +65,11 @@ const PropertyDetailsScreen = ({navigation, route}) => {
           </View>
         </View>
       </View>
-      {/* Card Details */}
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}>
         <View style={styles.card}>
-          {/* Price, brand */}
           <View style={styles.cardRow}>
             <View style={{flexDirection: 'row', gap: 4}}>
               <BlackDirham width={16} height={14} />
@@ -84,10 +80,8 @@ const PropertyDetailsScreen = ({navigation, route}) => {
               <Text style={styles.brandName}>{property.brandName}</Text>
             </View>
           </View>
-          {/* Name, location */}
           <Text style={styles.cardName}>{property.name}</Text>
           <Text style={styles.cardLocation}>{property.location}</Text>
-          {/* Progress Bar */}
           <View
             style={{
               backgroundColor: 'rgba(255,255,255,0.3)',
@@ -134,7 +128,6 @@ const PropertyDetailsScreen = ({navigation, route}) => {
               <Text style={styles.paymentPlanBtnText}>View payment plan</Text>
             </TouchableOpacity>
           </View>
-          {/* Info Table */}
           <Text
             style={{
               fontSize: 16,
@@ -189,7 +182,6 @@ const PropertyDetailsScreen = ({navigation, route}) => {
               <Text style={styles.infoValueLink}>The Torch Project</Text>
             </View>
           </View>
-          {/* Description */}
           <Text style={styles.description}>
             Damac Properties is delighted to present this exquisite apartment
             LIV Lux, Dubai Marina.
@@ -229,7 +221,6 @@ const PropertyDetailsScreen = ({navigation, route}) => {
         </View>
       </ScrollView>
 
-      {/* Payment Action at Bottom */}
     </ImageBackground>
   );
 };
@@ -244,7 +235,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100, // Add padding to account for bottom bar
+    paddingBottom: 100,
   },
   imageContainer: {
     position: 'relative',

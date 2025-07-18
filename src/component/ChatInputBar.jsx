@@ -8,7 +8,6 @@ import {
   Platform,
 } from 'react-native';
 import {VectorIcon} from '../icons/index';
-// import { Colors, FontFamily } from '../constants'; // adjust imports
 import {FontFamily} from '../utilis/Fonts';
 import {Colors} from '../utilis/Colors';
 
@@ -22,8 +21,6 @@ const ChatInputBar = ({
 }) => {
   return (
     <View style={styles.inputBar}>
-      {/* Attachment Icon */}
-
       <TouchableOpacity onPress={handleDocumentPick} style={styles.iconWrapper}>
         <VectorIcon
           name="add"
@@ -33,7 +30,6 @@ const ChatInputBar = ({
         />
       </TouchableOpacity>
 
-      {/* Text Input */}
       <TextInput
         style={styles.input}
         placeholder="Ask anything about your money..."
@@ -43,7 +39,6 @@ const ChatInputBar = ({
         multiline
       />
 
-      {/* Mic or Send Icon */}
       <TouchableOpacity onPress={handleSendMessage}>
         {sendMessageLoading ? (
           <ActivityIndicator size="small" color={Colors.primary} />

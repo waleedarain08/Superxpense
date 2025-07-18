@@ -10,7 +10,7 @@ const assets = [
   {
     id: 1,
     name: 'Cryptocurrency',
-    icon: require('../assets/images/cardBackground.png'), // Replace with your icon
+    icon: require('../assets/images/cardBackground.png'),
     value: '500,000',
     change: '+6000 (-1.2%)',
     changeType: 'down',

@@ -91,9 +91,6 @@ const SignInScreen = ({navigation}) => {
 
   const verifyFace = async (payload, signature) => {
     const userEmail = await getStringItem('userEmail');
-    //console.log('userEmail', userEmail);
-    //console.log('payload', payload);
-    //console.log('signature', signature);
     await removeItem('userData');
     try {
       const data = await post(`${API.verifyFace}`, {
@@ -101,13 +98,10 @@ const SignInScreen = ({navigation}) => {
         payload: payload,
         signature: signature,
       });
-      //console.log('api response', data);
       const activeSub = data?.data?.activeSubscription;
       const productId = activeSub?.productId || '';
       await setStringItem('subscription', productId);
       await setItem('userData', data);
-      //await setItem('biometricEnabled', true);
-      //console.log('data', data);
       if (
         data?.data?.activeSubscription !== '' ||
         data?.data?.activeSubscription?.productId !== 'expired'
@@ -117,7 +111,6 @@ const SignInScreen = ({navigation}) => {
         navigation.replace('Subscription');
       }
     } catch (error) {
-      //console.log('Something went wrong!', error);
       if (error?.error === 'Unauthorized') {
         Alert.alert(
           'Authentication Failed',
@@ -131,13 +124,11 @@ const SignInScreen = ({navigation}) => {
   const doBiometricLogin = async () => {
     let epochTimeSeconds = Math.round(new Date().getTime() / 1000).toString();
     let payload = epochTimeSeconds + 'Superxpense';
-    //console.log('payload', payload);
     const rnBiometrics = new ReactNativeBiometrics();
     const {success, signature} = await rnBiometrics.createSignature({
       promptMessage: 'Sign in',
       payload,
     });
-    //console.log('signature', signature);
 
     if (!success) {
       Alert.alert(
@@ -180,9 +171,9 @@ const SignInScreen = ({navigation}) => {
 
   return (
     <ImageBackground
-     source={require('../../assets/images/loginBack.png')}
+      source={require('../../assets/images/loginBack.png')}
       style={[styles.container, {flex: 1}]}
-      imageStyle={{resizeMode: 'stretch',height: '47%'}}
+      imageStyle={{resizeMode: 'stretch', height: '47%'}}
       resizeMode="stretch">
       <SafeAreaView style={styles.safeStyle}>
         <View>
@@ -238,15 +229,6 @@ const SignInScreen = ({navigation}) => {
               <Text style={styles.buttonText}>Login</Text>
             )}
           </TouchableOpacity>
-          {/* <Text style={styles.orTxt}>OR</Text>
-          <TouchableOpacity
-            onPress={biometric}
-            style={[styles.faceIdButton, loading && {opacity: 0.6}]}
-            disabled={loading}>
-            <View style={styles.innerContainer}>
-              <FaceScan />
-            </View>
-          </TouchableOpacity> */}
         </View>
       </SafeAreaView>
     </ImageBackground>
@@ -257,7 +239,7 @@ export default SignInScreen;
 
 const styles = StyleSheet.create({
   safeStyle: {
-    paddingTop:Platform.OS === 'android' && 20,
+    paddingTop: Platform.OS === 'android' && 20,
   },
   container: {
     paddingVertical: 32,
@@ -271,10 +253,10 @@ const styles = StyleSheet.create({
   },
   subHeading: {
     color: Colors.newWhite,
-    color: "#ffffff",
+    color: '#ffffff',
   },
   subHeading: {
-    color: "#ffffff",
+    color: '#ffffff',
     fontSize: 16,
     marginBottom: 24,
   },

@@ -22,11 +22,9 @@ const bgImages = [
   require('../assets/images/purpleCard.png'),
 ];
 
-// Helper to assign a random background image to each account, but keep it consistent
 function assignBgImagesToAccounts(accounts) {
   const assigned = {};
   accounts.forEach((acc, idx) => {
-    // Use bankId if available, otherwise fallback to idx
     const key = acc.bankId || idx;
     if (!assigned[key]) {
       assigned[key] = bgImages[Math.floor(Math.random() * bgImages.length)];
@@ -131,7 +129,6 @@ const AccountCard = ({
           </Text>
         )}
       </ImageBackground>
-      {/* Blur Overlay */}
       {showBlurOverlay && (
         <View style={styles.blurOverlay}>
           <Image
@@ -142,7 +139,6 @@ const AccountCard = ({
         </View>
       )}
 
-      {/* Toggle Button */}
       <TouchableOpacity style={styles.toggleButton} onPress={toggleBlurOverlay}>
         <Text style={styles.toggleButtonText}>
           {!showBlurOverlay
@@ -162,10 +158,8 @@ export default function AccountSwiper({
 }) {
   if (!accounts || accounts.length === 0) return null;
 
-  // Dynamically set stackSize: 1 if 1 card, 2 if 2, max 5
   const stackSize = Math.min(accounts.length, 5);
 
-  // Assign background images to each account only once
   const bgMap = useMemo(() => assignBgImagesToAccounts(accounts), [accounts]);
 
   return (
@@ -255,7 +249,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    // backgroundColor: 'rgba(0,0,0,0.5)',
     borderRadius: 20,
     zIndex: 1,
   },

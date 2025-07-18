@@ -13,41 +13,28 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useState, useRef, useMemo} from 'react';
-import {Colors} from '../../utilis/Colors';
-import SpendingSummary from '../../component/SpendingSummary';
-import StackedChart from '../../component/StackedChart';
-import BudgetCard from '../../component/BudgetCard';
-import {
-  Home,
-  House,
-  Houses,
-  Plus,
-  Stars,
-  Dirham,
-  Bank,
-  GreenBank,
-} from '../../assets/svgs';
-import {FontFamily} from '../../utilis/Fonts';
+import {Colors} from '../../../utilis/Colors';
+import SpendingSummary from '../../../component/SpendingSummary';
+import BudgetCard from '../../../component/BudgetCard';
+import {Houses, Dirham, GreenBank} from '../../../assets/svgs';
+import {FontFamily} from '../../../utilis/Fonts';
 import Icon from 'react-native-vector-icons/Ionicons';
-import LinearGradient from 'react-native-linear-gradient';
-import {API, leanAppToken, isSandbox} from '../../utilis/Constant';
-import {get, del} from '../../utilis/Api';
-import {getItem} from '../../utilis/StorageActions';
-import BankCard from '../../component/BankCard';
+import {API, leanAppToken, isSandbox} from '../../../utilis/Constant';
+import {get, del} from '../../../utilis/Api';
+import {getItem} from '../../../utilis/StorageActions';
+import BankCard from '../../../component/BankCard';
 import {useFocusEffect} from '@react-navigation/native';
-import CalendarHeader from '../../component/CalendarHeader';
+import CalendarHeader from '../../../component/CalendarHeader';
 import moment from 'moment';
-import LargestPurchaseCard from '../../component/LargestPurchaseCard';
-import SpendingChart from '../../component/SpendingChart';
-import FloatingChatButton from '../../component/FloatingChatButton';
-import MainHeader from '../../component/MainHeader';
+import LargestPurchaseCard from '../../../component/LargestPurchaseCard';
+import SpendingChart from '../../../component/SpendingChart';
+import FloatingChatButton from '../../../component/FloatingChatButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import DocumentPicker from '@react-native-documents/picker';
-import ContractInstallmentsList from '../../component/ContractInstallmentTable';
 import LinkSDK from 'lean-react-native';
-import AccountSwiper from '../../component/AccountSwiper';
-import {ChevronLeft, PlusIcon} from '../../icons';
-import UpcomingBills from '../../component/UpcomingBills';
+import AccountSwiper from '../../../component/AccountSwiper';
+import {PlusIcon} from '../../../icons';
+import UpcomingBills from '../../../component/UpcomingBills';
+import MainHeader from '../../../component/MainHeader';
 
 const {width} = Dimensions.get('window');
 const categoryColors = [
@@ -145,11 +132,8 @@ const HomeScreen = ({navigation, route}) => {
       </View>
 
       <View style={styles.currentMonthChartArea}>
-        {/* <View style={styles.circularPlaceholder}>
-          <View style={styles.innerCircle} />
-        </View> */}
         <Image
-          source={require('../../assets/images/CircleUnfilled.png')}
+          source={require('../../../assets/images/CircleUnfilled.png')}
           style={{
             resizeMode: 'contain',
             width: 100,
@@ -171,7 +155,7 @@ const HomeScreen = ({navigation, route}) => {
 
   const handleDateChange = newDate => {
     setSelectedDate(newDate);
-    setMonth(newDate.month() + 1); // Month is 0-indexed in moment.js
+    setMonth(newDate.month() + 1);
     setYear(newDate.year());
   };
 
@@ -202,7 +186,6 @@ const HomeScreen = ({navigation, route}) => {
   );
 
   const handleAccountPress = (account, bankID, bankName) => {
-    // Find the full bank data object
     const bankData = banksData.find(bank => bank.bankId === bankID);
 
     navigation.navigate('BankTransaction', {
@@ -211,11 +194,10 @@ const HomeScreen = ({navigation, route}) => {
       accountType: account.accountType,
       BankName: bankName,
       entityId: bankID,
-      bankData: bankData, // Add the missing bankData parameter
+      bankData: bankData,
     });
   };
 
-  // Account-specific functions
   const hitLeanApi = async () => {
     try {
       const userData = await getItem('userData');
@@ -270,7 +252,7 @@ const HomeScreen = ({navigation, route}) => {
         accountType: account.accountType,
         BankName: bankName,
         entityId: account.bankId,
-        bankData: account, // This should be the full bank object
+        bankData: account,
       });
       navigation.navigate('BankTransaction', {
         accountId: Array.isArray(account.accounts)
@@ -281,7 +263,7 @@ const HomeScreen = ({navigation, route}) => {
         accountType: account.accountType,
         BankName: bankName,
         entityId: account.bankId,
-        bankData: account, // This should be the full bank object
+        bankData: account,
       });
     }
   };
@@ -355,12 +337,10 @@ const HomeScreen = ({navigation, route}) => {
 
       const categories = response?.data?.categories || [];
 
-      // Sort from largest to smallest by amount
       const sortedCategories = [...categories].sort(
         (a, b) => b.amount - a.amount,
       );
-
-      // Add rotating color to each category
+  
       const coloredData = sortedCategories.map((item, index) => ({
         ...item,
         color: categoryColors[index % categoryColors.length],
@@ -382,22 +362,6 @@ const HomeScreen = ({navigation, route}) => {
         token,
       );
       console.log('Bar graph response:', response);
-      // if (response.data.status === 'RECONNECT_REQUIRED') {
-      //   Alert.alert(
-      //     'Reconnect Required',
-      //     'Your bank connection has expired. Please reconnect.',
-      //     [
-      //       {
-      //         text: 'OK',
-      //         onPress: () => {
-      //           navigation.navigate('Accounts');
-      //         },
-      //       },
-      //     ],
-      //   );
-      //   return;
-      // }
-
       const {netWorthExpense} = response.data || {};
 
       if (Array.isArray(netWorthExpense)) {
@@ -448,10 +412,9 @@ const HomeScreen = ({navigation, route}) => {
       setMonthlySpending(response.data.currentMonthSpending);
       setLastSpending(response.data.lastMonthSpending);
       if (Array.isArray(transactions)) {
-        // Transform transactions if needed here
         setLineChartData(transactions);
       } else {
-        setLineChartData([]); // fallback for empty or unexpected data
+        setLineChartData([]);
       }
     } catch (error) {
       console.log('Error fetching LineGraph Dataaaaa:', error);
@@ -467,7 +430,7 @@ const HomeScreen = ({navigation, route}) => {
         {month: month, year: year},
         token,
       );
-      setBudgetCategoryData(response); // or response?.data if needed
+      setBudgetCategoryData(response);
     } catch (error) {
       console.log('Error fetching LineGraph Data:', error);
     }
@@ -479,8 +442,6 @@ const HomeScreen = ({navigation, route}) => {
     try {
       const response = await get(`${API.documentReminder}`, {}, token);
       setContractData(response.data[0]);
-      // setBudgetCategoryData(response); // or response?.data if needed
-      // console.log(response.data[0]);
     } catch (error) {
       console.log('Error fetching LineGraph Data:', error);
     }
@@ -494,9 +455,8 @@ const HomeScreen = ({navigation, route}) => {
         fetchMonthlyIncome();
         fetchBudgetBycategory();
         fetchDocumentReminder();
-      }, 1500); // 1.5 seconds
+      }, 1500);
 
-      // Cleanup timeout if screen is unfocused before timeout completes
       return () => clearTimeout(timeout);
     }, [month, year, renderOverview, renderSpending, renderAccount]),
   );
@@ -533,128 +493,10 @@ const HomeScreen = ({navigation, route}) => {
       setRenderOverview(selectedTab === 'Overview');
       setRenderSpending(selectedTab === 'Spending');
       setRenderAccount(selectedTab === 'Account');
-    }, 50); // small delay to ensure safe unmount/mount cycle
+    }, 50);
     return () => clearTimeout(timeout);
   }, [selectedTab]);
 
-  // const handleSendMessage = async (file = null) => {
-  //   if (!message.trim() && !file) return;
-
-  //   try {
-  //     setSendMessageLoading(true);
-  //     const userData = await getItem('userData');
-  //     const token = userData.data?.accessToken;
-
-  //     const timestamp = new Date().toLocaleTimeString();
-
-  //     // Add user message or file-sending indicator
-  //     setChats(prevChats => [
-  //       ...prevChats,
-  //       {
-  //         message: file ? `Uploading document: ${file.name}` : message,
-  //         isUser: true,
-  //         timestamp,
-  //       },
-  //       {
-  //         message: 'Thinking...',
-  //         isUser: false,
-  //         isThinking: true,
-  //         timestamp,
-  //       },
-  //     ]);
-
-  //     let formData;
-  //     let headers;
-
-  //     if (file) {
-  //       formData = new FormData();
-  //       formData.append('file', {
-  //         uri: file.uri,
-  //         name: file.name,
-  //         type: file.type || 'application/octet-stream',
-  //       });
-  //       formData.append('query', message); // optionally include the message too
-  //       headers = {
-  //         Authorization: `Bearer ${token}`,
-  //         'Content-Type': 'multipart/form-data',
-  //       };
-  //     }
-
-  //     const response = await fetch(API.createChat, {
-  //       method: 'POST',
-  //       headers: file
-  //         ? headers
-  //         : {
-  //             'Content-Type': 'application/json',
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //       body: file ? formData : JSON.stringify({query: message}),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`Server responded with status: ${response.status}`);
-  //     }
-
-  //     const data = await response.json();
-  //     // Remove thinking and show bot reply
-  //     setChats(prevChats => {
-  //       const newChats = prevChats.filter(chat => !chat.isThinking);
-  //       return [
-  //         ...newChats,
-  //         {
-  //           message: file
-  //             ? data?.data?.response ||
-  //               'Sorry, there was an error processing your request'
-  //             : data?.data ||
-  //               'Sorry, there was an error processing your request',
-  //           isUser: false,
-  //           timestamp: new Date().toLocaleTimeString(),
-  //           installments: data?.data?.installments || [],
-  //         },
-  //       ];
-  //     });
-
-  //     if (file && data?.data?.response) {
-  //       Alert.alert(
-  //         'Payment Reminders Set',
-  //         'You will be notified when payment is due.',
-  //         [{text: 'OK'}],
-  //         {cancelable: false},
-  //       );
-  //     }
-
-  //     setMessage('');
-  //   } catch (err) {
-  //     console.error('Send error:', err);
-  //     setChats([]);
-  //     Alert.alert(
-  //       'Error',
-  //       'Sorry, we encountered an error. Please try again later.',
-  //       [{text: 'OK'}],
-  //       {cancelable: false},
-  //     );
-  //   } finally {
-  //     setSendMessageLoading(false);
-  //   }
-  // };
-
-  // const handleDocumentPick = async () => {
-  //   try {
-  //     const file = await DocumentPicker.pickSingle({
-  //       type: DocumentPicker.types.allFiles,
-  //     });
-
-  //     await handleSendMessage(file);
-  //   } catch (err) {
-  //     if (DocumentPicker.isCancel(err)) {
-  //       console.log('User cancelled document picker');
-  //     } else {
-  //       console.error('Document pick error:', err);
-  //     }
-  //   }
-  // };
-
-  // Custom setSelectedTab function to log the tab change
   const handleSetSelectedTab = tab => {
     console.log('Tab changed to:', tab);
     setSelectedTab(tab);
@@ -662,7 +504,7 @@ const HomeScreen = ({navigation, route}) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/commonBack.png')}
+      source={require('../../../assets/images/commonBack.png')}
       style={[styles.container, {flex: 1}]}
       imageStyle={{resizeMode: 'stretch', height: '140%'}}
       resizeMode="stretch">
@@ -715,36 +557,12 @@ const HomeScreen = ({navigation, route}) => {
                 currentDate={selectedDate}
                 onDateChange={handleDateChange}
               />
-              {/* <View style={{marginTop: 16}}>
-                <StackedChart chartData={barData} />
-              </View> */}
               <BudgetCard data={budgetCategoryData?.data || []} month={month} />
               <SpendingSummary
                 data={categoryData}
                 month={selectedDate.format('MMM YYYY')}
               />
-              {/* <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-            <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
-              <LinearGradient
-                colors={['#6CFFC2', '#FFFFFF']}
-                start={{x: 0, y: 3}}
-                end={{x: 1, y: 1}}
-                style={styles.superCard}>
-                <View style={styles.superCardHeader}>
-                  <Text style={styles.recentLabel}>Superxpense AI</Text>
-                  <Stars />
-                </View>
-                <Text style={styles.recentLabel2}>
-                  Ask me anything about your personal finance, spending and many
-                  more.
-                </Text>
-                <View style={{alignItems: 'flex-end', marginRight: 20}}>
-                  <Icon name="chevron-forward" size={14} color={Colors.black} />
-                </View>
-              </LinearGradient>
-            </TouchableOpacity> */}
-              {/* </TouchableOpacity>
-            <ContractInstallmentsList contract={contractData || []} /> */}
+      
               <UpcomingBills
                 categoryData={categoryData}
                 navigation={navigation}
@@ -813,7 +631,7 @@ const HomeScreen = ({navigation, route}) => {
                   ) : (
                     <View style={{alignItems: 'center'}}>
                       <Image
-                        source={require('../../assets/images/emptyWallet.png')}
+                        source={require('../../../assets/images/emptyWallet.png')}
                         style={{
                           height: 300,
                           width: '100%',
@@ -832,7 +650,7 @@ const HomeScreen = ({navigation, route}) => {
                         justifyContent: 'center',
                       }}>
                       <Image
-                        source={require('../../assets/images/currentMonth.png')}
+                        source={require('../../../assets/images/currentMonth.png')}
                         style={{
                           height: 200,
                           width: '103%',

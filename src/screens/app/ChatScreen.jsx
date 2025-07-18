@@ -15,12 +15,10 @@ import {
 } from 'react-native';
 import {FontFamily} from '../../utilis/Fonts';
 import {Colors} from '../../utilis/Colors';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {VectorIcon} from '../../icons';
 import {get, post} from '../../utilis/Api';
 import {getItem} from '../../utilis/StorageActions';
 import {API} from '../../utilis/Constant';
-import { pick } from '@react-native-documents/picker'
+import {pick} from '@react-native-documents/picker';
 import Header from '../../component/Header';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ChatInputBar from '../../component/ChatInputBar';
@@ -111,16 +109,12 @@ const HomeScreen = ({navigation, route}) => {
   };
 
   const handleDocumentPick = async () => {
-    console.log("pickerrr");
-    
+    console.log('pickerrr');
+
     try {
-      // const file = await DocumentPicker.pick({
-      //   type: DocumentPicker.types.allFiles,
-      // });
+      const [file] = await pick();
 
-      const [file] = await pick()
-
-      console.log('Selected file:', file); // Debug log
+      console.log('Selected file:', file);
       await handleSendMessage(file);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
@@ -419,67 +413,11 @@ const HomeScreen = ({navigation, route}) => {
                             ))}
                           </View>
                         )}
-                      {/* {!chat.isThinking && (
-                        <Text style={styles.timestampText}>
-                          {chat.timestamp}
-                        </Text>
-                      )} */}
                     </View>
                   ))}
                 </View>
               )}
             </ScrollView>
-            {/* <View style={styles.inputBar}>
-              <TextInput
-                style={styles.input}
-                placeholder="Ask me Anything"
-                placeholderTextColor="#999"
-                value={message}
-                onChangeText={setMessage}
-              />
-              <TouchableOpacity onPress={() => handleSendMessage()}>
-                {sendMessageLoading ? (
-                  <ActivityIndicator size="small" color={Colors.primary} />
-                ) : (
-                  <VectorIcon
-                    name="send"
-                    color={Colors.primary}
-                    size={20}
-                    type="Ionicons"
-                  />
-                )}
-              </TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginHorizontal: 6,
-                  marginBottom: 8,
-                }}>
-                <TouchableOpacity
-                  onPress={handleDocumentPick}
-                  style={[
-                    styles.iconStyle,
-                    {
-                      backgroundColor: Colors.lightestGreen,
-                      borderRadius: 100,
-                      padding: 6,
-                      shadowColor: '#000',
-                      shadowOffset: {width: 0, height: 2},
-                      shadowOpacity: 0.15,
-                      shadowRadius: 2,
-                      elevation: 2,
-                    },
-                  ]}>
-                  <VectorIcon
-                    name="document-attach"
-                    type="Ionicons"
-                    size={22}
-                    color={Colors.background}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View> */}
             <View
               style={{
                 backgroundColor: 'rgba(255,255,255,0.3)',
@@ -490,7 +428,6 @@ const HomeScreen = ({navigation, route}) => {
                 handleSendMessage={handleSendMessage}
                 sendMessageLoading={sendMessageLoading}
                 handleDocumentPick={handleDocumentPick}
-                // handleMicPress={handleMicPress}
               />
             </View>
           </View>

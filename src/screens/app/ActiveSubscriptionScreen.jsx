@@ -6,39 +6,35 @@ import {
   ImageBackground,
   TouchableOpacity,
   Platform,
-  SafeAreaView,
   StatusBar,
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {API} from '../../utilis/Constant';
 import {get} from '../../utilis/Api';
-import {getItem, getStringItem} from '../../utilis/StorageActions';
+import {getItem} from '../../utilis/StorageActions';
 import Header from '../../component/Header';
 
 const ActiveSubscriptionScreen = ({navigation}) => {
   const [subscription, setSubscription] = useState('');
   const [userData, setUserData] = useState('');
-  const [amount, setAmount] = useState('0.00'); // Default amount for trial, change as needed
+  const [amount, setAmount] = useState('0.00');
 
   useEffect(() => {
     const getUserData = async () => {
       const userData = await getItem('userData');
-      //setUserData(userData);
       const token = userData?.data?.accessToken;
       try {
         const data = await get(`${API.getUserData}`, {}, token);
         setSubscription(data.data.activeSubscription.productId);
         setUserData(data.data.activeSubscription);
         if (data.data.activeSubscription.productId === 'trial') {
-          setAmount('0.00'); // Set amount to 0 for trial subscription
+          setAmount('0.00');
         } else if (data.data.activeSubscription.productId === 'yearly') {
-          setAmount('119.99'); // Set amount for yearly subscription
+          setAmount('119.99');
         } else if (data.data.activeSubscription.productId === 'monthly') {
-          setAmount('14.99'); // Set amount for monthly subscription
+          setAmount('14.99');
         }
-        //console.log('UserData:', data.data.activeSubscription);
       } catch (err) {
         console.log(err);
       }
@@ -47,19 +43,11 @@ const ActiveSubscriptionScreen = ({navigation}) => {
     getUserData();
   }, [navigation]);
 
-  // useEffect(() => {
-  //   const getSubscription = async () => {
-  //     const subscriptionn = await getStringItem('subscription');
-  //     setSubscription(subscriptionn);
-  //   };
-  //   getSubscription();
-  // }, [navigation]);
-
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth is zero-based
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    const year = String(date.getFullYear()); // Get last 2 digits
+    const year = String(date.getFullYear());
     return `${day}/${month}/${year}`;
   }
 
@@ -83,9 +71,8 @@ const ActiveSubscriptionScreen = ({navigation}) => {
           />
         </View>
         <View style={styles.cardContainer}>
-          {/* Card with background image */}
           <ImageBackground
-            source={require('../../assets/images/cardBackground.png')} // Update the path based on your project structure
+            source={require('../../assets/images/cardBackground.png')}
             style={styles.card}
             imageStyle={styles.cardImage}>
             <Text style={styles.planLabel}>
@@ -99,7 +86,6 @@ const ActiveSubscriptionScreen = ({navigation}) => {
             </Text>
           </ImageBackground>
 
-          {/* Billing Info Section */}
           <Text style={styles.billingTitle}>Billing Info</Text>
           <View style={styles.billingCard}>
             <View style={styles.billingRow}>
@@ -120,15 +106,9 @@ const ActiveSubscriptionScreen = ({navigation}) => {
             </View>
           </View>
 
-          {/* Description Text */}
           <View style={{flex: 0.8}}>
-            {/* <Text style={styles.descriptionText}>You signup using IOS</Text>
-          <Text style={styles.descriptionSubText}>
-            Your iOS account is automatically{'\n'}billed each month
-          </Text> */}
           </View>
 
-          {/* Upgrade Button */}
           <TouchableOpacity
             style={styles.upgradeButton}
             onPress={() => navigation.navigate('Subscription')}>

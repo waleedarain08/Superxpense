@@ -22,36 +22,6 @@ import {
   TotalWorth,
 } from '../../assets/svgs';
 
-const properties = [
-  {
-    id: 1,
-    status: 'Ongoing Payment',
-    statusColor: Colors.orange,
-    image: require('../../assets/images/cardBackground.png'),
-    price: '1,200,000',
-    name: '2 Bedroom Apartment',
-    location: 'Damac Heights, Dubai Marina, Dubai',
-    brand: require('../../assets/images/america.png'),
-    brandName: 'Damac',
-    statusMsg: 'Payment due in 3 days',
-    action: 'Pay Now',
-    actionColor: Colors.green,
-  },
-  {
-    id: 2,
-    status: '',
-    statusColor: Colors.green,
-    image: require('../../assets/images/cardBackground.png'),
-    price: '1,200,000',
-    name: '1 Studio Bedroom Apartment',
-    location: 'Damac Heights, Dubai Marina, Dubai',
-    unit: 'Unit 124',
-    beds: 3,
-    baths: 2,
-    area: '1,400 sq.ft.',
-  },
-];
-
 const RealEstateBreakdownScreen = ({navigation}) => {
   return (
     <ImageBackground
@@ -60,7 +30,6 @@ const RealEstateBreakdownScreen = ({navigation}) => {
       resizeMode="cover">
       <View style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Header */}
           <View style={styles.headerRow}>
             <Header
               ScreenName="Real Estate"
@@ -68,7 +37,6 @@ const RealEstateBreakdownScreen = ({navigation}) => {
             />
           </View>
 
-          {/* Summary Cards */}
           <View style={styles.summaryRow}>
             <View style={styles.summaryCard}>
               <View
@@ -89,7 +57,6 @@ const RealEstateBreakdownScreen = ({navigation}) => {
               <Text style={styles.summaryValue}>5.00%</Text>
             </View>
           </View>
-          {/* Progress Bar */}
           <View
             style={{
               backgroundColor: 'rgba(255,255,255,0.3)',
@@ -100,7 +67,6 @@ const RealEstateBreakdownScreen = ({navigation}) => {
               marginBottom: 16,
               padding: 16,
             }}>
-            {/* Progress Bar */}
             <View style={styles.progressBarContainer}>
               <View style={styles.progressBarRow}>
                 <View style={styles.progressBarLeft}>
@@ -112,9 +78,6 @@ const RealEstateBreakdownScreen = ({navigation}) => {
               </View>
             </View>
 
-            {/* Visual Progress Bar */}
-
-            {/* Labels */}
             <View style={styles.progressLabelsRow}>
               <View style={styles.progressLabelContainer}>
                 <Text style={styles.progressLabel}>Amount Paid</Text>
@@ -130,7 +93,6 @@ const RealEstateBreakdownScreen = ({navigation}) => {
               </View>
             </View>
           </View>
-          {/* Properties List */}
           <View style={styles.propertiesHeaderRow}>
             <Text style={styles.propertiesHeader}>(5) Total Properties</Text>
             <TouchableOpacity style={styles.seeAllBtn}>
@@ -139,18 +101,15 @@ const RealEstateBreakdownScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity style={styles.card}>
-            {/* Status badge */}
             <View style={[styles.statusBadge, {backgroundColor: Colors.white}]}>
               <ReloadYellow />
               <Text style={[styles.statusText]}>Ongoing Payment</Text>
             </View>
-            {/* Property image */}
             <Image
               source={require('../../assets/images/bathroom.png')}
               style={styles.cardImage}
               resizeMode="cover"
             />
-            {/* Price, brand */}
             <View style={styles.cardRow}>
               <View style={styles.priceBox}>
                 <BlackDirham width={18} height={18} />
@@ -164,13 +123,10 @@ const RealEstateBreakdownScreen = ({navigation}) => {
                 <Text style={styles.brandName}>Damac</Text>
               </View>
             </View>
-            {/* Name, location */}
             <Text style={styles.cardName}>2 Bedroom Apartment</Text>
             <Text style={styles.cardLocation}>
               Damac Heights, Dubai Marina, Dubai
-            </Text>
-            {/* Status message and action */}
-            {/* {item.statusMsg ? ( */}
+            </Text> 
             <View style={styles.cardFooterRow}>
               <Text style={styles.statusMsg}>Payment due in 3 days</Text>
               <TouchableOpacity style={styles.actionBtn}>

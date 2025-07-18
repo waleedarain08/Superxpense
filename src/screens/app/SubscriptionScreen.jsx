@@ -19,14 +19,7 @@ import * as RNIap from 'react-native-iap';
 import {post} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
 import {getItem, setStringItem} from '../../utilis/StorageActions';
-import {
-  LeftBlack,
-  Dirham,
-  Completed,
-  Crown,
-  Subscription,
-  BlubIcon,
-} from '../../assets/svgs';
+import {Dirham, Crown, Subscription, BlubIcon} from '../../assets/svgs';
 import Header from '../../component/Header';
 import {CheckCircle} from '../../icons';
 
@@ -34,7 +27,7 @@ const SubscriptionScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState({});
-  const productIds = ['yearly', 'monthly']; // replace with your real product id(s)
+  const productIds = ['yearly', 'monthly'];
   const [loading, setLoading] = useState(false);
   const [isYearly, setIsYearly] = useState(true);
 
@@ -44,16 +37,12 @@ const SubscriptionScreen = ({navigation}) => {
         await RNIap.initConnection();
         if (Platform.OS === 'ios') {
           const items = await RNIap.getSubscriptions({skus: productIds});
-          //const items = [{productId: 'yearly', title: 'Yearly Subscription', description: 'Premium access for a year at discounted price', localizedPrice: 'AED 119.99', subscriptionPeriodUnitIOS: 'year'}, {productId: 'monthly', title: 'Monthly Subscription', description: 'Allow access to premium features for a month', localizedPrice: 'AED 14.99', subscriptionPeriodUnitIOS: 'month'}];
-          //console.log('subscriptions:', items);
           setProducts(items);
-          // Set initial selected product to yearly
           const yearlyProduct = items.find(item => item.productId === 'yearly');
           if (yearlyProduct) {
             setSelectedProduct(yearlyProduct);
           }
         } else if (Platform.OS === 'android') {
-          //android here
         }
       } catch (err) {
         console.log(err);
@@ -80,15 +69,6 @@ const SubscriptionScreen = ({navigation}) => {
   const buyProduct = async () => {
     const userData = await getItem('userData');
     const token = userData?.data?.accessToken;
-    //console.log('Token:', token);
-    // const selectedProducts = Object.keys(selectedProduct).length;
-    // if (selectedProducts === 0) {
-    //   Alert.alert(
-    //     'Choose subscription plan',
-    //     'You must select a subscription plan before proceeding.',
-    //   );
-    //   return;
-    // }
 
     if (Platform.OS === 'ios') {
       try {
@@ -96,16 +76,13 @@ const SubscriptionScreen = ({navigation}) => {
           sku: selectedProduct.productId,
         });
         const receipt = purchase.transactionReceipt;
-        //console.log('Purchase receipt:', receipt);
-        //console.log('subscriptionId:', selectedProduct.productId);
-        //console.log('Token:', token);
         setLoading(true);
         const response = await post(
           `${API.billingSubscription}`,
           {
             platform: 'apple',
             receipt: receipt,
-            subscriptionId: isYearly?'yearly':'monthly'
+            subscriptionId: isYearly ? 'yearly' : 'monthly',
           },
           token,
         );
@@ -142,7 +119,7 @@ const SubscriptionScreen = ({navigation}) => {
       source={require('../../assets/images/greenishBackground.png')}
       style={styles.container}
       imageStyle={{resizeMode: 'cover'}}>
-        <SubscriptionModal
+      <SubscriptionModal
         visible={modalVisible}
         products={products}
         onBuyProduct={() => buyProduct()}
@@ -151,7 +128,6 @@ const SubscriptionScreen = ({navigation}) => {
         loading={loading}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
         <Header
           ScreenName="Subscription"
           mainContainer={{
@@ -160,12 +136,9 @@ const SubscriptionScreen = ({navigation}) => {
           onBackPress={() => navigation.goBack()}
         />
 
-        {/* Main Content */}
         <View style={styles.content}>
-          {/* Icon */}
           <Subscription />
 
-          {/* Title */}
           <Text style={styles.title}>
             Unlock More with{'\n'}Superxpense Pro
           </Text>
@@ -174,7 +147,6 @@ const SubscriptionScreen = ({navigation}) => {
             more
           </Text>
 
-          {/* Toggle */}
           <View style={styles.toggleContainer}>
             <Text style={[styles.toggleText, !isYearly && styles.activeToggle]}>
               Monthly
@@ -190,7 +162,6 @@ const SubscriptionScreen = ({navigation}) => {
             </Text>
           </View>
 
-          {/* Pricing */}
           <View
             style={{
               width: '100%',
@@ -203,7 +174,7 @@ const SubscriptionScreen = ({navigation}) => {
             <View style={styles.pricingContainer}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Dirham width={22} height={19} />
-                <Text style={styles.price}> {isYearly?119.99:14.99}</Text>
+                <Text style={styles.price}> {isYearly ? 119.99 : 14.99}</Text>
               </View>
               {isYearly && (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -224,8 +195,6 @@ const SubscriptionScreen = ({navigation}) => {
               Built for users who want full control of their finances
             </Text>
           </View>
-
-          {/* Features */}
           <View style={styles.featuresContainer}>
             <FeatureItem text="Connect your bank" />
             <FeatureItem text="Understand your spending" />
@@ -234,7 +203,6 @@ const SubscriptionScreen = ({navigation}) => {
             <FeatureItem text="AI-assisted chatbot" />
           </View>
 
-          {/* Did you know section */}
           <View style={styles.infoSection}>
             <View
               style={{
@@ -251,9 +219,7 @@ const SubscriptionScreen = ({navigation}) => {
             </Text>
           </View>
 
-          {/* Upgrade Button */}
-          <TouchableOpacity style={styles.upgradeButton} 
-          onPress={buyProduct}>
+          <TouchableOpacity style={styles.upgradeButton} onPress={buyProduct}>
             {loading ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
@@ -263,37 +229,56 @@ const SubscriptionScreen = ({navigation}) => {
               </View>
             )}
           </TouchableOpacity>
-          <View style={{ marginTop: 5, alignItems: 'center', marginBottom:20 }}>
-        <Text style={{ color: '#000', fontSize: 10, textAlign: 'center', marginBottom: 5 }}>
-          Payment will be charged to your Apple ID account at confirmation of purchase. 
-          Your subscription automatically renews unless auto-renew is turned off at least 
-          24-hours before the end of the current period. You can manage or cancel your 
-          subscription in your App Store account settings at any time.
-        </Text>
+          <View style={{marginTop: 5, alignItems: 'center', marginBottom: 20}}>
+            <Text
+              style={{
+                color: '#000',
+                fontSize: 10,
+                textAlign: 'center',
+                marginBottom: 5,
+              }}>
+              Payment will be charged to your Apple ID account at confirmation
+              of purchase. Your subscription automatically renews unless
+              auto-renew is turned off at least 24-hours before the end of the
+              current period. You can manage or cancel your subscription in your
+              App Store account settings at any time.
+            </Text>
 
-      <Text style={{ color: '#000', fontSize: 10 ,marginBottom: 10, textAlign: 'center'}}>
-        By subscribing, you agree to our{' '}
-        <Text
-          style={{ textDecorationLine: 'underline', color: Colors.newButtonBack }}
-          onPress={() => {
-            // Replace with your hosted URL
-            Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/terms.html');
-          }}
-        >
-          Terms of Use
-        </Text>{' '}
-        and{' '}
-        <Text
-          style={{ textDecorationLine: 'underline', color: Colors.newButtonBack }}
-          onPress={() => {
-            // Replace with your hosted URL
-            Linking.openURL('https://harmonious-rolypoly-9889e6.netlify.app/privacy.html');
-          }}
-        >
-          Privacy Policy
-        </Text>.
-        </Text>
-        </View>
+            <Text
+              style={{
+                color: '#000',
+                fontSize: 10,
+                marginBottom: 10,
+                textAlign: 'center',
+              }}>
+              By subscribing, you agree to our{' '}
+              <Text
+                style={{
+                  textDecorationLine: 'underline',
+                  color: Colors.newButtonBack,
+                }}
+                onPress={() => {
+                  Linking.openURL(
+                    'https://harmonious-rolypoly-9889e6.netlify.app/terms.html',
+                  );
+                }}>
+                Terms of Use
+              </Text>{' '}
+              and{' '}
+              <Text
+                style={{
+                  textDecorationLine: 'underline',
+                  color: Colors.newButtonBack,
+                }}
+                onPress={() => {
+                  Linking.openURL(
+                    'https://harmonious-rolypoly-9889e6.netlify.app/privacy.html',
+                  );
+                }}>
+                Privacy Policy
+              </Text>
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </ImageBackground>

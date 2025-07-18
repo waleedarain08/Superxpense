@@ -12,20 +12,15 @@ import {
   TextInput, // <-- Add TextInput for search bar
 } from 'react-native';
 import React, {useCallback, useRef, useState, useMemo} from 'react';
-import {Colors} from '../../utilis/Colors';
-
-import {Plus} from '../../assets/svgs';
-import {FontFamily} from '../../utilis/Fonts';
-
-import {API, leanAppToken, isSandbox} from '../../utilis/Constant';
-import {del, get} from '../../utilis/Api';
-import {getItem} from '../../utilis/StorageActions';
-import BankCard from '../../component/BankCard';
+import {Colors} from '../../../utilis/Colors';
+import {FontFamily} from '../../../utilis/Fonts';
+import {getItem} from '../../../utilis/StorageActions';
+import {API, leanAppToken, isSandbox} from '../../../utilis/Constant';
+import {del, get} from '../../../utilis/Api';
 import {useFocusEffect} from '@react-navigation/native';
 import LinkSDK from 'lean-react-native';
-import AccountSwiper from '../../component/AccountSwiper';
-import {ChevronLeft, PlusIcon} from '../../icons';
-import BankAccountCard from '../../component/AccountCard';
+import {ChevronLeft, PlusIcon} from '../../../icons';
+import BankAccountCard from '../../../component/AccountCard';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const AccountsScreen = ({navigation}) => {
@@ -189,182 +184,13 @@ const AccountsScreen = ({navigation}) => {
   }, [banksData, searchText]);
 
   return (
-    // <ImageBackground
-    //   source={require('../../assets/images/greenishBackground.png')}
-    //   style={{flex: 1}}
-    //   imageStyle={{resizeMode: 'cover'}}
-    //   resizeMode="cover">
-    //   <AccountSwiper accounts={banksData} />
-    //   <View>
-    //     {/* <View style={styles.container}>
-    //       <View style={styles.topRow}>
-    //         <TouchableOpacity style={styles.accountSelector}></TouchableOpacity>
-
-    //         <View style={styles.actionButtons}>
-    //           <TouchableOpacity
-    //             style={styles.plusButton}
-    //             onPress={() => navigation.navigate('IssuingCountryScreen')}>
-    //             <Plus />
-    //           </TouchableOpacity>
-    //         </View>
-    //       </View>
-    //     </View> */}
-
-    //     {banksData.length > 0 ? (
-    //       <ScrollView
-    //         contentContainerStyle={styles.section}
-    //         showsVerticalScrollIndicator={false}>
-    //         {/* <Text style={styles.title}>Bank Connections</Text>
-    //         <Text style={styles.subtitle}>
-    //           Handle your bank connection and see transactions in one place.
-    //         </Text> */}
-    //         {banksData.map((item, index) => {
-    //           const reconnectAccounts = item.accounts?.filter(
-    //             acc => acc.status === 'RECONNECT_REQUIRED',
-    //           );
-
-    //           const hasReconnect = reconnectAccounts.length > 0;
-
-    //           if (hasReconnect) {
-    //             console.log(
-    //               `Bank: ${item.bankName} has ${reconnectAccounts.length} account(s) requiring reconnect:`,
-    //             );
-    //             reconnectAccounts.forEach(acc => {
-    //               console.log({
-    //                 bankName: item.bankName,
-    //                 accountId: acc.accountId,
-    //                 reconnectId: acc.reconnectId,
-    //                 accountType: acc.accountType,
-    //               });
-    //             });
-    //           }
-
-    //           return (
-    //             <BankCard
-    //               key={index}
-    //               logo={{uri: item.bankIcon}}
-    //               bankID={item.bankId}
-    //               bankName={item.bankName}
-    //               totalBalance={`${item.bankBalance} AED`} // Placeholder — can calculate from data if available
-    //               accounts={item.accounts}
-    //               onPress={handleAccountPress}
-    //               deletePress={() => deletePress(item)}
-    //               isReconnect={hasReconnect}
-    //             />
-    //           );
-    //         })}
-    //         <TouchableOpacity
-    //           onPress={() => navigation.navigate('IssuingCountryScreen')}
-    //           style={styles.button}>
-    //           <Text style={styles.buttonText}> + Add New Account</Text>
-    //         </TouchableOpacity>
-    //       </ScrollView>
-    //     ) : (
-    //       <View style={{marginTop: '50%'}}>
-    //         <Text style={styles.title}>No active accounts</Text>
-    //         <Text style={styles.subtitle}>
-    //           Add a bank connection to see them here
-    //         </Text>
-    //         <TouchableOpacity
-    //           onPress={() => navigation.navigate('IssuingCountryScreen')}
-    //           style={styles.button}>
-    //           <Text style={styles.buttonText}>Connect Account</Text>
-    //         </TouchableOpacity>
-    //       </View>
-    //     )}
-    //     <LinkSDK
-    //       ref={Lean}
-    //       webViewProps={{
-    //         androidHardwareAccelerationDisabled: true,
-    //       }}
-    //       customerId={customerID}
-    //       appToken={leanAppToken}
-    //       sandbox={isSandbox}
-    //       customization={{
-    //         theme_color: Colors.btnColor,
-    //         button_text_color: Colors.white,
-    //         button_border_radius: 50,
-    //         link_color: Colors.btnColor,
-    //       }}
-    //       callback={async response => {
-    //         console.log('response:', response);
-    //         if (response.status !== 'SUCCESS') {
-    //           Alert.alert('Connection Failed', response.status);
-    //         } else {
-    //           // Alert.alert('Connection Failed', response.status);
-    //           console.log('response:', response);
-    //           setIsReconnect(false);
-    //           fetchAccounts();
-    //         }
-    //       }}
-    //     />
-    //   </View>
-    // </ImageBackground>
-
-    // <ImageBackground
-    //   source={require('../../assets/images/greenishBackground.png')}
-    //   style={{flex: 1}}
-    //   imageStyle={{resizeMode: 'cover'}}
-    //   resizeMode="cover">
-    //   {banksData.length > 0 ? (
-    //     <>
-    //       <AccountSwiper
-    //         accounts={banksData}
-    //         onReconnect={handleAccountPress}
-    //         onDelete={deletePress}
-    //         onPressAccount={handleAccountPress}
-    //       />
-    //       <ScrollView contentContainerStyle={styles.section}>
-    //         {banksData.map((item, index) => {
-    //           const reconnectAccounts = item.accounts?.filter(
-    //             acc => acc.status === 'RECONNECT_REQUIRED',
-    //           );
-    //           const hasReconnect = reconnectAccounts.length > 0;
-
-    //           return (
-    //             <BankCard
-    //               key={index}
-    //               logo={{uri: item.bankIcon}}
-    //               bankID={item.bankId}
-    //               bankName={item.bankName}
-    //               totalBalance={`${item.bankBalance} AED`}
-    //               accounts={item.accounts}
-    //               onPress={handleAccountPress}
-    //               deletePress={() => deletePress(item)}
-    //               isReconnect={hasReconnect}
-    //             />
-    //           );
-    //         })}
-    //         <TouchableOpacity
-    //           onPress={() => navigation.navigate('IssuingCountryScreen')}
-    //           style={styles.button}>
-    //           <Text style={styles.buttonText}> + Add New Account</Text>
-    //         </TouchableOpacity>
-    //       </ScrollView>
-    //     </>
-    //   ) : (
-    //     <View style={{marginTop: '50%'}}>
-    //       <Text style={styles.title}>No active accounts</Text>
-    //       <Text style={styles.subtitle}>
-    //         Add a bank connection to see them here
-    //       </Text>
-    //       <TouchableOpacity
-    //         onPress={() => navigation.navigate('IssuingCountryScreen')}
-    //         style={styles.button}>
-    //         <Text style={styles.buttonText}>Connect Account</Text>
-    //       </TouchableOpacity>
-    //     </View>
-    //   )}
-    // </ImageBackground>
     <ImageBackground
-      source={require('../../assets/images/greenishBackground.png')}
+      source={require('../../../assets/images/greenishBackground.png')}
       style={{flex: 1}}
       imageStyle={{resizeMode: 'cover'}}
       resizeMode="cover">
       <View style={styles.header}>
-        <View
-        // style={{width: '20%'}}
-        >
+        <View>
           <TouchableOpacity
             style={styles.iconButton}
             onPress={() => navigation.navigate('Main')}>
@@ -373,7 +199,6 @@ const AccountsScreen = ({navigation}) => {
         </View>
         <Text style={styles.nameTxt}>Accounts</Text>
         <TouchableOpacity
-          // style={{width: '20%'}}
           onPress={() => navigation.navigate('IssuingCountryScreen')}>
           <View style={styles.iconStyle}>
             <PlusIcon size={20} color={Colors.newButtonBack} />
@@ -381,17 +206,6 @@ const AccountsScreen = ({navigation}) => {
         </TouchableOpacity>
       </View>
       {/* Search Bar at the top */}
-      {/* <View style={styles.searchBarContainer}>
-        <TextInput
-          style={styles.searchBar}
-          placeholder="Search by bank name"
-          placeholderTextColor={Colors.gray || '#888'}
-          value={searchText}
-          onChangeText={setSearchText}
-          autoCorrect={false}
-          autoCapitalize="none"
-        />
-      </View> */}
       <View style={styles.searchContainer}>
         <Icon
           name="search-outline"
@@ -419,12 +233,6 @@ const AccountsScreen = ({navigation}) => {
       </View>
       {filteredBanksData.length > 0 ? (
         <View>
-          {/* <AccountSwiper
-            accounts={banksData}
-            onReconnect={handleAccountPress}
-            onDelete={deletePress}
-            onPressAccount={handleAccountPress}
-          /> */}
           <FlatList
             data={filteredBanksData}
             keyExtractor={(item, index) =>

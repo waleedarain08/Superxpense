@@ -12,10 +12,9 @@ import {
   ImageBackground,
   Image,
 } from 'react-native';
-import PhoneInput from 'react-native-phone-input';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import {Email, LeftBlack} from '../../assets/svgs';
+import {Email} from '../../assets/svgs';
 import {getItem} from '../../utilis/StorageActions';
 import {get, patch} from '../../utilis/Api';
 import {API} from '../../utilis/Constant';
@@ -100,16 +99,6 @@ const EditProfileScreen = ({navigation}) => {
           />
         </View>
         <View style={styles.form}>
-          {/* <Text style={styles.label}>Firstname</Text>
-          <TextInput
-            value={name}
-            onChangeText={text => {
-              setName(text);
-              setChange(true);
-            }}
-            style={styles.input}
-            placeholder="Firstname"
-          /> */}
           <View
             style={{
               backgroundColor: 'rgba(255,255,255,0.5)',
@@ -138,29 +127,15 @@ const EditProfileScreen = ({navigation}) => {
               setName(text);
               setChange(true);
             }}
-            // error={error.email}
             keyboardType="email-address"
             autoCapitalize="none"
             style={[
               styles.input,
-              // error.email && styles.inputError,
               {marginBottom: 24},
             ]}
           />
 
-          {/* <Text style={styles.label}>Email Address</Text>
-          <TextInput
-            value={email}
-            onChangeText={text => {
-              setEmail(text);
-              setChange(true);
-            }}
-            editable={false}
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          /> */}
+         
 
           <IconInput
             svgIcon={<Email />}
@@ -170,16 +145,13 @@ const EditProfileScreen = ({navigation}) => {
               setEmail(text);
               setChange(true);
             }}
-            // error={error.email}
             keyboardType="email-address"
             autoCapitalize="none"
             style={[
               styles.input,
-              // error.email && styles.inputError,
               {marginBottom: 14},
             ]}
           />
-          {/* <Text style={styles.label}>Mobile Number</Text> */}
           <PhoneInputCustom
             value={phone}
             onChangeText={text => {

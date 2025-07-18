@@ -10,16 +10,12 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
-import Header from './Header';
 import {ArrowRight, ChevronLeft, PlusIcon} from '../icons';
-// Replace with your actual icons/images
 import {
   BlackDirham,
   BlackSearchIcon,
   Completed,
   ReloadYellow,
-  SearchIcon,
-  UploadIcon,
 } from '../assets/svgs';
 
 const properties = [
@@ -64,7 +60,6 @@ const StepThree = ({onBack, onContinue}) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.headerRow}>
         <View style={{flex: 0.25}}>
           <TouchableOpacity onPress={onBack} style={styles.headerIconBtn}>
@@ -87,7 +82,6 @@ const StepThree = ({onBack, onContinue}) => {
             key={item.id}
             style={styles.card}
             onPress={() => handleCardPress(item)}>
-            {/* Status badge */}
             <View style={[styles.statusBadge, {backgroundColor: Colors.white}]}>
               {item.status === 'Ongoing Payment' ? (
                 <ReloadYellow />
@@ -96,13 +90,11 @@ const StepThree = ({onBack, onContinue}) => {
               )}
               <Text style={[styles.statusText]}>{item.status}</Text>
             </View>
-            {/* Property image */}
             <Image
               source={item.image}
               style={styles.cardImage}
               resizeMode="cover"
             />
-            {/* Price, brand */}
             <View style={styles.cardRow}>
               <View style={styles.priceBox}>
                 <BlackDirham width={18} height={18} />
@@ -113,10 +105,8 @@ const StepThree = ({onBack, onContinue}) => {
                 <Text style={styles.brandName}>{item.brandName}</Text>
               </View>
             </View>
-            {/* Name, location */}
             <Text style={styles.cardName}>{item.name}</Text>
             <Text style={styles.cardLocation}>{item.location}</Text>
-            {/* Status message and action */}
             {item.statusMsg ? (
               <View style={styles.cardFooterRow}>
                 <Text style={styles.statusMsg}>{item.statusMsg}</Text>

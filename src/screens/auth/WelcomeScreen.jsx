@@ -28,45 +28,36 @@ const WelcomeScreen = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-        <View style={styles.mainContainer}>
-          <View style={styles.header}>
-            <Text style={styles.subtitle}>
+      <View style={styles.mainContainer}>
+        <View style={styles.header}>
+          <Text style={styles.subtitle}>
             Get more out of your {'\n'}money & spending
-            </Text>
-            <Text style={styles.welcome}>SUPERXPENSE</Text>
-          </View>
-
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              style={styles.emailButton}
-              onPress={() => navigation.navigate('SignUp')}>
-              <Text style={styles.buttonText}>Continue with Email</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.appleButton}
-              //onPress={() => navigation.navigate('Main')}
-              >
-              <Apple />
-              <Text style={styles.appleButtonText}>Continue with Apple</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.appleButton}
-              //onPress={() => navigation.navigate('Main')}
-              >
-              <Google />
-              <Text style={styles.appleButtonText}>Continue with Google</Text>
-            </TouchableOpacity>
-            <View style={{height:20}}></View>
-            <TouchableOpacity
-             // onPress={() => navigation.navigate('Main')}
-              style={styles.guestButton}>
-              <Text style={styles.guestText}>Continue as Guest</Text>
-            </TouchableOpacity>
-          </View>
+          </Text>
+          <Text style={styles.welcome}>SUPERXPENSE</Text>
         </View>
 
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={styles.emailButton}
+            onPress={() => navigation.navigate('SignUp')}>
+            <Text style={styles.buttonText}>Continue with Email</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.appleButton}>
+            <Apple />
+            <Text style={styles.appleButtonText}>Continue with Apple</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.appleButton}>
+            <Google />
+            <Text style={styles.appleButtonText}>Continue with Google</Text>
+          </TouchableOpacity>
+          <View style={{height: 20}}></View>
+          <TouchableOpacity style={styles.guestButton}>
+            <Text style={styles.guestText}>Continue as Guest</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </ImageBackground>
   );
 };

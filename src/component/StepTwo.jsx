@@ -10,7 +10,6 @@ import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 import Header from './Header';
 import {Document, Image, UploadIcon} from '../assets/svgs';
-// import { DocumentIcon, ImageIcon } from '../assets/svgs'; // Remove these for now
 
 const files = [
   {

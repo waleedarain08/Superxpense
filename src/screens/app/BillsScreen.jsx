@@ -19,202 +19,204 @@ import Header from '../../component/Header';
 const {width} = Dimensions.get('window');
 
 // Subscription Modal Component - Extracted and memoized to prevent re-creation
-const SubscriptionModal = memo(({
-  selectedBill,
-  subscriptionModalVisible,
-  setSubscriptionModalVisible,
-  selectedPlan,
-  setSelectedPlan,
-  isYearly,
-  setIsYearly
-}) => {
-  if (!selectedBill) return null;
+const SubscriptionModal = memo(
+  ({
+    selectedBill,
+    subscriptionModalVisible,
+    setSubscriptionModalVisible,
+    selectedPlan,
+    setSelectedPlan,
+    isYearly,
+    setIsYearly,
+  }) => {
+    if (!selectedBill) return null;
 
-  const plans = [
-    {
-      name: 'Basic plan- current',
-      price: '13.00',
+    const plans = [
+      {
+        name: 'Basic plan- current',
+        price: '13.00',
+        period: 'month',
+        description: 'Per year',
+      },
+      {
+        name: 'Premium plan',
+        price: '19.50',
+        period: 'month',
+        description: 'Per year',
+      },
+    ];
+
+    const advancedPlan = {
+      name: 'Advanced',
+      price: '30.00',
       period: 'month',
       description: 'Per year',
-    },
-    {
-      name: 'Premium plan',
-      price: '19.50',
-      period: 'month',
-      description: 'Per year',
-    },
-  ];
+    };
 
-  const advancedPlan = {
-    name: 'Advanced',
-    price: '30.00',
-    period: 'month',
-    description: 'Per year',
-  };
+    return (
+      <Modal
+        key="subscription-modal"
+        animationType="slide"
+        transparent={true}
+        visible={subscriptionModalVisible}
+        onRequestClose={() => setSubscriptionModalVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.subscriptionModalContent}>
+            {/* Green indicator bar */}
+            <View style={styles.indicatorBar} />
 
-  return (
-    <Modal
-      key="subscription-modal"
-      animationType="slide"
-      transparent={true}
-      visible={subscriptionModalVisible}
-      onRequestClose={() => setSubscriptionModalVisible(false)}>
-      <View style={styles.modalOverlay}>
-        <View style={styles.subscriptionModalContent}>
-          {/* Green indicator bar */}
-          <View style={styles.indicatorBar} />
+            {/* Header */}
+            <Text style={styles.subscriptionModalTitle}>Manage bill</Text>
+            <Text style={styles.subscriptionModalSubtitle}>
+              Manage and track your bills due date
+            </Text>
 
-          {/* Header */}
-          <Text style={styles.subscriptionModalTitle}>Manage bill</Text>
-          <Text style={styles.subscriptionModalSubtitle}>
-            Manage and track your bills due date
-          </Text>
-
-          {/* Bill Info with Yearly Toggle */}
-          <View style={styles.subscriptionBillInfo}>
-            <View style={styles.subscriptionBillLeft}>
-              <Image
-                source={selectedBill.logo}
-                style={styles.subscriptionBillLogo}
-              />
-              <View style={styles.subscriptionBillDetails}>
-                <Text style={styles.subscriptionBillTitle}>
-                  {selectedBill.title}
-                </Text>
-                <Text style={styles.subscriptionBillDescription}>
-                  Basic plan - Due in 8 days
-                </Text>
-              </View>
-            </View>
-            <View style={styles.subscriptionBillRight}>
-              <Text style={styles.subscriptionBillPrice}>AED 32/ month</Text>
-              <View style={styles.yearlyToggleContainer}>
-                <Text style={styles.yearlyLabel}>Yearly</Text>
-                <Switch
-                  value={isYearly}
-                  onValueChange={value => {
-                    setIsYearly(value);
-                  }}
-                  thumbColor={isYearly ? Colors.white : '#f4f3f4'}
-                  trackColor={{false: '#767577', true: Colors.newButtonBack}}
-                  style={styles.yearlySwitch}
+            {/* Bill Info with Yearly Toggle */}
+            <View style={styles.subscriptionBillInfo}>
+              <View style={styles.subscriptionBillLeft}>
+                <Image
+                  source={selectedBill.logo}
+                  style={styles.subscriptionBillLogo}
                 />
+                <View style={styles.subscriptionBillDetails}>
+                  <Text style={styles.subscriptionBillTitle}>
+                    {selectedBill.title}
+                  </Text>
+                  <Text style={styles.subscriptionBillDescription}>
+                    Basic plan - Due in 8 days
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.subscriptionBillRight}>
+                <Text style={styles.subscriptionBillPrice}>AED 32/ month</Text>
+                <View style={styles.yearlyToggleContainer}>
+                  <Text style={styles.yearlyLabel}>Yearly</Text>
+                  <Switch
+                    value={isYearly}
+                    onValueChange={value => {
+                      setIsYearly(value);
+                    }}
+                    thumbColor={isYearly ? Colors.white : '#f4f3f4'}
+                    trackColor={{false: '#767577', true: Colors.newButtonBack}}
+                    style={styles.yearlySwitch}
+                  />
+                </View>
               </View>
             </View>
-          </View>
 
-          {/* Plans */}
-          <ScrollView
-            style={styles.plansContainer}
-            showsVerticalScrollIndicator={false}>
-            {plans.map((plan, index) => {
-              const isSelected = selectedPlan === plan.name;
-              return (
-                <TouchableOpacity
-                  key={index}
+            {/* Plans */}
+            <ScrollView
+              style={styles.plansContainer}
+              showsVerticalScrollIndicator={false}>
+              {plans.map((plan, index) => {
+                const isSelected = selectedPlan === plan.name;
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.planOption,
+                      isSelected && styles.selectedPlanOption,
+                    ]}
+                    onPress={e => {
+                      e.stopPropagation();
+                      setSelectedPlan(plan.name);
+                    }}>
+                    <Text
+                      style={[
+                        styles.planOptionName,
+                        isSelected && styles.selectedPlanOptionText,
+                      ]}>
+                      {plan.name}
+                    </Text>
+                    <View style={styles.planOptionPricing}>
+                      <Text
+                        style={[
+                          styles.planOptionPrice,
+                          isSelected && styles.selectedPlanOptionText,
+                        ]}>
+                        AED {plan.price}/{plan.period}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.planOptionDescription,
+                          isSelected && styles.selectedPlanOptionText,
+                        ]}>
+                        {plan.description}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+
+              {/* Advanced Section */}
+              <Text style={styles.advancedSectionTitle}>Advanced</Text>
+              <TouchableOpacity
+                style={[
+                  styles.planOption,
+                  selectedPlan === advancedPlan.name &&
+                    styles.selectedPlanOption,
+                ]}
+                onPress={e => {
+                  e.stopPropagation();
+                  setSelectedPlan(advancedPlan.name);
+                }}>
+                <Text
                   style={[
-                    styles.planOption,
-                    isSelected && styles.selectedPlanOption,
-                  ]}
-                  onPress={e => {
-                    e.stopPropagation();
-                    setSelectedPlan(plan.name);
-                  }}>
+                    styles.planOptionName,
+                    selectedPlan === advancedPlan.name &&
+                      styles.selectedPlanOptionText,
+                  ]}>
+                  {advancedPlan.name}
+                </Text>
+                <View style={styles.planOptionPricing}>
                   <Text
                     style={[
-                      styles.planOptionName,
-                      isSelected && styles.selectedPlanOptionText,
+                      styles.planOptionPrice,
+                      selectedPlan === advancedPlan.name &&
+                        styles.selectedPlanOptionText,
                     ]}>
-                    {plan.name}
+                    AED {advancedPlan.price}/{advancedPlan.period}
                   </Text>
-                  <View style={styles.planOptionPricing}>
-                    <Text
-                      style={[
-                        styles.planOptionPrice,
-                        isSelected && styles.selectedPlanOptionText,
-                      ]}>
-                      AED {plan.price}/{plan.period}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.planOptionDescription,
-                        isSelected && styles.selectedPlanOptionText,
-                      ]}>
-                      {plan.description}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+                  <Text
+                    style={[
+                      styles.planOptionDescription,
+                      selectedPlan === advancedPlan.name &&
+                        styles.selectedPlanOptionText,
+                    ]}>
+                    {advancedPlan.description}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
 
-            {/* Advanced Section */}
-            <Text style={styles.advancedSectionTitle}>Advanced</Text>
-            <TouchableOpacity 
-              style={[
-                styles.planOption,
-                selectedPlan === advancedPlan.name &&
-                  styles.selectedPlanOption,
-              ]}
-              onPress={e => {
-                e.stopPropagation();
-                setSelectedPlan(advancedPlan.name);
-              }}>
-              <Text 
-                style={[
-                  styles.planOptionName,
-                  selectedPlan === advancedPlan.name &&
-                    styles.selectedPlanOptionText,
-                ]}>
-                {advancedPlan.name}
+            {/* Action Buttons */}
+            <TouchableOpacity
+              style={styles.subscriptionUpgradeButton}
+              onPress={() => setSubscriptionModalVisible(false)}>
+              <Text style={styles.subscriptionUpgradeButtonText}>
+                Upgrade Subscription
               </Text>
-              <View style={styles.planOptionPricing}>
-                <Text 
-                  style={[
-                    styles.planOptionPrice,
-                    selectedPlan === advancedPlan.name &&
-                      styles.selectedPlanOptionText,
-                  ]}>
-                  AED {advancedPlan.price}/{advancedPlan.period}
-                </Text>
-                <Text 
-                  style={[
-                    styles.planOptionDescription,
-                    selectedPlan === advancedPlan.name &&
-                      styles.selectedPlanOptionText,
-                  ]}>
-                  {advancedPlan.description}
-                </Text>
-              </View>
             </TouchableOpacity>
-          </ScrollView>
 
-          {/* Action Buttons */}
-          <TouchableOpacity 
-            style={styles.subscriptionUpgradeButton}
-            onPress={() => setSubscriptionModalVisible(false)}>
-            <Text style={styles.subscriptionUpgradeButtonText}>
-              Upgrade Subscription
+            <TouchableOpacity
+              style={styles.subscriptionCancelButton}
+              onPress={() => setSubscriptionModalVisible(false)}>
+              <Text style={styles.subscriptionCancelButtonText}>
+                Cancel Subscription
+              </Text>
+            </TouchableOpacity>
+
+            {/* Footer */}
+            <Text style={styles.subscriptionFooter}>
+              If you cancel this subscription, your service will end on 4th
+              March 2026
             </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.subscriptionCancelButton}
-            onPress={() => setSubscriptionModalVisible(false)}>
-            <Text style={styles.subscriptionCancelButtonText}>
-              Cancel Subscription
-            </Text>
-          </TouchableOpacity>
-
-          {/* Footer */}
-          <Text style={styles.subscriptionFooter}>
-            If you cancel this subscription, your service will end on 4th
-            March 2026
-          </Text>
+          </View>
         </View>
-      </View>
-    </Modal>
-  );
-});
+      </Modal>
+    );
+  },
+);
 
 SubscriptionModal.displayName = 'SubscriptionModal';
 
@@ -502,8 +504,6 @@ const BillsScreen = ({navigation}) => {
     );
   };
 
-  
-
   return (
     <>
       {showIntro ? <IntroScreen /> : <BillsDataScreen />}
@@ -590,7 +590,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 18,
     marginTop: 60,
-    // marginHorizontal: 14,
   },
   headerContainer: {
     paddingBottom: 30,

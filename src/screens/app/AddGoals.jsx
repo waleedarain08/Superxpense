@@ -21,15 +21,7 @@ import {
   PlusIcon,
 } from '../../icons';
 import DualRingProgress from '../../component/DualRingProgress';
-import LinearGradient from 'react-native-linear-gradient';
 import {
-  Goal,
-  Car,
-  PopCorn,
-  Heart,
-  Bulb,
-  Plus,
-  Credit,
   Houses,
   Cars,
   Rings,

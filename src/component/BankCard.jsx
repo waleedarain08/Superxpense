@@ -16,7 +16,6 @@ const BankCard = ({
 }) => {
   return (
     <View style={styles.card}>
-      {/* Top: Logo, Bank name, Balance, Options */}
       <View style={styles.topRow}>
         <View style={styles.bankLogoWrapper}>
           <Image source={logo} style={styles.bankLogo} resizeMode="contain" />
@@ -31,9 +30,7 @@ const BankCard = ({
         </TouchableOpacity>
       </View>
 
-      {/* Bottom: Accounts */}
       <View style={styles.accountSection}>
-        {/* Timeline */}
         <View style={styles.timeline}>
           <View style={styles.timelineItem}>
             {accounts.map((_, index) => (
@@ -47,7 +44,6 @@ const BankCard = ({
           </View>
         </View>
 
-        {/* Account details */}
         <View style={styles.accountDetails}>
           {accounts.map((account, index) => (
             <TouchableOpacity
@@ -113,7 +109,6 @@ const styles = StyleSheet.create({
   bankLogo: {
     width: 35,
     height: 35,
-    //tintColor: Colors.lightestGrayTwo,
   },
   bankInfo: {
     flex: 1,
@@ -137,7 +132,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
     flexShrink: 0,
-    paddingTop: 4, // starts just below the top section
+    paddingTop: 4,
   },
   timelineItem: {
     alignItems: 'center',

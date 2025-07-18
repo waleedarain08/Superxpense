@@ -1,7 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {CarGreen, Invoice} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 import {Colors} from '../utilis/Colors';
 
@@ -39,15 +38,13 @@ const BudgetCard = ({data = [], month}) => {
     'December',
   ];
 
-  const readableMonth = monthNames[(month ?? 1) - 1]; // subtract 1 because array is 0-indexed
+  const readableMonth = monthNames[(month ?? 1) - 1];
 
   return (
     <LinearGradient
       colors={['#ccf3f3', '#d0f4f4']}
       style={styles.gradientBackground}>
       <View style={styles.container}>
-        {/* <View style={styles.container}> */}
-        {/* Top Text Section */}
         <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
         <Text style={styles.statusText}>
           {Number(budgetLeft).toFixed(2) > 0
@@ -57,17 +54,15 @@ const BudgetCard = ({data = [], month}) => {
               )} AED less from your budget`}
         </Text>
 
-        {/* Progress Bar with Linear Gradient */}
         <View style={styles.progressBarBackground}>
           <LinearGradient
-            colors={[Colors.newButtonBack, '#FFFFFF40']} // Gradient colors for the progress bar
+            colors={[Colors.newButtonBack, '#FFFFFF40']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
             style={[styles.progressBarFill, {width: `${percentageUsed}%`}]}
           />
         </View>
 
-        {/* Category Budgets */}
         <Text style={styles.topBudgetText}>Top Monthly Budget</Text>
         {Array.isArray(data) &&
           data.map((item, index) => (

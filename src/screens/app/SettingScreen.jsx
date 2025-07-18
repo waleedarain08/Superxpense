@@ -59,7 +59,7 @@ const SettingScreen = ({navigation}) => {
         <TouchableOpacity
           style={{
             position: 'absolute',
-            top: 69,
+            top: Platform.OS === 'ios' ? 69 : 45,
             left: 20,
             backgroundColor: Colors.white,
             width: 32,

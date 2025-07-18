@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 import {Personal, Dirham, House, GreenArrow, BlackDirham} from '../assets/svgs';
@@ -16,16 +16,18 @@ const NoAssetDataCard = ({
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.leftSection}>
         <View style={styles.iconCircle}>
-          <BlurView
-            style={[
-              StyleSheet.absoluteFill,
-              {zIndex: 500, borderRadius: 22, overflow: 'hidden'},
-            ]}
-            blurType="light"
-            blurAmount={1}
-            reducedTransparencyFallbackColor="white"
-            blurRadius={10}
-          />
+          {Platform.OS === 'ios' && (
+            <BlurView
+              style={[
+                StyleSheet.absoluteFill,
+                {zIndex: 500, borderRadius: 22, overflow: 'hidden'},
+              ]}
+              blurType="light"
+              blurAmount={1}
+              reducedTransparencyFallbackColor="white"
+              blurRadius={10}
+            />
+          )}
           <House />
         </View>
         <View style={{marginLeft: 10}}>

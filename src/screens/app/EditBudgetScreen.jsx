@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import {Colors} from '../../utilis/Colors';
 import {FontFamily} from '../../utilis/Fonts';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import Header from '../../component/Header';
 import {Amount, ShoppingGreen} from '../../assets/svgs';
 import {PlusIcon} from '../../icons';
@@ -89,7 +88,6 @@ const EditBudgetScreen = ({navigation}) => {
   };
 
   const handleUpdate = () => {
-    // Handle update logic here
     console.log('Budget Amount:', budgetAmount);
     console.log('Category Budgets:', categoryBudgets);
     navigation.goBack();
@@ -99,7 +97,6 @@ const EditBudgetScreen = ({navigation}) => {
     <View style={styles.categoryCard}>
       <View style={styles.categoryHeader}>
         <View style={[styles.categoryIcon]}>
-          {/* <Icon name={category.icon} size={18} color="white" />˝ */}
           <ShoppingGreen />
         </View>
         <Text style={styles.categoryName}>{category.name}</Text>
@@ -139,7 +136,6 @@ const EditBudgetScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
         <Header
           ScreenName="Edit Budget"
           onBackPress={() => navigation.goBack()}
@@ -150,13 +146,9 @@ const EditBudgetScreen = ({navigation}) => {
             borderWidth: 1,
             borderColor: Colors.white,
             borderRadius: 20,
-            // padding: 16,
-            // margin: 16,
           }}>
-          {/* Subtitle */}
           <Text style={styles.subtitle}>Limit your spending</Text>
 
-          {/* Budget Amount Section */}
           <View style={styles.inputRow}>
             <Amount style={{marginRight: 8}} />
             <TextInput
@@ -170,7 +162,6 @@ const EditBudgetScreen = ({navigation}) => {
             <Text style={styles.inputSuffix}>AED</Text>
           </View>
 
-          {/* Expenses Label */}
           <View style={styles.expensesHeader}>
             <Text style={styles.expensesLabel}>Expenses</Text>
             <TouchableOpacity style={styles.addButton}>
@@ -178,14 +169,12 @@ const EditBudgetScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
 
-          {/* Categories Grid */}
           <View style={styles.categoriesGrid}>
             {budgetCategories.map(category => (
               <CategoryBudgetCard key={category.id} category={category} />
             ))}
           </View>
 
-          {/* Update Button */}
           <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
             <Text style={styles.updateButtonText}>Update</Text>
           </TouchableOpacity>
@@ -359,7 +348,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.semiBold,
     color: Colors.newWhite,
   },
-  // Missing styles that were causing the crash
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',

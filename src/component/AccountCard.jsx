@@ -1,169 +1,3 @@
-// import React from 'react';
-// import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
-// import {Colors} from '../utilis/Colors';
-// import {Dirham, ReloadSvg} from '../assets/svgs';
-// import {FontFamily} from '../utilis/Fonts';
-
-// const BankAccountCard = ({
-//   bankName,
-//   lastSynced,
-//   accountType,
-//   amount,
-//   accountNumber,
-//   onDelete,
-//   image,
-//   reloadPressed,
-// }) => {
-//   return (
-//     <View style={styles.card}>
-//       {/* Top Row */}
-//       <View style={styles.row}>
-//         <View style={styles.bankInfo}>
-//           <Image
-//             source={{
-//               uri: image,
-//             }}
-//             style={styles.logo}
-//           />
-//           <Text style={styles.bankName}>{bankName}</Text>
-//         </View>
-//         {/* <Text style={styles.accountNumber}>{accountNumber}</Text> */}
-//       </View>
-
-//       {/* Sync and Balance */}
-//       <View style={styles.infoRow}>
-//         <View>
-//           <Text style={styles.label}>last synced</Text>
-//           <View style={styles.syncRow}>
-//             <Text style={styles.syncText}>{lastSynced}</Text>
-//             <TouchableOpacity style={styles.refreshBtn} onPress={reloadPressed}>
-//               <ReloadSvg width={8} height={8} />
-//             </TouchableOpacity>
-//           </View>
-//         </View>
-//         <View>
-//           <Text style={styles.label}>{accountType}</Text>
-//           <View
-//             style={{
-//               flexDirection: 'row',
-//               justifyContent: 'center',
-//               alignItems: 'center',
-//               gap: 4,
-//             }}>
-//             <Dirham />
-//             <Text style={styles.amount}>{amount}</Text>
-//           </View>
-//         </View>
-//       </View>
-
-//       {/* Divider */}
-//       <View style={styles.divider} />
-
-//       {/* Delete Button */}
-//       <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
-//         <Text style={styles.deleteText}>Delete Account</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   card: {
-//     backgroundColor: 'rgba(255,255,255,0.3)',
-//     borderRadius: 20,
-//     padding: 16,
-//     margin: 16,
-//     borderColor: Colors.white,
-//     borderWidth: 1,
-//   },
-//   row: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//   },
-//   bankInfo: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   logo: {
-//     width: 36,
-//     height: 36,
-//     resizeMode: 'contain',
-//     marginRight: 8,
-//     borderWidth: 1,
-//     borderColor: Colors.white,
-//     borderRadius: 50,
-//   },
-//   bankName: {
-//     fontSize: 14,
-//     fontFamily: FontFamily.medium,
-//     color: Colors.txtColor,
-//   },
-//   accountNumber: {
-//     fontSize: 14,
-//     fontFamily: FontFamily.medium,
-//     color: Colors.txtColor,
-//   },
-//   infoRow: {
-//     marginTop: 16,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//   },
-//   label: {
-//     fontSize: 14,
-//     fontFamily: FontFamily.medium,
-//     color: Colors.grayIcon,
-//     marginBottom: 12,
-//   },
-//   syncRow: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   syncText: {
-//     fontSize: 12,
-//     fontFamily: FontFamily.medium,
-//     color: Colors.txtColor,
-//   },
-//   syncIcon: {
-//     marginLeft: 8,
-//     fontSize: 16,
-//     color: '#66ccc4',
-//   },
-//   amount: {
-//     fontSize: 16,
-//     fontFamily: FontFamily.semiBold,
-//     color: Colors.newButtonBack,
-//   },
-//   divider: {
-//     height: 1,
-//     backgroundColor: Colors.white,
-//     marginVertical: 16,
-//   },
-//   deleteButton: {
-//     backgroundColor: '#FFC7C7',
-//     borderRadius: 30,
-//     paddingVertical: 12,
-//     alignItems: 'center',
-//   },
-//   deleteText: {
-//     color: '#D31B1B',
-//     fontSize: 14,
-//     fontFamily: FontFamily.medium,
-//   },
-//   refreshBtn: {
-//     marginLeft: 8,
-//     backgroundColor: '#28A08C1A',
-//     height: 16,
-//     width: 16,
-//     borderRadius: 40,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     padding:2,
-//   },
-// });
-
-// export default BankAccountCard;
-
 import React from 'react';
 import {
   View,
@@ -176,12 +10,10 @@ import {
 import {Colors} from '../utilis/Colors';
 import {Dirham, ReloadSvg} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const BankAccountCard = ({
   bankName,
   lastSynced,
-  accountNumber,
   image,
   accounts = [],
   onDelete,
@@ -191,7 +23,7 @@ const BankAccountCard = ({
 }) => {
   // Filter only "Current Account"
   const filteredAccounts = accounts.filter(
-    acc => acc.accountType === 'Current Account'
+    acc => acc.accountType === 'Current Account',
   );
 
   const hasReconnect = filteredAccounts.some(
@@ -206,9 +38,6 @@ const BankAccountCard = ({
           <Image source={{uri: image}} style={styles.logo} />
           <Text style={styles.bankName}>{bankName}</Text>
         </View>
-        {/* <TouchableOpacity onPress={onDelete}>
-          <Icon name="delete" size={22} color="#D31B1B" />
-        </TouchableOpacity> */}
       </View>
 
       {/* Accounts List */}
@@ -224,8 +53,7 @@ const BankAccountCard = ({
                 ? onReconnect?.(item)
                 : onPressAccount?.(item)
             }>
-            <View
-              style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+            <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
               {item.status === 'RECONNECT_REQUIRED' ? (
                 <View style={styles.reconnectIcon}>
                   <ReloadSvg width={12} height={12} />

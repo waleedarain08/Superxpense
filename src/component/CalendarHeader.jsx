@@ -1,21 +1,19 @@
-// CalendarHeader.js
+
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
-import LinearGradient from 'react-native-linear-gradient';
 
 const CalendarHeader = ({currentDate, onDateChange}) => {
   const handleMonthChange = direction => {
     const newDate = moment(currentDate).add(direction, 'months');
-    onDateChange(newDate); // Notify parent
+    onDateChange(newDate);
   };
 
   return (
     <View style={styles.tabContainer}>
-      {/* <View style={styles.card}> */}
       <TouchableOpacity onPress={() => handleMonthChange(-1)}>
         <Icon name="chevron-back" size={14} color={Colors.black} />
       </TouchableOpacity>

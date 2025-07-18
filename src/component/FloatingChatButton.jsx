@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {Colors} from '../utilis/Colors';
 import {FontFamily} from '../utilis/Fonts';
 
@@ -12,7 +12,6 @@ const FloatingChatButton = ({navigation}) => {
         source={require('../assets/images/newChatIcon.png')}
         style={styles.icon}
       />
-      {/* <Text style={styles.text}>Chat with AI</Text> */}
     </TouchableOpacity>
   );
 };
@@ -22,18 +21,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 80,
     zIndex: 1000,
-    // backgroundColor: '#000',
-    // borderRadius: 30,
-    // height: 48,
-    // width: 164,
     width: 120,
     height: 120,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    // justifyContent: 'center',
-    // flexDirection: 'row',
-    // alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: {width: 1, height: 1},

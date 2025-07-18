@@ -74,7 +74,6 @@ const AlertNotificationScreen = ({navigation}) => {
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}>
-        {/* Reminders Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, {marginTop: 0}]}>Reminders</Text>
           <View style={styles.sectionContainer}>
@@ -112,7 +111,6 @@ const AlertNotificationScreen = ({navigation}) => {
             />
           </View>
 
-          {/* Account & Security Section */}
           <View>
             <Text style={styles.sectionTitle}>Account & Security</Text>
             <View style={styles.sectionContainer}>
@@ -206,7 +204,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: FontFamily.regular,
     color: Colors.grayIcon,
-    // lineHeight: 16,
   },
   disabledSwitch: {
     opacity: 0.5,

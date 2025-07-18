@@ -1,15 +1,5 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Platform,
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/Ionicons';
+import React from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../utilis/Colors';
 import {
   DirhamWhite,
@@ -17,12 +7,9 @@ import {
   GreenArrow,
   Notification,
   SearchIcon,
-  TiltArrow,
 } from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 import {ChevronLeft} from '../icons';
-
-const {width} = Dimensions.get('window');
 
 const PortHeader = ({
   navigation,
@@ -35,7 +22,6 @@ const PortHeader = ({
 }) => {
   return (
     <View>
-      {/* Top Row: Avatar and Search */}
       <View style={styles.topRow}>
         <View style={{flex: 1}}>
           <TouchableOpacity
@@ -63,7 +49,6 @@ const PortHeader = ({
         </View>
       </View>
 
-      {/* Big Impact Section */}
       <View style={styles.bigImpactContainer}>
         <Text style={styles.bigImpactText}>Total Investment</Text>
         <View
@@ -177,7 +162,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, 0.27)', // translucent white
+    backgroundColor: 'rgba(255, 255, 255, 0.27)',
     paddingHorizontal: 8,
     paddingVertical: 5,
     borderRadius: 50,
@@ -192,7 +177,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   activeTab: {
-    backgroundColor: Colors.txtColor, // dark fill for active
+    backgroundColor: Colors.txtColor,
   },
   tabText: {
     color: Colors.txtColor,

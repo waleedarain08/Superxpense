@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {CarGreen, Invoice} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 import {Colors} from '../utilis/Colors';
 import {Down} from '../icons';
@@ -39,7 +38,7 @@ const BudgetCardd = ({data = [], month}) => {
     'December',
   ];
 
-  const readableMonth = monthNames[(month ?? 1) - 1]; // subtract 1 because array is 0-indexed
+  const readableMonth = monthNames[(month ?? 1) - 1];
 
   const toggleExpanded = () => {
     setExpanded(prev => !prev);
@@ -52,48 +51,7 @@ const BudgetCardd = ({data = [], month}) => {
     : [];
 
   return (
-    // <View style={styles.container}>
-    //   {/* Top Text Section */}
-    //   <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
-    //   <Text style={styles.statusText}>
-    //     {Number(budgetLeft).toFixed(2) > 0
-    //       ? `Great job! you have ${Number(budgetLeft).toFixed(2)} AED left`
-    //       : `You have behind by ${Number(budgetLeft).toFixed(
-    //           2,
-    //         )} AED from your budget`}
-    //   </Text>
-
-    //   {/* Progress Bar with Linear Gradient */}
-    //   <View style={styles.progressBarBackground}>
-    //     <LinearGradient
-    //       colors={['#0D9488', '#FFFFFF40']} // Gradient colors for the progress bar
-    //       start={{x: 0, y: 0}}
-    //       end={{x: 1, y: 0}}
-    //       style={[styles.progressBarFill, {width: `${percentageUsed}%`}]}
-    //     />
-    //   </View>
-
-    //   {/* Category Budgets */}
-    //   <View style={styles.budgetHeader}>
-    //     <Text style={styles.topBudgetText}>Total Planned Expenses</Text>
-    //     <Down size={15} />
-    //   </View>
-    //   {Array.isArray(data) &&
-    //     data.map((item, index) => (
-    //       <View key={index} style={styles.budgetItem}>
-    //         <View style={styles.dotsStyle} />
-    //         <Text style={styles.label}>{item?.category ?? 'Unknown'}</Text>
-    //         <Text style={styles.amount}>
-    //           <Text style={{color: Colors.txtColor}}>
-    //             {item?.actualAmount ?? 0}
-    //           </Text>{' '}
-    //           of {item?.budgetAmount ?? 0} AED
-    //         </Text>
-    //       </View>
-    //     ))}
-    // </View>
     <View style={styles.container}>
-      {/* Top Text Section */}
       <Text style={styles.monthLabel}>{readableMonth} Budget</Text>
       <Text style={styles.statusText}>
         {Number(budgetLeft).toFixed(2) > 0
@@ -103,7 +61,6 @@ const BudgetCardd = ({data = [], month}) => {
             )} AED from your budget`}
       </Text>
 
-      {/* Progress Bar with Linear Gradient */}
       <View style={styles.progressBarBackground}>
         <LinearGradient
           colors={[Colors.newButtonBack, '#FFFFFF40']}
@@ -113,7 +70,6 @@ const BudgetCardd = ({data = [], month}) => {
         />
       </View>
 
-      {/* Category Budgets Header */}
       <View style={styles.budgetHeader}>
         <Text style={styles.topBudgetText}>Total Planned Expenses</Text>
         {Array.isArray(data) && data.length > 3 && (
@@ -123,7 +79,6 @@ const BudgetCardd = ({data = [], month}) => {
         )}
       </View>
 
-      {/* Budget Items */}
       {visibleItems.map((item, index) => (
         <View key={index} style={styles.budgetItem}>
           <View style={styles.dotsStyle} />

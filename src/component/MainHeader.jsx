@@ -8,13 +8,10 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../utilis/Colors';
 import {DirhamWhite, Notification, TiltArrow} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
-
-const {width} = Dimensions.get('window');
 
 const MainHeader = ({
   navigation,
@@ -36,7 +33,6 @@ const MainHeader = ({
 
   return (
     <View>
-      {/* Top Row: Avatar and Search */}
       <View style={styles.topRow}>
         <TouchableOpacity
           style={styles.avatar}
@@ -58,7 +54,6 @@ const MainHeader = ({
             onSubmitEditing={handleSearch}
             returnKeyType="done"
             underlineColorAndroid="transparent"
-            // Fix vertical alignment for Android
             textAlignVertical={Platform.OS === 'android' ? 'center' : 'auto'}
           />
         </View>
@@ -70,7 +65,6 @@ const MainHeader = ({
         </TouchableOpacity>
       </View>
 
-      {/* Big Impact Section */}
       <View style={styles.bigImpactContainer}>
         <Text style={styles.bigImpactText}>Big impact</Text>
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>

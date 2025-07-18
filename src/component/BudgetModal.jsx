@@ -12,18 +12,8 @@ import {
   ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Flame, Gros, Home, Income, PopCorn, Soda} from '../assets/svgs';
 import {FontFamily} from '../utilis/Fonts';
 import {Colors} from '../utilis/Colors';
-
-const categories = [
-  {id: '1', label: 'Entertainment', color: '#6366F1', icon: <PopCorn />},
-  {id: '2', label: 'Home and Utilities', color: '#A855F7', icon: <Home />},
-  {id: '3', label: 'Groceries', color: '#F87171', icon: <Gros />},
-  {id: '4', label: 'Food & Drinks', color: '#06B6D4', icon: <Soda />},
-  {id: '5', label: 'Income', color: '#8B5CF6', icon: <Income />},
-  {id: '6', label: 'Lifestyle', color: '#34D399', icon: <Flame />},
-];
 
 const BudgetModal = ({visible, onClose, categories = [], onSubmit}) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -71,10 +61,6 @@ const BudgetModal = ({visible, onClose, categories = [], onSubmit}) => {
       setSelectedCategories(prev => [...prev, category]);
     }
   };
-
-  //console.log(categories);
-
-  const showSubmitButton = selectedCategories.length > 0;
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
@@ -170,7 +156,6 @@ const styles = StyleSheet.create({
     marginTop: 80,
     borderWidth: 1,
     borderColor: Colors.white,
-    //minHeight: '85%',
   },
   headerRow: {
     flexDirection: 'row',

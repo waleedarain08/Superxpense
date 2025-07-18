@@ -3,12 +3,10 @@ import {
   StyleSheet,
   View,
   Image,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
-// import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {navigationRef} from './NavigationRef';
 import {Colors} from '../utilis/Colors';
@@ -19,8 +17,8 @@ import SplashScreen from '../screens/auth/SplashScreen';
 import WelcomeScreen from '../screens/auth/WelcomeScreen';
 import BudgetsScreen from '../screens/app/BudgetsScreen';
 import BillsScreen from '../screens/app/BillsScreen';
-import AccountsScreen from '../screens/app/AccountsScreen';
-import HomeScreen from '../screens/app/HomeScreen';
+import AccountsScreen from '../screens/app/Home/AccountsScreen';
+import HomeScreen from '../screens/app/Home/HomeScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 import OnBoardingScreen from '../screens/auth/OnBoardingScreen';
@@ -194,196 +192,9 @@ const BottomNavigator = () => {
     ({focused, color, size}) =>
       <Icon name={name} size={28} color={focused ? 'red' : 'white'} />;
   return (
-    // <View style={{backgroundColor: 'black', flex: 1}}>
-    //   {/* <BottomStack.Navigator
-    //     initialRouteName="Home"
-    //     screenOptions={{
-    //       tabBarStyle: {
-    //         backgroundColor: Colors.tabBarbackground,
-    //         borderTopWidth: 0,
-    //         // marginBottom: 7,
-    //         height: Platform.OS === 'ios' ? 80 : 60,
-    //       },
-    //       tabBarShowLabel: false,
-    //       tabBarItemStyle: {
-    //         justifyContent: 'center',
-    //         alignItems: 'center',
-    //       },
-    //       tabBarShowLabel: true,
-    //       tabBarLabelStyle: {
-    //         fontSize: 12,
-    //         marginTop: 2,
-    //       },
-    //       tabBarActiveTintColor: Colors.activeTabColor,
-    //       tabBarInactiveTintColor: Colors.inactiveTabColor,
-    //     }}> */}
-    //   <BottomStack.Navigator
-    //     initialRouteName="Home"
-    //     tabBar={props => <CustomTabBar {...props} />}
-    //     >
-    //     {/* <BottomStack.Screen
-    //       name="Home"
-    //       component={HomeScreen}
-    //       options={{
-    //         headerShown: false,
-    //         tabBarIcon: ({focused}) => (
-    //           <Image
-    //             source={require('../assets/images/homeBottom.png')}
-    //             style={{
-    //               tintColor: focused
-    //                 ? Colors.activeTabColor
-    //                 : Colors.inactiveTabColor,
-    //               height: 21,
-    //               width: 21,
-    //             }}
-    //           />
-    //         ),
-    //       }}
-    //     /> */}
-    //     <BottomStack.Screen
-    //       name="Home"
-    //       component={HomeScreen}
-    //       options={{
-    //         headerShown: false,
-    //         tabBarIcon: ({focused}) => (
-    //           <Image
-    //             source={require('../assets/images/homeBottom.png')}
-    //             style={{
-    //               tintColor: focused
-    //                 ? Colors.white
-    //                 : Colors.inactiveTabColor,
-    //               height: 21,
-    //               width: 21,
-    //             }}
-    //           />
-    //         ),
-    //         tabBarLabel: 'Home',
-    //       }}
-    //     />
-    //     <BottomStack.Screen
-    //       name="Budgets"
-    //       component={BudgetsScreen}
-    //       options={{
-    //         headerShown: false,
-    //         tabBarIcon: ({focused}) => (
-    //           <Image
-    //             source={require('../assets/images/chartBottom.png')}
-    //             style={{
-    //               tintColor: focused
-    //                 ? Colors.white
-    //                 : Colors.inactiveTabColor,
-    //               height: 21,
-    //               width: 21,
-    //             }}
-    //           />
-    //         ),
-    //       }}
-    //     />
-    //     {/* <BottomStack.Screen
-    //       name="Bills"
-    //       component={BillsScreen}
-    //       options={{
-    //         headerShown: false,
-    //         tabBarLabel: () => null, // 👈 This hides the label
-    //         tabBarIcon: ({focused}) => (
-    //           <Image
-    //             source={require('../assets/images/bottomIcon.png')}
-    //             style={{
-    //               height: 45,
-    //               width: 45,
-    //               marginTop: 10,
-    //             }}
-    //           />
-    //         ),
-    //       }}
-    //     /> */}
-    //     {/* <BottomStack.Screen
-    //       name="Dummy"
-    //       component={() => null} // Blank component
-    //       options={{
-    //         tabBarLabel: () => null,
-    //         tabBarIcon: ({focused}) => (
-    //           <Image
-    //             source={require('../assets/images/bottomIcon.png')}
-    //             style={{
-    //               height: 45,
-    //               width: 45,
-    //               marginTop: 10,
-    //             }}
-    //           />
-    //         ),
-    //         tabBarButton: props => (
-    //           <TouchableWithoutFeedback onPress={() => {}}>
-    //             <View {...props} />
-    //           </TouchableWithoutFeedback>
-    //         ),
-    //       }}
-    //     /> */}
-    //     <BottomStack.Screen
-    //       name="Accounts"
-    //       component={AccountsScreen}
-    //       options={{
-    //         headerShown: false,
-    //         tabBarIcon: ({focused}) => (
-    //           <Image
-    //             source={require('../assets/images/bulbBottom.png')}
-    //             style={{
-    //               tintColor: focused
-    //                 ? Colors.white
-    //                 : Colors.inactiveTabColor,
-    //               height: 21,
-    //               width: 21,
-    //             }}
-    //           />
-    //         ),
-    //       }}
-    //     />
-    //     {/* <BottomStack.Screen
-    //       name="Goals"
-    //       component={AddGoals}
-    //       options={{
-    //         headerShown: false,
-    //         tabBarIcon: ({focused}) => (
-    //           <Image
-    //             source={
-    //               focused
-    //                 ? require('../assets/images/GoalActive.png')
-    //                 : require('../assets/images/Goal.png')
-    //             }
-    //             style={{
-    //               height: 25,
-    //               width: 25,
-    //             }}
-    //           />
-    //         ),
-    //       }}
-    //     /> */}
-    //     <BottomStack.Screen
-    //       name="Settings"
-    //       component={SettingScreen}
-    //       options={{
-    //         headerShown: false,
-    //         tabBarIcon: ({focused}) => (
-    //           <Image
-    //             source={require('../assets/images/settingsBottom.png')}
-    //             style={{
-    //               tintColor: focused
-    //                 ? Colors.white
-    //                 : Colors.inactiveTabColor,
-    //               height: 21,
-    //               width: 21,
-    //             }}
-    //           />
-    //         ),
-    //       }}
-    //     />
-    //   </BottomStack.Navigator>
-    // </View>
     <Tab.Navigator
       screenOptions={{
-        // tabBarActiveTintColor: Colors.newButtonBack,
         tabBarActiveBackgroundColor: 'rgba(255, 255, 255, 0.85)',
-        //tabBarInactiveBackgroundColor: '#C1E3E9',
         headerShown: false,
         tabBarButton: {
           backgroundColor: '#00A3FF',
@@ -444,30 +255,6 @@ const BottomNavigator = () => {
         name="Home"
         component={HomeScreen}
       />
-
-      {/* <Tab.Screen
-        options={{
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={require('../assets/images/chartBottom.png')}
-              style={{
-                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused ? 25 : 20,
-                width: focused ? 25 : 20,
-              }}
-            />
-          ),
-          tabBarLabel: 'Budget', // Focused label color
-          tabBarLabelStyle: {
-            fontSize: 11,
-            marginTop: 7,
-          },
-          tabBarInactiveTintColor: 'gray',
-        }}
-        name="Budgets"
-        component={BudgetsScreen}
-      /> */}
-
       <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
@@ -513,35 +300,11 @@ const BottomNavigator = () => {
         name="Bills"
         component={BillsScreen}
       />
-
-      {/* <Tab.Screen
-        options={{
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={require('../assets/images/bulbBottom.png')}
-              style={{
-                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused ? 25 : 21,
-                width: focused ? 21 : 18,
-              }}
-            />
-          ),
-          tabBarLabel: 'Accounts', // Focused label color
-          tabBarLabelStyle: {
-            fontSize: 11,
-            marginTop: 7,
-          },
-          tabBarInactiveTintColor: 'gray',
-        }}
-        name="Accounts"
-        component={AccountsRedirect}
-      /> */}
-
       <Tab.Screen
         options={{
           tabBarIcon: ({focused}) => (
             <Image
-              source={require('../assets/images/goal.png')}
+              source={require('../assets/images/Goal.png')}
               style={{
                 tintColor: focused ? Colors.white : Colors.inactiveTabColor,
                 height: focused ? 25 : 21,
@@ -559,52 +322,6 @@ const BottomNavigator = () => {
         name="Goals"
         component={AddGoals}
       />
-
-      {/* <Tab.Screen
-        options={{
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={require('../assets/images/settingsBottom.png')}
-              style={{
-                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused ? 25 : 22,
-                width: focused ? 25 : 22,
-              }}
-            />
-          ),
-          tabBarLabel: 'Property', // Focused label color
-          tabBarLabelStyle: {
-            fontSize: 11,
-            marginTop: 7,
-          },
-          tabBarInactiveTintColor: 'gray',
-        }}
-        name="Property"
-        component={PropertyScreen}
-      /> */}
-
-      {/* <Tab.Screen
-        options={{
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={require('../assets/images/settingsBottom.png')}
-              style={{
-                tintColor: focused ? Colors.white : Colors.inactiveTabColor,
-                height: focused ? 25 : 22,
-                width: focused ? 25 : 22,
-              }}
-            />
-          ),
-          tabBarLabel: 'Settings', // Focused label color
-          tabBarLabelStyle: {
-            fontSize: 11,
-            marginTop: 7,
-          },
-          tabBarInactiveTintColor: 'gray',
-        }}
-        name="Settings"
-        component={SettingScreen}
-      /> */}
     </Tab.Navigator>
   );
 };
