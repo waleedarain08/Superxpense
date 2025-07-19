@@ -264,6 +264,7 @@ const SpendingSummary = ({data = [], month}) => {
                 color: Colors.grayIcon,
                 fontFamily: FontFamily.regular,
                 fontSize: 14,
+                marginTop:5
               }}>
               This section shows a summary of your monthly expenses, by category
               and trend.

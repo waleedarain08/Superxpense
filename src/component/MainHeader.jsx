@@ -60,15 +60,15 @@ const MainHeader = ({
           />
         </View>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={[styles.avatar, {marginLeft: 12}]}
           onPress={() => navigation.navigate('Notification')}>
           <Notification />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Big Impact Section */}
-      <View style={styles.bigImpactContainer}>
+      {/* <View style={styles.bigImpactContainer}>
         <Text style={styles.bigImpactText}>Big impact</Text>
         <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
           <DirhamWhite width={28} height={24} />
@@ -82,7 +82,7 @@ const MainHeader = ({
             You added 5,000 AED to savings last week
           </Text>
         </View>
-      </View>
+      </View> */}
 
       {/* Tabs */}
       <LinearGradient

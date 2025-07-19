@@ -33,7 +33,7 @@ const WelcomeScreen = ({navigation}) => {
             <Text style={styles.subtitle}>
             Get more out of your {'\n'}money & spending
             </Text>
-            <Text style={styles.welcome}>SUPERXPENSE</Text>
+            <Text style={styles.welcome}>Superxpense</Text>
           </View>
 
           <View style={styles.buttonsContainer}>
@@ -43,27 +43,25 @@ const WelcomeScreen = ({navigation}) => {
               <Text style={styles.buttonText}>Continue with Email</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.appleButton}
-              //onPress={() => navigation.navigate('Main')}
               >
               <Apple />
               <Text style={styles.appleButtonText}>Continue with Apple</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.appleButton}
-              //onPress={() => navigation.navigate('Main')}
               >
               <Google />
               <Text style={styles.appleButtonText}>Continue with Google</Text>
-            </TouchableOpacity>
-            <View style={{height:20}}></View>
-            <TouchableOpacity
-             // onPress={() => navigation.navigate('Main')}
+            </TouchableOpacity> */}
+
+            <View style={{height:'15%'}}></View>
+            {/* <TouchableOpacity
               style={styles.guestButton}>
               <Text style={styles.guestText}>Continue as Guest</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -89,7 +87,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcome: {
-    fontSize: 18,
+    fontSize: 19,
     color: '#1AA875',
     fontFamily: FontFamily.semiBold,
     marginTop: 16,
@@ -180,7 +178,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.33)',
-    paddingTop: 24,
+    paddingTop: '20%',
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
   },
