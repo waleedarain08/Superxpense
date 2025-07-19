@@ -60,8 +60,100 @@ import UploadPayment from './uploadPayment.svg';
 import ViewPayment from './viewPayment.svg';
 import BlurSvg from './blurSvg.svg';
 import GreenFaceScan from './greenFaceScan.svg';
+import UploadIcon from './uploadIcon.svg';
+import House from './house.svg';
+import GrayArrow from './grayArrow.svg';
+import SearchIcon from './searchIcon.svg';
+import BlackDirham from './blackDirham.svg';
+import GreenArrow from './greenArrow.svg';
+import CryptoIcon from './cryptoIcon.svg';
+import BlackSearchIcon from './blackSearch.svg';
+import ReloadYellow from './reloadyellow.svg';
+import Completed from './completed.svg';
+import Bed from './bed.svg';
+import Bath from './bath.svg';
+import Ruler from './ruler.svg';
+import Document from './documnet.svg';
+import Image from './images.svg';
+import Card from './card.svg';
+import Bank from './bank.svg';
+import AppleSvg from './apple.svg';
+import AnnualReturn from './annualReturn.svg';
+import TotalWorth from './TotalWorth.svg';
+import Houses from './Houses.svg';
+import Cars from './Cars.svg';
+import Rings from './Rings.svg';
+import DotsSvg from './dotsSvg.svg';
+import Emergency from './emergency.svg';
+import Birthday from './birthday.svg';
+import GoalSvg from './goalSvg.svg';
+import SaveCard from './saveCard.svg';
+import Amount from './amount.svg';
+import BlubIcon from './blubSvg.svg';
+import EditIcon from './editIcon.svg';
+import Shopping from './shopping.svg';
+import ShoppingGreen from './shoppingGreen.svg';
+import Bill from './bill.svg';
+import SvgDots from './svgDots.svg';
+import CalendarSvg from './calendar.svg';
+import BlankCalendar from './blankCalender.svg';
+import GreenBank from './greenBank.svg';
+import Mail from './mail.svg';
+import Phone from './phone.svg';
+import Copy from './copy.svg';
+import Subscription from './subscription.svg';
+import Diamond from './diamond.svg';
+import GreenNotification from './greenNotification.svg';
+import Pirvacy from './privacy.svg';
+import FAQSvg from './faqs.svg';
 
 export {
+  FAQSvg,
+  Pirvacy,
+  GreenNotification,
+  Diamond,
+  Subscription,
+  Copy,
+  Mail,
+  Phone,
+  GreenBank,
+  BlankCalendar,
+  CalendarSvg,
+  SvgDots,
+  Bill,
+  ShoppingGreen,
+  EditIcon,
+  Shopping,
+  BlubIcon,
+  SaveCard,
+  Amount,
+  GoalSvg,
+  Birthday,
+  Emergency,
+  DotsSvg,
+  Houses,
+  Cars,
+  Rings,
+  AnnualReturn,
+  TotalWorth,
+  AppleSvg,
+  Card,
+  Bank,
+  Document,
+  Image,
+  Bed,
+  Bath,
+  Ruler,
+  Completed,
+  ReloadYellow,
+  BlackSearchIcon,
+  CryptoIcon,
+  GreenArrow,
+  BlackDirham,
+  SearchIcon,
+  GrayArrow,
+  House,
+  UploadIcon,
   GreenFaceScan,
   BlurSvg,
   UploadPayment,
