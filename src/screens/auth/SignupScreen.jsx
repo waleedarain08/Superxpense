@@ -40,50 +40,74 @@ const SignUpScreen = ({navigation}) => {
   const [error, setError] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
     name: '',
     phoneNumber: '',
-    countryCode: '971',
   });
 
   const validate = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const errors = {email: '', password: '', name: '', phoneNumber: ''};
+    const errors = {email: '', password: '', confirmPassword: '', name: '', phoneNumber: ''};
     let isValid = true;
 
     setEmailError(false);
     setPasswordError(false);
+    setConfirmPasswordError(false);
     setNameError(false);
     setMobileNumberError(false);
 
-    if (!emailRegex.test(email)) {
-      errors.email = 'Enter a valid email address';
+    // Name validation
+    if (!name.trim()) {
+      errors.name = 'Name is required';
       isValid = false;
-      setEmailError(true);
-    }
-
-    if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters long';
-      isValid = false;
-      setPasswordError(true);
-    }
-    // Confirm password match validation
-    if (confirmPassword !== password) {
-      errors.confirmPassword = 'Passwords do not match';
-      isValid = false;
-      setConfirmPasswordError(true);
-    }
-
-    if (name.length < 3) {
+      setNameError(true);
+    } else if (name.trim().length < 3) {
       errors.name = 'Name should be at least 3 characters long';
       isValid = false;
       setNameError(true);
     }
 
-    // if (phoneNumber.length < 7 || phoneNumber.length > 10) {
-    //   errors.phoneNumber = 'Mobile number must be between 7 and 10 digits';
-    //   isValid = false;
-    //   setMobileNumberError(true);
-    // }
+    // Email validation
+    if (!email.trim()) {
+      errors.email = 'Email is required';
+      isValid = false;
+      setEmailError(true);
+    } else if (!emailRegex.test(email.trim())) {
+      errors.email = 'Enter a valid email address';
+      isValid = false;
+      setEmailError(true);
+    }
+
+    // Phone number validation
+    if (phoneNumber.trim()) {
+      if (phoneNumber.trim().length < 7 || phoneNumber.trim().length > 15) {
+        errors.phoneNumber = 'Mobile number must be between 7 and 15 digits';
+        isValid = false;
+        setMobileNumberError(true);
+      }
+    }
+
+    // Password validation
+    if (!password) {
+      errors.password = 'Password is required';
+      isValid = false;
+      setPasswordError(true);
+    } else if (password.length < 6) {
+      errors.password = 'Password must be at least 6 characters long';
+      isValid = false;
+      setPasswordError(true);
+    }
+
+    // Confirm password validation
+    if (!confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password';
+      isValid = false;
+      setConfirmPasswordError(true);
+    } else if (confirmPassword !== password) {
+      errors.confirmPassword = 'Passwords do not match';
+      isValid = false;
+      setConfirmPasswordError(true);
+    }
 
     setError(errors);
     return isValid;
@@ -92,18 +116,18 @@ const SignUpScreen = ({navigation}) => {
   const handleSignUp = async () => {
     if (!validate()) return;
 
-    const countryCode = error.countryCode;
-    const mobileNumber = phoneNumber.trim();
+    const countryCode = '971'; // Default country code
+    const mobileNumber = phoneNumber.trim() || null; // Make it null if empty
     const checkToken = await getStringItem('fcmToken');
     setLoading(true);
     await removeItem('userData');
 
     try {
       const data = await post(API.signUp, {
-        email,
+        email: email.trim(),
         password,
-        name,
-        mobileNumber,
+        name: name.trim(),
+        ...(mobileNumber && { mobileNumber }), // Only include if not null
         countryCode,
         fcmToken: checkToken,
         fcmPlatform: Platform.OS === 'ios' ? 'ios' : 'android',
@@ -114,6 +138,7 @@ const SignUpScreen = ({navigation}) => {
       setName('');
       setEmail('');
       setPassword('');
+      setConfirmPassword('');
       setPhoneNumber('');
       navigation.navigate('VerificationCode', {email});
     } catch (err) {
@@ -149,7 +174,10 @@ const SignUpScreen = ({navigation}) => {
               svgIcon={<FullName />}
               placeholder="Full Name"
               value={name}
-              onChangeText={setName}
+              onChangeText={text => {
+                setName(text);
+                if (nameError) setNameError(false);
+              }}
               error={nameError}
               style={{marginBottom: nameError ? 5 : 10}}
             />
@@ -159,7 +187,10 @@ const SignUpScreen = ({navigation}) => {
               svgIcon={<Email />}
               placeholder="Email Address"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={text => {
+                setEmail(text);
+                if (emailError) setEmailError(false);
+              }}
               error={emailError}
               keyboardType="email-address"
               autoCapitalize="none"
@@ -171,7 +202,7 @@ const SignUpScreen = ({navigation}) => {
               value={phoneNumber}
               onChangeText={text => {
                 setPhoneNumber(text);
-                if (mobileNumberError) setMobileNumberError(false); // clear error when typing
+                if (mobileNumberError) setMobileNumberError(false);
               }}
               error={mobileNumberError}
             />
@@ -183,26 +214,30 @@ const SignUpScreen = ({navigation}) => {
               svgIcon={<Password />}
               placeholder="Create Password"
               value={password}
-              onChangeText={setPassword}
+              onChangeText={text => {
+                setPassword(text);
+                if (passwordError) setPasswordError(false);
+              }}
               error={passwordError}
               style={{marginBottom: 5, marginTop: 10}}
             />
             {passwordError && (
-              <Text style={styles.errorText}>
-                Password must be atleast 6 Characters long
-              </Text>
+              <Text style={styles.errorText}>{error.password}</Text>
             )}
 
             <PasswordInput
               svgIcon={<Password />}
               placeholder="Retype Password"
               value={confirmPassword}
-              onChangeText={setConfirmPassword}
+              onChangeText={text => {
+                setConfirmPassword(text);
+                if (confirmPasswordError) setConfirmPasswordError(false);
+              }}
               error={confirmPasswordError}
               style={{marginBottom: 5, marginTop: 15}}
             />
             {confirmPasswordError && (
-              <Text style={styles.errorText}>Passwords do not match.</Text>
+              <Text style={styles.errorText}>{error.confirmPassword}</Text>
             )}
           </View>
 

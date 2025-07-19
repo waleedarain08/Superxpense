@@ -10,6 +10,12 @@ const PhoneInputCustom = ({
   numberBack,
   overAllBack,
 }) => {
+  const handlePhoneChange = (text) => {
+    // Only allow numeric characters
+    const numericText = text.replace(/[^0-9]/g, '');
+    onChangeText(numericText);
+  };
+
   return (
     <View style={[styles.row, overAllBack]}>
       {/* Flag and code */}
@@ -25,10 +31,10 @@ const PhoneInputCustom = ({
         style={[styles.inputBox, error && styles.inputBoxError, textInputMain]}>
         <TextInput
           value={value}
-          onChangeText={onChangeText}
+          onChangeText={handlePhoneChange}
           placeholder="Phone Number"
-          keyboardType="phone-pad"
-          maxLength={10}
+          keyboardType="numeric"
+          maxLength={15}
           style={styles.textInput}
           placeholderTextColor={Colors.txtColor}
         />

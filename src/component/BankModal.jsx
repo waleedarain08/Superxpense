@@ -81,6 +81,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   ImageBackground,
+  ScrollView,
 } from 'react-native';
 import {get} from '../utilis/Api';
 import {API} from '../utilis/Constant';
@@ -213,21 +214,23 @@ const BankModal = ({visible, onClose, onBankSelect}) => {
               style={{marginTop: 30}}
             />
           ) : (
-            <View
+            <ScrollView
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.26)',
                 paddingHorizontal: 13,
                 borderWidth: 1,
                 borderColor: Colors.white,
                 borderRadius: 20,
-              }}>
+              }}
+              showsVerticalScrollIndicator={false}
+              >
               <FlatList
                 data={filteredBanks}
                 keyExtractor={item => item.identifier}
                 renderItem={renderBank}
                 contentContainerStyle={{paddingBottom: 30}}
               />
-            </View>
+            </ScrollView>
           )}
         </View>
       </ImageBackground>
